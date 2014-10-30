@@ -85,8 +85,12 @@ casper.then(function() {
       //   data: ''
       // });
 
+      // var url = '/web/podcasts/all.json';
+      // var url = '/web/episodes/new_releases_episodes.json';
+      var url = '/web/episodes/in_progress_episodes.json';
+      
       $http({
-        url: '/web/podcasts/all.json',
+        url: url,
         dataType: 'json',
         method: 'POST',
         data: '',
@@ -97,22 +101,16 @@ casper.then(function() {
       }).then(function(result){
         var data = result.data;
         console.log('result',JSON.stringify(data,null,2));
+        window.scrobble = data;
       });
 
     });
-    // var app = angular.module('scrobbler', [])
-    //   .config(function() {
-    //     console.log('config kikikikiki');
-    //   })
-    //   .run(function($http) {
-    //     console.log('run kikikikiki');
-    //   });
-    // angular.bootstrap(document, ['scrobbler']);
   }, XSRF);
 });
 
 casper.wait(3000, function() {
   this.echo("I've waited for 3 seconds.");
+  this.echo(JSON.stringify(this.getGlobal('scrobble'),null,2));
 });
 // TODO try error handling to debug this POST
 if (0) casper.then(function() {

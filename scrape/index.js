@@ -9,17 +9,24 @@ credentials = require('credentials.json');
 var casper = require('casper').create({
   verbose: true,
   logLevel: "debug",
+  pageSettings: {
+    loadImages: false
+  },
   onError: function(_cspr, r) {
     console.log('onError');
     console.log(JSON.stringify(r));
   },
-  onResourceReceived: function(_casper, r) {
-    console.log('onResourceReceived');
-    console.log(JSON.stringify(r));
-  },
   onResourceRequested: function(_casper, r) {
-    console.log('onResourceRequested');
-    console.log(JSON.stringify(r));
+    if (/all.json$/.test(r.url)) {
+      console.log('onResourceRequested: ' + r.url);
+      console.log(JSON.stringify(r, null, 2));
+    }
+  },
+  onResourceReceived: function(_casper, r) {
+    if (/all.json$/.test(r.url)) {
+      console.log('onResourceReceived: ' + r.url);
+      console.log(JSON.stringify(r.headers));
+    }
   }
 });
 
@@ -29,6 +36,9 @@ var casper = require('casper').create({
 // }
 // require("utils").dump(casper.cli.args);
 
+casper.on('remote.message', function(msg) {
+  this.echo('***** REMOTE: ' + msg);
+})
 casper.start();
 
 casper.userAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X)');
@@ -61,14 +71,61 @@ casper.then(function() {
   this.echo('*** xsrf: ' + XSRF);
 });
 
-// TODO try error handling to debug this POST
 casper.then(function() {
+  var data = this.evaluate(function(XSRF) {
+    console.log('cococococococococococococ');
+    var $injector = angular.injector(['ng']);
+    $injector.invoke(function($http) {
+      console.log('inject kikikikiki', XSRF);
+
+      // This works
+      // $http.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
+      // $http.defaults.headers.post['X-XSRF-TOKEN'] = XSRF;
+      // $http.post('/web/podcasts/all.json', {
+      //   data: ''
+      // });
+
+      $http({
+        url: '/web/podcasts/all.json',
+        dataType: 'json',
+        method: 'POST',
+        data: '',
+        headers: {
+          "Content-Type": 'application/json;charset=UTF-8',
+          'X-XSRF-TOKEN': XSRF
+        }
+      }).then(function(result){
+        var data = result.data;
+        console.log('result',JSON.stringify(data,null,2));
+      });
+
+    });
+    // var app = angular.module('scrobbler', [])
+    //   .config(function() {
+    //     console.log('config kikikikiki');
+    //   })
+    //   .run(function($http) {
+    //     console.log('run kikikikiki');
+    //   });
+    // angular.bootstrap(document, ['scrobbler']);
+  }, XSRF);
+});
+
+casper.wait(3000, function() {
+  this.echo("I've waited for 3 seconds.");
+});
+// TODO try error handling to debug this POST
+if (0) casper.then(function() {
   // var wsurl = 'https://play.pocketcasts.com/web/podcasts/all.json';
   var wsurl = '/web/podcasts/all.json';
   var data = this.evaluate(function(wsurl) {
     return JSON.parse(__utils__.sendAJAX(wsurl, 'POST', { /*data*/ }, false, {
       // 'Content-Type': 'application/json;charset=UTF-8',
-      contentType:'application/json;charset=UTF-8'
+      contentType: 'application/json;charset=UTF-8',
+      headers: [{
+        name: 'MYKEY',
+        value: 'MYVALUE'
+      }]
     }));
   }, wsurl);
   this.echo('*** SendAjax: ');

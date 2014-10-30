@@ -1,0 +1,15 @@
+{
+  "name": "podscrape",
+  "version": "1.0.0",
+  "description": "scrape podcast metadata",
+  "main": "index.js",
+  "scripts": {
+    "run": "cat index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "casperjs": "^1.1.0-beta3"
+  }
+}

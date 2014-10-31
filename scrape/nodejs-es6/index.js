@@ -1,7 +1,7 @@
 "use strict";
 
-var request = require('request');
-var jar = request.jar()
+var rp = require('request-promise');
+var jar = rp.jar();
 
 //this how we could set a global default ?
 // request = request.defaults({
@@ -9,36 +9,28 @@ var jar = request.jar()
 // })
 
 var uri = 'https://play.pocketcasts.com/';
-request({
+rp({
   jar: jar,
-  uri: uri
-}, function(error, response, body) {
-  if (!error && response.statusCode == 200) {
-    //  why is headers in in the keys?
-    // console.log('response.keys:', Object.keys(response.headers));
+  uri: uri,
+  resolveWithFullResponse: true
+}).then(function(response) {
+  var cookies = jar.getCookies(uri);
 
-    // console.log('headers:',response.headers);
-    // console.log('headers:', response.headers['set-cookie']);
+  var XSRF;
+  cookies.forEach(function(cookie) {
+    // console.log('jar.eachCookie:', cookie);      
+    if ("XSRF-TOKEN" === cookie.key) {
+      XSRF = cookie.value;
+    }
+  });
+  return XSRF;
+}).then(function(XSRF) {
+  console.log('XSRF:', XSRF);
 
-    // console.log('jar:', jar);
-    var cookies = jar.getCookies(uri);
-    // console.log('jar.cookies:', cookies);
-
-    var XSRF;
-    cookies.forEach(function(cookie){
-      // console.log('jar.eachCookie:', cookie);      
-      // console.log('aCookey.key:', cookie.key);
-      // console.log('aCookey.value:', cookie.value);
-      if ("XSRF-TOKEN"===cookie.key){
-        // console.log('XSRF-TOKEN:', cookie.value);
-        XSRF=cookie.value;
-      }
-
-    });
-
-    console.log('XSRF:', XSRF);
-
-
-    // console.log(body);
-  }
-})
+  // now do a post
+  return rp({
+    jar: jar,
+    uri: uri,
+    resolveWithFullResponse: true
+  });
+}).catch(console.error);

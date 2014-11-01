@@ -10,6 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bluebird": "^2.3.10",
+    "limiter": "^1.0.5",
     "request-promise": "^0.2.4"
   }
 }

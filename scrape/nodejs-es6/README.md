@@ -15,3 +15,4 @@
 ## References
 
 * [custom headers])https://github.com/request/request#custom-http-headers)
+* [Rate limiting](https://github.com/jhurliman/node-rate-limiter)

@@ -44,11 +44,17 @@ function makeWork(len) {
 
 function Level0(l0) {
   function Level1(l1) {
-      return rateLimitThing([l0,l1].join('.'));
+    function Level2(l2) {
+      return rateLimitThing([l0, l1, l2].join('.'));
+    }
+    return Promise.all([
+      rateLimitThing([l0, l1].join('.')),
+      Promise.map(makeWork(2), Level2, { concurrency: 1 })
+    ]);
   }
   return Promise.all([
     rateLimitThing('' + l0 ),
-    Promise.map(makeWork(5),Level1,{concurrency:1})
+    Promise.map(makeWork(3),Level1,{concurrency:1})
   ]);
 }
 

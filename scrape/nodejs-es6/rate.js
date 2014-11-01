@@ -22,15 +22,15 @@ function padByClock() {
 }
 
 function rateLimitThing(input) {
-  input = padByClock() + input;
+  var pad =  padByClock();
   return new Promise(function(resolve, reject) {
-    console.log('-', input);
-    limiter.removeTokens(1, function() {
-      return resolve(input);
-    });
-  }).delay(500).then(function(output) {
-    console.log('+', input);
-    return output
+      console.log(pad + '-' + input);
+      limiter.removeTokens(1, function() {
+        return resolve(input);
+      });
+    }).delay(500).then(function(output) {
+        console.log(pad + '+' + input);
+        return output
   });
 }
 function makeWork(len) {

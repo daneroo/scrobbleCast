@@ -28,7 +28,7 @@ function rateLimitThing(input) {
       limiter.removeTokens(1, function() {
         return resolve(input);
       });
-    }).delay(500).then(function(output) {
+    }).delay(00).then(function(output) {
         console.log(pad + '+' + input);
         return output
   });
@@ -41,11 +41,18 @@ function makeWork(len) {
   return work;
 }
 
+
 function Level0(l0) {
-  return rateLimitThing('' + l0 + '.');
+  function Level1(l1) {
+      return rateLimitThing([l0,l1].join('.'));
+  }
+  return Promise.all([
+    rateLimitThing('' + l0 ),
+    Promise.map(makeWork(5),Level1,{concurrency:1})
+  ]);
 }
 
-Promise.map(makeWork(100), Level0, { concurrency: 2 })
+Promise.map(makeWork(30), Level0, { concurrency: 3 })
   .then(function(result) {
-    console.log('result');
+    console.log('result',result);
   });

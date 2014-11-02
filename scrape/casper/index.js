@@ -73,38 +73,58 @@ casper.then(function() {
 
 casper.then(function() {
   var data = this.evaluate(function(XSRF) {
-    console.log('cococococococococococococ');
-    var $injector = angular.injector(['ng']);
-    $injector.invoke(function($http) {
-      console.log('inject kikikikiki', XSRF);
+    var scrobble = angular.module('scrobble', [])
+      .factory('interceptor', function() {
+        var requestInterceptor = {
+          request: function(config) {
+            // here we have the request config
+            console.log('interceptor', JSON.stringify(config,null,2));
+            return config;
+          }
+        };
+        return requestInterceptor;
+      })
+      .config(function($httpProvider) {
+        console.log('*** CONFIG BLOCK ***');
+        $httpProvider.interceptors.push('interceptor');
+      })
+      .run(function($http) {
+        console.log('*** RUN BLOCK ***');
 
-      // This works
-      // $http.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
-      // $http.defaults.headers.post['X-XSRF-TOKEN'] = XSRF;
-      // $http.post('/web/podcasts/all.json', {
-      //   data: ''
-      // });
+        console.log('injected xsrf ', XSRF);
 
-      // var url = '/web/podcasts/all.json';
-      // var url = '/web/episodes/new_releases_episodes.json';
-      var url = '/web/episodes/in_progress_episodes.json';
-      
-      $http({
-        url: url,
-        dataType: 'json',
-        method: 'POST',
-        data: '',
-        headers: {
-          "Content-Type": 'application/json;charset=UTF-8',
-          'X-XSRF-TOKEN': XSRF
-        }
-      }).then(function(result){
-        var data = result.data;
-        // console.log('result',JSON.stringify(data,null,2));
-        window.scrobble = data;
+        // This works
+        // $http.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
+        // $http.defaults.headers.post['X-XSRF-TOKEN'] = XSRF;
+        // $http.post('/web/podcasts/all.json', {
+        //   data: ''
+        // });
+
+        // var url = '/web/podcasts/all.json';
+        // var url = '/web/episodes/new_releases_episodes.json';
+        var url = '/web/episodes/in_progress_episodes.json';
+
+        $http({
+          url: url,
+          dataType: 'json',
+          method: 'POST',
+          data: '',
+          headers: {
+            "Content-Type": 'application/json;charset=UTF-8',
+            'X-XSRF-TOKEN': XSRF
+          }
+        }).then(function(result) {
+          var data = result.data;
+          // console.log('result',JSON.stringify(data,null,2));
+          window.scrobble = data;
+        });
+
       });
 
-    });
+    // angular.bootstrap(document, ['scrobble']);
+    // must include ng for $http
+    var $injector = angular.injector(['ng','scrobble']);
+
   }, XSRF);
 });
 

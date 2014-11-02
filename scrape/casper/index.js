@@ -65,8 +65,8 @@ casper.then(function() {
   var value = casper.evaluate(function() {
     return USER_PODCASTS_UUIDS
   });
-  this.echo('*** podcasts');
-  this.echo(value);
+  // this.echo('*** podcasts');
+  // this.echo(value);
   XSRF = this.getElementAttribute('meta[name="csrf-token"]', 'content');
   this.echo('*** xsrf: ' + XSRF);
 });
@@ -100,7 +100,7 @@ casper.then(function() {
         }
       }).then(function(result){
         var data = result.data;
-        console.log('result',JSON.stringify(data,null,2));
+        // console.log('result',JSON.stringify(data,null,2));
         window.scrobble = data;
       });
 
@@ -109,46 +109,12 @@ casper.then(function() {
 });
 
 casper.wait(3000, function() {
-  this.echo("I've waited for 3 seconds.");
-  this.echo(JSON.stringify(this.getGlobal('scrobble'),null,2));
+  this.echo("I've waited for 3 seconds. Should have window.scrobble");
+  var scrobble=this.getGlobal('scrobble');
+  // this.echo(JSON.stringify(scrobble,null,2));
+  this.echo('episodes: '+scrobble.episodes.length);
+  this.echo('episode0: '+JSON.stringify(scrobble.episodes[0],null,2));
 });
-// TODO try error handling to debug this POST
-if (0) casper.then(function() {
-  // var wsurl = 'https://play.pocketcasts.com/web/podcasts/all.json';
-  var wsurl = '/web/podcasts/all.json';
-  var data = this.evaluate(function(wsurl) {
-    return JSON.parse(__utils__.sendAJAX(wsurl, 'POST', { /*data*/ }, false, {
-      // 'Content-Type': 'application/json;charset=UTF-8',
-      contentType: 'application/json;charset=UTF-8',
-      headers: [{
-        name: 'MYKEY',
-        value: 'MYVALUE'
-      }]
-    }));
-  }, wsurl);
-  this.echo('*** SendAjax: ');
-  require('utils').dump(data);
-});
-
-// Not working
-if (0) casper.thenOpen('https://play.pocketcasts.com/web/podcasts/all.json', {
-  method: "post",
-  headers: {
-    'Accept': 'application/json',
-    'Content-Type': 'application/json;charset=UTF-8',
-    'Origin': 'https://play.pocketcasts.com',
-    'X-XSRF-TOKEN': XSRF
-  },
-  data: {}
-}, function(response) {
-  // this.echo("POST request has been sent.")
-  this.echo('*** Fetched feeds, response: ');
-  // require('utils').dump(response);
-  // require('utils').dump(JSON.parse(this.getPageContent()));
-  this.echo('*** Content:');
-  this.echo(this.getPageContent());
-});
-
 
 casper.run(function() {
   this.echo('Done');

@@ -3,6 +3,7 @@ var RateLimiter = require('limiter').RateLimiter;
 var limiter = new RateLimiter(1, 100);
 
 
+// visual vertical sine-wave noting time
 function vsine(value, amplitude) {
   // return value % mod;
   var speed = 10;

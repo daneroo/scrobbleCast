@@ -7,10 +7,14 @@
 
 ## TODO
 
+## Notes
 
-* Auth: 
-  * use request, to fetch (hedaers might be enough to get csrf as Cookie)
-  * if not, use cheerio to fetch meta tag with csrf-token
+* Auth/Login: 
+  * GET /users/sign_in, to get cookies (XSRF-TOKEN)
+  * POST form to /users/sign_in, with authenticity_token and credentials in form  
+    Note: the POST returns a 302, which rejects the request-promise,  
+    whereas a faled login returns the login page content again (200)  
+    the 302 response also has a new XSRF-TOKEN cookie  
 
 ## References
 

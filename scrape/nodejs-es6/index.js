@@ -61,6 +61,8 @@ function reqGenXSRF(path, options) {
   return o;
 }
 
+// TODO: we can actually wrap this with rp, 
+// or find another way to wrap both rp, and ratelimitting in one decorator.
 function reqJSON(path, params) {
   return reqGenXSRF(path, {
     headers: {

@@ -7,6 +7,11 @@
 
 ## TODO
 
+* rate limiting (as in rate.js)
+* compose 
+  * all pages for a podcast
+  * all podcasts (quick/deep)
+
 ## Notes
 
 * Auth/Login: 

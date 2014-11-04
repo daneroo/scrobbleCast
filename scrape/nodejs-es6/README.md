@@ -7,10 +7,10 @@
 
 ## TODO
 
-* rate limiting (as in rate.js)
+* rate limiting (as in rate.js): Done
 * compose 
-  * all pages for a podcast
-  * all podcasts (quick/deep)
+  * all pages for a podcast:  Done, needs refactor
+  * all podcasts (quick/deep, on fetchAll)
 * Store
 * Delta Events
 
@@ -22,6 +22,9 @@
     Note: the POST returns a 302, which rejects the request-promise,  
     whereas a faled login returns the login page content again (200)  
     the 302 response also has a new XSRF-TOKEN cookie  
+* Timing concurrency
+  fetchall:  20s (concurrency:{page:5,podcasts:10},rate: 500/s)
+  fetchall: 715s (concurrency:{page:1,podcasts:1},rate: 1/s)
 
 ## References
 

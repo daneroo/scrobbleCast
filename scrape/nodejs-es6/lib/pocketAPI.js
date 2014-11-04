@@ -43,6 +43,9 @@ function speedLimit(input) {
 // JSON post with param (requires prior login)
 function fetch(path, params) {
   return function() {
+    // if (params && params.page){
+    //   console.log('fetching page',params.page);
+    // }
     return rp(helper.reqJSON(path, params))
       .then(function(response) {
         // console.log('XSRF', helper.XSRF());
@@ -54,7 +57,7 @@ function fetch(path, params) {
           console.log('    * podcasts', response.podcasts.length);
         }
         if (response.result && response.result.episodes) {
-          console.log('    * podcasts.page', response.result.total, response.result.episodes.length);
+          console.log('    * podcasts.page len,total:', response.result.episodes.length,response.result.total);
         }
         return response;
       });

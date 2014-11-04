@@ -11,6 +11,8 @@
 * compose 
   * all pages for a podcast
   * all podcasts (quick/deep)
+* Store
+* Delta Events
 
 ## Notes
 

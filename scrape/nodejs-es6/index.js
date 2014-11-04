@@ -51,7 +51,8 @@ function fetchall(uuid) {
             pages = _.pluck(pages, 'episodes');
             accum = accum.concat(_.flatten(pages));
             console.log('accum', _.pluck(accum, 'title')); // or title
-            return accum
+            require('fs').writeFileSync('data/'+uuid+'.json', JSON.stringify(accum, null, 2));
+            return accum;
           });
 
       });

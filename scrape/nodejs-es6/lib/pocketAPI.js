@@ -4,7 +4,10 @@ var Promise = require("bluebird");
 var rp = require('request-promise');
 var _ = require('lodash');
 var helper = require('./reqHelpers');
+var RateLimiter = require('limiter').RateLimiter;
 
+// globals limiter might be configures, injected, credentials as well...
+var limiter = new RateLimiter(1, 1000);
 var paths = {
   sign_in: '/users/sign_in',
   podcasts_all: '/web/podcasts/all.json',
@@ -19,27 +22,43 @@ function rebind(path) {
     // console.log('defined with params', params, path);
     return function() {
       // console.log('invoked with params', params, path);
-      return fetch(path, params)
-    }
+      return speedLimit()
+        .then(fetch(path, params));
+    };
   }
 }
+
+
+// promise token.
+function speedLimit(input) {
+  return new Promise(function(resolve, reject) {
+    // console.log(new Date().toJSON().substr(0, 19), 'YELLOW');
+    limiter.removeTokens(1, function() {
+      // console.log(new Date().toJSON().substr(0, 19), 'GREEN');
+      return resolve(input);
+    });
+  });
+}
+
 // JSON post with param (requires prior login)
 function fetch(path, params) {
-  return rp(helper.reqJSON(path, params))
-    .then(function(response) {
-      // console.log('XSRF', helper.XSRF());
-      console.log('* path',path);
-      if (response.episodes) {
-        console.log('    * episodes', response.episodes.length);
-      }
-      if (response.podcasts) {
-        console.log('    * podcasts', response.podcasts.length);
-      }
-      if (response.result && response.result.episodes) {
-        console.log('    * podcasts.page', response.result.total, response.result.episodes.length);
-      }
-      return response;
-    });
+  return function() {
+    return rp(helper.reqJSON(path, params))
+      .then(function(response) {
+        // console.log('XSRF', helper.XSRF());
+        console.log('* path', path);
+        if (response.episodes) {
+          console.log('    * episodes', response.episodes.length);
+        }
+        if (response.podcasts) {
+          console.log('    * podcasts', response.podcasts.length);
+        }
+        if (response.result && response.result.episodes) {
+          console.log('    * podcasts.page', response.result.total, response.result.episodes.length);
+        }
+        return response;
+      });
+  }
 }
 // not a function factory actually invokes login.
 function sign_in(credentials) {
@@ -84,5 +103,6 @@ var exports = module.exports = {
   podcasts_all: rebind(paths.podcasts_all),
   new_releases_episodes: rebind(paths.new_releases_episodes),
   in_progress_episodes: rebind(paths.in_progress_episodes),
-  find_by_podcast: rebind(paths.find_by_podcast)
+  find_by_podcast: rebind(paths.find_by_podcast),
+  speedLimit: speedLimit
 };

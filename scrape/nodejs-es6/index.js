@@ -7,7 +7,6 @@ var API = require('./lib/pocketAPI');
 // external data for creds.
 var credentials = require('./credentials.json');
 
-
 API.sign_in(credentials)
   .then(API.new_releases_episodes())
   .then(API.in_progress_episodes())

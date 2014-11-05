@@ -13,6 +13,7 @@
   * all podcasts (quick/deep, on fetchAll)
 * Store
 * Delta Events
+* Cron
 
 ## Notes
 
@@ -25,6 +26,8 @@
 * Timing concurrency
   fetchall:  20s (concurrency:{page:5,podcasts:10},rate: 500/s)
   fetchall: 715s (concurrency:{page:1,podcasts:1},rate: 1/s)
+* Cron: `cron` npm module, just worked.
+
 
 ## References
 

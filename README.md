@@ -25,3 +25,16 @@ To do that we could first:
 * Angular - ionic (Ang-1.2), material- (Ang-1.3), ES6/Ang-2.0
 * Minimal frontend - Angular-material (<json.file)
 * implement pull from angular (CORS, ionic/phonegap)
+
+## Parts
+
+### scrape 
+
+* cacsper
+* nodejs-es6 : the es6 is vestigial!
+    * API, promises, rate-limiting, cron
+
+###
+* web app
+    * trying `generator-gulp-webapp`: not angular-awar, but really nice (fast)
+    * doing `cg-angular`: not angular-awar, but really nice (fast)

@@ -49,7 +49,7 @@ function scrape() {
 
 var CronJob = cron.CronJob;
 var job = new CronJob({
-  cronTime: '0 */1 * * * *', // seconds included 6 params - standard 5 params supported
+  cronTime: '0 */10 * * * *', // seconds included 6 params - standard 5 params supported
   onTick: scrape,
   start: true // default is true, else, if start:false, use job.start()
   // timeZone: "America/Montreal" // npm install time, if you want to use TZ

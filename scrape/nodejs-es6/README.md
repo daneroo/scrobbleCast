@@ -11,8 +11,10 @@
 * compose 
   * all pages for a podcast:  Done, needs refactor
   * all podcasts (quick/deep, on fetchAll)
-* Store
-* Delta Events
+* Store (file done)
+* Cron
+* Delta Events - storage (mongo? couch?)
+* docker with creds in `ENV`
 
 ## Notes
 
@@ -25,6 +27,8 @@
 * Timing concurrency
   fetchall:  20s (concurrency:{page:5,podcasts:10},rate: 500/s)
   fetchall: 715s (concurrency:{page:1,podcasts:1},rate: 1/s)
+* Cron: `cron` npm module, just worked.
+
 
 ## References
 

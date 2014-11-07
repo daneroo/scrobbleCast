@@ -1,0 +1,35 @@
+      <div ng-repeat="item in todos">
+            <h3>{{item.what}}</h3>
+            <h4>{{item.who}}</h4>
+            <p>
+              {{item.notes}}
+            </p>
+              <img ng-src="{{item.face}}" class="face" alt="{{item.who}}">
+      </div>
+
+<!-- <div class="col-md-12" ng-controller="HomeCtrl">
+</div>
+ -->
+  <md-content>
+
+    <md-list>
+
+      <md-item ng-repeat="item in todos">
+        <md-item-content>
+          <div class="md-tile-left">
+              <img ng-src="{{item.face}}" class="face" alt="{{item.who}}">
+          </div>
+          <div class="md-tile-content">
+            <h3>{{item.what}}</h3>
+            <h4>{{item.who}}</h4>
+            <p>
+              {{item.notes}}
+            </p>
+          </div>
+        </md-item-content>
+      </md-item>
+
+    </md-list>
+
+  </md-content>
+

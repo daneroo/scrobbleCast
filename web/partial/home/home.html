@@ -20,19 +20,21 @@
   <md-content md-theme="orange">
     <section>
       <md-subheader class="md-primary">Podcasts</md-subheader>
-      <md-list layout="vertical">
+      <md-list layout="vertical" layout-fill>
         <md-item ng-repeat="podcast in podcasts">
           <md-item-content>
-            <div class="md-tile-left">
-                <img width="64" ng-src="{{podcast.thumbnail_url}}" class="face" alt="{podcast.title}}">
-            </div>
-            <div class="md-tile-content">
-              <h3>{{podcast.title}}</h3>
-              <h4>{{podcast.author}}</h4>
-              <p>
-                {{podcast.episode}}
-              </p>
-            </div>
+            <md-whiteframe class="md-whiteframe-z1" layout layout-align="center center">
+              <div class="md-tile-left">
+                  <img width="64" ng-src="{{podcast.thumbnail_url}}" class="face" alt="{podcast.title}}">
+              </div>
+              <div class="md-tile-content">
+                <h3>{{podcast.title}}</h3>
+                <h4>{{podcast.author}}</h4>
+                <p>
+                  {{podcast.episode}}
+                </p>
+              </div>
+            </md-whiteframe>
           </md-item-content>
         </md-item>
       </md-list>
@@ -43,16 +45,18 @@
       <md-list layout="vertical">
         <md-item ng-repeat="episode in in_progress.concat(new_releases)">
           <md-item-content>
-            <div class="md-tile-left">
-                <img ng-src="/images/podcast.jpg" class="face" alt="PodcastName">
-            </div>
-            <div class="md-tile-content">
-              <h3>{{episode.title}}</h3>
-              <h4>{{episode.published_at}}</h4>
-              <p>
-                {{episode}}
-              </p>
-            </div>
+            <md-whiteframe class="md-whiteframe-z1" layout layout-align="center center">
+              <div class="md-tile-left">
+                  <img ng-src="/images/podcast.jpg" class="face" alt="PodcastName">
+              </div>
+              <div class="md-tile-content">
+                <h3>{{episode.title}}</h3>
+                <h4>{{episode.published_at}}</h4>
+                <p>
+                  {{episode}}
+                </p>
+              </div>
+            </md-whiteframe>
           </md-item-content>
         </md-item>
       </md-list>

@@ -1,6 +1,7 @@
-angular.module('scrobbleCast', ['ngMaterial',/*'ui.bootstrap','ui.utils'*/,'ui.router','ngAnimate']);
+angular.module('scrobbleCast', [/*'ngMaterial','ui.bootstrap','ui.utils'*/,'ui.router',/*'ngAria'*/,'ngAnimate']);
 
 angular.module('scrobbleCast').config(function($stateProvider, $urlRouterProvider) {
+  console.log('scrobbleCast.config');
 
     $stateProvider.state('home', {
         url: '/home',
@@ -12,6 +13,7 @@ angular.module('scrobbleCast').config(function($stateProvider, $urlRouterProvide
 });
 
 angular.module('scrobbleCast').run(function($rootScope) {
+  console.log('scrobbleCast.run');
 
     $rootScope.safeApply = function(fn) {
         var phase = $rootScope.$$phase;

@@ -1,29 +1,25 @@
-      <div ng-repeat="item in todos">
-            <h3>{{item.what}}</h3>
-            <h4>{{item.who}}</h4>
-            <p>
-              {{item.notes}}
-            </p>
-              <img ng-src="{{item.face}}" class="face" alt="{{item.who}}">
-      </div>
 
-<!-- <div class="col-md-12" ng-controller="HomeCtrl">
+<!-- Vestigial bootstrap 
+<div class="col-md-12" ng-controller="HomeCtrl">
 </div>
  -->
-  <md-content>
 
+<div ng-controller="HomeCtrl">
+
+  <md-content>
     <md-list>
 
-      <md-item ng-repeat="item in todos">
+      <!-- <md-item ng-repeat="episode in in_progress.episodes"> -->
+      <md-item ng-repeat="episode in in_progress.concat(new_releases)">
         <md-item-content>
           <div class="md-tile-left">
-              <img ng-src="{{item.face}}" class="face" alt="{{item.who}}">
+              <img ng-src="//placehold.it/64x64" class="face" alt="PodcastName">
           </div>
           <div class="md-tile-content">
-            <h3>{{item.what}}</h3>
-            <h4>{{item.who}}</h4>
+            <h3>{{episode.title}}</h3>
+            <h4>{{episode.published_at}}</h4>
             <p>
-              {{item.notes}}
+              {{episode}}
             </p>
           </div>
         </md-item-content>
@@ -32,4 +28,6 @@
     </md-list>
 
   </md-content>
+
+</div>
 

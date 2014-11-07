@@ -1,35 +1,23 @@
-angular.module('scrobbleCast').controller('HomeCtrl', function($scope) {
+angular.module('scrobbleCast').controller('HomeCtrl', function($scope, scrobbleSvc) {
+    console.log('HomeCtrl');
+    var img = '//placehold.it/64x64&text=SC';
 
-  $scope.todos = [{
-    face: '/img/list/60.jpeg',
-    what: 'Brunch this weekend?',
-    who: 'Min Li Chan',
-    when: '3:08PM',
-    notes: " I'll be in your neighborhood doing errands"
-  }, {
-    face: '/img/list/60.jpeg',
-    what: 'Brunch this weekend?',
-    who: 'Min Li Chan',
-    when: '3:08PM',
-    notes: " I'll be in your neighborhood doing errands"
-  }, {
-    face: '/img/list/60.jpeg',
-    what: 'Brunch this weekend?',
-    who: 'Min Li Chan',
-    when: '3:08PM',
-    notes: " I'll be in your neighborhood doing errands"
-  }, {
-    face: '/img/list/60.jpeg',
-    what: 'Brunch this weekend?',
-    who: 'Min Li Chan',
-    when: '3:08PM',
-    notes: " I'll be in your neighborhood doing errands"
-  }, {
-    face: '/img/list/60.jpeg',
-    what: 'Brunch this weekend?',
-    who: 'Min Li Chan',
-    when: '3:08PM',
-    notes: " I'll be in your neighborhood doing errands"
-  }];
+    scrobbleSvc.in_progress()
+        .then(function(result) {
+            console.log('ip - result', result);
+            $scope.in_progress = result.episodes;
+        })
+        .catch(function(error) {
+            console.error('ip - error', error);
+        });
+
+    $scope.new_releases = scrobbleSvc.new_releases()
+        .then(function(result) {
+            console.log('nr - result', result);
+            $scope.new_releases = result.episodes;
+        })
+        .catch(function(error) {
+            console.error('nr - error', error);
+        });
 
 });

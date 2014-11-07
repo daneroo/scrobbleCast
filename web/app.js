@@ -1,4 +1,4 @@
-angular.module('scrobbleCast', ['ngMaterial','ui.bootstrap','ui.utils','ui.router','ngAnimate']);
+angular.module('scrobbleCast', ['ngMaterial',/*'ui.bootstrap','ui.utils'*/,'ui.router','ngAnimate']);
 
 angular.module('scrobbleCast').config(function($stateProvider, $urlRouterProvider) {
 

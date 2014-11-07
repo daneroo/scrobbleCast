@@ -2,22 +2,16 @@ angular.module('scrobbleCast').controller('HomeCtrl', function($scope, scrobbleS
     console.log('HomeCtrl');
     var img = '//placehold.it/64x64&text=SC';
 
-    scrobbleSvc.in_progress()
+    ['in_progress', 'new_releases', 'podcasts'].forEach(function(service) {
+        scrobbleSvc[service]() // invoke the service by name
         .then(function(result) {
-            console.log('ip - result', result);
-            $scope.in_progress = result.episodes;
+            console.log('result', service, result);
+            // attach the result (podcasts/episodes) to same name in scope
+            $scope[service] = result.episodes || result.podcasts;
         })
-        .catch(function(error) {
-            console.error('ip - error', error);
-        });
-
-    $scope.new_releases = scrobbleSvc.new_releases()
-        .then(function(result) {
-            console.log('nr - result', result);
-            $scope.new_releases = result.episodes;
-        })
-        .catch(function(error) {
-            console.error('nr - error', error);
-        });
+            .catch(function(error) {
+                console.error('error', service, error);
+            });
+    });
 
 });

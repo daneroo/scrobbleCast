@@ -17,6 +17,9 @@ angular.module('scrobbleCast').factory('scrobbleSvc', function($http) {
     },
     new_releases: function() {
       return get('/data/new_releases.2014-11-07T07:10:01Z.json');
+    },
+    podcasts: function() {
+      return get('/data/podcasts.json');
     }
   };
 

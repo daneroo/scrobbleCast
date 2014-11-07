@@ -6,7 +6,18 @@
 
 <div class="home" ng-controller="HomeCtrl">
 
-  <md-content>
+<div>
+ Button:
+    <md-button class="md-raised md-primary">Primary</md-button>
+</div>
+<div>
+ FAB:
+      <md-button class="md-fab" aria-label="Scrobble">
+        <md-icon icon="/images/podcast.jpg" style="width: 24px; height: 24px;"></md-icon>
+      </md-button>
+</div>
+
+  <md-content md-theme="orange">
     <section>
       <md-subheader class="md-primary">Podcasts</md-subheader>
       <md-list layout="vertical">

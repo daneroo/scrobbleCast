@@ -1,12 +1,26 @@
 "use strict";
 
 // dependencies
+var fs = require('fs');
+var path = require('path');
+var mkdirp = require('mkdirp');
 var API = require('./lib/pocketAPI');
 var Promise = require("bluebird");
 var _ = require('lodash');
 // globals
 // external data for creds.
 var credentials = require('./credentials.json');
+
+var dataDirname = 'data';
+
+// use substack's node-mkdirp, in case the dirname ever goes deeper.
+mkdirp.sync(dataDirname);
+mkdirp.sync(path.join(dataDirname,'podcasts'));
+
+function dump(base, response) {
+  var filename = path.join(dataDirname, base + '.json');
+  fs.writeFileSync(filename, JSON.stringify(response, null, 2));
+}
 
 //TODO: clean this up!
 function fetchall(uuid) {
@@ -51,7 +65,7 @@ function fetchall(uuid) {
             pages = _.pluck(pages, 'episodes');
             accum = accum.concat(_.flatten(pages));
             console.log('accum', _.pluck(accum, 'title')); // or title
-            require('fs').writeFileSync('data/'+uuid+'.json', JSON.stringify(accum, null, 2));
+            dump('podcasts/' + uuid, accum);
             return accum;
           });
 
@@ -76,8 +90,12 @@ API.sign_in(credentials)
   .then(fetchall("e4b6efd0-0424-012e-f9a0-00163e1b201c"))
   .then(API.podcasts_all())
   .then(function(response) {
+    dump('podcasts', response);
+    return response;
+  })
+  .then(function(response) {
     console.log('podcasts', _.pluck(response.podcasts, 'title'));
-    return Promise.map(_.pluck(response.podcasts,'uuid'), function(uuid){
+    return Promise.map(_.pluck(response.podcasts, 'uuid'), function(uuid) {
       console.log('-----fetchall', uuid);
       return fetchall(uuid)();
     }, {

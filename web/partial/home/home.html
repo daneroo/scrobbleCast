@@ -33,7 +33,7 @@
                 <h3>{{podcast.title}}</h3>
                 <h4>{{podcast.author}}</h4>
                 <md-content>
-                  <p>{{podcast.description}}</p>
+                  <p class="ellipsis">{{podcast.description}}</p>
                   <form ng-if="false" style="padding: 20px;">
                     <md-text-float label="url" ng-model="podcast.url" disabled> </md-text-float>
                     <div class="row">

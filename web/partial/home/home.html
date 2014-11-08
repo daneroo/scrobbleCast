@@ -14,7 +14,7 @@
   </div>
  -->
 
-  <md-content style="height: 600px;">
+  <md-content class="fullheight">
     <md-toolbar ng-if='true'>
       <h2 class="md-toolbar-tools">
         <span>Toolbar: default</span>
@@ -25,16 +25,23 @@
       <md-list layout="vertical" layout-fill>
         <md-item ng-repeat="podcast in podcasts">
           <md-item-content>
-            <md-whiteframe class="md-whiteframe-z1" layout layout-align="center center">
+            <md-whiteframe class="md-whiteframe-z1" layout layout-fill layout-align="center start">
               <div class="md-tile-left">
                   <img width="64" ng-src="{{podcast.thumbnail_url}}" class="face" alt="{podcast.title}}">
               </div>
               <div class="md-tile-content">
                 <h3>{{podcast.title}}</h3>
                 <h4>{{podcast.author}}</h4>
-                <p>
-                  {{podcast.episode}}
-                </p>
+                <md-content>
+                  <p>{{podcast.description}}</p>
+                  <form ng-if="false" style="padding: 20px;">
+                    <md-text-float label="url" ng-model="podcast.url" disabled> </md-text-float>
+                    <div class="row">
+                      <md-text-float label="id" ng-model="podcast.id" disabled> </md-text-float>
+                      <md-text-float label="uuid" ng-model="podcast.uuid" disabled> </md-text-float>
+                    </div>
+                  </form>
+                </md-content>
               </div>
             </md-whiteframe>
           </md-item-content>
@@ -47,16 +54,18 @@
       <md-list layout="vertical">
         <md-item ng-repeat="episode in in_progress.concat(new_releases)">
           <md-item-content>
-            <md-whiteframe class="md-whiteframe-z1" layout layout-align="center center">
+            <md-whiteframe class="md-whiteframe-z1" layout layout-fill layout-align="center start">
               <div class="md-tile-left">
                   <img ng-src="/images/podcast.jpg" class="face" alt="PodcastName">
               </div>
               <div class="md-tile-content">
                 <h3>{{episode.title}}</h3>
                 <h4>{{episode.published_at}}</h4>
-                <p>
-                  {{episode}}
-                </p>
+                <div>
+                  <i class="fa" ng-class="{'fa-star':episode.starred,'fa-star-o':!episode.starred,}"></i> Starred
+                  <i class="fa" ng-class="{'fa-trash':episode.is_deleted,'fa-trash-o':!episode.is_deleted,}"></i> Deleted
+                </div>
+                <!-- <p>{{episode}}</p> -->
               </div>
             </md-whiteframe>
           </md-item-content>

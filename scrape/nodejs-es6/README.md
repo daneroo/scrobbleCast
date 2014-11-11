@@ -12,8 +12,8 @@
   * all pages for a podcast:  Done, needs refactor
   * all podcasts (quick/deep, on fetchAll)
 * Store (file done)
-* Cron
-* Delta Events - storage (mongo? couch?)
+* Cron (Done for quick - remain:shallow/deep)
+* Delta Events - storage (file, firebase? mongo? couch?)
 * docker with creds in `ENV`
 
 ## Notes

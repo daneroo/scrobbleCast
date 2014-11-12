@@ -9,7 +9,7 @@
 
 var fs = require('fs');
 var path = require('path');
-// var mkdirp = require('mkdirp');
+var mkdirp = require('mkdirp');
 var Promise = require("bluebird");
 var glob = require("glob");
 var pglob = Promise.promisify(glob);
@@ -24,6 +24,7 @@ function resolve(file) {
 }
 
 var cachedNegative
+
 function loadJSON(file) {
   return require(resolve(file));
 }
@@ -52,8 +53,9 @@ function loadEpisodesForPodcast(podcast_uuid) {
   try {
     episodes = loadJSON(path.join('podcasts', podcast_uuid + '.json'));
   } catch (err) {
-    console.error('episodes not found for:', podcast_uuid, err);
-    console.error(' **creating empty Array to cache negative result');
+    // console.log('episodes not found for:', podcast_uuid, err);
+    console.log('episodes not found for:', podcast_uuid);
+    console.log(' **creating empty Array to cache negative result');
     episodes = [];
   }
   var episodeByUuid = _.groupBy(podcasts, 'uuid');
@@ -77,61 +79,91 @@ function find(pattern) {
     });
 }
 
-// should return merged (prefer from)
-function delta(from,to,stamp){
-  if (_.isEqual(from,to)){
-    console.log ('no differences');
-    return from;
+//  could merge to into from and return changes
+// but for now return
+// should return merged properties, (prefer from if equal)
+// should calculate and return changes
+// assume the objects are all shallow... (no nested properties)
+function delta(from, to) {
+  var changes = [];
+  var merged = from;
+  if (!_.isEqual(from, to)) {
+    var toKeys = _.keys(to);
+    var fromKeys = _.keys(from);
+    var allKeys = _.union(fromKeys, toKeys);
+
+    allKeys.forEach(function(key) {
+      var f = from[key];
+      var t = to[key];
+      var op;
+      if (_.isUndefined(f)) { // new key
+        op = 'new';
+        // console.log('--new key', key);
+      } else if (_.isUndefined(t)) { // deleted key
+        op = 'del';
+        // console.log('--del key', key);
+      } else if (!_.isEqual(f, t)) {
+        op = 'chg';
+        // console.log('--chg:', key, f, t)
+      }
+
+      // ignore deletions... 
+      // or maybe specific ones? (podcast_id)
+      // if (op) {
+      if (op && 'del' !== op) {
+        changes.push({
+          op: op,
+          key: key,
+          from: f,
+          to: t
+        });
+      }
+    });
+
+    // don't modify the from, make a copy.
+    merged = _.merge(_.merge({}, from), to);
   }
-  // key differences (shoulf not care about deleted keys, only new ones ?)
-  // new keys  
-  _.difference(_.keys(to), _.keys(from)).forEach(function(key){
-    console.log('--new key',key);
-  });
-  // deleted keys
-  // _.difference(_.keys(from), _.keys(to)).forEach(function(key){
-  //   console.log('--deleted key',key);
-  // });
 
-  // console.log ('has value differences?');
-  // console.log('from',from);
-  // console.log('to',to);
-  _.merge(from,to,function(a,b){
-    if (!_.isEqual(a,b)){
-      // TODO find the property name so we can log history
-      console.log('-- a != b',a,b);
-    }
-  })
-
-  // var a = { 'a': 1, 'b': 2, 'c': 3 };
-  // var b = { 'c': 3, 'd': 4, 'e': 5 };
-  // _.difference(_.keys(a), _.keys(b)); // ['a', 'b']
+  // if (changes.length) {
+  //   console.log('Δ', changes);
+  // }
+  return {
+    merged: merged,
+    changes: changes
+  }
 }
+
+function stampFromFile(file) {
+  var stamp = file.match(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z/);
+  if (stamp && stamp.length) {
+    stamp = new Date(stamp[0]);
+  }
+  return stamp;
+}
+
+var history = [];
 
 function handleEpisodeUpdate(file) {
   // console.log('do something with', file);
-  var stamp = file.match(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z/);
-  if (stamp && stamp.length) {
-    // console.log('stamp.match',JSON.stringify(stamp));
-    stamp = new Date(stamp[0]);
-  }
+  var stamp = stampFromFile(file);
   var episodes = loadJSON(file).episodes;
-  // console.log('in_progress',stamp,episodes.length);
   episodes.forEach(function(episode) {
-    // console.log('in_progress',stamp,episode);
-
-    // possible unknown pocast
-    // var podcast = podcastsByUuid[episode.podcast_uuid];
-    // if (!podcast) {
-    //   console.log('podcast not found for episode:', episode);
-    // }
-
     // possible unknown pocast or episode...
     var knownEpisodes = loadEpisodesForPodcast(episode.podcast_uuid);
     if (knownEpisodes[episode.uuid]) {
-      console.log('delta', episode.uuid);
-      delta(knownEpisodes[episode.uuid],episode,stamp);
-
+      var d = delta(knownEpisodes[episode.uuid], episode);
+      knownEpisodes[episode.uuid] = d.merged;
+      if (d.changes.length) {
+        console.log('Δ', episode.uuid, stamp.toJSON(), '\n', d.changes);
+        history.push({
+          stamp: stamp,
+          kind: 'episode',
+          // podcast_uuid ? if exists
+          uuid: episode.uuid,
+          source: file, // temporary for tracing
+          changes: d.changes
+        });
+      }
     } else {
       console.log('new Episode', episode.uuid);
       knownEpisodes[episode.uuid] = episode;
@@ -139,11 +171,89 @@ function handleEpisodeUpdate(file) {
   });
 }
 
-find('new_releases*.json')
+// temporary sort in_progress.YYMMDD, new_release.YYY by date, then new_release before in_pro
+// in progress, and new_releases, sort by order.
+function sortByDateThenReverseLexico(a, b) {
+  var aTime = stampFromFile(a);
+  aTime.setSeconds(0);
+  var bTime = stampFromFile(b);
+  bTime.setSeconds(0);
+  var diff = aTime.getTime() - bTime.getTime();
+  if (diff) {
+    return diff;
+  } else {
+    // reverse lexical file name: new_release before in_progress
+    return a.localeCompare(b);
+  }
+}
+
+function rewrite(file) {
+  console.log('-', file);
+  var stamp = stampFromFile(file);
+  stamp.setSeconds(0);
+  stamp = stamp.toJSON().replace(/\.\d{3}Z$/, 'Z');
+  var newfile = [file.split('.')[0], 'json'].join('.');
+  var dir = path.join(dataDirname, 'byDate', stamp);
+  mkdirp.sync(dir);
+  newfile = path.join(dir, newfile);
+  console.log('+', newfile);
+  fs.writeFileSync(newfile, fs.readFileSync(path.join(dataDirname, file)));
+}
+find('[ni]*.json')
   .then(function(files) {
-    files.forEach(handleEpisodeUpdate)
-  });
-find('in_progress*.json')
+    files.sort(sortByDateThenReverseLexico);
+    files.forEach(function(file) {
+      console.log((file.length < 38) ? ' ' : '', file);
+    });
+    return files;
+  })
   .then(function(files) {
-    files.forEach(handleEpisodeUpdate)
+    files.forEach(rewrite);
+    return files;
+  })
+  .then(function(files) {
+    files.forEach(handleEpisodeUpdate);
+    return files;
+  })
+  .then(function(files) {
+    fs.writeFileSync('history-old.json', JSON.stringify(history, null, 2));
+  })
+  .then(function() {
+    return find('byDate/*');
+  })
+  .then(function(dirs) {
+    // files.sort(sortByDateThenReverseLexico);
+    // dirs.forEach(function(dir){
+    //   console.log(dir);
+    // });
+    return Promise.map(dirs, function getFiles(dir) {
+      console.log('find files in dir', dir);
+      return find(path.join(dir, '*.json'))
+        .then(function(files) {
+          // so that new_release is before in_progress
+          files.reverse();
+          return files;
+        });
+    }).then(function(filesInDirs) {
+      return _.flatten(filesInDirs);
+    });
+  })
+  .then(function(files) {
+    history=[];// reset history
+    console.log('byDate.files', files);
+    files.forEach(handleEpisodeUpdate);
+    return files;
+  })
+  .then(function(files) {
+    fs.writeFileSync('history.json', JSON.stringify(history, null, 2));
   });
+
+// find('new_releases*.json')
+//   .then(function(files) {
+//     files.forEach(handleEpisodeUpdate)
+//   });
+
+// find('in_progress*.json')
+//   .then(function(files) {
+//     files.forEach(handleEpisodeUpdate)
+//   });

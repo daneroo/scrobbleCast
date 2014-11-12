@@ -198,6 +198,8 @@ function rewrite(file) {
   console.log('-', file);
   var stamp = stampFromFile(file);
   var newfile = [file.split('.')[0], 'json'].join('.');
+  newfile = newfile.replace('new_releases', '03-new_releases')
+  newfile = newfile.replace('in_progress', '04-in_progress')
 
   var dir = path.join(dataDirname, 'byDate', stamp);
   mkdirp.sync(dir);
@@ -205,12 +207,15 @@ function rewrite(file) {
   console.log('+', newfile);
   fs.writeFileSync(newfile, fs.readFileSync(path.join(dataDirname, file)));
 }
+
 find('[ni]*.json')
   .then(function(files) {
     files.sort(sortByDateThenReverseLexico);
     files.forEach(function(file) {
       console.log((file.length < 38) ? ' ' : '', file);
     });
+    fs.writeFileSync('old-files.json', JSON.stringify(files, null, 2));
+
     return files;
   })
   .then(function(files) {
@@ -225,32 +230,31 @@ find('[ni]*.json')
     fs.writeFileSync('history-old.json', JSON.stringify(history, null, 2));
   })
   .then(function() {
-    return find('byDate/*');
+    return find('byDate/**/*.json');
   })
-  .then(function(dirs) {
-    // files.sort(sortByDateThenReverseLexico);
-    // dirs.forEach(function(dir){
-    //   console.log(dir);
-    // });
-    return Promise.map(dirs, function getFiles(dir) {
-      console.log('find files in dir', dir);
-      return find(path.join(dir, '*.json'))
-        .then(function(files) {
-          // so that new_release is before in_progress
-          files.reverse();
-          return files;
-        });
-    }).then(function(filesInDirs) {
-      return _.flatten(filesInDirs);
-    });
-  })
-  .then(function(files) {
-    initialize();
+// .then(function(dirs) {
+//   return Promise.map(dirs, function getFiles(dir) {
+//     console.log('find files in dir', dir);
+//     return find(path.join(dir, '*.json'))
+//       .then(function(files) {
+//         // so that new_release is before in_progress
+//         files.reverse();
+//         return files;
+//       });
+//   }).then(function(filesInDirs) {
+//     return _.flatten(filesInDirs);
+//   });
+// })
+.then(function(files) {
+  files.sort();
+  initialize();
 
-    console.log('byDate.files', files);
-    files.forEach(handleEpisodeUpdate);
-    return files;
-  })
+  console.log('byDate.files', files);
+  files.forEach(handleEpisodeUpdate);
+  fs.writeFileSync('files.json', JSON.stringify(files, null, 2));
+
+  return files;
+})
   .then(function(files) {
     fs.writeFileSync('history.json', JSON.stringify(history, null, 2));
   });

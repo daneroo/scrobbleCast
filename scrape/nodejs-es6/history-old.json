@@ -1,22 +1,8 @@
 [
   {
-    "stamp": "2014-11-05T07:40:00.000Z",
+    "stamp": "2014-11-05T07:50:00Z",
     "kind": "episode",
     "uuid": "6ecc95b0-4539-0132-c9c7-5f4c86fd3263",
-    "source": "new_releases.2014-11-05T07:40:00Z.json",
-    "changes": [
-      {
-        "op": "new",
-        "key": "podcast_id",
-        "to": 248608
-      }
-    ]
-  },
-  {
-    "stamp": "2014-11-05T07:50:01.000Z",
-    "kind": "episode",
-    "uuid": "6ecc95b0-4539-0132-c9c7-5f4c86fd3263",
-    "source": "in_progress.2014-11-05T07:50:01Z.json",
     "changes": [
       {
         "op": "chg",
@@ -27,10 +13,9 @@
     ]
   },
   {
-    "stamp": "2014-11-05T08:07:01.000Z",
+    "stamp": "2014-11-05T08:07:00Z",
     "kind": "episode",
     "uuid": "9c7be780-46bc-0132-cab4-5f4c86fd3263",
-    "source": "in_progress.2014-11-05T08:07:01Z.json",
     "changes": [
       {
         "op": "new",
@@ -55,10 +40,9 @@
     ]
   },
   {
-    "stamp": "2014-11-05T09:05:01.000Z",
+    "stamp": "2014-11-05T09:05:00Z",
     "kind": "episode",
     "uuid": "9c7be780-46bc-0132-cab4-5f4c86fd3263",
-    "source": "in_progress.2014-11-05T09:05:01Z.json",
     "changes": [
       {
         "op": "chg",
@@ -69,10 +53,9 @@
     ]
   },
   {
-    "stamp": "2014-11-05T09:30:01.000Z",
+    "stamp": "2014-11-05T09:30:00Z",
     "kind": "episode",
     "uuid": "9c7be780-46bc-0132-cab4-5f4c86fd3263",
-    "source": "in_progress.2014-11-05T09:30:01Z.json",
     "changes": [
       {
         "op": "chg",
@@ -83,10 +66,9 @@
     ]
   },
   {
-    "stamp": "2014-11-05T09:41:01.000Z",
+    "stamp": "2014-11-05T09:41:00Z",
     "kind": "episode",
     "uuid": "9c7be780-46bc-0132-cab4-5f4c86fd3263",
-    "source": "in_progress.2014-11-05T09:41:01Z.json",
     "changes": [
       {
         "op": "chg",
@@ -97,10 +79,9 @@
     ]
   },
   {
-    "stamp": "2014-11-05T09:46:01.000Z",
+    "stamp": "2014-11-05T09:46:00Z",
     "kind": "episode",
     "uuid": "9c7be780-46bc-0132-cab4-5f4c86fd3263",
-    "source": "in_progress.2014-11-05T09:46:01Z.json",
     "changes": [
       {
         "op": "chg",
@@ -111,10 +92,9 @@
     ]
   },
   {
-    "stamp": "2014-11-05T10:02:01.000Z",
+    "stamp": "2014-11-05T10:02:00Z",
     "kind": "episode",
     "uuid": "9c7be780-46bc-0132-cab4-5f4c86fd3263",
-    "source": "in_progress.2014-11-05T10:02:01Z.json",
     "changes": [
       {
         "op": "chg",
@@ -125,10 +105,9 @@
     ]
   },
   {
-    "stamp": "2014-11-06T00:34:01.000Z",
+    "stamp": "2014-11-06T00:34:00Z",
     "kind": "episode",
     "uuid": "bc4c4af0-4740-0132-cb09-5f4c86fd3263",
-    "source": "in_progress.2014-11-06T00:34:01Z.json",
     "changes": [
       {
         "op": "new",
@@ -153,10 +132,9 @@
     ]
   },
   {
-    "stamp": "2014-11-06T02:24:01.000Z",
+    "stamp": "2014-11-06T02:24:00Z",
     "kind": "episode",
     "uuid": "bc4c4af0-4740-0132-cb09-5f4c86fd3263",
-    "source": "in_progress.2014-11-06T02:24:01Z.json",
     "changes": [
       {
         "op": "chg",
@@ -167,10 +145,9 @@
     ]
   },
   {
-    "stamp": "2014-11-06T05:16:01.000Z",
+    "stamp": "2014-11-06T05:16:00Z",
     "kind": "episode",
     "uuid": "660e0360-4788-0132-cb2b-5f4c86fd3263",
-    "source": "in_progress.2014-11-06T05:16:01Z.json",
     "changes": [
       {
         "op": "new",
@@ -195,10 +172,9 @@
     ]
   },
   {
-    "stamp": "2014-11-06T06:48:01.000Z",
+    "stamp": "2014-11-06T06:48:00Z",
     "kind": "episode",
     "uuid": "660e0360-4788-0132-cb2b-5f4c86fd3263",
-    "source": "in_progress.2014-11-06T06:48:01Z.json",
     "changes": [
       {
         "op": "chg",
@@ -209,10 +185,9 @@
     ]
   },
   {
-    "stamp": "2014-11-06T07:33:02.000Z",
+    "stamp": "2014-11-06T07:33:00Z",
     "kind": "episode",
     "uuid": "1d4710d0-4757-0132-cb13-5f4c86fd3263",
-    "source": "in_progress.2014-11-06T07:33:02Z.json",
     "changes": [
       {
         "op": "new",
@@ -237,10 +212,9 @@
     ]
   },
   {
-    "stamp": "2014-11-06T08:02:01.000Z",
+    "stamp": "2014-11-06T08:02:00Z",
     "kind": "episode",
     "uuid": "ee49c6a0-4796-0132-cb32-5f4c86fd3263",
-    "source": "in_progress.2014-11-06T08:02:01Z.json",
     "changes": [
       {
         "op": "new",
@@ -265,10 +239,9 @@
     ]
   },
   {
-    "stamp": "2014-11-06T09:55:01.000Z",
+    "stamp": "2014-11-06T09:55:00Z",
     "kind": "episode",
     "uuid": "ee49c6a0-4796-0132-cb32-5f4c86fd3263",
-    "source": "in_progress.2014-11-06T09:55:01Z.json",
     "changes": [
       {
         "op": "chg",
@@ -279,10 +252,9 @@
     ]
   },
   {
-    "stamp": "2014-11-06T10:40:01.000Z",
+    "stamp": "2014-11-06T10:40:00Z",
     "kind": "episode",
     "uuid": "ee49c6a0-4796-0132-cb32-5f4c86fd3263",
-    "source": "in_progress.2014-11-06T10:40:01Z.json",
     "changes": [
       {
         "op": "chg",
@@ -293,10 +265,9 @@
     ]
   },
   {
-    "stamp": "2014-11-06T19:50:02.000Z",
+    "stamp": "2014-11-06T19:50:00Z",
     "kind": "episode",
     "uuid": "03b1aaa0-46ac-0132-caa2-5f4c86fd3263",
-    "source": "in_progress.2014-11-06T19:50:02Z.json",
     "changes": [
       {
         "op": "new",
@@ -321,10 +292,9 @@
     ]
   },
   {
-    "stamp": "2014-11-06T21:40:01.000Z",
+    "stamp": "2014-11-06T21:40:00Z",
     "kind": "episode",
     "uuid": "03b1aaa0-46ac-0132-caa2-5f4c86fd3263",
-    "source": "in_progress.2014-11-06T21:40:01Z.json",
     "changes": [
       {
         "op": "chg",
@@ -335,10 +305,9 @@
     ]
   },
   {
-    "stamp": "2014-11-06T23:10:02.000Z",
+    "stamp": "2014-11-06T23:10:00Z",
     "kind": "episode",
     "uuid": "ade05310-481b-0132-cb7e-5f4c86fd3263",
-    "source": "in_progress.2014-11-06T23:10:02Z.json",
     "changes": [
       {
         "op": "new",
@@ -363,10 +332,9 @@
     ]
   },
   {
-    "stamp": "2014-11-06T23:20:02.000Z",
+    "stamp": "2014-11-06T23:20:00Z",
     "kind": "episode",
     "uuid": "ade05310-481b-0132-cb7e-5f4c86fd3263",
-    "source": "in_progress.2014-11-06T23:20:02Z.json",
     "changes": [
       {
         "op": "chg",
@@ -377,10 +345,9 @@
     ]
   },
   {
-    "stamp": "2014-11-06T23:20:02.000Z",
+    "stamp": "2014-11-06T23:20:00Z",
     "kind": "episode",
     "uuid": "72f6add0-4812-0132-cb7a-5f4c86fd3263",
-    "source": "new_releases.2014-11-06T23:20:02Z.json",
     "changes": [
       {
         "op": "new",
@@ -405,38 +372,9 @@
     ]
   },
   {
-    "stamp": "2014-11-07T01:10:01.000Z",
-    "kind": "episode",
-    "uuid": "6251a570-47f6-0132-cb6d-5f4c86fd3263",
-    "source": "in_progress.2014-11-07T01:10:01Z.json",
-    "changes": [
-      {
-        "op": "new",
-        "key": "playing_status",
-        "to": 2
-      },
-      {
-        "op": "new",
-        "key": "played_up_to",
-        "to": 230
-      },
-      {
-        "op": "new",
-        "key": "is_deleted",
-        "to": false
-      },
-      {
-        "op": "new",
-        "key": "starred",
-        "to": false
-      }
-    ]
-  },
-  {
-    "stamp": "2014-11-07T01:10:01.000Z",
+    "stamp": "2014-11-07T01:10:00Z",
     "kind": "episode",
     "uuid": "a1bdcae0-47fc-0132-cb70-5f4c86fd3263",
-    "source": "new_releases.2014-11-07T01:10:01Z.json",
     "changes": [
       {
         "op": "new",
@@ -461,10 +399,36 @@
     ]
   },
   {
-    "stamp": "2014-11-07T01:30:01.000Z",
+    "stamp": "2014-11-07T01:10:00Z",
+    "kind": "episode",
+    "uuid": "6251a570-47f6-0132-cb6d-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "new",
+        "key": "playing_status",
+        "to": 2
+      },
+      {
+        "op": "new",
+        "key": "played_up_to",
+        "to": 230
+      },
+      {
+        "op": "new",
+        "key": "is_deleted",
+        "to": false
+      },
+      {
+        "op": "new",
+        "key": "starred",
+        "to": false
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-07T01:30:00Z",
     "kind": "episode",
     "uuid": "7dc961b0-4846-0132-cb93-5f4c86fd3263",
-    "source": "in_progress.2014-11-07T01:30:01Z.json",
     "changes": [
       {
         "op": "new",
@@ -489,10 +453,9 @@
     ]
   },
   {
-    "stamp": "2014-11-07T02:00:02.000Z",
+    "stamp": "2014-11-07T02:00:00Z",
     "kind": "episode",
     "uuid": "41fef130-480b-0132-cb77-5f4c86fd3263",
-    "source": "in_progress.2014-11-07T02:00:02Z.json",
     "changes": [
       {
         "op": "new",
@@ -517,10 +480,9 @@
     ]
   },
   {
-    "stamp": "2014-11-07T02:10:01.000Z",
+    "stamp": "2014-11-07T02:10:00Z",
     "kind": "episode",
     "uuid": "9b9915a0-4804-0132-cb74-5f4c86fd3263",
-    "source": "in_progress.2014-11-07T02:10:01Z.json",
     "changes": [
       {
         "op": "new",
@@ -545,10 +507,9 @@
     ]
   },
   {
-    "stamp": "2014-11-07T06:50:02.000Z",
+    "stamp": "2014-11-07T06:50:00Z",
     "kind": "episode",
     "uuid": "a1bdcae0-47fc-0132-cb70-5f4c86fd3263",
-    "source": "in_progress.2014-11-07T06:50:02Z.json",
     "changes": [
       {
         "op": "chg",
@@ -559,10 +520,9 @@
     ]
   },
   {
-    "stamp": "2014-11-07T07:00:01.000Z",
+    "stamp": "2014-11-07T07:00:00Z",
     "kind": "episode",
     "uuid": "a1bdcae0-47fc-0132-cb70-5f4c86fd3263",
-    "source": "in_progress.2014-11-07T07:00:01Z.json",
     "changes": [
       {
         "op": "chg",
@@ -573,24 +533,9 @@
     ]
   },
   {
-    "stamp": "2014-11-07T08:10:02.000Z",
-    "kind": "episode",
-    "uuid": "a1bdcae0-47fc-0132-cb70-5f4c86fd3263",
-    "source": "in_progress.2014-11-07T08:10:02Z.json",
-    "changes": [
-      {
-        "op": "chg",
-        "key": "played_up_to",
-        "from": 1564,
-        "to": 2134
-      }
-    ]
-  },
-  {
-    "stamp": "2014-11-07T08:10:02.000Z",
+    "stamp": "2014-11-07T08:10:00Z",
     "kind": "episode",
     "uuid": "61db9410-487f-0132-cbb4-5f4c86fd3263",
-    "source": "new_releases.2014-11-07T08:10:02Z.json",
     "changes": [
       {
         "op": "chg",
@@ -621,10 +566,22 @@
     ]
   },
   {
-    "stamp": "2014-11-07T08:20:02.000Z",
+    "stamp": "2014-11-07T08:10:00Z",
     "kind": "episode",
     "uuid": "a1bdcae0-47fc-0132-cb70-5f4c86fd3263",
-    "source": "in_progress.2014-11-07T08:20:02Z.json",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "played_up_to",
+        "from": 1564,
+        "to": 2134
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-07T08:20:00Z",
+    "kind": "episode",
+    "uuid": "a1bdcae0-47fc-0132-cb70-5f4c86fd3263",
     "changes": [
       {
         "op": "chg",
@@ -635,10 +592,9 @@
     ]
   },
   {
-    "stamp": "2014-11-07T09:50:01.000Z",
+    "stamp": "2014-11-07T09:50:00Z",
     "kind": "episode",
     "uuid": "10333f60-4827-0132-cb84-5f4c86fd3263",
-    "source": "in_progress.2014-11-07T09:50:01Z.json",
     "changes": [
       {
         "op": "new",
@@ -663,10 +619,22 @@
     ]
   },
   {
-    "stamp": "2014-11-07T10:00:01.000Z",
+    "stamp": "2014-11-07T10:00:00Z",
+    "kind": "episode",
+    "uuid": "10333f60-4827-0132-cb84-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "played_up_to",
+        "from": 380,
+        "to": 390
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-07T10:00:00Z",
     "kind": "episode",
     "uuid": "7f82b100-4805-0132-cb74-5f4c86fd3263",
-    "source": "in_progress.2014-11-07T10:00:01Z.json",
     "changes": [
       {
         "op": "new",
@@ -691,24 +659,9 @@
     ]
   },
   {
-    "stamp": "2014-11-07T10:00:01.000Z",
-    "kind": "episode",
-    "uuid": "10333f60-4827-0132-cb84-5f4c86fd3263",
-    "source": "in_progress.2014-11-07T10:00:01Z.json",
-    "changes": [
-      {
-        "op": "chg",
-        "key": "played_up_to",
-        "from": 380,
-        "to": 390
-      }
-    ]
-  },
-  {
-    "stamp": "2014-11-07T10:40:02.000Z",
+    "stamp": "2014-11-07T10:40:00Z",
     "kind": "episode",
     "uuid": "7f82b100-4805-0132-cb74-5f4c86fd3263",
-    "source": "in_progress.2014-11-07T10:40:02Z.json",
     "changes": [
       {
         "op": "chg",
@@ -719,10 +672,9 @@
     ]
   },
   {
-    "stamp": "2014-11-07T10:50:02.000Z",
+    "stamp": "2014-11-07T10:50:00Z",
     "kind": "episode",
     "uuid": "7f82b100-4805-0132-cb74-5f4c86fd3263",
-    "source": "in_progress.2014-11-07T10:50:02Z.json",
     "changes": [
       {
         "op": "chg",
@@ -733,10 +685,9 @@
     ]
   },
   {
-    "stamp": "2014-11-07T11:30:02.000Z",
+    "stamp": "2014-11-07T11:30:00Z",
     "kind": "episode",
     "uuid": "10333f60-4827-0132-cb84-5f4c86fd3263",
-    "source": "in_progress.2014-11-07T11:30:02Z.json",
     "changes": [
       {
         "op": "chg",
@@ -747,10 +698,9 @@
     ]
   },
   {
-    "stamp": "2014-11-07T12:30:01.000Z",
+    "stamp": "2014-11-07T12:30:00Z",
     "kind": "episode",
     "uuid": "10333f60-4827-0132-cb84-5f4c86fd3263",
-    "source": "in_progress.2014-11-07T12:30:01Z.json",
     "changes": [
       {
         "op": "chg",
@@ -761,10 +711,9 @@
     ]
   },
   {
-    "stamp": "2014-11-07T13:30:01.000Z",
+    "stamp": "2014-11-07T13:30:00Z",
     "kind": "episode",
     "uuid": "10333f60-4827-0132-cb84-5f4c86fd3263",
-    "source": "in_progress.2014-11-07T13:30:01Z.json",
     "changes": [
       {
         "op": "chg",
@@ -775,10 +724,9 @@
     ]
   },
   {
-    "stamp": "2014-11-07T19:30:02.000Z",
+    "stamp": "2014-11-07T19:30:00Z",
     "kind": "episode",
     "uuid": "03b1aaa0-46ac-0132-caa2-5f4c86fd3263",
-    "source": "in_progress.2014-11-07T19:30:02Z.json",
     "changes": [
       {
         "op": "chg",
@@ -789,10 +737,9 @@
     ]
   },
   {
-    "stamp": "2014-11-07T20:30:02.000Z",
+    "stamp": "2014-11-07T20:30:00Z",
     "kind": "episode",
     "uuid": "03b1aaa0-46ac-0132-caa2-5f4c86fd3263",
-    "source": "in_progress.2014-11-07T20:30:02Z.json",
     "changes": [
       {
         "op": "chg",
@@ -803,10 +750,9 @@
     ]
   },
   {
-    "stamp": "2014-11-07T20:40:02.000Z",
+    "stamp": "2014-11-07T20:40:00Z",
     "kind": "episode",
     "uuid": "03b1aaa0-46ac-0132-caa2-5f4c86fd3263",
-    "source": "in_progress.2014-11-07T20:40:02Z.json",
     "changes": [
       {
         "op": "chg",
@@ -817,10 +763,9 @@
     ]
   },
   {
-    "stamp": "2014-11-07T20:50:02.000Z",
+    "stamp": "2014-11-07T20:50:00Z",
     "kind": "episode",
     "uuid": "03b1aaa0-46ac-0132-caa2-5f4c86fd3263",
-    "source": "in_progress.2014-11-07T20:50:02Z.json",
     "changes": [
       {
         "op": "chg",
@@ -831,10 +776,9 @@
     ]
   },
   {
-    "stamp": "2014-11-07T22:20:02.000Z",
+    "stamp": "2014-11-07T22:20:00Z",
     "kind": "episode",
     "uuid": "1cb7c550-48f5-0132-cbf0-5f4c86fd3263",
-    "source": "new_releases.2014-11-07T22:20:02Z.json",
     "changes": [
       {
         "op": "chg",
@@ -865,10 +809,9 @@
     ]
   },
   {
-    "stamp": "2014-11-08T02:40:00.000Z",
+    "stamp": "2014-11-08T02:40:00Z",
     "kind": "episode",
     "uuid": "81a213f0-4912-0132-cbff-5f4c86fd3263",
-    "source": "new_releases.2014-11-08T02:40:00Z.json",
     "changes": [
       {
         "op": "chg",
@@ -879,10 +822,9 @@
     ]
   },
   {
-    "stamp": "2014-11-08T05:40:01.000Z",
+    "stamp": "2014-11-08T05:40:00Z",
     "kind": "episode",
     "uuid": "b6c21390-48fe-0132-cbf5-5f4c86fd3263",
-    "source": "new_releases.2014-11-08T05:40:01Z.json",
     "changes": [
       {
         "op": "chg",
@@ -893,10 +835,9 @@
     ]
   },
   {
-    "stamp": "2014-11-08T05:40:01.000Z",
+    "stamp": "2014-11-08T05:40:00Z",
     "kind": "episode",
     "uuid": "b6c546f0-48fe-0132-cbf5-5f4c86fd3263",
-    "source": "new_releases.2014-11-08T05:40:01Z.json",
     "changes": [
       {
         "op": "chg",
@@ -907,10 +848,9 @@
     ]
   },
   {
-    "stamp": "2014-11-08T07:50:01.000Z",
+    "stamp": "2014-11-08T07:50:00Z",
     "kind": "episode",
     "uuid": "99e6cfe0-4947-0132-cc1c-5f4c86fd3263",
-    "source": "new_releases.2014-11-08T07:50:01Z.json",
     "changes": [
       {
         "op": "chg",
@@ -941,10 +881,9 @@
     ]
   },
   {
-    "stamp": "2014-11-08T12:20:01.000Z",
+    "stamp": "2014-11-08T12:20:00Z",
     "kind": "episode",
     "uuid": "2c7ca260-4904-0132-cbf8-5f4c86fd3263",
-    "source": "new_releases.2014-11-08T12:20:01Z.json",
     "changes": [
       {
         "op": "new",
@@ -969,10 +908,9 @@
     ]
   },
   {
-    "stamp": "2014-11-08T12:50:01.000Z",
+    "stamp": "2014-11-08T12:50:00Z",
     "kind": "episode",
     "uuid": "2c7ca260-4904-0132-cbf8-5f4c86fd3263",
-    "source": "in_progress.2014-11-08T12:50:01Z.json",
     "changes": [
       {
         "op": "chg",
@@ -983,10 +921,9 @@
     ]
   },
   {
-    "stamp": "2014-11-08T19:40:01.000Z",
+    "stamp": "2014-11-08T19:40:00Z",
     "kind": "episode",
     "uuid": "40c91d10-4990-0132-cc55-5f4c86fd3263",
-    "source": "in_progress.2014-11-08T19:40:01Z.json",
     "changes": [
       {
         "op": "new",
@@ -1011,10 +948,9 @@
     ]
   },
   {
-    "stamp": "2014-11-08T19:50:01.000Z",
+    "stamp": "2014-11-08T19:50:00Z",
     "kind": "episode",
     "uuid": "40c91d10-4990-0132-cc55-5f4c86fd3263",
-    "source": "in_progress.2014-11-08T19:50:01Z.json",
     "changes": [
       {
         "op": "chg",
@@ -1025,10 +961,9 @@
     ]
   },
   {
-    "stamp": "2014-11-08T20:00:01.000Z",
+    "stamp": "2014-11-08T20:00:00Z",
     "kind": "episode",
     "uuid": "40c91d10-4990-0132-cc55-5f4c86fd3263",
-    "source": "in_progress.2014-11-08T20:00:01Z.json",
     "changes": [
       {
         "op": "chg",
@@ -1039,10 +974,9 @@
     ]
   },
   {
-    "stamp": "2014-11-08T20:10:01.000Z",
+    "stamp": "2014-11-08T20:10:00Z",
     "kind": "episode",
     "uuid": "40c91d10-4990-0132-cc55-5f4c86fd3263",
-    "source": "in_progress.2014-11-08T20:10:01Z.json",
     "changes": [
       {
         "op": "chg",
@@ -1053,10 +987,9 @@
     ]
   },
   {
-    "stamp": "2014-11-08T20:20:01.000Z",
+    "stamp": "2014-11-08T20:20:00Z",
     "kind": "episode",
     "uuid": "61db9410-487f-0132-cbb4-5f4c86fd3263",
-    "source": "in_progress.2014-11-08T20:20:01Z.json",
     "changes": [
       {
         "op": "chg",
@@ -1073,10 +1006,9 @@
     ]
   },
   {
-    "stamp": "2014-11-08T20:30:01.000Z",
+    "stamp": "2014-11-08T20:30:00Z",
     "kind": "episode",
     "uuid": "61db9410-487f-0132-cbb4-5f4c86fd3263",
-    "source": "in_progress.2014-11-08T20:30:01Z.json",
     "changes": [
       {
         "op": "chg",
@@ -1087,10 +1019,9 @@
     ]
   },
   {
-    "stamp": "2014-11-08T20:40:01.000Z",
+    "stamp": "2014-11-08T20:40:00Z",
     "kind": "episode",
     "uuid": "61db9410-487f-0132-cbb4-5f4c86fd3263",
-    "source": "in_progress.2014-11-08T20:40:01Z.json",
     "changes": [
       {
         "op": "chg",
@@ -1101,10 +1032,9 @@
     ]
   },
   {
-    "stamp": "2014-11-08T21:00:02.000Z",
+    "stamp": "2014-11-08T21:00:00Z",
     "kind": "episode",
     "uuid": "b8f2d8a0-494f-0132-cc24-5f4c86fd3263",
-    "source": "in_progress.2014-11-08T21:00:02Z.json",
     "changes": [
       {
         "op": "new",
@@ -1129,10 +1059,9 @@
     ]
   },
   {
-    "stamp": "2014-11-08T21:20:01.000Z",
+    "stamp": "2014-11-08T21:20:00Z",
     "kind": "episode",
     "uuid": "030d9490-451e-0132-c9b8-5f4c86fd3263",
-    "source": "in_progress.2014-11-08T21:20:01Z.json",
     "changes": [
       {
         "op": "chg",
@@ -1163,10 +1092,9 @@
     ]
   },
   {
-    "stamp": "2014-11-08T21:30:01.000Z",
+    "stamp": "2014-11-08T21:30:00Z",
     "kind": "episode",
     "uuid": "030d9490-451e-0132-c9b8-5f4c86fd3263",
-    "source": "in_progress.2014-11-08T21:30:01Z.json",
     "changes": [
       {
         "op": "chg",
@@ -1177,10 +1105,9 @@
     ]
   },
   {
-    "stamp": "2014-11-08T21:50:01.000Z",
+    "stamp": "2014-11-08T21:50:00Z",
     "kind": "episode",
     "uuid": "030d9490-451e-0132-c9b8-5f4c86fd3263",
-    "source": "in_progress.2014-11-08T21:50:01Z.json",
     "changes": [
       {
         "op": "chg",
@@ -1191,10 +1118,9 @@
     ]
   },
   {
-    "stamp": "2014-11-08T22:00:01.000Z",
+    "stamp": "2014-11-08T22:00:00Z",
     "kind": "episode",
     "uuid": "030d9490-451e-0132-c9b8-5f4c86fd3263",
-    "source": "in_progress.2014-11-08T22:00:01Z.json",
     "changes": [
       {
         "op": "chg",
@@ -1205,10 +1131,9 @@
     ]
   },
   {
-    "stamp": "2014-11-08T22:20:01.000Z",
+    "stamp": "2014-11-08T22:20:00Z",
     "kind": "episode",
     "uuid": "70f29f30-48d4-0132-cbe1-5f4c86fd3263",
-    "source": "in_progress.2014-11-08T22:20:01Z.json",
     "changes": [
       {
         "op": "new",
@@ -1233,10 +1158,9 @@
     ]
   },
   {
-    "stamp": "2014-11-08T22:50:01.000Z",
+    "stamp": "2014-11-08T22:50:00Z",
     "kind": "episode",
     "uuid": "70f29f30-48d4-0132-cbe1-5f4c86fd3263",
-    "source": "in_progress.2014-11-08T22:50:01Z.json",
     "changes": [
       {
         "op": "chg",
@@ -1247,10 +1171,9 @@
     ]
   },
   {
-    "stamp": "2014-11-08T23:00:01.000Z",
+    "stamp": "2014-11-08T23:00:00Z",
     "kind": "episode",
     "uuid": "277ec520-4851-0132-cb98-5f4c86fd3263",
-    "source": "in_progress.2014-11-08T23:00:01Z.json",
     "changes": [
       {
         "op": "new",
@@ -1275,10 +1198,9 @@
     ]
   },
   {
-    "stamp": "2014-11-08T23:10:01.000Z",
+    "stamp": "2014-11-08T23:10:00Z",
     "kind": "episode",
     "uuid": "277ec520-4851-0132-cb98-5f4c86fd3263",
-    "source": "in_progress.2014-11-08T23:10:01Z.json",
     "changes": [
       {
         "op": "chg",
@@ -1289,10 +1211,9 @@
     ]
   },
   {
-    "stamp": "2014-11-08T23:20:01.000Z",
+    "stamp": "2014-11-08T23:20:00Z",
     "kind": "episode",
     "uuid": "277ec520-4851-0132-cb98-5f4c86fd3263",
-    "source": "in_progress.2014-11-08T23:20:01Z.json",
     "changes": [
       {
         "op": "chg",
@@ -1303,10 +1224,9 @@
     ]
   },
   {
-    "stamp": "2014-11-09T06:50:02.000Z",
+    "stamp": "2014-11-09T06:50:00Z",
     "kind": "episode",
     "uuid": "d188a9c0-495c-0132-cc2e-5f4c86fd3263",
-    "source": "in_progress.2014-11-09T06:50:02Z.json",
     "changes": [
       {
         "op": "new",
@@ -1331,10 +1251,9 @@
     ]
   },
   {
-    "stamp": "2014-11-09T06:50:02.000Z",
+    "stamp": "2014-11-09T06:50:00Z",
     "kind": "episode",
     "uuid": "277ec520-4851-0132-cb98-5f4c86fd3263",
-    "source": "in_progress.2014-11-09T06:50:02Z.json",
     "changes": [
       {
         "op": "chg",
@@ -1345,10 +1264,9 @@
     ]
   },
   {
-    "stamp": "2014-11-09T07:00:02.000Z",
+    "stamp": "2014-11-09T07:00:00Z",
     "kind": "episode",
     "uuid": "d188a9c0-495c-0132-cc2e-5f4c86fd3263",
-    "source": "in_progress.2014-11-09T07:00:02Z.json",
     "changes": [
       {
         "op": "chg",
@@ -1359,10 +1277,9 @@
     ]
   },
   {
-    "stamp": "2014-11-09T07:10:01.000Z",
+    "stamp": "2014-11-09T07:10:00Z",
     "kind": "episode",
     "uuid": "d188a9c0-495c-0132-cc2e-5f4c86fd3263",
-    "source": "in_progress.2014-11-09T07:10:01Z.json",
     "changes": [
       {
         "op": "chg",
@@ -1373,10 +1290,9 @@
     ]
   },
   {
-    "stamp": "2014-11-09T07:20:02.000Z",
+    "stamp": "2014-11-09T07:20:00Z",
     "kind": "episode",
     "uuid": "81a213f0-4912-0132-cbff-5f4c86fd3263",
-    "source": "in_progress.2014-11-09T07:20:02Z.json",
     "changes": [
       {
         "op": "new",
@@ -1401,10 +1317,9 @@
     ]
   },
   {
-    "stamp": "2014-11-09T07:40:01.000Z",
+    "stamp": "2014-11-09T07:40:00Z",
     "kind": "episode",
     "uuid": "81a213f0-4912-0132-cbff-5f4c86fd3263",
-    "source": "in_progress.2014-11-09T07:40:01Z.json",
     "changes": [
       {
         "op": "chg",
@@ -1415,24 +1330,9 @@
     ]
   },
   {
-    "stamp": "2014-11-09T09:20:02.000Z",
-    "kind": "episode",
-    "uuid": "81a213f0-4912-0132-cbff-5f4c86fd3263",
-    "source": "in_progress.2014-11-09T09:20:02Z.json",
-    "changes": [
-      {
-        "op": "chg",
-        "key": "played_up_to",
-        "from": 1724,
-        "to": 1883
-      }
-    ]
-  },
-  {
-    "stamp": "2014-11-09T09:20:02.000Z",
+    "stamp": "2014-11-09T09:20:00Z",
     "kind": "episode",
     "uuid": "946b09c0-4a11-0132-cc9f-5f4c86fd3263",
-    "source": "new_releases.2014-11-09T09:20:02Z.json",
     "changes": [
       {
         "op": "chg",
@@ -1463,10 +1363,22 @@
     ]
   },
   {
-    "stamp": "2014-11-09T09:40:01.000Z",
+    "stamp": "2014-11-09T09:20:00Z",
     "kind": "episode",
     "uuid": "81a213f0-4912-0132-cbff-5f4c86fd3263",
-    "source": "in_progress.2014-11-09T09:40:01Z.json",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "played_up_to",
+        "from": 1724,
+        "to": 1883
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-09T09:40:00Z",
+    "kind": "episode",
+    "uuid": "81a213f0-4912-0132-cbff-5f4c86fd3263",
     "changes": [
       {
         "op": "chg",
@@ -1477,10 +1389,9 @@
     ]
   },
   {
-    "stamp": "2014-11-09T10:20:02.000Z",
+    "stamp": "2014-11-09T10:20:00Z",
     "kind": "episode",
     "uuid": "9bf60b10-4a18-0132-cca6-5f4c86fd3263",
-    "source": "in_progress.2014-11-09T10:20:02Z.json",
     "changes": [
       {
         "op": "new",
@@ -1505,10 +1416,9 @@
     ]
   },
   {
-    "stamp": "2014-11-09T12:20:02.000Z",
+    "stamp": "2014-11-09T12:20:00Z",
     "kind": "episode",
     "uuid": "946b09c0-4a11-0132-cc9f-5f4c86fd3263",
-    "source": "in_progress.2014-11-09T12:20:02Z.json",
     "changes": [
       {
         "op": "chg",
@@ -1525,10 +1435,9 @@
     ]
   },
   {
-    "stamp": "2014-11-09T18:30:02.000Z",
+    "stamp": "2014-11-09T18:30:00Z",
     "kind": "episode",
     "uuid": "d0cc4f80-4a5f-0132-ccd2-5f4c86fd3263",
-    "source": "in_progress.2014-11-09T18:30:02Z.json",
     "changes": [
       {
         "op": "new",
@@ -1553,10 +1462,9 @@
     ]
   },
   {
-    "stamp": "2014-11-10T01:10:02.000Z",
+    "stamp": "2014-11-10T01:10:00Z",
     "kind": "episode",
     "uuid": "12c96de0-4738-0132-cb04-5f4c86fd3263",
-    "source": "in_progress.2014-11-10T01:10:02Z.json",
     "changes": [
       {
         "op": "new",
@@ -1581,10 +1489,9 @@
     ]
   },
   {
-    "stamp": "2014-11-10T02:30:02.000Z",
+    "stamp": "2014-11-10T02:30:00Z",
     "kind": "episode",
     "uuid": "baae5150-4aa3-0132-ccf2-5f4c86fd3263",
-    "source": "new_releases.2014-11-10T02:30:02Z.json",
     "changes": [
       {
         "op": "chg",
@@ -1615,10 +1522,9 @@
     ]
   },
   {
-    "stamp": "2014-11-10T05:20:02.000Z",
+    "stamp": "2014-11-10T05:20:00Z",
     "kind": "episode",
     "uuid": "684dd9c0-4abd-0132-cd03-5f4c86fd3263",
-    "source": "in_progress.2014-11-10T05:20:02Z.json",
     "changes": [
       {
         "op": "new",
@@ -1643,10 +1549,9 @@
     ]
   },
   {
-    "stamp": "2014-11-10T05:30:02.000Z",
+    "stamp": "2014-11-10T05:30:00Z",
     "kind": "episode",
     "uuid": "684dd9c0-4abd-0132-cd03-5f4c86fd3263",
-    "source": "in_progress.2014-11-10T05:30:02Z.json",
     "changes": [
       {
         "op": "chg",
@@ -1657,10 +1562,22 @@
     ]
   },
   {
-    "stamp": "2014-11-10T06:20:02.000Z",
+    "stamp": "2014-11-10T06:20:00Z",
+    "kind": "episode",
+    "uuid": "684dd9c0-4abd-0132-cd03-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "played_up_to",
+        "from": 1423,
+        "to": 1462
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-10T06:20:00Z",
     "kind": "episode",
     "uuid": "eee2c440-4a99-0132-ccee-5f4c86fd3263",
-    "source": "in_progress.2014-11-10T06:20:02Z.json",
     "changes": [
       {
         "op": "new",
@@ -1685,24 +1602,9 @@
     ]
   },
   {
-    "stamp": "2014-11-10T06:20:02.000Z",
-    "kind": "episode",
-    "uuid": "684dd9c0-4abd-0132-cd03-5f4c86fd3263",
-    "source": "in_progress.2014-11-10T06:20:02Z.json",
-    "changes": [
-      {
-        "op": "chg",
-        "key": "played_up_to",
-        "from": 1423,
-        "to": 1462
-      }
-    ]
-  },
-  {
-    "stamp": "2014-11-10T07:00:01.000Z",
+    "stamp": "2014-11-10T07:00:00Z",
     "kind": "episode",
     "uuid": "659781d0-4a82-0132-cce3-5f4c86fd3263",
-    "source": "in_progress.2014-11-10T07:00:01Z.json",
     "changes": [
       {
         "op": "new",
@@ -1727,10 +1629,9 @@
     ]
   },
   {
-    "stamp": "2014-11-10T07:20:02.000Z",
+    "stamp": "2014-11-10T07:20:00Z",
     "kind": "episode",
     "uuid": "659781d0-4a82-0132-cce3-5f4c86fd3263",
-    "source": "in_progress.2014-11-10T07:20:02Z.json",
     "changes": [
       {
         "op": "chg",
@@ -1741,10 +1642,9 @@
     ]
   },
   {
-    "stamp": "2014-11-10T09:00:01.000Z",
+    "stamp": "2014-11-10T09:00:00Z",
     "kind": "episode",
     "uuid": "659781d0-4a82-0132-cce3-5f4c86fd3263",
-    "source": "in_progress.2014-11-10T09:00:01Z.json",
     "changes": [
       {
         "op": "chg",
@@ -1755,10 +1655,9 @@
     ]
   },
   {
-    "stamp": "2014-11-10T09:10:01.000Z",
+    "stamp": "2014-11-10T09:10:00Z",
     "kind": "episode",
     "uuid": "6f693600-4aaa-0132-ccf6-5f4c86fd3263",
-    "source": "in_progress.2014-11-10T09:10:01Z.json",
     "changes": [
       {
         "op": "new",
@@ -1783,10 +1682,9 @@
     ]
   },
   {
-    "stamp": "2014-11-10T09:10:01.000Z",
+    "stamp": "2014-11-10T09:10:00Z",
     "kind": "episode",
     "uuid": "659781d0-4a82-0132-cce3-5f4c86fd3263",
-    "source": "in_progress.2014-11-10T09:10:01Z.json",
     "changes": [
       {
         "op": "chg",
@@ -1797,10 +1695,9 @@
     ]
   },
   {
-    "stamp": "2014-11-10T09:20:02.000Z",
+    "stamp": "2014-11-10T09:20:00Z",
     "kind": "episode",
     "uuid": "6f693600-4aaa-0132-ccf6-5f4c86fd3263",
-    "source": "in_progress.2014-11-10T09:20:02Z.json",
     "changes": [
       {
         "op": "chg",
@@ -1811,10 +1708,9 @@
     ]
   },
   {
-    "stamp": "2014-11-10T10:10:01.000Z",
+    "stamp": "2014-11-10T10:10:00Z",
     "kind": "episode",
     "uuid": "659781d0-4a82-0132-cce3-5f4c86fd3263",
-    "source": "in_progress.2014-11-10T10:10:01Z.json",
     "changes": [
       {
         "op": "chg",
@@ -1825,10 +1721,9 @@
     ]
   },
   {
-    "stamp": "2014-11-10T10:20:02.000Z",
+    "stamp": "2014-11-10T10:20:00Z",
     "kind": "episode",
     "uuid": "659781d0-4a82-0132-cce3-5f4c86fd3263",
-    "source": "in_progress.2014-11-10T10:20:02Z.json",
     "changes": [
       {
         "op": "chg",
@@ -1839,10 +1734,9 @@
     ]
   },
   {
-    "stamp": "2014-11-10T11:20:02.000Z",
+    "stamp": "2014-11-10T11:20:00Z",
     "kind": "episode",
     "uuid": "684dd9c0-4abd-0132-cd03-5f4c86fd3263",
-    "source": "in_progress.2014-11-10T11:20:02Z.json",
     "changes": [
       {
         "op": "chg",
@@ -1853,10 +1747,9 @@
     ]
   },
   {
-    "stamp": "2014-11-10T12:20:02.000Z",
+    "stamp": "2014-11-10T12:20:00Z",
     "kind": "episode",
     "uuid": "684dd9c0-4abd-0132-cd03-5f4c86fd3263",
-    "source": "in_progress.2014-11-10T12:20:02Z.json",
     "changes": [
       {
         "op": "chg",
@@ -1867,10 +1760,9 @@
     ]
   },
   {
-    "stamp": "2014-11-10T15:20:02.000Z",
+    "stamp": "2014-11-10T15:20:00Z",
     "kind": "episode",
     "uuid": "bb235e60-4afc-0132-cd26-5f4c86fd3263",
-    "source": "in_progress.2014-11-10T15:20:02Z.json",
     "changes": [
       {
         "op": "new",
@@ -1895,10 +1787,9 @@
     ]
   },
   {
-    "stamp": "2014-11-10T17:20:00.000Z",
+    "stamp": "2014-11-10T17:20:00Z",
     "kind": "episode",
     "uuid": "d289bcd0-4b1e-0132-cd36-5f4c86fd3263",
-    "source": "new_releases.2014-11-10T17:20:00Z.json",
     "changes": [
       {
         "op": "chg",
@@ -1929,10 +1820,9 @@
     ]
   },
   {
-    "stamp": "2014-11-10T20:50:01.000Z",
+    "stamp": "2014-11-10T20:50:00Z",
     "kind": "episode",
     "uuid": "13357220-4b43-0132-cd47-5f4c86fd3263",
-    "source": "in_progress.2014-11-10T20:50:01Z.json",
     "changes": [
       {
         "op": "new",
@@ -1957,10 +1847,9 @@
     ]
   },
   {
-    "stamp": "2014-11-10T22:30:01.000Z",
+    "stamp": "2014-11-10T22:30:00Z",
     "kind": "episode",
     "uuid": "13357220-4b43-0132-cd47-5f4c86fd3263",
-    "source": "in_progress.2014-11-10T22:30:01Z.json",
     "changes": [
       {
         "op": "chg",
@@ -1971,10 +1860,9 @@
     ]
   },
   {
-    "stamp": "2014-11-10T22:40:01.000Z",
+    "stamp": "2014-11-10T22:40:00Z",
     "kind": "episode",
     "uuid": "13357220-4b43-0132-cd47-5f4c86fd3263",
-    "source": "in_progress.2014-11-10T22:40:01Z.json",
     "changes": [
       {
         "op": "chg",
@@ -1985,10 +1873,9 @@
     ]
   },
   {
-    "stamp": "2014-11-11T05:50:01.000Z",
+    "stamp": "2014-11-11T05:50:00Z",
     "kind": "episode",
     "uuid": "9f022090-4b76-0132-cd60-5f4c86fd3263",
-    "source": "in_progress.2014-11-11T05:50:01Z.json",
     "changes": [
       {
         "op": "new",
@@ -2013,10 +1900,9 @@
     ]
   },
   {
-    "stamp": "2014-11-11T06:40:02.000Z",
+    "stamp": "2014-11-11T06:40:00Z",
     "kind": "episode",
     "uuid": "9f022090-4b76-0132-cd60-5f4c86fd3263",
-    "source": "in_progress.2014-11-11T06:40:02Z.json",
     "changes": [
       {
         "op": "chg",
@@ -2027,10 +1913,9 @@
     ]
   },
   {
-    "stamp": "2014-11-11T06:50:01.000Z",
+    "stamp": "2014-11-11T06:50:00Z",
     "kind": "episode",
     "uuid": "64e9bc50-4b79-0132-cd62-5f4c86fd3263",
-    "source": "in_progress.2014-11-11T06:50:01Z.json",
     "changes": [
       {
         "op": "new",
@@ -2055,10 +1940,22 @@
     ]
   },
   {
-    "stamp": "2014-11-11T07:00:01.000Z",
+    "stamp": "2014-11-11T07:00:00Z",
+    "kind": "episode",
+    "uuid": "64e9bc50-4b79-0132-cd62-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "played_up_to",
+        "from": 649,
+        "to": 1346
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-11T07:00:00Z",
     "kind": "episode",
     "uuid": "71686240-4b41-0132-cd46-5f4c86fd3263",
-    "source": "in_progress.2014-11-11T07:00:01Z.json",
     "changes": [
       {
         "op": "new",
@@ -2083,24 +1980,9 @@
     ]
   },
   {
-    "stamp": "2014-11-11T07:00:01.000Z",
-    "kind": "episode",
-    "uuid": "64e9bc50-4b79-0132-cd62-5f4c86fd3263",
-    "source": "in_progress.2014-11-11T07:00:01Z.json",
-    "changes": [
-      {
-        "op": "chg",
-        "key": "played_up_to",
-        "from": 649,
-        "to": 1346
-      }
-    ]
-  },
-  {
-    "stamp": "2014-11-11T07:10:01.000Z",
+    "stamp": "2014-11-11T07:10:00Z",
     "kind": "episode",
     "uuid": "d289bcd0-4b1e-0132-cd36-5f4c86fd3263",
-    "source": "in_progress.2014-11-11T07:10:01Z.json",
     "changes": [
       {
         "op": "chg",
@@ -2117,10 +1999,9 @@
     ]
   },
   {
-    "stamp": "2014-11-11T07:20:01.000Z",
+    "stamp": "2014-11-11T07:20:00Z",
     "kind": "episode",
     "uuid": "d289bcd0-4b1e-0132-cd36-5f4c86fd3263",
-    "source": "in_progress.2014-11-11T07:20:01Z.json",
     "changes": [
       {
         "op": "chg",
@@ -2131,10 +2012,9 @@
     ]
   },
   {
-    "stamp": "2014-11-11T07:40:01.000Z",
+    "stamp": "2014-11-11T07:40:00Z",
     "kind": "episode",
     "uuid": "64e9bc50-4b79-0132-cd62-5f4c86fd3263",
-    "source": "in_progress.2014-11-11T07:40:01Z.json",
     "changes": [
       {
         "op": "chg",
@@ -2145,10 +2025,9 @@
     ]
   },
   {
-    "stamp": "2014-11-11T08:00:01.000Z",
+    "stamp": "2014-11-11T08:00:00Z",
     "kind": "episode",
     "uuid": "64e9bc50-4b79-0132-cd62-5f4c86fd3263",
-    "source": "in_progress.2014-11-11T08:00:01Z.json",
     "changes": [
       {
         "op": "chg",
@@ -2159,10 +2038,9 @@
     ]
   },
   {
-    "stamp": "2014-11-11T09:50:02.000Z",
+    "stamp": "2014-11-11T09:50:00Z",
     "kind": "episode",
     "uuid": "64e9bc50-4b79-0132-cd62-5f4c86fd3263",
-    "source": "in_progress.2014-11-11T09:50:02Z.json",
     "changes": [
       {
         "op": "chg",
@@ -2173,10 +2051,9 @@
     ]
   },
   {
-    "stamp": "2014-11-11T10:00:01.000Z",
+    "stamp": "2014-11-11T10:00:00Z",
     "kind": "episode",
     "uuid": "875f5780-4b72-0132-cd5e-5f4c86fd3263",
-    "source": "new_releases.2014-11-11T10:00:01Z.json",
     "changes": [
       {
         "op": "chg",
@@ -2193,10 +2070,9 @@
     ]
   },
   {
-    "stamp": "2014-11-11T11:00:01.000Z",
+    "stamp": "2014-11-11T11:00:00Z",
     "kind": "episode",
     "uuid": "64e9bc50-4b79-0132-cd62-5f4c86fd3263",
-    "source": "in_progress.2014-11-11T11:00:01Z.json",
     "changes": [
       {
         "op": "chg",
@@ -2207,10 +2083,9 @@
     ]
   },
   {
-    "stamp": "2014-11-11T12:40:01.000Z",
+    "stamp": "2014-11-11T12:40:00Z",
     "kind": "episode",
     "uuid": "64e9bc50-4b79-0132-cd62-5f4c86fd3263",
-    "source": "in_progress.2014-11-11T12:40:01Z.json",
     "changes": [
       {
         "op": "chg",
@@ -2221,10 +2096,9 @@
     ]
   },
   {
-    "stamp": "2014-11-11T15:40:01.000Z",
+    "stamp": "2014-11-11T15:40:00Z",
     "kind": "episode",
     "uuid": "7169c200-4b41-0132-cd46-5f4c86fd3263",
-    "source": "in_progress.2014-11-11T15:40:01Z.json",
     "changes": [
       {
         "op": "new",
@@ -2245,6 +2119,150 @@
         "op": "new",
         "key": "starred",
         "to": false
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-12T01:10:00Z",
+    "kind": "episode",
+    "uuid": "6f3412d0-4c06-0132-cda5-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "new",
+        "key": "playing_status",
+        "to": 2
+      },
+      {
+        "op": "new",
+        "key": "played_up_to",
+        "to": 482
+      },
+      {
+        "op": "new",
+        "key": "is_deleted",
+        "to": false
+      },
+      {
+        "op": "new",
+        "key": "starred",
+        "to": false
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-12T01:20:00Z",
+    "kind": "episode",
+    "uuid": "12c96de0-4738-0132-cb04-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "played_up_to",
+        "from": 561,
+        "to": 975
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-12T02:30:00Z",
+    "kind": "episode",
+    "uuid": "12c96de0-4738-0132-cb04-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "played_up_to",
+        "from": 975,
+        "to": 1744
+      },
+      {
+        "op": "chg",
+        "key": "starred",
+        "from": false,
+        "to": true
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-12T02:40:00Z",
+    "kind": "episode",
+    "uuid": "12c96de0-4738-0132-cb04-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "played_up_to",
+        "from": 1744,
+        "to": 2052
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-12T03:30:00Z",
+    "kind": "episode",
+    "uuid": "1ecf75d0-4c3b-0132-cdbe-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "new",
+        "key": "playing_status",
+        "to": 2
+      },
+      {
+        "op": "new",
+        "key": "played_up_to",
+        "to": 558
+      },
+      {
+        "op": "new",
+        "key": "is_deleted",
+        "to": false
+      },
+      {
+        "op": "new",
+        "key": "starred",
+        "to": false
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-12T03:40:00Z",
+    "kind": "episode",
+    "uuid": "1ecf75d0-4c3b-0132-cdbe-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "played_up_to",
+        "from": 558,
+        "to": 1521
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-12T04:00:00Z",
+    "kind": "episode",
+    "uuid": "baae5150-4aa3-0132-ccf2-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "playing_status",
+        "from": null,
+        "to": 2
+      },
+      {
+        "op": "chg",
+        "key": "played_up_to",
+        "from": null,
+        "to": 1358
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-12T06:00:00Z",
+    "kind": "episode",
+    "uuid": "baae5150-4aa3-0132-ccf2-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "played_up_to",
+        "from": 1358,
+        "to": 2067
       }
     ]
   }

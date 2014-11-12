@@ -30,18 +30,27 @@ function loadJSON(file) {
 }
 
 // TODO: memoize these:
-var podcasts = loadJSON('podcasts.json').podcasts;
-// console.log(podcasts.length,podcasts[0]);
-var podcastsByUuid = _.groupBy(podcasts, 'uuid');
-// console.log(podcastsByUuid);
-// var podcastUuids = _.pluck(podcasts, 'uuid');
-// console.log(podcastUuids);
+var podcasts;
+var podcastsByUuid;
+var allEpisodesByUuid = {};
+var history = []; // reset history
 
-var allEpisodesByUuid = {
-  // podcast_uuid: {
-  //   episode_uuid: {epidode_itself}  
-  // }
-};
+function initialize() {
+  var podcasts = loadJSON('podcasts.json').podcasts;
+  // console.log(podcasts.length,podcasts[0]);
+
+  var podcastsByUuid = _.groupBy(podcasts, 'uuid');
+  // console.log(podcastsByUuid);
+
+  // nested lookup
+  allEpisodesByUuid = {
+    // podcast_uuid: {
+    //   episode_uuid: {epidode_itself}  
+    // }
+  };
+  history = []; // reset history
+}
+initialize();
 
 // return cached (accumulated value) if available
 function loadEpisodesForPodcast(podcast_uuid) {
@@ -137,11 +146,11 @@ function stampFromFile(file) {
   var stamp = file.match(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z/);
   if (stamp && stamp.length) {
     stamp = new Date(stamp[0]);
+    stamp.setSeconds(0);
+    stamp = stamp.toJSON().replace(/\.\d{3}Z$/, 'Z');
   }
   return stamp;
 }
-
-var history = [];
 
 function handleEpisodeUpdate(file) {
   // console.log('do something with', file);
@@ -154,13 +163,13 @@ function handleEpisodeUpdate(file) {
       var d = delta(knownEpisodes[episode.uuid], episode);
       knownEpisodes[episode.uuid] = d.merged;
       if (d.changes.length) {
-        console.log('Δ', episode.uuid, stamp.toJSON(), '\n', d.changes);
+        console.log('Δ', episode.uuid, stamp, '\n', d.changes);
         history.push({
           stamp: stamp,
           kind: 'episode',
           // podcast_uuid ? if exists
           uuid: episode.uuid,
-          source: file, // temporary for tracing
+          // source: file, // temporary for tracing
           changes: d.changes
         });
       }
@@ -174,25 +183,22 @@ function handleEpisodeUpdate(file) {
 // temporary sort in_progress.YYMMDD, new_release.YYY by date, then new_release before in_pro
 // in progress, and new_releases, sort by order.
 function sortByDateThenReverseLexico(a, b) {
-  var aTime = stampFromFile(a);
-  aTime.setSeconds(0);
-  var bTime = stampFromFile(b);
-  bTime.setSeconds(0);
-  var diff = aTime.getTime() - bTime.getTime();
+  var aStamp = stampFromFile(a);
+  var bStamp = stampFromFile(b);
+  var diff = aStamp.localeCompare(bStamp);
   if (diff) {
     return diff;
   } else {
     // reverse lexical file name: new_release before in_progress
-    return a.localeCompare(b);
+    return b.localeCompare(a);
   }
 }
 
 function rewrite(file) {
   console.log('-', file);
   var stamp = stampFromFile(file);
-  stamp.setSeconds(0);
-  stamp = stamp.toJSON().replace(/\.\d{3}Z$/, 'Z');
   var newfile = [file.split('.')[0], 'json'].join('.');
+
   var dir = path.join(dataDirname, 'byDate', stamp);
   mkdirp.sync(dir);
   newfile = path.join(dir, newfile);
@@ -239,7 +245,8 @@ find('[ni]*.json')
     });
   })
   .then(function(files) {
-    history=[];// reset history
+    initialize();
+
     console.log('byDate.files', files);
     files.forEach(handleEpisodeUpdate);
     return files;

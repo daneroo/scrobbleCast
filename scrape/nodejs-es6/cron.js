@@ -17,19 +17,33 @@ var dataDirname = 'data';
 // use substack's node-mkdirp, in case the dirname ever goes deeper.
 mkdirp.sync(dataDirname);
 
-
-function now() {
+// remove millis, round seconds, convert to iso8601 string
+function nowMinute() {
   // remove millis
-  return new Date().toJSON().replace(/\.\d{3}Z$/, 'Z');
+  var stamp = new Date();
+  stamp.setSeconds(0);
+  return stamp.toJSON().replace(/\.\d{3}Z$/, 'Z'); // iso8601, remove millis
 }
 
 function logStamp(message) {
   console.log(new Date().toJSON(), message);
 }
 
-function dump(base, response) {
-  var filename = path.join(dataDirname, base + '.' + now() + '.json');
-  fs.writeFileSync(filename, JSON.stringify(response, null, 2));
+function writeResponse(base, response) {
+  logStamp(base);
+  var stamp = nowMinute();
+  var content = JSON.stringify(response, null, 2);
+  // old way
+  var filename = path.join(dataDirname, base + '.' + stamp + '.json');
+  fs.writeFileSync(filename, content);
+  console.log('-', filename);
+
+  // new way
+  var dir = path.join(dataDirname, 'byDate', stamp);
+  mkdirp.sync(dir);
+  var newfile = path.join(dir, [base,'json'].join('.'));
+  console.log('+', newfile);
+  fs.writeFileSync(newfile, content);
 }
 
 function scrape() {
@@ -37,13 +51,11 @@ function scrape() {
   API.sign_in(credentials)
     .then(API.new_releases_episodes())
     .then(function(response) {
-      logStamp('new_releases');
-      dump('new_releases', response);
+      writeResponse('03-new_releases', response);
     })
     .then(API.in_progress_episodes())
     .then(function(response) {
-      console.log(new Date().toJSON(), 'in_progress');
-      dump('in_progress', response);
+      writeResponse('04-in_progress', response);
     });
 }
 

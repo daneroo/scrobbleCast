@@ -2711,5 +2711,45 @@
         "to": false
       }
     ]
+  },
+  {
+    "stamp": "2014-11-13T10:10:00Z",
+    "kind": "episode",
+    "uuid": "f1bd5080-4cff-0132-ce1b-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "played_up_to",
+        "from": 628,
+        "to": 647
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-13T10:10:00Z",
+    "kind": "episode",
+    "uuid": "5f531e70-4cba-0132-cdfb-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "new",
+        "key": "playing_status",
+        "to": 2
+      },
+      {
+        "op": "new",
+        "key": "played_up_to",
+        "to": 1450
+      },
+      {
+        "op": "new",
+        "key": "is_deleted",
+        "to": false
+      },
+      {
+        "op": "new",
+        "key": "starred",
+        "to": false
+      }
+    ]
   }
 ]

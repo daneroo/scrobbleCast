@@ -217,10 +217,6 @@ function rewrite(file) {
 find('0[34]-[ni]*.json')
   .then(function(files) {
     files.sort(sortByDateThenLexico);
-    // files.forEach(function(file) {
-    //   console.log((file.length < 38) ? ' ' : '', file);
-    // });
-    // fs.writeFileSync('old-files.json', JSON.stringify(files, null, 2));
     return files;
   })
   .then(function(files) {
@@ -240,32 +236,19 @@ find('0[34]-[ni]*.json')
     fs.writeFileSync('history-uuid-old.json', JSON.stringify(history, null, 2));
     return files;
   })
-  .then(function() {
+  .then(function() { // new stuff - starts here
     return find('byDate/**/*.json');
   })
-// .then(function(dirs) {
-//   return Promise.map(dirs, function getFiles(dir) {
-//     console.log('find files in dir', dir);
-//     return find(path.join(dir, '*.json'))
-//       .then(function(files) {
-//         // so that new_release is before in_progress
-//         files.reverse();
-//         return files;
-//       });
-//   }).then(function(filesInDirs) {
-//     return _.flatten(filesInDirs);
-//   });
-// })
-.then(function(files) {
-  initialize();
-  files.sort();
+  .then(function(files) {
+    initialize();
+    files.sort();
 
-  // console.log('byDate.files', files);
-  files.forEach(handleEpisodeUpdate);
-  // fs.writeFileSync('files.json', JSON.stringify(files, null, 2));
+    // console.log('byDate.files', files);
+    files.forEach(handleEpisodeUpdate);
+    // fs.writeFileSync('files.json', JSON.stringify(files, null, 2));
 
-  return files;
-})
+    return files;
+  })
   .then(function(files) {
     fs.writeFileSync('history.json', JSON.stringify(history, null, 2));
     return files;

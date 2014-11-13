@@ -64,7 +64,7 @@ function loadEpisodesForPodcast(podcast_uuid) {
   } catch (err) {
     // console.log('episodes not found for:', podcast_uuid, err);
     console.log('episodes not found for:', podcast_uuid);
-    console.log(' **creating empty Array to cache negative result');
+    // console.log(' **creating empty Array to cache negative result');
     episodes = [];
   }
   var episodeByUuid = _.groupBy(podcasts, 'uuid');
@@ -163,7 +163,7 @@ function handleEpisodeUpdate(file) {
       var d = delta(knownEpisodes[episode.uuid], episode);
       knownEpisodes[episode.uuid] = d.merged;
       if (d.changes.length) {
-        console.log('Δ', episode.uuid, stamp, '\n', d.changes);
+        // console.log('Δ', episode.uuid, stamp, '\n', d.changes);
         history.push({
           stamp: stamp,
           kind: 'episode',
@@ -174,7 +174,7 @@ function handleEpisodeUpdate(file) {
         });
       }
     } else {
-      console.log('new Episode', episode.uuid);
+      // console.log('new Episode', episode.uuid);
       knownEpisodes[episode.uuid] = episode;
     }
   });
@@ -182,7 +182,7 @@ function handleEpisodeUpdate(file) {
 
 // temporary sort in_progress.YYMMDD, new_release.YYY by date, then new_release before in_pro
 // in progress, and new_releases, sort by order.
-function sortByDateThenReverseLexico(a, b) {
+function sortByDateThenLexico(a, b) {
   var aStamp = stampFromFile(a);
   var bStamp = stampFromFile(b);
   var diff = aStamp.localeCompare(bStamp);
@@ -190,30 +190,36 @@ function sortByDateThenReverseLexico(a, b) {
     return diff;
   } else {
     // reverse lexical file name: new_release before in_progress
-    return b.localeCompare(a);
+    return a.localeCompare(b);
   }
 }
 
 function rewrite(file) {
-  console.log('-', file);
+  // console.log('-', file);
   var stamp = stampFromFile(file);
   var newfile = [file.split('.')[0], 'json'].join('.');
-  newfile = newfile.replace('new_releases', '03-new_releases')
-  newfile = newfile.replace('in_progress', '04-in_progress')
+  newfile = newfile.replace('^new_releases', '03-new_releases')
+  newfile = newfile.replace('^in_progress', '04-in_progress')
 
   var dir = path.join(dataDirname, 'byDate', stamp);
   mkdirp.sync(dir);
   newfile = path.join(dir, newfile);
-  console.log('+', newfile);
-  fs.writeFileSync(newfile, fs.readFileSync(path.join(dataDirname, file)));
+  // console.log('+', newfile);
+  if (!fs.existsSync(newfile)){
+    console.log('** missing *******',newfile);
+    // fs.writeFileSync(newfile, fs.readFileSync(path.join(dataDirname, file)));
+  } else {
+    // console.log('** found   *******',newfile);
+  }
+  // fs.writeFileSync(newfile, fs.readFileSync(path.join(dataDirname, file)));
 }
 
-find('[ni]*.json')
+find('0[34]-[ni]*.json')
   .then(function(files) {
-    files.sort(sortByDateThenReverseLexico);
-    files.forEach(function(file) {
-      console.log((file.length < 38) ? ' ' : '', file);
-    });
+    files.sort(sortByDateThenLexico);
+    // files.forEach(function(file) {
+    //   console.log((file.length < 38) ? ' ' : '', file);
+    // });
     fs.writeFileSync('old-files.json', JSON.stringify(files, null, 2));
 
     return files;
@@ -228,6 +234,12 @@ find('[ni]*.json')
   })
   .then(function(files) {
     fs.writeFileSync('history-old.json', JSON.stringify(history, null, 2));
+    return files;
+  })
+  .then(function(files) {
+    history = _.sortBy(history, ['uuid', 'stamp']);
+    fs.writeFileSync('history-uuid-old.json', JSON.stringify(history, null, 2));
+    return files;
   })
   .then(function() {
     return find('byDate/**/*.json');
@@ -246,10 +258,10 @@ find('[ni]*.json')
 //   });
 // })
 .then(function(files) {
-  files.sort();
   initialize();
+  files.sort();
 
-  console.log('byDate.files', files);
+  // console.log('byDate.files', files);
   files.forEach(handleEpisodeUpdate);
   fs.writeFileSync('files.json', JSON.stringify(files, null, 2));
 
@@ -257,8 +269,13 @@ find('[ni]*.json')
 })
   .then(function(files) {
     fs.writeFileSync('history.json', JSON.stringify(history, null, 2));
+    return files;
+  })
+  .then(function(files) {
+    history = _.sortBy(history, ['uuid', 'stamp']);
+    fs.writeFileSync('history-uuid.json', JSON.stringify(history, null, 2));
+    return files;
   });
-
 // find('new_releases*.json')
 //   .then(function(files) {
 //     files.forEach(handleEpisodeUpdate)

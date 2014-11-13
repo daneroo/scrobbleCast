@@ -2265,5 +2265,451 @@
         "to": 2067
       }
     ]
+  },
+  {
+    "stamp": "2014-11-12T07:30:00Z",
+    "kind": "episode",
+    "uuid": "65f65780-4b6b-0132-cd5b-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "new",
+        "key": "playing_status",
+        "to": 2
+      },
+      {
+        "op": "new",
+        "key": "played_up_to",
+        "to": 3
+      },
+      {
+        "op": "new",
+        "key": "is_deleted",
+        "to": false
+      },
+      {
+        "op": "new",
+        "key": "starred",
+        "to": false
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-12T07:30:00Z",
+    "kind": "episode",
+    "uuid": "a880c430-4b42-0132-cd47-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "new",
+        "key": "playing_status",
+        "to": 2
+      },
+      {
+        "op": "new",
+        "key": "played_up_to",
+        "to": 1238
+      },
+      {
+        "op": "new",
+        "key": "is_deleted",
+        "to": false
+      },
+      {
+        "op": "new",
+        "key": "starred",
+        "to": false
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-12T08:10:00Z",
+    "kind": "episode",
+    "uuid": "a880c430-4b42-0132-cd47-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "played_up_to",
+        "from": 1238,
+        "to": 3762
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-12T08:40:00Z",
+    "kind": "episode",
+    "uuid": "a880c430-4b42-0132-cd47-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "played_up_to",
+        "from": 3762,
+        "to": 3799
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-12T08:50:00Z",
+    "kind": "episode",
+    "uuid": "a880c430-4b42-0132-cd47-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "played_up_to",
+        "from": 3799,
+        "to": 3818
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-12T09:10:00Z",
+    "kind": "episode",
+    "uuid": "a880c430-4b42-0132-cd47-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "played_up_to",
+        "from": 3818,
+        "to": 4557
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-12T10:10:00Z",
+    "kind": "episode",
+    "uuid": "11c2a060-4c1b-0132-cdaf-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "new",
+        "key": "playing_status",
+        "to": 2
+      },
+      {
+        "op": "new",
+        "key": "played_up_to",
+        "to": 300
+      },
+      {
+        "op": "new",
+        "key": "is_deleted",
+        "to": false
+      },
+      {
+        "op": "new",
+        "key": "starred",
+        "to": false
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-12T11:10:00Z",
+    "kind": "episode",
+    "uuid": "3a7b53c0-4c0f-0132-cdaa-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "new",
+        "key": "playing_status",
+        "to": 2
+      },
+      {
+        "op": "new",
+        "key": "played_up_to",
+        "to": 261
+      },
+      {
+        "op": "new",
+        "key": "is_deleted",
+        "to": false
+      },
+      {
+        "op": "new",
+        "key": "starred",
+        "to": false
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-12T15:50:00Z",
+    "kind": "episode",
+    "uuid": "f4f17840-4c3d-0132-cdc0-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "title",
+        "from": "TYT-11.11.14",
+        "to": "The Young Turks - 11.11.14: Putin, Filibuster, Ebola, Marijuana & Video Game Study"
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-12T17:00:00Z",
+    "kind": "episode",
+    "uuid": "ce510f50-4cae-0132-cdf5-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "title",
+        "from": "Free Download: 'Intercepting a Shivery Light' by Composer Marcos Balter",
+        "to": "Bonus Track: 'Intercepting a Shivery Light' by Marcos Balter"
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-12T17:10:00Z",
+    "kind": "episode",
+    "uuid": "ce510f50-4cae-0132-cdf5-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "duration",
+        "from": null,
+        "to": 1057
+      },
+      {
+        "op": "new",
+        "key": "playing_status",
+        "to": null
+      },
+      {
+        "op": "new",
+        "key": "played_up_to",
+        "to": null
+      },
+      {
+        "op": "new",
+        "key": "is_deleted",
+        "to": false
+      },
+      {
+        "op": "new",
+        "key": "starred",
+        "to": false
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-12T18:00:00Z",
+    "kind": "episode",
+    "uuid": "12c96de0-4738-0132-cb04-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "played_up_to",
+        "from": 2052,
+        "to": 2174
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-12T18:30:00Z",
+    "kind": "episode",
+    "uuid": "12c96de0-4738-0132-cb04-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "played_up_to",
+        "from": 2174,
+        "to": 2930
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-12T19:30:00Z",
+    "kind": "episode",
+    "uuid": "12c96de0-4738-0132-cb04-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "played_up_to",
+        "from": 2930,
+        "to": 3236
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-12T22:20:00Z",
+    "kind": "episode",
+    "uuid": "3f141e50-4bbb-0132-cd82-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "new",
+        "key": "playing_status",
+        "to": 2
+      },
+      {
+        "op": "new",
+        "key": "played_up_to",
+        "to": null
+      },
+      {
+        "op": "new",
+        "key": "is_deleted",
+        "to": false
+      },
+      {
+        "op": "new",
+        "key": "starred",
+        "to": false
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-12T22:40:00Z",
+    "kind": "episode",
+    "uuid": "f4f17840-4c3d-0132-cdc0-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "new",
+        "key": "playing_status",
+        "to": 2
+      },
+      {
+        "op": "new",
+        "key": "played_up_to",
+        "to": null
+      },
+      {
+        "op": "new",
+        "key": "is_deleted",
+        "to": false
+      },
+      {
+        "op": "new",
+        "key": "starred",
+        "to": false
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-12T22:40:00Z",
+    "kind": "episode",
+    "uuid": "3f141e50-4bbb-0132-cd82-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "played_up_to",
+        "from": null,
+        "to": 994
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-13T05:50:00Z",
+    "kind": "episode",
+    "uuid": "be62d880-4ab8-0132-cd00-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "new",
+        "key": "playing_status",
+        "to": 2
+      },
+      {
+        "op": "new",
+        "key": "played_up_to",
+        "to": 1141
+      },
+      {
+        "op": "new",
+        "key": "is_deleted",
+        "to": false
+      },
+      {
+        "op": "new",
+        "key": "starred",
+        "to": false
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-13T06:10:00Z",
+    "kind": "episode",
+    "uuid": "13d16990-4bf9-0132-cd9f-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "new",
+        "key": "playing_status",
+        "to": 2
+      },
+      {
+        "op": "new",
+        "key": "played_up_to",
+        "to": null
+      },
+      {
+        "op": "new",
+        "key": "is_deleted",
+        "to": false
+      },
+      {
+        "op": "new",
+        "key": "starred",
+        "to": false
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-13T07:10:00Z",
+    "kind": "episode",
+    "uuid": "13d16990-4bf9-0132-cd9f-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "played_up_to",
+        "from": null,
+        "to": 3786
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-13T09:10:00Z",
+    "kind": "episode",
+    "uuid": "17509c60-4cd5-0132-ce07-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "new",
+        "key": "playing_status",
+        "to": 2
+      },
+      {
+        "op": "new",
+        "key": "played_up_to",
+        "to": 224
+      },
+      {
+        "op": "new",
+        "key": "is_deleted",
+        "to": false
+      },
+      {
+        "op": "new",
+        "key": "starred",
+        "to": false
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-13T09:40:00Z",
+    "kind": "episode",
+    "uuid": "f1bd5080-4cff-0132-ce1b-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "new",
+        "key": "playing_status",
+        "to": 2
+      },
+      {
+        "op": "new",
+        "key": "played_up_to",
+        "to": 628
+      },
+      {
+        "op": "new",
+        "key": "is_deleted",
+        "to": false
+      },
+      {
+        "op": "new",
+        "key": "starred",
+        "to": false
+      }
+    ]
   }
 ]

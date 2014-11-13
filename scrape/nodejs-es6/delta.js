@@ -23,8 +23,6 @@ function resolve(file) {
   return path.resolve(dataDirname, file);
 }
 
-var cachedNegative
-
 function loadJSON(file) {
   return require(resolve(file));
 }
@@ -180,6 +178,7 @@ function handleEpisodeUpdate(file) {
   });
 }
 
+// REMOVE
 // temporary sort in_progress.YYMMDD, new_release.YYY by date, then new_release before in_pro
 // in progress, and new_releases, sort by order.
 function sortByDateThenLexico(a, b) {
@@ -194,6 +193,7 @@ function sortByDateThenLexico(a, b) {
   }
 }
 
+// REMOVE temporary
 function rewrite(file) {
   // console.log('-', file);
   var stamp = stampFromFile(file);
@@ -205,8 +205,8 @@ function rewrite(file) {
   mkdirp.sync(dir);
   newfile = path.join(dir, newfile);
   // console.log('+', newfile);
-  if (!fs.existsSync(newfile)){
-    console.log('** missing *******',newfile);
+  if (!fs.existsSync(newfile)) {
+    console.log('** missing *******', newfile);
     // fs.writeFileSync(newfile, fs.readFileSync(path.join(dataDirname, file)));
   } else {
     // console.log('** found   *******',newfile);
@@ -220,12 +220,11 @@ find('0[34]-[ni]*.json')
     // files.forEach(function(file) {
     //   console.log((file.length < 38) ? ' ' : '', file);
     // });
-    fs.writeFileSync('old-files.json', JSON.stringify(files, null, 2));
-
+    // fs.writeFileSync('old-files.json', JSON.stringify(files, null, 2));
     return files;
   })
   .then(function(files) {
-    files.forEach(rewrite);
+    // files.forEach(rewrite);
     return files;
   })
   .then(function(files) {
@@ -263,7 +262,7 @@ find('0[34]-[ni]*.json')
 
   // console.log('byDate.files', files);
   files.forEach(handleEpisodeUpdate);
-  fs.writeFileSync('files.json', JSON.stringify(files, null, 2));
+  // fs.writeFileSync('files.json', JSON.stringify(files, null, 2));
 
   return files;
 })
@@ -276,12 +275,3 @@ find('0[34]-[ni]*.json')
     fs.writeFileSync('history-uuid.json', JSON.stringify(history, null, 2));
     return files;
   });
-// find('new_releases*.json')
-//   .then(function(files) {
-//     files.forEach(handleEpisodeUpdate)
-//   });
-
-// find('in_progress*.json')
-//   .then(function(files) {
-//     files.forEach(handleEpisodeUpdate)
-//   });

@@ -34,7 +34,8 @@ var allEpisodesByUuid = {};
 var history = []; // reset history
 
 function initialize() {
-  var podcasts = loadJSON('podcasts.json').podcasts;
+  var prefix = 'byDate//2014-11-07T08:34:00Z/';
+  var podcasts = loadJSON(prefix + 'podcasts.json').podcasts;
   // console.log(podcasts.length,podcasts[0]);
 
   var podcastsByUuid = _.groupBy(podcasts, 'uuid');
@@ -58,7 +59,9 @@ function loadEpisodesForPodcast(podcast_uuid) {
     return episodes;
   }
   try {
-    episodes = loadJSON(path.join('podcasts', podcast_uuid + '.json'));
+    var prefix = 'byDate//2014-11-07T08:34:00Z/';
+
+    episodes = loadJSON(path.join(prefix+'podcasts', podcast_uuid + '.json'));
   } catch (err) {
     // console.log('episodes not found for:', podcast_uuid, err);
     console.log('episodes not found for:', podcast_uuid);
@@ -178,7 +181,7 @@ function handleEpisodeUpdate(file) {
   });
 }
 
-find('byDate/**/*.json')
+find('byDate/**/0[34]*.json')
   .then(function(files) {
     initialize();
     files.sort();

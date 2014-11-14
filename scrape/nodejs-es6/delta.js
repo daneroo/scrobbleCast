@@ -178,67 +178,7 @@ function handleEpisodeUpdate(file) {
   });
 }
 
-// REMOVE
-// temporary sort in_progress.YYMMDD, new_release.YYY by date, then new_release before in_pro
-// in progress, and new_releases, sort by order.
-function sortByDateThenLexico(a, b) {
-  var aStamp = stampFromFile(a);
-  var bStamp = stampFromFile(b);
-  var diff = aStamp.localeCompare(bStamp);
-  if (diff) {
-    return diff;
-  } else {
-    // reverse lexical file name: new_release before in_progress
-    return a.localeCompare(b);
-  }
-}
-
-// REMOVE temporary
-function rewrite(file) {
-  // console.log('-', file);
-  var stamp = stampFromFile(file);
-  var newfile = [file.split('.')[0], 'json'].join('.');
-  newfile = newfile.replace('^new_releases', '03-new_releases')
-  newfile = newfile.replace('^in_progress', '04-in_progress')
-
-  var dir = path.join(dataDirname, 'byDate', stamp);
-  mkdirp.sync(dir);
-  newfile = path.join(dir, newfile);
-  // console.log('+', newfile);
-  if (!fs.existsSync(newfile)) {
-    console.log('** missing *******', newfile);
-    // fs.writeFileSync(newfile, fs.readFileSync(path.join(dataDirname, file)));
-  } else {
-    // console.log('** found   *******',newfile);
-  }
-  // fs.writeFileSync(newfile, fs.readFileSync(path.join(dataDirname, file)));
-}
-
-find('0[34]-[ni]*.json')
-  .then(function(files) {
-    files.sort(sortByDateThenLexico);
-    return files;
-  })
-  .then(function(files) {
-    // files.forEach(rewrite);
-    return files;
-  })
-  .then(function(files) {
-    files.forEach(handleEpisodeUpdate);
-    return files;
-  })
-  .then(function(files) {
-    fs.writeFileSync('history-old.json', JSON.stringify(history, null, 2));
-    return files;
-  })
-  .then(function(files) {
-    history = _.sortBy(history, ['uuid', 'stamp']);
-    fs.writeFileSync('history-uuid-old.json', JSON.stringify(history, null, 2));
-    return files;
-  })
-  .then(function() { // new stuff - starts here
-    return find('byDate/**/*.json');
-  })
+find('byDate/**/*.json')
   .then(function(files) {
     initialize();
     files.sort();

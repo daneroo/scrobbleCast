@@ -3148,5 +3148,126 @@
         "to": false
       }
     ]
+  },
+  {
+    "stamp": "2014-11-14T06:10:00Z",
+    "kind": "episode",
+    "uuid": "4bbbb200-4da9-0132-ce6e-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "new",
+        "key": "playing_status",
+        "to": 2
+      },
+      {
+        "op": "new",
+        "key": "played_up_to",
+        "to": 610
+      },
+      {
+        "op": "new",
+        "key": "is_deleted",
+        "to": false
+      },
+      {
+        "op": "new",
+        "key": "starred",
+        "to": false
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-14T06:30:00Z",
+    "kind": "episode",
+    "uuid": "4bbbb200-4da9-0132-ce6e-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "played_up_to",
+        "from": 610,
+        "to": 630
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-14T06:30:00Z",
+    "kind": "episode",
+    "uuid": "738cb5a0-4d85-0132-ce5d-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "new",
+        "key": "playing_status",
+        "to": 2
+      },
+      {
+        "op": "new",
+        "key": "played_up_to",
+        "to": null
+      },
+      {
+        "op": "new",
+        "key": "is_deleted",
+        "to": false
+      },
+      {
+        "op": "new",
+        "key": "starred",
+        "to": false
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-14T06:30:00Z",
+    "kind": "episode",
+    "uuid": "21b1beb0-4cf9-0132-ce18-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "new",
+        "key": "playing_status",
+        "to": 2
+      },
+      {
+        "op": "new",
+        "key": "played_up_to",
+        "to": null
+      },
+      {
+        "op": "new",
+        "key": "is_deleted",
+        "to": false
+      },
+      {
+        "op": "new",
+        "key": "starred",
+        "to": false
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-14T06:30:00Z",
+    "kind": "episode",
+    "uuid": "6054e0e0-4dce-0132-ce7f-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "new",
+        "key": "playing_status",
+        "to": 2
+      },
+      {
+        "op": "new",
+        "key": "played_up_to",
+        "to": 2030
+      },
+      {
+        "op": "new",
+        "key": "is_deleted",
+        "to": false
+      },
+      {
+        "op": "new",
+        "key": "starred",
+        "to": false
+      }
+    ]
   }
 ]

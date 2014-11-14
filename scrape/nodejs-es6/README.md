@@ -13,6 +13,7 @@
   * all pages for a podcast:  Done, needs refactor
   * all podcasts (quick/deep, on fetchAll)
 * Delta Events
+  * byUser/byPocast/byStamp
   * storage (history)
   * refcator (cleanup)
   * include quick/shallow/deep

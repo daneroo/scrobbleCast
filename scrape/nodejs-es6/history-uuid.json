@@ -3231,6 +3231,33 @@
     ]
   },
   {
+    "stamp": "2014-11-14T09:00:00Z",
+    "kind": "episode",
+    "uuid": "f1d7f2c0-4d99-0132-ce66-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "new",
+        "key": "playing_status",
+        "to": 2
+      },
+      {
+        "op": "new",
+        "key": "played_up_to",
+        "to": 460
+      },
+      {
+        "op": "new",
+        "key": "is_deleted",
+        "to": false
+      },
+      {
+        "op": "new",
+        "key": "starred",
+        "to": false
+      }
+    ]
+  },
+  {
     "stamp": "2014-11-12T15:50:00Z",
     "kind": "episode",
     "uuid": "f4f17840-4c3d-0132-cdc0-5f4c86fd3263",

@@ -29,16 +29,12 @@ function logStamp(message) {
   console.log(new Date().toJSON(), message);
 }
 
+//TODO: gonna need user id
 function writeResponse(base, response) {
   logStamp(base);
   var stamp = nowMinute();
   var content = JSON.stringify(response, null, 2);
-  // old way
-  var filename = path.join(dataDirname, base + '.' + stamp + '.json');
-  fs.writeFileSync(filename, content);
-  console.log('-', filename);
 
-  // new way
   var dir = path.join(dataDirname, 'byDate', stamp);
   mkdirp.sync(dir);
   var newfile = path.join(dir, [base,'json'].join('.'));

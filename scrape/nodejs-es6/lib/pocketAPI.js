@@ -42,22 +42,24 @@ function speedLimit(input) {
 
 // JSON post with param (requires prior login)
 function fetch(path, params) {
+  var verbose=false;
   return function() {
     // if (params && params.page){
     //   console.log('fetching page',params.page);
     // }
     return rp(helper.reqJSON(path, params))
       .then(function(response) {
-        // console.log('XSRF', helper.XSRF());
-        console.log('* path', path);
-        if (response.episodes) {
-          console.log('    * episodes', response.episodes.length);
-        }
-        if (response.podcasts) {
-          console.log('    * podcasts', response.podcasts.length);
-        }
-        if (response.result && response.result.episodes) {
-          console.log('    * podcasts.page len,total:', response.result.episodes.length,response.result.total);
+        if (verbose){
+          console.log('* path', path);
+          if (response.episodes) {
+            console.log('    * episodes', response.episodes.length);
+          }
+          if (response.podcasts) {
+            console.log('    * podcasts', response.podcasts.length);
+          }
+          if (response.result && response.result.episodes) {
+            console.log('    * podcasts.page len,total:', response.result.episodes.length,response.result.total);
+          }
         }
         return response;
       });
@@ -89,7 +91,7 @@ function sign_in(credentials) {
           reject('Login NOT OK');
         }).catch(function(error) { // error: {error:,options,response,statusCode}
           if (error.statusCode === 302 && error.response.headers.location === helper.baseUri + '/') {
-            console.log('Got expected 302 ERROR, resolving');
+            console.log('Login OK: Got expected redirection: 302');
             resolve('Login OK');
           } else {
             console.log('Got unexpected ERROR, reject.', error);

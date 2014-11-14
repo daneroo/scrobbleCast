@@ -9,6 +9,7 @@
 
 * [gulp](https://github.com/youngmountain/generator-node-gulp)
 * test
+* instead of logging, broadcast/pubsub messages: (can sync to Firebase)
 * compose 
   * all pages for a podcast:  Done, needs refactor
   * all podcasts (quick/deep, on fetchAll)

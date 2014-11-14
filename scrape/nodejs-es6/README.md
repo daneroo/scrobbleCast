@@ -7,17 +7,18 @@
 
 ## TODO
 
+* Delta Events
+  * prefix files: with 01-podcasts.json,02-podcasts/
+  * byUser/byPocast/byStamp
+  * storage (history)
+  * refcator (cleanup)
+  * include quick/shallow/deep
 * [gulp](https://github.com/youngmountain/generator-node-gulp)
 * test
 * instead of logging, broadcast/pubsub messages: (can sync to Firebase)
 * compose 
   * all pages for a podcast:  Done, needs refactor
   * all podcasts (quick/deep, on fetchAll)
-* Delta Events
-  * byUser/byPocast/byStamp
-  * storage (history)
-  * refcator (cleanup)
-  * include quick/shallow/deep
 * Cron (Done for quick - remain:shallow/deep)
 * docker with creds in `ENV`
 

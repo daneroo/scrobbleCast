@@ -7,7 +7,7 @@ var helper = require('./reqHelpers');
 var RateLimiter = require('limiter').RateLimiter;
 
 // globals limiter might be configures, injected, credentials as well...
-var limiter = new RateLimiter(5, 1000);
+var limiter = new RateLimiter(20, 1000);
 var paths = {
   sign_in: '/users/sign_in',
   podcasts_all: '/web/podcasts/all.json',

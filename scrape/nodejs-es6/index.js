@@ -1,26 +1,16 @@
 "use strict";
 
-// dependencies
-var fs = require('fs');
-var path = require('path');
-var mkdirp = require('mkdirp');
-var API = require('./lib/pocketAPI');
+// dependencies - core-public-internal
 var Promise = require("bluebird");
 var _ = require('lodash');
+
+// dependencies - internal
+var API = require('./lib/pocketAPI');
+var utils = require('./lib/utils');
+
 // globals
-// external data for creds.
+// external data for creds. candidate for config
 var credentials = require('./credentials.json');
-
-var dataDirname = 'data';
-
-// use substack's node-mkdirp, in case the dirname ever goes deeper.
-mkdirp.sync(dataDirname);
-mkdirp.sync(path.join(dataDirname,'podcasts'));
-
-function dump(base, response) {
-  var filename = path.join(dataDirname, base + '.json');
-  fs.writeFileSync(filename, JSON.stringify(response, null, 2));
-}
 
 //TODO: clean this up!
 function fetchall(uuid) {
@@ -56,7 +46,6 @@ function fetchall(uuid) {
           return page + 2;
         });
 
-        console.log('fetch the rest:', restOfPages);
         return Promise.map(restOfPages, fetchPage, {
             concurrency: 1
           })
@@ -64,8 +53,8 @@ function fetchall(uuid) {
             // console.log('pages',pages);
             pages = _.pluck(pages, 'episodes');
             accum = accum.concat(_.flatten(pages));
-            console.log('accum', _.pluck(accum, 'title')); // or title
-            dump('podcasts/' + uuid, accum);
+            utils.logStamp('Fetched '+accum.length+' episodes');
+            utils.writeResponse('podcasts/' + uuid, accum);
             return accum;
           });
 
@@ -73,35 +62,48 @@ function fetchall(uuid) {
   }
 }
 
-// Adventures in Angluar
-// History of Rome
-API.sign_in(credentials)
-  .then(API.new_releases_episodes())
-  .then(API.in_progress_episodes())
-  .then(API.find_by_podcast({
-    uuid: "80931490-01be-0132-a0fb-5f4c86fd3263", // Adventures in Angluar
-    page: 1
-  }))
-  .then(API.find_by_podcast({
-    uuid: "e4b6efd0-0424-012e-f9a0-00163e1b201c", // History of Rome
-    page: 16
-  }))
-  .then(fetchall("80931490-01be-0132-a0fb-5f4c86fd3263"))
-  .then(fetchall("e4b6efd0-0424-012e-f9a0-00163e1b201c"))
-  .then(API.podcasts_all())
-  .then(function(response) {
-    dump('podcasts', response);
-    return response;
-  })
-  .then(function(response) {
-    console.log('podcasts', _.pluck(response.podcasts, 'title'));
-    return Promise.map(_.pluck(response.podcasts, 'uuid'), function(uuid) {
-      console.log('-----fetchall', uuid);
-      return fetchall(uuid)();
-    }, {
-      concurrency: 1
+  API.sign_in(credentials)
+    .then(API.podcasts_all())
+    .then(function(response) {
+      utils.writeResponse('podcasts', response);
+      return response.podcasts;
+    })
+    .then(function(podcasts) {
+      utils.logStamp('Found '+podcasts.length+' podcasts');
+
+      // just for lookupFun
+      var podcastByUuid = _.groupBy(podcasts,'uuid');
+      // assert unique uuids - 
+
+      return Promise.map(_.pluck(podcasts, 'uuid'), function(uuid) {
+        utils.logStamp('Fetching: '+podcastByUuid[uuid][0].title);
+        return fetchall(uuid)();
+      }, {
+        concurrency: 3
+      });
+    })
+    .catch(function(error) {
+      console.log('+++catch+++ ERROR', error);
     });
-  })
-  .catch(function(error) {
-    console.log('+++catch+++ ERROR', error);
-  });
+
+
+if (0) { // Just an example exercising the API.
+  // Adventures in Angluar
+  // History of Rome
+  API.sign_in(credentials)
+    .then(API.new_releases_episodes())
+    .then(API.in_progress_episodes())
+    .then(API.find_by_podcast({
+      uuid: "80931490-01be-0132-a0fb-5f4c86fd3263", // Adventures in Angluar
+      page: 1
+    }))
+    .then(API.find_by_podcast({
+      uuid: "e4b6efd0-0424-012e-f9a0-00163e1b201c", // History of Rome
+      page: 16
+    }))
+    .then(fetchall("80931490-01be-0132-a0fb-5f4c86fd3263"))
+    .then(fetchall("e4b6efd0-0424-012e-f9a0-00163e1b201c"))
+    .catch(function(error) {
+      console.log('+++catch+++ ERROR', error);
+    });
+}

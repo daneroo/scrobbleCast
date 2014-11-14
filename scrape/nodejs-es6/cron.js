@@ -17,27 +17,32 @@ var dataDirname = 'data';
 // use substack's node-mkdirp, in case the dirname ever goes deeper.
 mkdirp.sync(dataDirname);
 
-// remove millis, round seconds, convert to iso8601 string
-function nowMinute() {
-  // remove millis
-  var stamp = new Date();
-  stamp.setSeconds(0);
-  return stamp.toJSON().replace(/\.\d{3}Z$/, 'Z'); // iso8601, remove millis
-}
-
+// pubsub would be good
 function logStamp(message) {
   console.log(new Date().toJSON(), message);
 }
 
-//TODO: gonna need user id
+
+// TODO: gonna need user id
+// merge with version in index, and move to lib
 function writeResponse(base, response) {
+  // remove millis, round seconds, convert to iso8601 string
+  function nowMinute() {
+    // remove millis
+    var stamp = new Date();
+    stamp.setSeconds(0);
+    return stamp.toJSON().replace(/\.\d{3}Z$/, 'Z'); // iso8601, remove millis
+  }
+
+  // announce what we are doing io.file
   logStamp(base);
+
   var stamp = nowMinute();
   var content = JSON.stringify(response, null, 2);
 
   var dir = path.join(dataDirname, 'byDate', stamp);
   mkdirp.sync(dir);
-  var newfile = path.join(dir, [base,'json'].join('.'));
+  var newfile = path.join(dir, [base, 'json'].join('.'));
   console.log('+', newfile);
   fs.writeFileSync(newfile, content);
 }

@@ -35,13 +35,13 @@ var history = []; // reset history
 
 function initialize() {
   var prefix = 'byDate/2014-11-07T08:34:00Z/';
-  var podcasts = loadJSON(prefix + '01-podcasts.json').podcasts;
+  podcasts = loadJSON(prefix + '01-podcasts.json').podcasts;
   // console.log(podcasts.length,podcasts[0]);
 
-  var podcastsByUuid = _.groupBy(podcasts, 'uuid');
+  podcastsByUuid = _.groupBy(podcasts, 'uuid');
   // console.log(podcastsByUuid);
 
-  // nested lookup
+  // nested lookup : this is the structure
   allEpisodesByUuid = {
     // podcast_uuid: {
     //   episode_uuid: {epidode_itself}  
@@ -61,14 +61,13 @@ function loadEpisodesForPodcast(podcast_uuid) {
   try {
     var prefix = 'byDate/2014-11-07T08:34:00Z/';
 
-    episodes = loadJSON(path.join(prefix+'02-podcasts', podcast_uuid + '.json'));
+    episodes = loadJSON(path.join(prefix + '02-podcasts', podcast_uuid + '.json'));
   } catch (err) {
-    // console.log('episodes not found for:', podcast_uuid, err);
     console.log('episodes not found for:', podcast_uuid);
     // console.log(' **creating empty Array to cache negative result');
     episodes = [];
   }
-  var episodeByUuid = _.groupBy(podcasts, 'uuid');
+  var episodeByUuid = _.groupBy(episodes, 'uuid');
   // cache it
   allEpisodesByUuid[podcast_uuid] = episodeByUuid;
   return episodeByUuid;
@@ -165,14 +164,34 @@ function handleEpisodeUpdate(file) {
       knownEpisodes[episode.uuid] = d.merged;
       if (d.changes.length) {
         // console.log('Δ', episode.uuid, stamp, '\n', d.changes);
-        history.push({
+        var record = {
           stamp: stamp,
           kind: 'episode',
           // podcast_uuid ? if exists
           uuid: episode.uuid,
           // source: file, // temporary for tracing
           changes: d.changes
-        });
+        };
+        console.log('episode with podcast:',episode.podcast_uuid);
+        // safe lookup
+        var podcast = (podcastsByUuid[episode.podcast_uuid]||[{}])[0];
+        // decorate with titles
+
+        // if we don't already have the episode title, lookit up
+        if (podcast && !episode.title){
+          // safe lookup.
+          episode.title = (allEpisodesByUuid[episode.podcast_uuid]||{})[episode.uuid];
+        }
+        if (episode.title) {
+          record.episode_title = episode.title;
+        }
+        if (podcast && podcast.uuid) {
+          record.podcast_uuid = podcast.uuid;
+          if (podcast.title) {
+            record.podcast_title = podcast.title;
+          }
+        }
+        history.push(record);
       }
     } else {
       // console.log('new Episode', episode.uuid);

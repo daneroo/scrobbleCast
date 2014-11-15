@@ -1,5 +1,345 @@
 [
   {
+    "stamp": "2014-11-05T07:40:00Z",
+    "kind": "episode",
+    "uuid": "9c7be780-46bc-0132-cab4-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "new",
+        "key": "uuid",
+        "to": "9c7be780-46bc-0132-cab4-5f4c86fd3263"
+      },
+      {
+        "op": "new",
+        "key": "url",
+        "to": "http://www.podtrac.com/pts/redirect.mp3/traffic.libsyn.com/tytnetworkpodcast/TYT-11.04.14.mp3"
+      },
+      {
+        "op": "new",
+        "key": "title",
+        "to": "TYT-11.04.14"
+      },
+      {
+        "op": "new",
+        "key": "published_at",
+        "to": "2014-11-05 01:50:28"
+      },
+      {
+        "op": "new",
+        "key": "size",
+        "to": 116734201
+      },
+      {
+        "op": "new",
+        "key": "duration",
+        "to": 3648
+      },
+      {
+        "op": "new",
+        "key": "file_type",
+        "to": "audio/mp3"
+      },
+      {
+        "op": "new",
+        "key": "podcast_id",
+        "to": 171028
+      },
+      {
+        "op": "new",
+        "key": "id",
+        "to": null
+      },
+      {
+        "op": "new",
+        "key": "podcast_uuid",
+        "to": "0fb72d80-4c95-0130-e3d5-723c91aeae46"
+      }
+    ],
+    "episode_title": "TYT-11.04.14",
+    "podcast_uuid": "0fb72d80-4c95-0130-e3d5-723c91aeae46",
+    "podcast_title": "The Young Turks Audio Podcast"
+  },
+  {
+    "stamp": "2014-11-05T07:40:00Z",
+    "kind": "episode",
+    "uuid": "e5b89230-469f-0132-ca9d-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "new",
+        "key": "uuid",
+        "to": "e5b89230-469f-0132-ca9d-5f4c86fd3263"
+      },
+      {
+        "op": "new",
+        "key": "url",
+        "to": "http://shoptalkshow.com/podpress_trac/feed/636/0/218222-140-with-justin-sainton.mp3"
+      },
+      {
+        "op": "new",
+        "key": "title",
+        "to": "140: With Justin Sainton"
+      },
+      {
+        "op": "new",
+        "key": "published_at",
+        "to": "2014-11-04 22:27:20"
+      },
+      {
+        "op": "new",
+        "key": "size",
+        "to": 31730028
+      },
+      {
+        "op": "new",
+        "key": "duration",
+        "to": 3934
+      },
+      {
+        "op": "new",
+        "key": "file_type",
+        "to": "audio/mp3"
+      },
+      {
+        "op": "new",
+        "key": "podcast_id",
+        "to": 100772
+      },
+      {
+        "op": "new",
+        "key": "id",
+        "to": null
+      },
+      {
+        "op": "new",
+        "key": "podcast_uuid",
+        "to": "d8fb5c80-1d1e-012f-f6d4-525400c11844"
+      }
+    ],
+    "episode_title": "140: With Justin Sainton",
+    "podcast_uuid": "d8fb5c80-1d1e-012f-f6d4-525400c11844",
+    "podcast_title": "ShopTalk"
+  },
+  {
+    "stamp": "2014-11-05T07:40:00Z",
+    "kind": "episode",
+    "uuid": "03b1aaa0-46ac-0132-caa2-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "new",
+        "key": "uuid",
+        "to": "03b1aaa0-46ac-0132-caa2-5f4c86fd3263"
+      },
+      {
+        "op": "new",
+        "key": "url",
+        "to": "http://feedproxy.google.com/~r/NodeUp/~5/sswItq_2cJU/NodeUp75.mp3"
+      },
+      {
+        "op": "new",
+        "key": "title",
+        "to": "75 - A NodeForward Show."
+      },
+      {
+        "op": "new",
+        "key": "published_at",
+        "to": "2014-11-04 17:00:00"
+      },
+      {
+        "op": "new",
+        "key": "size",
+        "to": 0
+      },
+      {
+        "op": "new",
+        "key": "duration",
+        "to": 3115
+      },
+      {
+        "op": "new",
+        "key": "file_type",
+        "to": "audio/mp3"
+      },
+      {
+        "op": "new",
+        "key": "podcast_id",
+        "to": 36914
+      },
+      {
+        "op": "new",
+        "key": "id",
+        "to": null
+      },
+      {
+        "op": "new",
+        "key": "podcast_uuid",
+        "to": "25ca21a0-85c2-012e-3eb7-00163e1b201c"
+      }
+    ],
+    "episode_title": "75 - A NodeForward Show.",
+    "podcast_uuid": "25ca21a0-85c2-012e-3eb7-00163e1b201c",
+    "podcast_title": "NodeUp"
+  },
+  {
+    "stamp": "2014-11-05T07:40:00Z",
+    "kind": "episode",
+    "uuid": "6ecc95b0-4539-0132-c9c7-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "new",
+        "key": "uuid",
+        "to": "6ecc95b0-4539-0132-c9c7-5f4c86fd3263"
+      },
+      {
+        "op": "new",
+        "key": "url",
+        "to": "http://traffic.libsyn.com/revolutionspodcast/3.15-_The_Rise_of_The_Jacobins.mp3"
+      },
+      {
+        "op": "new",
+        "key": "title",
+        "to": "3.15- The Rise of the Jacobins"
+      },
+      {
+        "op": "new",
+        "key": "published_at",
+        "to": "2014-11-03 03:30:00"
+      },
+      {
+        "op": "new",
+        "key": "size",
+        "to": 15044567
+      },
+      {
+        "op": "new",
+        "key": "duration",
+        "to": 1881
+      },
+      {
+        "op": "new",
+        "key": "file_type",
+        "to": "audio/mp3"
+      },
+      {
+        "op": "new",
+        "key": "podcast_id",
+        "to": 248608
+      },
+      {
+        "op": "new",
+        "key": "id",
+        "to": null
+      },
+      {
+        "op": "new",
+        "key": "podcast_uuid",
+        "to": "b1ccb690-fd97-0130-c6ee-723c91aeae46"
+      },
+      {
+        "op": "new",
+        "key": "playing_status",
+        "to": 2
+      },
+      {
+        "op": "new",
+        "key": "played_up_to",
+        "to": 406
+      },
+      {
+        "op": "new",
+        "key": "is_deleted",
+        "to": false
+      },
+      {
+        "op": "new",
+        "key": "starred",
+        "to": false
+      }
+    ],
+    "episode_title": "3.15- The Rise of the Jacobins",
+    "podcast_uuid": "b1ccb690-fd97-0130-c6ee-723c91aeae46",
+    "podcast_title": "Revolutions"
+  },
+  {
+    "stamp": "2014-11-05T07:40:00Z",
+    "kind": "episode",
+    "uuid": "c46e6870-4491-0132-c967-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "new",
+        "key": "uuid",
+        "to": "c46e6870-4491-0132-c967-5f4c86fd3263"
+      },
+      {
+        "op": "new",
+        "key": "url",
+        "to": "http://podcast.cbc.ca/mp3/podcasts/writersandco_20141102_25888.mp3"
+      },
+      {
+        "op": "new",
+        "key": "title",
+        "to": "Tim Winton Podcast"
+      },
+      {
+        "op": "new",
+        "key": "published_at",
+        "to": "2014-11-02 04:00:00"
+      },
+      {
+        "op": "new",
+        "key": "size",
+        "to": 51368
+      },
+      {
+        "op": "new",
+        "key": "duration",
+        "to": 3331
+      },
+      {
+        "op": "new",
+        "key": "file_type",
+        "to": "audio/mp3"
+      },
+      {
+        "op": "new",
+        "key": "podcast_id",
+        "to": 9994
+      },
+      {
+        "op": "new",
+        "key": "id",
+        "to": null
+      },
+      {
+        "op": "new",
+        "key": "podcast_uuid",
+        "to": "55c51e50-3318-012e-0d51-00163e1b201c"
+      },
+      {
+        "op": "new",
+        "key": "playing_status",
+        "to": 2
+      },
+      {
+        "op": "new",
+        "key": "played_up_to",
+        "to": null
+      },
+      {
+        "op": "new",
+        "key": "is_deleted",
+        "to": false
+      },
+      {
+        "op": "new",
+        "key": "starred",
+        "to": false
+      }
+    ],
+    "episode_title": "Tim Winton Podcast",
+    "podcast_uuid": "55c51e50-3318-012e-0d51-00163e1b201c",
+    "podcast_title": "Writers and Company from CBC Radio"
+  },
+  {
     "stamp": "2014-11-05T07:50:00Z",
     "kind": "episode",
     "uuid": "6ecc95b0-4539-0132-c9c7-5f4c86fd3263",
@@ -10,7 +350,10 @@
         "from": 406,
         "to": 955
       }
-    ]
+    ],
+    "episode_title": "3.15- The Rise of the Jacobins",
+    "podcast_uuid": "b1ccb690-fd97-0130-c6ee-723c91aeae46",
+    "podcast_title": "Revolutions"
   },
   {
     "stamp": "2014-11-05T08:07:00Z",
@@ -37,7 +380,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "TYT-11.04.14",
+    "podcast_uuid": "0fb72d80-4c95-0130-e3d5-723c91aeae46",
+    "podcast_title": "The Young Turks Audio Podcast"
   },
   {
     "stamp": "2014-11-05T09:05:00Z",
@@ -50,7 +396,10 @@
         "from": 235,
         "to": 807
       }
-    ]
+    ],
+    "episode_title": "TYT-11.04.14",
+    "podcast_uuid": "0fb72d80-4c95-0130-e3d5-723c91aeae46",
+    "podcast_title": "The Young Turks Audio Podcast"
   },
   {
     "stamp": "2014-11-05T09:30:00Z",
@@ -63,7 +412,70 @@
         "from": 807,
         "to": 2193
       }
-    ]
+    ],
+    "episode_title": "TYT-11.04.14",
+    "podcast_uuid": "0fb72d80-4c95-0130-e3d5-723c91aeae46",
+    "podcast_title": "The Young Turks Audio Podcast"
+  },
+  {
+    "stamp": "2014-11-05T09:33:00Z",
+    "kind": "episode",
+    "uuid": "8ebdaee0-46fc-0132-cadb-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "new",
+        "key": "uuid",
+        "to": "8ebdaee0-46fc-0132-cadb-5f4c86fd3263"
+      },
+      {
+        "op": "new",
+        "key": "url",
+        "to": "http://downloads.bbc.co.uk/podcasts/worldservice/globalnews/globalnews_20141104-2355b.mp3"
+      },
+      {
+        "op": "new",
+        "key": "title",
+        "to": "GlobalNews: 05 Nov 14 AM Kiev sends troops east & south"
+      },
+      {
+        "op": "new",
+        "key": "published_at",
+        "to": "2014-11-04 23:55:00"
+      },
+      {
+        "op": "new",
+        "key": "size",
+        "to": 12837295
+      },
+      {
+        "op": "new",
+        "key": "duration",
+        "to": 1594
+      },
+      {
+        "op": "new",
+        "key": "file_type",
+        "to": "audio/mp3"
+      },
+      {
+        "op": "new",
+        "key": "podcast_id",
+        "to": 1149
+      },
+      {
+        "op": "new",
+        "key": "id",
+        "to": null
+      },
+      {
+        "op": "new",
+        "key": "podcast_uuid",
+        "to": "74a35900-0423-012e-f9a0-00163e1b201c"
+      }
+    ],
+    "episode_title": "GlobalNews: 05 Nov 14 AM Kiev sends troops east & south",
+    "podcast_uuid": "74a35900-0423-012e-f9a0-00163e1b201c",
+    "podcast_title": "Global News"
   },
   {
     "stamp": "2014-11-05T09:41:00Z",
@@ -76,7 +488,10 @@
         "from": 2193,
         "to": 2257
       }
-    ]
+    ],
+    "episode_title": "TYT-11.04.14",
+    "podcast_uuid": "0fb72d80-4c95-0130-e3d5-723c91aeae46",
+    "podcast_title": "The Young Turks Audio Podcast"
   },
   {
     "stamp": "2014-11-05T09:46:00Z",
@@ -89,7 +504,10 @@
         "from": 2257,
         "to": 2536
       }
-    ]
+    ],
+    "episode_title": "TYT-11.04.14",
+    "podcast_uuid": "0fb72d80-4c95-0130-e3d5-723c91aeae46",
+    "podcast_title": "The Young Turks Audio Podcast"
   },
   {
     "stamp": "2014-11-05T10:02:00Z",
@@ -102,7 +520,310 @@
         "from": 2536,
         "to": 3641
       }
-    ]
+    ],
+    "episode_title": "TYT-11.04.14",
+    "podcast_uuid": "0fb72d80-4c95-0130-e3d5-723c91aeae46",
+    "podcast_title": "The Young Turks Audio Podcast"
+  },
+  {
+    "stamp": "2014-11-05T15:28:00Z",
+    "kind": "episode",
+    "uuid": "3bc12130-472e-0132-cafe-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "new",
+        "key": "uuid",
+        "to": "3bc12130-472e-0132-cafe-5f4c86fd3263"
+      },
+      {
+        "op": "new",
+        "key": "url",
+        "to": "http://podcast.cbc.ca/mp3/podcasts/ideas_20141105_11095.mp3"
+      },
+      {
+        "op": "new",
+        "key": "title",
+        "to": "Being Canadian, Part 2"
+      },
+      {
+        "op": "new",
+        "key": "published_at",
+        "to": "2014-11-05 05:00:00"
+      },
+      {
+        "op": "new",
+        "key": "size",
+        "to": 50621
+      },
+      {
+        "op": "new",
+        "key": "duration",
+        "to": 3240
+      },
+      {
+        "op": "new",
+        "key": "file_type",
+        "to": "audio/mp3"
+      },
+      {
+        "op": "new",
+        "key": "podcast_id",
+        "to": 2819
+      },
+      {
+        "op": "new",
+        "key": "id",
+        "to": null
+      },
+      {
+        "op": "new",
+        "key": "podcast_uuid",
+        "to": "c3adff20-1b2f-012e-0081-00163e1b201c"
+      }
+    ],
+    "episode_title": "Being Canadian, Part 2",
+    "podcast_uuid": "c3adff20-1b2f-012e-0081-00163e1b201c",
+    "podcast_title": "Ideas from CBC Radio (Highlights)"
+  },
+  {
+    "stamp": "2014-11-05T16:39:00Z",
+    "kind": "episode",
+    "uuid": "12c96de0-4738-0132-cb04-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "new",
+        "key": "uuid",
+        "to": "12c96de0-4738-0132-cb04-5f4c86fd3263"
+      },
+      {
+        "op": "new",
+        "key": "url",
+        "to": "http://devchat.cachefly.net/javascriptjabber/JSJ132MVFrameworks.mp3"
+      },
+      {
+        "op": "new",
+        "key": "title",
+        "to": "132 JSJ MV Frameworks with Craig McKeachie"
+      },
+      {
+        "op": "new",
+        "key": "published_at",
+        "to": "2014-11-05 13:00:00"
+      },
+      {
+        "op": "new",
+        "key": "size",
+        "to": 55795201
+      },
+      {
+        "op": "new",
+        "key": "duration",
+        "to": 3487
+      },
+      {
+        "op": "new",
+        "key": "file_type",
+        "to": "audio/mp3"
+      },
+      {
+        "op": "new",
+        "key": "podcast_id",
+        "to": 264998
+      },
+      {
+        "op": "new",
+        "key": "id",
+        "to": null
+      },
+      {
+        "op": "new",
+        "key": "podcast_uuid",
+        "to": "58b79440-1f1f-0131-6ebd-723c91aeae46"
+      }
+    ],
+    "episode_title": "132 JSJ MV Frameworks with Craig McKeachie",
+    "podcast_uuid": "58b79440-1f1f-0131-6ebd-723c91aeae46",
+    "podcast_title": "JavaScript Jabber"
+  },
+  {
+    "stamp": "2014-11-05T17:36:00Z",
+    "kind": "episode",
+    "uuid": "16080a30-4740-0132-cb08-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "new",
+        "key": "uuid",
+        "to": "16080a30-4740-0132-cb08-5f4c86fd3263"
+      },
+      {
+        "op": "new",
+        "key": "url",
+        "to": "http://itunesmedia.economist.com/sites/default/files/audio/20141105_iow_track2-1_traffic.mp3"
+      },
+      {
+        "op": "new",
+        "key": "title",
+        "to": "The cost of traffic jams"
+      },
+      {
+        "op": "new",
+        "key": "published_at",
+        "to": "2014-11-05 14:59:14"
+      },
+      {
+        "op": "new",
+        "key": "size",
+        "to": 4868909
+      },
+      {
+        "op": "new",
+        "key": "duration",
+        "to": 185
+      },
+      {
+        "op": "new",
+        "key": "file_type",
+        "to": "audio/mp3"
+      },
+      {
+        "op": "new",
+        "key": "podcast_id",
+        "to": 1109
+      },
+      {
+        "op": "new",
+        "key": "id",
+        "to": null
+      },
+      {
+        "op": "new",
+        "key": "podcast_uuid",
+        "to": "fe2b3f90-0422-012e-f9a0-00163e1b201c"
+      }
+    ],
+    "episode_title": "The cost of traffic jams",
+    "podcast_uuid": "fe2b3f90-0422-012e-f9a0-00163e1b201c",
+    "podcast_title": "The Economist: All audio"
+  },
+  {
+    "stamp": "2014-11-05T17:41:00Z",
+    "kind": "episode",
+    "uuid": "bc4c4af0-4740-0132-cb09-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "new",
+        "key": "uuid",
+        "to": "bc4c4af0-4740-0132-cb09-5f4c86fd3263"
+      },
+      {
+        "op": "new",
+        "key": "url",
+        "to": "http://downloads.bbc.co.uk/podcasts/worldservice/globalnews/globalnews_20141105-1716a.mp3"
+      },
+      {
+        "op": "new",
+        "key": "title",
+        "to": "GlobalNews: 05 Nov 14 PM  Triumph for US Republicans"
+      },
+      {
+        "op": "new",
+        "key": "published_at",
+        "to": "2014-11-05 17:16:00"
+      },
+      {
+        "op": "new",
+        "key": "size",
+        "to": 14384557
+      },
+      {
+        "op": "new",
+        "key": "duration",
+        "to": 1787
+      },
+      {
+        "op": "new",
+        "key": "file_type",
+        "to": "audio/mp3"
+      },
+      {
+        "op": "new",
+        "key": "podcast_id",
+        "to": 1149
+      },
+      {
+        "op": "new",
+        "key": "id",
+        "to": null
+      },
+      {
+        "op": "new",
+        "key": "podcast_uuid",
+        "to": "74a35900-0423-012e-f9a0-00163e1b201c"
+      }
+    ],
+    "episode_title": "GlobalNews: 05 Nov 14 PM  Triumph for US Republicans",
+    "podcast_uuid": "74a35900-0423-012e-f9a0-00163e1b201c",
+    "podcast_title": "Global News"
+  },
+  {
+    "stamp": "2014-11-05T19:39:00Z",
+    "kind": "episode",
+    "uuid": "3e1a0c00-4751-0132-cb11-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "new",
+        "key": "uuid",
+        "to": "3e1a0c00-4751-0132-cb11-5f4c86fd3263"
+      },
+      {
+        "op": "new",
+        "key": "url",
+        "to": "http://www.podtrac.com/pts/redirect.mp3/twit.cachefly.net/audio/tnt/tnt1129/tnt1129.mp3"
+      },
+      {
+        "op": "new",
+        "key": "title",
+        "to": "TNT 1129: Beam Me Up Onyx"
+      },
+      {
+        "op": "new",
+        "key": "published_at",
+        "to": "2014-11-05 19:22:30"
+      },
+      {
+        "op": "new",
+        "key": "size",
+        "to": 11077194
+      },
+      {
+        "op": "new",
+        "key": "duration",
+        "to": 1355
+      },
+      {
+        "op": "new",
+        "key": "file_type",
+        "to": "audio/mp3"
+      },
+      {
+        "op": "new",
+        "key": "podcast_id",
+        "to": 1040
+      },
+      {
+        "op": "new",
+        "key": "id",
+        "to": null
+      },
+      {
+        "op": "new",
+        "key": "podcast_uuid",
+        "to": "77170eb0-0257-012e-f994-00163e1b201c"
+      }
+    ],
+    "episode_title": "TNT 1129: Beam Me Up Onyx",
+    "podcast_uuid": "77170eb0-0257-012e-f994-00163e1b201c",
+    "podcast_title": "Tech News Today (MP3)"
   },
   {
     "stamp": "2014-11-06T00:34:00Z",
@@ -129,7 +850,190 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "GlobalNews: 05 Nov 14 PM  Triumph for US Republicans",
+    "podcast_uuid": "74a35900-0423-012e-f9a0-00163e1b201c",
+    "podcast_title": "Global News"
+  },
+  {
+    "stamp": "2014-11-06T02:02:00Z",
+    "kind": "episode",
+    "uuid": "c9ddc040-4786-0132-cb2a-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "new",
+        "key": "uuid",
+        "to": "c9ddc040-4786-0132-cb2a-5f4c86fd3263"
+      },
+      {
+        "op": "new",
+        "key": "url",
+        "to": "http://www.podtrac.com/pts/redirect.mp3/traffic.libsyn.com/tytnetworkpodcast/tytTEASE-20141105.mp3"
+      },
+      {
+        "op": "new",
+        "key": "title",
+        "to": "TYT-11.05.14"
+      },
+      {
+        "op": "new",
+        "key": "published_at",
+        "to": "2014-11-06 01:51:12"
+      },
+      {
+        "op": "new",
+        "key": "size",
+        "to": 44099784
+      },
+      {
+        "op": "new",
+        "key": "duration",
+        "to": 2756
+      },
+      {
+        "op": "new",
+        "key": "file_type",
+        "to": "audio/mp3"
+      },
+      {
+        "op": "new",
+        "key": "podcast_id",
+        "to": 171028
+      },
+      {
+        "op": "new",
+        "key": "id",
+        "to": null
+      },
+      {
+        "op": "new",
+        "key": "podcast_uuid",
+        "to": "0fb72d80-4c95-0130-e3d5-723c91aeae46"
+      }
+    ],
+    "episode_title": "TYT-11.05.14",
+    "podcast_uuid": "0fb72d80-4c95-0130-e3d5-723c91aeae46",
+    "podcast_title": "The Young Turks Audio Podcast"
+  },
+  {
+    "stamp": "2014-11-06T02:19:00Z",
+    "kind": "episode",
+    "uuid": "2a8f09f0-4789-0132-cb2b-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "new",
+        "key": "uuid",
+        "to": "2a8f09f0-4789-0132-cb2b-5f4c86fd3263"
+      },
+      {
+        "op": "new",
+        "key": "url",
+        "to": "http://www.podtrac.com/pts/redirect.mp3/traffic.libsyn.com/tytnetworkpodcast/tytTEASE-20141105.mp4"
+      },
+      {
+        "op": "new",
+        "key": "title",
+        "to": "TYT-11.05.14"
+      },
+      {
+        "op": "new",
+        "key": "published_at",
+        "to": "2014-11-06 02:11:20"
+      },
+      {
+        "op": "new",
+        "key": "size",
+        "to": 311356885
+      },
+      {
+        "op": "new",
+        "key": "duration",
+        "to": 2763
+      },
+      {
+        "op": "new",
+        "key": "file_type",
+        "to": "video/x-mp4"
+      },
+      {
+        "op": "new",
+        "key": "podcast_id",
+        "to": 171028
+      },
+      {
+        "op": "new",
+        "key": "id",
+        "to": null
+      },
+      {
+        "op": "new",
+        "key": "podcast_uuid",
+        "to": "0fb72d80-4c95-0130-e3d5-723c91aeae46"
+      }
+    ],
+    "episode_title": "TYT-11.05.14",
+    "podcast_uuid": "0fb72d80-4c95-0130-e3d5-723c91aeae46",
+    "podcast_title": "The Young Turks Audio Podcast"
+  },
+  {
+    "stamp": "2014-11-06T02:20:00Z",
+    "kind": "episode",
+    "uuid": "45738a00-4789-0132-cb2b-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "new",
+        "key": "uuid",
+        "to": "45738a00-4789-0132-cb2b-5f4c86fd3263"
+      },
+      {
+        "op": "new",
+        "key": "url",
+        "to": "http://www.scientificamerican.com/podcast/podcast.mp3?fileId=A08F9429-5B16-44CF-BB13582D7B01447E"
+      },
+      {
+        "op": "new",
+        "key": "title",
+        "to": "Ebola Expert Update"
+      },
+      {
+        "op": "new",
+        "key": "published_at",
+        "to": "2014-11-06 01:38:00"
+      },
+      {
+        "op": "new",
+        "key": "size",
+        "to": 0
+      },
+      {
+        "op": "new",
+        "key": "duration",
+        "to": 1472
+      },
+      {
+        "op": "new",
+        "key": "file_type",
+        "to": "audio/mpeg"
+      },
+      {
+        "op": "new",
+        "key": "podcast_id",
+        "to": 1306
+      },
+      {
+        "op": "new",
+        "key": "id",
+        "to": null
+      },
+      {
+        "op": "new",
+        "key": "podcast_uuid",
+        "to": "bc383e00-0425-012e-f9a0-00163e1b201c"
+      }
+    ],
+    "episode_title": "Ebola Expert Update",
+    "podcast_uuid": "bc383e00-0425-012e-f9a0-00163e1b201c",
+    "podcast_title": "Science Talk"
   },
   {
     "stamp": "2014-11-06T02:24:00Z",
@@ -142,7 +1046,130 @@
         "from": 29,
         "to": 677
       }
-    ]
+    ],
+    "episode_title": "GlobalNews: 05 Nov 14 PM  Triumph for US Republicans",
+    "podcast_uuid": "74a35900-0423-012e-f9a0-00163e1b201c",
+    "podcast_title": "Global News"
+  },
+  {
+    "stamp": "2014-11-06T02:36:00Z",
+    "kind": "episode",
+    "uuid": "7c0537b0-478b-0132-cb2c-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "new",
+        "key": "uuid",
+        "to": "7c0537b0-478b-0132-cb2c-5f4c86fd3263"
+      },
+      {
+        "op": "new",
+        "key": "url",
+        "to": "http://www.stanford.edu/group/edcorner/uploads/podcast/carolan141105.mp3"
+      },
+      {
+        "op": "new",
+        "key": "title",
+        "to": "Seeking the Full Potential of Education - Jennifer Carolan (New Schools Venture Fund)"
+      },
+      {
+        "op": "new",
+        "key": "published_at",
+        "to": "2014-11-05 08:00:00"
+      },
+      {
+        "op": "new",
+        "key": "size",
+        "to": 28835840
+      },
+      {
+        "op": "new",
+        "key": "duration",
+        "to": 3431
+      },
+      {
+        "op": "new",
+        "key": "file_type",
+        "to": "audio/mp3"
+      },
+      {
+        "op": "new",
+        "key": "podcast_id",
+        "to": 1845
+      },
+      {
+        "op": "new",
+        "key": "id",
+        "to": null
+      },
+      {
+        "op": "new",
+        "key": "podcast_uuid",
+        "to": "14cd6d90-0cc4-012e-fb69-00163e1b201c"
+      }
+    ],
+    "episode_title": "Seeking the Full Potential of Education - Jennifer Carolan (New Schools Venture Fund)",
+    "podcast_uuid": "14cd6d90-0cc4-012e-fb69-00163e1b201c",
+    "podcast_title": "Entrepreneurial Thought Leaders"
+  },
+  {
+    "stamp": "2014-11-06T03:58:00Z",
+    "kind": "episode",
+    "uuid": "ee49c6a0-4796-0132-cb32-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "new",
+        "key": "uuid",
+        "to": "ee49c6a0-4796-0132-cb32-5f4c86fd3263"
+      },
+      {
+        "op": "new",
+        "key": "url",
+        "to": "http://www.podtrac.com/pts/redirect.mp3/twit.cachefly.net/audio/twig/twig0274/twig0274.mp3"
+      },
+      {
+        "op": "new",
+        "key": "title",
+        "to": "TWiG 274: Google's Cookie Factory"
+      },
+      {
+        "op": "new",
+        "key": "published_at",
+        "to": "2014-11-06 01:54:54"
+      },
+      {
+        "op": "new",
+        "key": "size",
+        "to": 55468953
+      },
+      {
+        "op": "new",
+        "key": "duration",
+        "to": 6897
+      },
+      {
+        "op": "new",
+        "key": "file_type",
+        "to": "audio/mp3"
+      },
+      {
+        "op": "new",
+        "key": "podcast_id",
+        "to": 1588
+      },
+      {
+        "op": "new",
+        "key": "id",
+        "to": null
+      },
+      {
+        "op": "new",
+        "key": "podcast_uuid",
+        "to": "dde6abe0-04fe-012e-f9d3-00163e1b201c"
+      }
+    ],
+    "episode_title": "TWiG 274: Google's Cookie Factory",
+    "podcast_uuid": "dde6abe0-04fe-012e-f9d3-00163e1b201c",
+    "podcast_title": "This Week in Google (MP3)"
   },
   {
     "stamp": "2014-11-06T05:16:00Z",
@@ -169,7 +1196,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "GlobalNews: 06 NOV 14 AM US leaders pledge to work together",
+    "podcast_uuid": "74a35900-0423-012e-f9a0-00163e1b201c",
+    "podcast_title": "Global News"
   },
   {
     "stamp": "2014-11-06T06:48:00Z",
@@ -182,7 +1212,10 @@
         "from": 774,
         "to": 1464
       }
-    ]
+    ],
+    "episode_title": "GlobalNews: 06 NOV 14 AM US leaders pledge to work together",
+    "podcast_uuid": "74a35900-0423-012e-f9a0-00163e1b201c",
+    "podcast_title": "Global News"
   },
   {
     "stamp": "2014-11-06T07:33:00Z",
@@ -209,7 +1242,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "FLOSS Weekly 315: RethinkDB",
+    "podcast_uuid": "278554c0-0bef-012e-fb16-00163e1b201c",
+    "podcast_title": "FLOSS Weekly (MP3)"
   },
   {
     "stamp": "2014-11-06T08:02:00Z",
@@ -236,7 +1272,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "TWiG 274: Google's Cookie Factory",
+    "podcast_uuid": "dde6abe0-04fe-012e-f9d3-00163e1b201c",
+    "podcast_title": "This Week in Google (MP3)"
   },
   {
     "stamp": "2014-11-06T09:55:00Z",
@@ -249,7 +1288,10 @@
         "from": 1049,
         "to": 2133
       }
-    ]
+    ],
+    "episode_title": "TWiG 274: Google's Cookie Factory",
+    "podcast_uuid": "dde6abe0-04fe-012e-f9d3-00163e1b201c",
+    "podcast_title": "This Week in Google (MP3)"
   },
   {
     "stamp": "2014-11-06T10:40:00Z",
@@ -262,7 +1304,610 @@
         "from": 2133,
         "to": 3961
       }
-    ]
+    ],
+    "episode_title": "TWiG 274: Google's Cookie Factory",
+    "podcast_uuid": "dde6abe0-04fe-012e-f9d3-00163e1b201c",
+    "podcast_title": "This Week in Google (MP3)"
+  },
+  {
+    "stamp": "2014-11-06T15:30:00Z",
+    "kind": "episode",
+    "uuid": "6251a570-47f6-0132-cb6d-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "new",
+        "key": "uuid",
+        "to": "6251a570-47f6-0132-cb6d-5f4c86fd3263"
+      },
+      {
+        "op": "new",
+        "key": "url",
+        "to": "http://itunesmedia.economist.com/sites/default/files/audio/20141106_iow_track2-1_guyfawkes.mp3"
+      },
+      {
+        "op": "new",
+        "key": "title",
+        "to": "How Guy Fawkes became the face of post-modern protest"
+      },
+      {
+        "op": "new",
+        "key": "published_at",
+        "to": "2014-11-05 15:07:31"
+      },
+      {
+        "op": "new",
+        "key": "size",
+        "to": 4930960
+      },
+      {
+        "op": "new",
+        "key": "duration",
+        "to": 246
+      },
+      {
+        "op": "new",
+        "key": "file_type",
+        "to": "audio/mp3"
+      },
+      {
+        "op": "new",
+        "key": "podcast_id",
+        "to": 1109
+      },
+      {
+        "op": "new",
+        "key": "id",
+        "to": null
+      },
+      {
+        "op": "new",
+        "key": "podcast_uuid",
+        "to": "fe2b3f90-0422-012e-f9a0-00163e1b201c"
+      }
+    ],
+    "episode_title": "How Guy Fawkes became the face of post-modern protest",
+    "podcast_uuid": "fe2b3f90-0422-012e-f9a0-00163e1b201c",
+    "podcast_title": "The Economist: All audio"
+  },
+  {
+    "stamp": "2014-11-06T16:10:00Z",
+    "kind": "episode",
+    "uuid": "a1bdcae0-47fc-0132-cb70-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "new",
+        "key": "uuid",
+        "to": "a1bdcae0-47fc-0132-cb70-5f4c86fd3263"
+      },
+      {
+        "op": "new",
+        "key": "url",
+        "to": "http://podcast.cbc.ca/mp3/podcasts/ideas_20141106_82243.mp3"
+      },
+      {
+        "op": "new",
+        "key": "title",
+        "to": "Coming Home"
+      },
+      {
+        "op": "new",
+        "key": "published_at",
+        "to": "2014-11-06 05:00:00"
+      },
+      {
+        "op": "new",
+        "key": "size",
+        "to": 50625
+      },
+      {
+        "op": "new",
+        "key": "duration",
+        "to": 3240
+      },
+      {
+        "op": "new",
+        "key": "file_type",
+        "to": "audio/mp3"
+      },
+      {
+        "op": "new",
+        "key": "podcast_id",
+        "to": 2819
+      },
+      {
+        "op": "new",
+        "key": "id",
+        "to": null
+      },
+      {
+        "op": "new",
+        "key": "podcast_uuid",
+        "to": "c3adff20-1b2f-012e-0081-00163e1b201c"
+      }
+    ],
+    "episode_title": "Coming Home",
+    "podcast_uuid": "c3adff20-1b2f-012e-0081-00163e1b201c",
+    "podcast_title": "Ideas from CBC Radio (Highlights)"
+  },
+  {
+    "stamp": "2014-11-06T16:30:00Z",
+    "kind": "episode",
+    "uuid": "f9e3b5b0-47ff-0132-cb71-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "new",
+        "key": "uuid",
+        "to": "f9e3b5b0-47ff-0132-cb71-5f4c86fd3263"
+      },
+      {
+        "op": "new",
+        "key": "url",
+        "to": "http://media.devchat.tv/adventures-in-angular/AiA015KendoUI.mp3"
+      },
+      {
+        "op": "new",
+        "key": "title",
+        "to": "015 AiA Angular and Kendo UI with Jesse Liberty"
+      },
+      {
+        "op": "new",
+        "key": "published_at",
+        "to": "2014-11-06 13:00:00"
+      },
+      {
+        "op": "new",
+        "key": "size",
+        "to": 32816649
+      },
+      {
+        "op": "new",
+        "key": "duration",
+        "to": 2051
+      },
+      {
+        "op": "new",
+        "key": "file_type",
+        "to": "audio/mp3"
+      },
+      {
+        "op": "new",
+        "key": "podcast_id",
+        "to": 362948
+      },
+      {
+        "op": "new",
+        "key": "id",
+        "to": null
+      },
+      {
+        "op": "new",
+        "key": "podcast_uuid",
+        "to": "80931490-01be-0132-a0fb-5f4c86fd3263"
+      }
+    ],
+    "episode_title": "015 AiA Angular and Kendo UI with Jesse Liberty",
+    "podcast_uuid": "80931490-01be-0132-a0fb-5f4c86fd3263",
+    "podcast_title": "Adventures in Angular"
+  },
+  {
+    "stamp": "2014-11-06T16:40:00Z",
+    "kind": "episode",
+    "uuid": "26e16610-4800-0132-cb71-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "new",
+        "key": "uuid",
+        "to": "26e16610-4800-0132-cb71-5f4c86fd3263"
+      },
+      {
+        "op": "new",
+        "key": "url",
+        "to": "http://downloads.bbc.co.uk/podcasts/worldservice/globalnews/globalnews_20141106-1615a.mp3"
+      },
+      {
+        "op": "new",
+        "key": "title",
+        "to": "GlobalNews: 06 Nov 14 PM  Syrian child refugees join IS"
+      },
+      {
+        "op": "new",
+        "key": "published_at",
+        "to": "2014-11-06 16:15:00"
+      },
+      {
+        "op": "new",
+        "key": "size",
+        "to": 13865831
+      },
+      {
+        "op": "new",
+        "key": "duration",
+        "to": 1722
+      },
+      {
+        "op": "new",
+        "key": "file_type",
+        "to": "audio/mp3"
+      },
+      {
+        "op": "new",
+        "key": "podcast_id",
+        "to": 1149
+      },
+      {
+        "op": "new",
+        "key": "id",
+        "to": null
+      },
+      {
+        "op": "new",
+        "key": "podcast_uuid",
+        "to": "74a35900-0423-012e-f9a0-00163e1b201c"
+      }
+    ],
+    "episode_title": "GlobalNews: 06 Nov 14 PM  Syrian child refugees join IS",
+    "podcast_uuid": "74a35900-0423-012e-f9a0-00163e1b201c",
+    "podcast_title": "Global News"
+  },
+  {
+    "stamp": "2014-11-06T16:40:00Z",
+    "kind": "episode",
+    "uuid": "26e30460-4800-0132-cb71-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "new",
+        "key": "uuid",
+        "to": "26e30460-4800-0132-cb71-5f4c86fd3263"
+      },
+      {
+        "op": "new",
+        "key": "url",
+        "to": "http://downloads.bbc.co.uk/podcasts/worldservice/globalnews/globalnews_20141106-0031b.mp3"
+      },
+      {
+        "op": "new",
+        "key": "title",
+        "to": "GlobalNews: 06 Nov 14 AM US leaders pledge to work together"
+      },
+      {
+        "op": "new",
+        "key": "published_at",
+        "to": "2014-11-06 00:31:00"
+      },
+      {
+        "op": "new",
+        "key": "size",
+        "to": 12720233
+      },
+      {
+        "op": "new",
+        "key": "duration",
+        "to": 1579
+      },
+      {
+        "op": "new",
+        "key": "file_type",
+        "to": "audio/mp3"
+      },
+      {
+        "op": "new",
+        "key": "podcast_id",
+        "to": 1149
+      },
+      {
+        "op": "new",
+        "key": "id",
+        "to": null
+      },
+      {
+        "op": "new",
+        "key": "podcast_uuid",
+        "to": "74a35900-0423-012e-f9a0-00163e1b201c"
+      }
+    ],
+    "episode_title": "GlobalNews: 06 Nov 14 AM US leaders pledge to work together",
+    "podcast_uuid": "74a35900-0423-012e-f9a0-00163e1b201c",
+    "podcast_title": "Global News"
+  },
+  {
+    "stamp": "2014-11-06T17:10:00Z",
+    "kind": "episode",
+    "uuid": "7f82b100-4805-0132-cb74-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "new",
+        "key": "uuid",
+        "to": "7f82b100-4805-0132-cb74-5f4c86fd3263"
+      },
+      {
+        "op": "new",
+        "key": "url",
+        "to": "http://downloads.bbc.co.uk/podcasts/radio4/inscience/inscience_20141106-1700a.mp3"
+      },
+      {
+        "op": "new",
+        "key": "title",
+        "to": "inscience: Science of ageing; Microneedles; Firelab; Rosetta; Scientific authorship 06 Nov 14"
+      },
+      {
+        "op": "new",
+        "key": "published_at",
+        "to": "2014-11-06 17:00:00"
+      },
+      {
+        "op": "new",
+        "key": "size",
+        "to": 13657203
+      },
+      {
+        "op": "new",
+        "key": "duration",
+        "to": 1699
+      },
+      {
+        "op": "new",
+        "key": "file_type",
+        "to": "audio/mp3"
+      },
+      {
+        "op": "new",
+        "key": "podcast_id",
+        "to": 227280
+      },
+      {
+        "op": "new",
+        "key": "id",
+        "to": null
+      },
+      {
+        "op": "new",
+        "key": "podcast_uuid",
+        "to": "66084f00-c6b1-0130-34d2-723c91aeae46"
+      }
+    ],
+    "episode_title": "inscience: Science of ageing; Microneedles; Firelab; Rosetta; Scientific authorship 06 Nov 14",
+    "podcast_uuid": "66084f00-c6b1-0130-34d2-723c91aeae46",
+    "podcast_title": "BBC Inside Science"
+  },
+  {
+    "stamp": "2014-11-06T17:10:00Z",
+    "kind": "episode",
+    "uuid": "9b9915a0-4804-0132-cb74-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "new",
+        "key": "uuid",
+        "to": "9b9915a0-4804-0132-cb74-5f4c86fd3263"
+      },
+      {
+        "op": "new",
+        "key": "url",
+        "to": "http://downloads.bbc.co.uk/podcasts/radio4/iot/iot_20141106-1700a.mp3"
+      },
+      {
+        "op": "new",
+        "key": "title",
+        "to": "IOT: Hatshepsut 06 Nov 14"
+      },
+      {
+        "op": "new",
+        "key": "published_at",
+        "to": "2014-11-06 17:00:00"
+      },
+      {
+        "op": "new",
+        "key": "size",
+        "to": 22002710
+      },
+      {
+        "op": "new",
+        "key": "duration",
+        "to": 2742
+      },
+      {
+        "op": "new",
+        "key": "file_type",
+        "to": "audio/mp3"
+      },
+      {
+        "op": "new",
+        "key": "podcast_id",
+        "to": 1218
+      },
+      {
+        "op": "new",
+        "key": "id",
+        "to": null
+      },
+      {
+        "op": "new",
+        "key": "podcast_uuid",
+        "to": "5e6125f0-0424-012e-f9a0-00163e1b201c"
+      }
+    ],
+    "episode_title": "IOT: Hatshepsut 06 Nov 14",
+    "podcast_uuid": "5e6125f0-0424-012e-f9a0-00163e1b201c",
+    "podcast_title": "In Our Time With Melvyn Bragg"
+  },
+  {
+    "stamp": "2014-11-06T18:00:00Z",
+    "kind": "episode",
+    "uuid": "41fef130-480b-0132-cb77-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "new",
+        "key": "uuid",
+        "to": "41fef130-480b-0132-cb77-5f4c86fd3263"
+      },
+      {
+        "op": "new",
+        "key": "url",
+        "to": "http://itunesmedia.economist.com/sites/default/files/audio/20141017_alix_christie_ad.mp3"
+      },
+      {
+        "op": "new",
+        "key": "title",
+        "to": "Gutenberg's apprentice"
+      },
+      {
+        "op": "new",
+        "key": "published_at",
+        "to": "2014-11-06 16:38:42"
+      },
+      {
+        "op": "new",
+        "key": "size",
+        "to": 7886616
+      },
+      {
+        "op": "new",
+        "key": "duration",
+        "to": 394
+      },
+      {
+        "op": "new",
+        "key": "file_type",
+        "to": "audio/mp3"
+      },
+      {
+        "op": "new",
+        "key": "podcast_id",
+        "to": 1109
+      },
+      {
+        "op": "new",
+        "key": "id",
+        "to": null
+      },
+      {
+        "op": "new",
+        "key": "podcast_uuid",
+        "to": "fe2b3f90-0422-012e-f9a0-00163e1b201c"
+      }
+    ],
+    "episode_title": "Gutenberg's apprentice",
+    "podcast_uuid": "fe2b3f90-0422-012e-f9a0-00163e1b201c",
+    "podcast_title": "The Economist: All audio"
+  },
+  {
+    "stamp": "2014-11-06T18:50:00Z",
+    "kind": "episode",
+    "uuid": "72f6add0-4812-0132-cb7a-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "new",
+        "key": "uuid",
+        "to": "72f6add0-4812-0132-cb7a-5f4c86fd3263"
+      },
+      {
+        "op": "new",
+        "key": "url",
+        "to": "http://feedproxy.google.com/~r/TheBryanCallenShow/~5/1tANskMNetY/bc-0168.mp3"
+      },
+      {
+        "op": "new",
+        "key": "title",
+        "to": "Ep168 - Michael Malice, Part 2"
+      },
+      {
+        "op": "new",
+        "key": "published_at",
+        "to": "2014-11-06 16:00:00"
+      },
+      {
+        "op": "new",
+        "key": "size",
+        "to": 63450406
+      },
+      {
+        "op": "new",
+        "key": "duration",
+        "to": 3937
+      },
+      {
+        "op": "new",
+        "key": "file_type",
+        "to": "audio/mp3"
+      },
+      {
+        "op": "new",
+        "key": "podcast_id",
+        "to": 138175
+      },
+      {
+        "op": "new",
+        "key": "id",
+        "to": null
+      },
+      {
+        "op": "new",
+        "key": "podcast_uuid",
+        "to": "42150f70-c66f-012f-7e7a-723c91aeae46"
+      }
+    ],
+    "episode_title": "Ep168 - Michael Malice, Part 2",
+    "podcast_uuid": "42150f70-c66f-012f-7e7a-723c91aeae46",
+    "podcast_title": "The Bryan Callen Show"
+  },
+  {
+    "stamp": "2014-11-06T19:50:00Z",
+    "kind": "episode",
+    "uuid": "ade05310-481b-0132-cb7e-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "new",
+        "key": "uuid",
+        "to": "ade05310-481b-0132-cb7e-5f4c86fd3263"
+      },
+      {
+        "op": "new",
+        "key": "url",
+        "to": "http://www.podtrac.com/pts/redirect.mp3/twit.cachefly.net/audio/tnt/tnt1130/tnt1130.mp3"
+      },
+      {
+        "op": "new",
+        "key": "title",
+        "to": "TNT 1130: Amazon Echos Siri"
+      },
+      {
+        "op": "new",
+        "key": "published_at",
+        "to": "2014-11-06 19:31:02"
+      },
+      {
+        "op": "new",
+        "key": "size",
+        "to": 14176989
+      },
+      {
+        "op": "new",
+        "key": "duration",
+        "to": 1743
+      },
+      {
+        "op": "new",
+        "key": "file_type",
+        "to": "audio/mp3"
+      },
+      {
+        "op": "new",
+        "key": "podcast_id",
+        "to": 1040
+      },
+      {
+        "op": "new",
+        "key": "id",
+        "to": null
+      },
+      {
+        "op": "new",
+        "key": "podcast_uuid",
+        "to": "77170eb0-0257-012e-f994-00163e1b201c"
+      }
+    ],
+    "episode_title": "TNT 1130: Amazon Echos Siri",
+    "podcast_uuid": "77170eb0-0257-012e-f994-00163e1b201c",
+    "podcast_title": "Tech News Today (MP3)"
   },
   {
     "stamp": "2014-11-06T19:50:00Z",
@@ -289,7 +1934,190 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "75 - A NodeForward Show.",
+    "podcast_uuid": "25ca21a0-85c2-012e-3eb7-00163e1b201c",
+    "podcast_title": "NodeUp"
+  },
+  {
+    "stamp": "2014-11-06T21:10:00Z",
+    "kind": "episode",
+    "uuid": "10333f60-4827-0132-cb84-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "new",
+        "key": "uuid",
+        "to": "10333f60-4827-0132-cb84-5f4c86fd3263"
+      },
+      {
+        "op": "new",
+        "key": "url",
+        "to": "http://mp3s.nashownotes.com/NA-667-2014-11-06-Final.mp3"
+      },
+      {
+        "op": "new",
+        "key": "title",
+        "to": "NA-667-2014-11-06"
+      },
+      {
+        "op": "new",
+        "key": "published_at",
+        "to": "2014-11-06 21:03:52"
+      },
+      {
+        "op": "new",
+        "key": "size",
+        "to": 128964434
+      },
+      {
+        "op": "new",
+        "key": "duration",
+        "to": 10714
+      },
+      {
+        "op": "new",
+        "key": "file_type",
+        "to": "audio/mp3"
+      },
+      {
+        "op": "new",
+        "key": "podcast_id",
+        "to": 129249
+      },
+      {
+        "op": "new",
+        "key": "id",
+        "to": null
+      },
+      {
+        "op": "new",
+        "key": "podcast_uuid",
+        "to": "8c4c6bd0-a696-012f-4480-525400c11844"
+      }
+    ],
+    "episode_title": "NA-667-2014-11-06",
+    "podcast_uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
+    "podcast_title": "No Agenda"
+  },
+  {
+    "stamp": "2014-11-06T21:10:00Z",
+    "kind": "episode",
+    "uuid": "48fda890-4826-0132-cb83-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "new",
+        "key": "uuid",
+        "to": "48fda890-4826-0132-cb83-5f4c86fd3263"
+      },
+      {
+        "op": "new",
+        "key": "url",
+        "to": "http://itunesmedia.economist.com/sites/default/files/audio/20141106_twa_aa.mp3"
+      },
+      {
+        "op": "new",
+        "key": "title",
+        "to": "The week ahead: November 6th 2014"
+      },
+      {
+        "op": "new",
+        "key": "published_at",
+        "to": "2014-11-06 19:16:18"
+      },
+      {
+        "op": "new",
+        "key": "size",
+        "to": 10805200
+      },
+      {
+        "op": "new",
+        "key": "duration",
+        "to": 675
+      },
+      {
+        "op": "new",
+        "key": "file_type",
+        "to": "audio/mp3"
+      },
+      {
+        "op": "new",
+        "key": "podcast_id",
+        "to": 1109
+      },
+      {
+        "op": "new",
+        "key": "id",
+        "to": null
+      },
+      {
+        "op": "new",
+        "key": "podcast_uuid",
+        "to": "fe2b3f90-0422-012e-f9a0-00163e1b201c"
+      }
+    ],
+    "episode_title": "The week ahead: November 6th 2014",
+    "podcast_uuid": "fe2b3f90-0422-012e-f9a0-00163e1b201c",
+    "podcast_title": "The Economist: All audio"
+  },
+  {
+    "stamp": "2014-11-06T21:40:00Z",
+    "kind": "episode",
+    "uuid": "6e0d6bd0-482a-0132-cb85-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "new",
+        "key": "uuid",
+        "to": "6e0d6bd0-482a-0132-cb85-5f4c86fd3263"
+      },
+      {
+        "op": "new",
+        "key": "url",
+        "to": "http://traffic.libsyn.com/thehistoryofbyzantium/57_Why_did_the_Arabs_Win_Part_2_In_the_Shadow_of_the_Sword.mp3"
+      },
+      {
+        "op": "new",
+        "key": "title",
+        "to": "Episode 57 - Why did the Arabs win? Part 2: In the Shadow of the Sword"
+      },
+      {
+        "op": "new",
+        "key": "published_at",
+        "to": "2014-11-06 21:26:25"
+      },
+      {
+        "op": "new",
+        "key": "size",
+        "to": 35718665
+      },
+      {
+        "op": "new",
+        "key": "duration",
+        "to": 2119
+      },
+      {
+        "op": "new",
+        "key": "file_type",
+        "to": "audio/mp3"
+      },
+      {
+        "op": "new",
+        "key": "podcast_id",
+        "to": 124638
+      },
+      {
+        "op": "new",
+        "key": "id",
+        "to": null
+      },
+      {
+        "op": "new",
+        "key": "podcast_uuid",
+        "to": "c84870c0-906a-012f-3312-525400c11844"
+      }
+    ],
+    "episode_title": "Episode 57 - Why did the Arabs win? Part 2: In the Shadow of the Sword",
+    "podcast_uuid": "c84870c0-906a-012f-3312-525400c11844",
+    "podcast_title": "The History of Byzantium"
   },
   {
     "stamp": "2014-11-06T21:40:00Z",
@@ -302,7 +2130,10 @@
         "from": 764,
         "to": 926
       }
-    ]
+    ],
+    "episode_title": "75 - A NodeForward Show.",
+    "podcast_uuid": "25ca21a0-85c2-012e-3eb7-00163e1b201c",
+    "podcast_title": "NodeUp"
   },
   {
     "stamp": "2014-11-06T23:10:00Z",
@@ -329,7 +2160,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "TNT 1130: Amazon Echos Siri",
+    "podcast_uuid": "77170eb0-0257-012e-f994-00163e1b201c",
+    "podcast_title": "Tech News Today (MP3)"
   },
   {
     "stamp": "2014-11-06T23:20:00Z",
@@ -342,7 +2176,10 @@
         "from": 366,
         "to": 758
       }
-    ]
+    ],
+    "episode_title": "TNT 1130: Amazon Echos Siri",
+    "podcast_uuid": "77170eb0-0257-012e-f994-00163e1b201c",
+    "podcast_title": "Tech News Today (MP3)"
   },
   {
     "stamp": "2014-11-06T23:20:00Z",
@@ -369,7 +2206,70 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "Ep168 - Michael Malice, Part 2",
+    "podcast_uuid": "42150f70-c66f-012f-7e7a-723c91aeae46",
+    "podcast_title": "The Bryan Callen Show"
+  },
+  {
+    "stamp": "2014-11-07T01:00:00Z",
+    "kind": "episode",
+    "uuid": "7dc961b0-4846-0132-cb93-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "new",
+        "key": "uuid",
+        "to": "7dc961b0-4846-0132-cb93-5f4c86fd3263"
+      },
+      {
+        "op": "new",
+        "key": "url",
+        "to": "http://downloads.bbc.co.uk/podcasts/worldservice/globalnews/globalnews_20141107-0006a.mp3"
+      },
+      {
+        "op": "new",
+        "key": "title",
+        "to": "GlobalNews: 07 Nov 14 AM Hollande bid to boost popularity"
+      },
+      {
+        "op": "new",
+        "key": "published_at",
+        "to": "2014-11-07 00:06:00"
+      },
+      {
+        "op": "new",
+        "key": "size",
+        "to": 13729198
+      },
+      {
+        "op": "new",
+        "key": "duration",
+        "to": 1705
+      },
+      {
+        "op": "new",
+        "key": "file_type",
+        "to": "audio/mp3"
+      },
+      {
+        "op": "new",
+        "key": "podcast_id",
+        "to": 1149
+      },
+      {
+        "op": "new",
+        "key": "id",
+        "to": null
+      },
+      {
+        "op": "new",
+        "key": "podcast_uuid",
+        "to": "74a35900-0423-012e-f9a0-00163e1b201c"
+      }
+    ],
+    "episode_title": "GlobalNews: 07 Nov 14 AM Hollande bid to boost popularity",
+    "podcast_uuid": "74a35900-0423-012e-f9a0-00163e1b201c",
+    "podcast_title": "Global News"
   },
   {
     "stamp": "2014-11-07T01:10:00Z",
@@ -396,7 +2296,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "Coming Home",
+    "podcast_uuid": "c3adff20-1b2f-012e-0081-00163e1b201c",
+    "podcast_title": "Ideas from CBC Radio (Highlights)"
   },
   {
     "stamp": "2014-11-07T01:10:00Z",
@@ -423,7 +2326,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "How Guy Fawkes became the face of post-modern protest",
+    "podcast_uuid": "fe2b3f90-0422-012e-f9a0-00163e1b201c",
+    "podcast_title": "The Economist: All audio"
   },
   {
     "stamp": "2014-11-07T01:30:00Z",
@@ -450,7 +2356,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "GlobalNews: 07 Nov 14 AM Hollande bid to boost popularity",
+    "podcast_uuid": "74a35900-0423-012e-f9a0-00163e1b201c",
+    "podcast_title": "Global News"
   },
   {
     "stamp": "2014-11-07T02:00:00Z",
@@ -477,7 +2386,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "Gutenberg's apprentice",
+    "podcast_uuid": "fe2b3f90-0422-012e-f9a0-00163e1b201c",
+    "podcast_title": "The Economist: All audio"
   },
   {
     "stamp": "2014-11-07T02:10:00Z",
@@ -504,7 +2416,70 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "IOT: Hatshepsut 06 Nov 14",
+    "podcast_uuid": "5e6125f0-0424-012e-f9a0-00163e1b201c",
+    "podcast_title": "In Our Time With Melvyn Bragg"
+  },
+  {
+    "stamp": "2014-11-07T02:20:00Z",
+    "kind": "episode",
+    "uuid": "277ec520-4851-0132-cb98-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "new",
+        "key": "uuid",
+        "to": "277ec520-4851-0132-cb98-5f4c86fd3263"
+      },
+      {
+        "op": "new",
+        "key": "url",
+        "to": "http://www.podtrac.com/pts/redirect.mp3/traffic.libsyn.com/tytnetworkpodcast/tytTEASE-20141106.mp3"
+      },
+      {
+        "op": "new",
+        "key": "title",
+        "to": "TYT-11.06.14"
+      },
+      {
+        "op": "new",
+        "key": "published_at",
+        "to": "2014-11-07 02:04:33"
+      },
+      {
+        "op": "new",
+        "key": "size",
+        "to": 55080646
+      },
+      {
+        "op": "new",
+        "key": "duration",
+        "to": 3443
+      },
+      {
+        "op": "new",
+        "key": "file_type",
+        "to": "audio/mp3"
+      },
+      {
+        "op": "new",
+        "key": "podcast_id",
+        "to": 171028
+      },
+      {
+        "op": "new",
+        "key": "id",
+        "to": null
+      },
+      {
+        "op": "new",
+        "key": "podcast_uuid",
+        "to": "0fb72d80-4c95-0130-e3d5-723c91aeae46"
+      }
+    ],
+    "episode_title": "TYT-11.06.14",
+    "podcast_uuid": "0fb72d80-4c95-0130-e3d5-723c91aeae46",
+    "podcast_title": "The Young Turks Audio Podcast"
   },
   {
     "stamp": "2014-11-07T06:50:00Z",
@@ -517,7 +2492,10 @@
         "from": null,
         "to": 989
       }
-    ]
+    ],
+    "episode_title": "Coming Home",
+    "podcast_uuid": "c3adff20-1b2f-012e-0081-00163e1b201c",
+    "podcast_title": "Ideas from CBC Radio (Highlights)"
   },
   {
     "stamp": "2014-11-07T07:00:00Z",
@@ -530,7 +2508,70 @@
         "from": 989,
         "to": 1564
       }
-    ]
+    ],
+    "episode_title": "Coming Home",
+    "podcast_uuid": "c3adff20-1b2f-012e-0081-00163e1b201c",
+    "podcast_title": "Ideas from CBC Radio (Highlights)"
+  },
+  {
+    "stamp": "2014-11-07T07:40:00Z",
+    "kind": "episode",
+    "uuid": "22b2a7c0-487e-0132-cbb3-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "new",
+        "key": "uuid",
+        "to": "22b2a7c0-487e-0132-cbb3-5f4c86fd3263"
+      },
+      {
+        "op": "new",
+        "key": "url",
+        "to": "http://podcast.cbc.ca/mp3/podcasts/ideas_20141107_94033.mp3"
+      },
+      {
+        "op": "new",
+        "key": "title",
+        "to": "Lost Innocence, Part 5 - Scars of the Second Generation"
+      },
+      {
+        "op": "new",
+        "key": "published_at",
+        "to": "2014-11-07 05:00:00"
+      },
+      {
+        "op": "new",
+        "key": "size",
+        "to": 50624
+      },
+      {
+        "op": "new",
+        "key": "duration",
+        "to": 3240
+      },
+      {
+        "op": "new",
+        "key": "file_type",
+        "to": "audio/mp3"
+      },
+      {
+        "op": "new",
+        "key": "podcast_id",
+        "to": 2819
+      },
+      {
+        "op": "new",
+        "key": "id",
+        "to": null
+      },
+      {
+        "op": "new",
+        "key": "podcast_uuid",
+        "to": "c3adff20-1b2f-012e-0081-00163e1b201c"
+      }
+    ],
+    "episode_title": "Lost Innocence, Part 5 - Scars of the Second Generation",
+    "podcast_uuid": "c3adff20-1b2f-012e-0081-00163e1b201c",
+    "podcast_title": "Ideas from CBC Radio (Highlights)"
   },
   {
     "stamp": "2014-11-07T08:10:00Z",
@@ -563,7 +2604,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "This Magic Moment",
+    "podcast_uuid": "7b376e30-1b93-012e-00b3-00163e1b201c",
+    "podcast_title": "Wiretap from CBC Radio"
   },
   {
     "stamp": "2014-11-07T08:10:00Z",
@@ -576,7 +2620,10 @@
         "from": 1564,
         "to": 2134
       }
-    ]
+    ],
+    "episode_title": "Coming Home",
+    "podcast_uuid": "c3adff20-1b2f-012e-0081-00163e1b201c",
+    "podcast_title": "Ideas from CBC Radio (Highlights)"
   },
   {
     "stamp": "2014-11-07T08:20:00Z",
@@ -589,7 +2636,10 @@
         "from": 2134,
         "to": 2634
       }
-    ]
+    ],
+    "episode_title": "Coming Home",
+    "podcast_uuid": "c3adff20-1b2f-012e-0081-00163e1b201c",
+    "podcast_title": "Ideas from CBC Radio (Highlights)"
   },
   {
     "stamp": "2014-11-07T09:50:00Z",
@@ -616,7 +2666,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "NA-667-2014-11-06",
+    "podcast_uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
+    "podcast_title": "No Agenda"
   },
   {
     "stamp": "2014-11-07T10:00:00Z",
@@ -629,7 +2682,10 @@
         "from": 380,
         "to": 390
       }
-    ]
+    ],
+    "episode_title": "NA-667-2014-11-06",
+    "podcast_uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
+    "podcast_title": "No Agenda"
   },
   {
     "stamp": "2014-11-07T10:00:00Z",
@@ -656,7 +2712,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "inscience: Science of ageing; Microneedles; Firelab; Rosetta; Scientific authorship 06 Nov 14",
+    "podcast_uuid": "66084f00-c6b1-0130-34d2-723c91aeae46",
+    "podcast_title": "BBC Inside Science"
   },
   {
     "stamp": "2014-11-07T10:40:00Z",
@@ -669,7 +2728,10 @@
         "from": 650,
         "to": 890
       }
-    ]
+    ],
+    "episode_title": "inscience: Science of ageing; Microneedles; Firelab; Rosetta; Scientific authorship 06 Nov 14",
+    "podcast_uuid": "66084f00-c6b1-0130-34d2-723c91aeae46",
+    "podcast_title": "BBC Inside Science"
   },
   {
     "stamp": "2014-11-07T10:50:00Z",
@@ -682,7 +2744,10 @@
         "from": 890,
         "to": 1270
       }
-    ]
+    ],
+    "episode_title": "inscience: Science of ageing; Microneedles; Firelab; Rosetta; Scientific authorship 06 Nov 14",
+    "podcast_uuid": "66084f00-c6b1-0130-34d2-723c91aeae46",
+    "podcast_title": "BBC Inside Science"
   },
   {
     "stamp": "2014-11-07T11:30:00Z",
@@ -695,7 +2760,10 @@
         "from": 390,
         "to": 1860
       }
-    ]
+    ],
+    "episode_title": "NA-667-2014-11-06",
+    "podcast_uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
+    "podcast_title": "No Agenda"
   },
   {
     "stamp": "2014-11-07T12:30:00Z",
@@ -708,7 +2776,10 @@
         "from": 1860,
         "to": 5545
       }
-    ]
+    ],
+    "episode_title": "NA-667-2014-11-06",
+    "podcast_uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
+    "podcast_title": "No Agenda"
   },
   {
     "stamp": "2014-11-07T13:30:00Z",
@@ -721,7 +2792,10 @@
         "from": 5545,
         "to": 9154
       }
-    ]
+    ],
+    "episode_title": "NA-667-2014-11-06",
+    "podcast_uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
+    "podcast_title": "No Agenda"
   },
   {
     "stamp": "2014-11-07T19:30:00Z",
@@ -734,7 +2808,10 @@
         "from": 926,
         "to": 1710
       }
-    ]
+    ],
+    "episode_title": "75 - A NodeForward Show.",
+    "podcast_uuid": "25ca21a0-85c2-012e-3eb7-00163e1b201c",
+    "podcast_title": "NodeUp"
   },
   {
     "stamp": "2014-11-07T20:30:00Z",
@@ -747,7 +2824,10 @@
         "from": 1710,
         "to": 1979
       }
-    ]
+    ],
+    "episode_title": "75 - A NodeForward Show.",
+    "podcast_uuid": "25ca21a0-85c2-012e-3eb7-00163e1b201c",
+    "podcast_title": "NodeUp"
   },
   {
     "stamp": "2014-11-07T20:40:00Z",
@@ -760,7 +2840,10 @@
         "from": 1979,
         "to": 2722
       }
-    ]
+    ],
+    "episode_title": "75 - A NodeForward Show.",
+    "podcast_uuid": "25ca21a0-85c2-012e-3eb7-00163e1b201c",
+    "podcast_title": "NodeUp"
   },
   {
     "stamp": "2014-11-07T20:50:00Z",
@@ -773,7 +2856,10 @@
         "from": 2722,
         "to": 2756
       }
-    ]
+    ],
+    "episode_title": "75 - A NodeForward Show.",
+    "podcast_uuid": "25ca21a0-85c2-012e-3eb7-00163e1b201c",
+    "podcast_title": "NodeUp"
   },
   {
     "stamp": "2014-11-07T22:20:00Z",
@@ -806,7 +2892,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "265: Hooked on social media. Hacking the mail. A CD that can't play. A brief history of time travel. Cyber attacks on human rights groups.",
+    "podcast_uuid": "05ccf3c0-1b97-012e-00b7-00163e1b201c",
+    "podcast_title": "Spark from CBC Radio"
   },
   {
     "stamp": "2014-11-08T02:40:00Z",
@@ -819,7 +2908,10 @@
         "from": "TRC #322: Less Kids Trick or Treating? + SFoSF: Coffee + BDSM Illegal? + Losing Elan",
         "to": "TRC #322: Fewer Kids Trick or Treating? + SFoSF: Coffee + BDSM Illegal? + Losing Elan"
       }
-    ]
+    ],
+    "episode_title": "TRC #322: Fewer Kids Trick or Treating? + SFoSF: Coffee + BDSM Illegal? + Losing Elan",
+    "podcast_uuid": "d22cc180-0dc1-012e-fbb9-00163e1b201c",
+    "podcast_title": "The Reality Check"
   },
   {
     "stamp": "2014-11-08T05:40:00Z",
@@ -832,7 +2924,10 @@
         "from": "http://ec.libsyn.com/p/3/e/a/3eac5e24945684c7/scifri201411071.mp3?d13a76d516d9dec20c3d276ce028ed5089ab1ce3dae902ea1d06c98233d1c85bca67&c_id=7846895",
         "to": "http://hwcdn.libsyn.com/p/3/e/a/3eac5e24945684c7/scifri201411071.mp3?c_id=7846895&expiration=1415425981&hwt=198d13364ccd578cfdcd10cea9f7ec84"
       }
-    ]
+    ],
+    "episode_title": "U.S. High-Speed Internet Lags Behind on Price, Cost",
+    "podcast_uuid": "52b13ce0-0d7b-012e-fba4-00163e1b201c",
+    "podcast_title": "Science Friday Audio Podcast"
   },
   {
     "stamp": "2014-11-08T05:40:00Z",
@@ -845,7 +2940,10 @@
         "from": "http://hwcdn.libsyn.com/p/b/0/e/b0e89522951194df/scifri201411075.mp3?c_id=7847411&expiration=1415402174&hwt=5ae3c7d45af467d683d12fea5917b4f8",
         "to": "http://ec.libsyn.com/p/b/0/e/b0e89522951194df/scifri201411075.mp3?d13a76d516d9dec20c3d276ce028ed5089ab1ce3dae902ea1d06c98233d3cf58418d&c_id=7847411"
       }
-    ]
+    ],
+    "episode_title": "Opening Up the Synthetic Biology Toolkit",
+    "podcast_uuid": "52b13ce0-0d7b-012e-fba4-00163e1b201c",
+    "podcast_title": "Science Friday Audio Podcast"
   },
   {
     "stamp": "2014-11-08T07:50:00Z",
@@ -878,7 +2976,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "Pickles, Vagasling and Cheatin\" on your house? Must be time to Laugh Out Loud",
+    "podcast_uuid": "3920d880-1b97-012e-00b9-00163e1b201c",
+    "podcast_title": "Laugh Out Loud from CBC Radio"
   },
   {
     "stamp": "2014-11-08T12:20:00Z",
@@ -905,7 +3006,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "210: Fuzzy Wuzzy Was A Podcast",
+    "podcast_uuid": "976c2fc0-1c0e-012e-00fd-00163e1b201c",
+    "podcast_title": "Android Central Podcast"
   },
   {
     "stamp": "2014-11-08T12:50:00Z",
@@ -918,7 +3022,10 @@
         "from": null,
         "to": 1729
       }
-    ]
+    ],
+    "episode_title": "210: Fuzzy Wuzzy Was A Podcast",
+    "podcast_uuid": "976c2fc0-1c0e-012e-00fd-00163e1b201c",
+    "podcast_title": "Android Central Podcast"
   },
   {
     "stamp": "2014-11-08T19:40:00Z",
@@ -945,7 +3052,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "GlobalNews: 08 Nov 14 SAT Global corruption clampdown",
+    "podcast_uuid": "74a35900-0423-012e-f9a0-00163e1b201c",
+    "podcast_title": "Global News"
   },
   {
     "stamp": "2014-11-08T19:50:00Z",
@@ -958,7 +3068,10 @@
         "from": 441,
         "to": 648
       }
-    ]
+    ],
+    "episode_title": "GlobalNews: 08 Nov 14 SAT Global corruption clampdown",
+    "podcast_uuid": "74a35900-0423-012e-f9a0-00163e1b201c",
+    "podcast_title": "Global News"
   },
   {
     "stamp": "2014-11-08T20:00:00Z",
@@ -971,7 +3084,10 @@
         "from": 648,
         "to": 993
       }
-    ]
+    ],
+    "episode_title": "GlobalNews: 08 Nov 14 SAT Global corruption clampdown",
+    "podcast_uuid": "74a35900-0423-012e-f9a0-00163e1b201c",
+    "podcast_title": "Global News"
   },
   {
     "stamp": "2014-11-08T20:10:00Z",
@@ -984,7 +3100,10 @@
         "from": 993,
         "to": 1704
       }
-    ]
+    ],
+    "episode_title": "GlobalNews: 08 Nov 14 SAT Global corruption clampdown",
+    "podcast_uuid": "74a35900-0423-012e-f9a0-00163e1b201c",
+    "podcast_title": "Global News"
   },
   {
     "stamp": "2014-11-08T20:20:00Z",
@@ -1003,7 +3122,10 @@
         "from": null,
         "to": 32
       }
-    ]
+    ],
+    "episode_title": "This Magic Moment",
+    "podcast_uuid": "7b376e30-1b93-012e-00b3-00163e1b201c",
+    "podcast_title": "Wiretap from CBC Radio"
   },
   {
     "stamp": "2014-11-08T20:30:00Z",
@@ -1016,7 +3138,10 @@
         "from": 32,
         "to": 1062
       }
-    ]
+    ],
+    "episode_title": "This Magic Moment",
+    "podcast_uuid": "7b376e30-1b93-012e-00b3-00163e1b201c",
+    "podcast_title": "Wiretap from CBC Radio"
   },
   {
     "stamp": "2014-11-08T20:40:00Z",
@@ -1029,7 +3154,10 @@
         "from": 1062,
         "to": 1262
       }
-    ]
+    ],
+    "episode_title": "This Magic Moment",
+    "podcast_uuid": "7b376e30-1b93-012e-00b3-00163e1b201c",
+    "podcast_title": "Wiretap from CBC Radio"
   },
   {
     "stamp": "2014-11-08T21:00:00Z",
@@ -1056,7 +3184,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "WorldUpMC: 08 Nov 14 Weekend Extra",
+    "podcast_uuid": "b633aa60-0bfe-012e-fb1f-00163e1b201c",
+    "podcast_title": "BBC World Update: Daily Commute"
   },
   {
     "stamp": "2014-11-08T21:20:00Z",
@@ -1089,7 +3220,8 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "#246: My Pen Pal"
   },
   {
     "stamp": "2014-11-08T21:30:00Z",
@@ -1102,7 +3234,8 @@
         "from": 603,
         "to": 1391
       }
-    ]
+    ],
+    "episode_title": "#246: My Pen Pal"
   },
   {
     "stamp": "2014-11-08T21:50:00Z",
@@ -1115,7 +3248,8 @@
         "from": 1391,
         "to": 2504
       }
-    ]
+    ],
+    "episode_title": "#246: My Pen Pal"
   },
   {
     "stamp": "2014-11-08T22:00:00Z",
@@ -1128,7 +3262,8 @@
         "from": 2504,
         "to": 3246
       }
-    ]
+    ],
+    "episode_title": "#246: My Pen Pal"
   },
   {
     "stamp": "2014-11-08T22:20:00Z",
@@ -1155,7 +3290,8 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "William Gibson on 'Zero History' with Cory Doctorow"
   },
   {
     "stamp": "2014-11-08T22:50:00Z",
@@ -1168,7 +3304,8 @@
         "from": 665,
         "to": 2428
       }
-    ]
+    ],
+    "episode_title": "William Gibson on 'Zero History' with Cory Doctorow"
   },
   {
     "stamp": "2014-11-08T23:00:00Z",
@@ -1195,7 +3332,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "TYT-11.06.14",
+    "podcast_uuid": "0fb72d80-4c95-0130-e3d5-723c91aeae46",
+    "podcast_title": "The Young Turks Audio Podcast"
   },
   {
     "stamp": "2014-11-08T23:10:00Z",
@@ -1208,7 +3348,10 @@
         "from": 278,
         "to": 520
       }
-    ]
+    ],
+    "episode_title": "TYT-11.06.14",
+    "podcast_uuid": "0fb72d80-4c95-0130-e3d5-723c91aeae46",
+    "podcast_title": "The Young Turks Audio Podcast"
   },
   {
     "stamp": "2014-11-08T23:20:00Z",
@@ -1221,7 +3364,10 @@
         "from": 520,
         "to": 1159
       }
-    ]
+    ],
+    "episode_title": "TYT-11.06.14",
+    "podcast_uuid": "0fb72d80-4c95-0130-e3d5-723c91aeae46",
+    "podcast_title": "The Young Turks Audio Podcast"
   },
   {
     "stamp": "2014-11-09T06:50:00Z",
@@ -1248,7 +3394,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "science: Hepatitis-C vaccine, Microneedles, Red-Dead Canal",
+    "podcast_uuid": "e4ff94b0-8686-0130-0b07-723c91aeae46",
+    "podcast_title": "Science Hour"
   },
   {
     "stamp": "2014-11-09T06:50:00Z",
@@ -1261,7 +3410,10 @@
         "from": 1159,
         "to": 1611
       }
-    ]
+    ],
+    "episode_title": "TYT-11.06.14",
+    "podcast_uuid": "0fb72d80-4c95-0130-e3d5-723c91aeae46",
+    "podcast_title": "The Young Turks Audio Podcast"
   },
   {
     "stamp": "2014-11-09T07:00:00Z",
@@ -1274,7 +3426,10 @@
         "from": 1545,
         "to": 2255
       }
-    ]
+    ],
+    "episode_title": "science: Hepatitis-C vaccine, Microneedles, Red-Dead Canal",
+    "podcast_uuid": "e4ff94b0-8686-0130-0b07-723c91aeae46",
+    "podcast_title": "Science Hour"
   },
   {
     "stamp": "2014-11-09T07:10:00Z",
@@ -1287,7 +3442,10 @@
         "from": 2255,
         "to": 2985
       }
-    ]
+    ],
+    "episode_title": "science: Hepatitis-C vaccine, Microneedles, Red-Dead Canal",
+    "podcast_uuid": "e4ff94b0-8686-0130-0b07-723c91aeae46",
+    "podcast_title": "Science Hour"
   },
   {
     "stamp": "2014-11-09T07:20:00Z",
@@ -1314,7 +3472,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "TRC #322: Fewer Kids Trick or Treating? + SFoSF: Coffee + BDSM Illegal? + Losing Elan",
+    "podcast_uuid": "d22cc180-0dc1-012e-fbb9-00163e1b201c",
+    "podcast_title": "The Reality Check"
   },
   {
     "stamp": "2014-11-09T07:40:00Z",
@@ -1327,7 +3488,10 @@
         "from": 626,
         "to": 1724
       }
-    ]
+    ],
+    "episode_title": "TRC #322: Fewer Kids Trick or Treating? + SFoSF: Coffee + BDSM Illegal? + Losing Elan",
+    "podcast_uuid": "d22cc180-0dc1-012e-fbb9-00163e1b201c",
+    "podcast_title": "The Reality Check"
   },
   {
     "stamp": "2014-11-09T09:20:00Z",
@@ -1360,7 +3524,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "Julia Franck Podcast",
+    "podcast_uuid": "55c51e50-3318-012e-0d51-00163e1b201c",
+    "podcast_title": "Writers and Company from CBC Radio"
   },
   {
     "stamp": "2014-11-09T09:20:00Z",
@@ -1373,7 +3540,10 @@
         "from": 1724,
         "to": 1883
       }
-    ]
+    ],
+    "episode_title": "TRC #322: Fewer Kids Trick or Treating? + SFoSF: Coffee + BDSM Illegal? + Losing Elan",
+    "podcast_uuid": "d22cc180-0dc1-012e-fbb9-00163e1b201c",
+    "podcast_title": "The Reality Check"
   },
   {
     "stamp": "2014-11-09T09:40:00Z",
@@ -1386,7 +3556,10 @@
         "from": 1883,
         "to": 3056
       }
-    ]
+    ],
+    "episode_title": "TRC #322: Fewer Kids Trick or Treating? + SFoSF: Coffee + BDSM Illegal? + Losing Elan",
+    "podcast_uuid": "d22cc180-0dc1-012e-fbb9-00163e1b201c",
+    "podcast_title": "The Reality Check"
   },
   {
     "stamp": "2014-11-09T10:20:00Z",
@@ -1413,7 +3586,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "WorldUpMC: The Sunday Feature: The last Cabmen shelters",
+    "podcast_uuid": "b633aa60-0bfe-012e-fb1f-00163e1b201c",
+    "podcast_title": "BBC World Update: Daily Commute"
   },
   {
     "stamp": "2014-11-09T12:20:00Z",
@@ -1432,7 +3608,10 @@
         "from": null,
         "to": 3181
       }
-    ]
+    ],
+    "episode_title": "Julia Franck Podcast",
+    "podcast_uuid": "55c51e50-3318-012e-0d51-00163e1b201c",
+    "podcast_title": "Writers and Company from CBC Radio"
   },
   {
     "stamp": "2014-11-09T18:30:00Z",
@@ -1459,7 +3638,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "GlobalNews: 09 Nov 14: United Berlin 25 Years On",
+    "podcast_uuid": "74a35900-0423-012e-f9a0-00163e1b201c",
+    "podcast_title": "Global News"
   },
   {
     "stamp": "2014-11-10T01:10:00Z",
@@ -1486,7 +3668,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "132 JSJ MV Frameworks with Craig McKeachie",
+    "podcast_uuid": "58b79440-1f1f-0131-6ebd-723c91aeae46",
+    "podcast_title": "JavaScript Jabber"
   },
   {
     "stamp": "2014-11-10T02:30:00Z",
@@ -1519,7 +3704,8 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "#539: The Leap"
   },
   {
     "stamp": "2014-11-10T05:20:00Z",
@@ -1546,7 +3732,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "483: Google Burger",
+    "podcast_uuid": "30c2cb40-0256-012e-f994-00163e1b201c",
+    "podcast_title": "This Week in Tech (MP3)"
   },
   {
     "stamp": "2014-11-10T05:30:00Z",
@@ -1559,7 +3748,10 @@
         "from": 793,
         "to": 1423
       }
-    ]
+    ],
+    "episode_title": "483: Google Burger",
+    "podcast_uuid": "30c2cb40-0256-012e-f994-00163e1b201c",
+    "podcast_title": "This Week in Tech (MP3)"
   },
   {
     "stamp": "2014-11-10T06:20:00Z",
@@ -1572,7 +3764,10 @@
         "from": 1423,
         "to": 1462
       }
-    ]
+    ],
+    "episode_title": "483: Google Burger",
+    "podcast_uuid": "30c2cb40-0256-012e-f994-00163e1b201c",
+    "podcast_title": "This Week in Tech (MP3)"
   },
   {
     "stamp": "2014-11-10T06:20:00Z",
@@ -1599,7 +3794,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "Cosmic Queries: Gravity",
+    "podcast_uuid": "ede41160-9eeb-012f-3e7d-525400c11844",
+    "podcast_title": "StarTalk Radio"
   },
   {
     "stamp": "2014-11-10T07:00:00Z",
@@ -1626,7 +3824,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "NA-668-2014-11-09",
+    "podcast_uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
+    "podcast_title": "No Agenda"
   },
   {
     "stamp": "2014-11-10T07:20:00Z",
@@ -1639,7 +3840,10 @@
         "from": 1838,
         "to": 3583
       }
-    ]
+    ],
+    "episode_title": "NA-668-2014-11-09",
+    "podcast_uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
+    "podcast_title": "No Agenda"
   },
   {
     "stamp": "2014-11-10T09:00:00Z",
@@ -1652,7 +3856,10 @@
         "from": 3583,
         "to": 5269
       }
-    ]
+    ],
+    "episode_title": "NA-668-2014-11-09",
+    "podcast_uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
+    "podcast_title": "No Agenda"
   },
   {
     "stamp": "2014-11-10T09:10:00Z",
@@ -1679,7 +3886,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "GlobalNews: 10 Nov 14 AM Obama defends more troops for Iraq",
+    "podcast_uuid": "74a35900-0423-012e-f9a0-00163e1b201c",
+    "podcast_title": "Global News"
   },
   {
     "stamp": "2014-11-10T09:10:00Z",
@@ -1692,7 +3902,10 @@
         "from": 5269,
         "to": 5279
       }
-    ]
+    ],
+    "episode_title": "NA-668-2014-11-09",
+    "podcast_uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
+    "podcast_title": "No Agenda"
   },
   {
     "stamp": "2014-11-10T09:20:00Z",
@@ -1705,7 +3918,10 @@
         "from": 421,
         "to": 1291
       }
-    ]
+    ],
+    "episode_title": "GlobalNews: 10 Nov 14 AM Obama defends more troops for Iraq",
+    "podcast_uuid": "74a35900-0423-012e-f9a0-00163e1b201c",
+    "podcast_title": "Global News"
   },
   {
     "stamp": "2014-11-10T10:10:00Z",
@@ -1718,7 +3934,10 @@
         "from": 5279,
         "to": 7278
       }
-    ]
+    ],
+    "episode_title": "NA-668-2014-11-09",
+    "podcast_uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
+    "podcast_title": "No Agenda"
   },
   {
     "stamp": "2014-11-10T10:20:00Z",
@@ -1731,7 +3950,10 @@
         "from": 7278,
         "to": 8467
       }
-    ]
+    ],
+    "episode_title": "NA-668-2014-11-09",
+    "podcast_uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
+    "podcast_title": "No Agenda"
   },
   {
     "stamp": "2014-11-10T11:20:00Z",
@@ -1744,7 +3966,10 @@
         "from": 1462,
         "to": 3272
       }
-    ]
+    ],
+    "episode_title": "483: Google Burger",
+    "podcast_uuid": "30c2cb40-0256-012e-f994-00163e1b201c",
+    "podcast_title": "This Week in Tech (MP3)"
   },
   {
     "stamp": "2014-11-10T12:20:00Z",
@@ -1757,7 +3982,10 @@
         "from": 3272,
         "to": 6842
       }
-    ]
+    ],
+    "episode_title": "483: Google Burger",
+    "podcast_uuid": "30c2cb40-0256-012e-f994-00163e1b201c",
+    "podcast_title": "This Week in Tech (MP3)"
   },
   {
     "stamp": "2014-11-10T15:20:00Z",
@@ -1784,7 +4012,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "WorldUpMC: 10 11 14 China, Japan try to heal relations",
+    "podcast_uuid": "b633aa60-0bfe-012e-fb1f-00163e1b201c",
+    "podcast_title": "BBC World Update: Daily Commute"
   },
   {
     "stamp": "2014-11-10T17:20:00Z",
@@ -1817,7 +4048,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "Ep. 354: Comet Siding Spring vs. Mars",
+    "podcast_uuid": "5e0e0e70-0c4f-012e-fb35-00163e1b201c",
+    "podcast_title": "Astronomy Cast"
   },
   {
     "stamp": "2014-11-10T20:50:00Z",
@@ -1844,7 +4078,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "TNT 1132: Escape from iMessage Jail",
+    "podcast_uuid": "77170eb0-0257-012e-f994-00163e1b201c",
+    "podcast_title": "Tech News Today (MP3)"
   },
   {
     "stamp": "2014-11-10T22:30:00Z",
@@ -1857,7 +4094,10 @@
         "from": 470,
         "to": 509
       }
-    ]
+    ],
+    "episode_title": "TNT 1132: Escape from iMessage Jail",
+    "podcast_uuid": "77170eb0-0257-012e-f994-00163e1b201c",
+    "podcast_title": "Tech News Today (MP3)"
   },
   {
     "stamp": "2014-11-10T22:40:00Z",
@@ -1870,7 +4110,10 @@
         "from": 509,
         "to": 1353
       }
-    ]
+    ],
+    "episode_title": "TNT 1132: Escape from iMessage Jail",
+    "podcast_uuid": "77170eb0-0257-012e-f994-00163e1b201c",
+    "podcast_title": "Tech News Today (MP3)"
   },
   {
     "stamp": "2014-11-11T05:50:00Z",
@@ -1897,7 +4140,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "#571 - Josh Zepps",
+    "podcast_uuid": "873e7420-042d-012e-f9a4-00163e1b201c",
+    "podcast_title": "The Joe Rogan Experience"
   },
   {
     "stamp": "2014-11-11T06:40:00Z",
@@ -1910,7 +4156,10 @@
         "from": 987,
         "to": 5637
       }
-    ]
+    ],
+    "episode_title": "#571 - Josh Zepps",
+    "podcast_uuid": "873e7420-042d-012e-f9a4-00163e1b201c",
+    "podcast_title": "The Joe Rogan Experience"
   },
   {
     "stamp": "2014-11-11T06:50:00Z",
@@ -1937,7 +4186,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "#572 - Dom Irrera",
+    "podcast_uuid": "873e7420-042d-012e-f9a4-00163e1b201c",
+    "podcast_title": "The Joe Rogan Experience"
   },
   {
     "stamp": "2014-11-11T07:00:00Z",
@@ -1950,7 +4202,10 @@
         "from": 649,
         "to": 1346
       }
-    ]
+    ],
+    "episode_title": "#572 - Dom Irrera",
+    "podcast_uuid": "873e7420-042d-012e-f9a4-00163e1b201c",
+    "podcast_title": "The Joe Rogan Experience"
   },
   {
     "stamp": "2014-11-11T07:00:00Z",
@@ -1977,7 +4232,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "2 Minutes with Maher (Originally Aired 11/7/2014)",
+    "podcast_uuid": "2433b8f0-0d4c-012e-fb96-00163e1b201c",
+    "podcast_title": "Real Time with Bill Maher"
   },
   {
     "stamp": "2014-11-11T07:10:00Z",
@@ -1996,7 +4254,10 @@
         "from": null,
         "to": 67
       }
-    ]
+    ],
+    "episode_title": "Ep. 354: Comet Siding Spring vs. Mars",
+    "podcast_uuid": "5e0e0e70-0c4f-012e-fb35-00163e1b201c",
+    "podcast_title": "Astronomy Cast"
   },
   {
     "stamp": "2014-11-11T07:20:00Z",
@@ -2009,7 +4270,10 @@
         "from": 67,
         "to": 998
       }
-    ]
+    ],
+    "episode_title": "Ep. 354: Comet Siding Spring vs. Mars",
+    "podcast_uuid": "5e0e0e70-0c4f-012e-fb35-00163e1b201c",
+    "podcast_title": "Astronomy Cast"
   },
   {
     "stamp": "2014-11-11T07:40:00Z",
@@ -2022,7 +4286,10 @@
         "from": 1346,
         "to": 1356
       }
-    ]
+    ],
+    "episode_title": "#572 - Dom Irrera",
+    "podcast_uuid": "873e7420-042d-012e-f9a4-00163e1b201c",
+    "podcast_title": "The Joe Rogan Experience"
   },
   {
     "stamp": "2014-11-11T08:00:00Z",
@@ -2035,7 +4302,10 @@
         "from": 1356,
         "to": 2453
       }
-    ]
+    ],
+    "episode_title": "#572 - Dom Irrera",
+    "podcast_uuid": "873e7420-042d-012e-f9a4-00163e1b201c",
+    "podcast_title": "The Joe Rogan Experience"
   },
   {
     "stamp": "2014-11-11T09:50:00Z",
@@ -2048,7 +4318,10 @@
         "from": 2453,
         "to": 2498
       }
-    ]
+    ],
+    "episode_title": "#572 - Dom Irrera",
+    "podcast_uuid": "873e7420-042d-012e-f9a4-00163e1b201c",
+    "podcast_title": "The Joe Rogan Experience"
   },
   {
     "stamp": "2014-11-11T10:00:00Z",
@@ -2067,7 +4340,10 @@
         "from": 13731657,
         "to": 13731780
       }
-    ]
+    ],
+    "episode_title": "GlobalNews: 11 Nov 14 AM Nigeria bomb: government blamed",
+    "podcast_uuid": "74a35900-0423-012e-f9a0-00163e1b201c",
+    "podcast_title": "Global News"
   },
   {
     "stamp": "2014-11-11T11:00:00Z",
@@ -2080,7 +4356,10 @@
         "from": 2498,
         "to": 3686
       }
-    ]
+    ],
+    "episode_title": "#572 - Dom Irrera",
+    "podcast_uuid": "873e7420-042d-012e-f9a4-00163e1b201c",
+    "podcast_title": "The Joe Rogan Experience"
   },
   {
     "stamp": "2014-11-11T12:40:00Z",
@@ -2093,7 +4372,10 @@
         "from": 3686,
         "to": 7159
       }
-    ]
+    ],
+    "episode_title": "#572 - Dom Irrera",
+    "podcast_uuid": "873e7420-042d-012e-f9a4-00163e1b201c",
+    "podcast_title": "The Joe Rogan Experience"
   },
   {
     "stamp": "2014-11-11T15:40:00Z",
@@ -2120,7 +4402,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "Episode #335 (Originally Aired 11/7/2014)",
+    "podcast_uuid": "2433b8f0-0d4c-012e-fb96-00163e1b201c",
+    "podcast_title": "Real Time with Bill Maher"
   },
   {
     "stamp": "2014-11-12T01:10:00Z",
@@ -2147,7 +4432,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "Babbage: Acquittals in l’Aquila",
+    "podcast_uuid": "fe2b3f90-0422-012e-f9a0-00163e1b201c",
+    "podcast_title": "The Economist: All audio"
   },
   {
     "stamp": "2014-11-12T01:20:00Z",
@@ -2160,7 +4448,10 @@
         "from": 561,
         "to": 975
       }
-    ]
+    ],
+    "episode_title": "132 JSJ MV Frameworks with Craig McKeachie",
+    "podcast_uuid": "58b79440-1f1f-0131-6ebd-723c91aeae46",
+    "podcast_title": "JavaScript Jabber"
   },
   {
     "stamp": "2014-11-12T02:30:00Z",
@@ -2179,7 +4470,10 @@
         "from": false,
         "to": true
       }
-    ]
+    ],
+    "episode_title": "132 JSJ MV Frameworks with Craig McKeachie",
+    "podcast_uuid": "58b79440-1f1f-0131-6ebd-723c91aeae46",
+    "podcast_title": "JavaScript Jabber"
   },
   {
     "stamp": "2014-11-12T02:40:00Z",
@@ -2192,7 +4486,10 @@
         "from": 1744,
         "to": 2052
       }
-    ]
+    ],
+    "episode_title": "132 JSJ MV Frameworks with Craig McKeachie",
+    "podcast_uuid": "58b79440-1f1f-0131-6ebd-723c91aeae46",
+    "podcast_title": "JavaScript Jabber"
   },
   {
     "stamp": "2014-11-12T03:30:00Z",
@@ -2219,7 +4516,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "GlobalNews: 12 Nov 14 AM Libyan activists beheaded",
+    "podcast_uuid": "74a35900-0423-012e-f9a0-00163e1b201c",
+    "podcast_title": "Global News"
   },
   {
     "stamp": "2014-11-12T03:40:00Z",
@@ -2232,7 +4532,10 @@
         "from": 558,
         "to": 1521
       }
-    ]
+    ],
+    "episode_title": "GlobalNews: 12 Nov 14 AM Libyan activists beheaded",
+    "podcast_uuid": "74a35900-0423-012e-f9a0-00163e1b201c",
+    "podcast_title": "Global News"
   },
   {
     "stamp": "2014-11-12T04:00:00Z",
@@ -2251,7 +4554,8 @@
         "from": null,
         "to": 1358
       }
-    ]
+    ],
+    "episode_title": "#539: The Leap"
   },
   {
     "stamp": "2014-11-12T06:00:00Z",
@@ -2264,7 +4568,8 @@
         "from": 1358,
         "to": 2067
       }
-    ]
+    ],
+    "episode_title": "#539: The Leap"
   },
   {
     "stamp": "2014-11-12T07:30:00Z",
@@ -2291,7 +4596,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "Money talks: November 10th 2014",
+    "podcast_uuid": "fe2b3f90-0422-012e-f9a0-00163e1b201c",
+    "podcast_title": "The Economist: All audio"
   },
   {
     "stamp": "2014-11-12T07:30:00Z",
@@ -2318,7 +4626,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "Monday Morning Podcast 11-10-14",
+    "podcast_uuid": "e0b82010-83df-012e-3c4d-00163e1b201c",
+    "podcast_title": "Monday Morning Podcast"
   },
   {
     "stamp": "2014-11-12T08:10:00Z",
@@ -2331,7 +4642,10 @@
         "from": 1238,
         "to": 3762
       }
-    ]
+    ],
+    "episode_title": "Monday Morning Podcast 11-10-14",
+    "podcast_uuid": "e0b82010-83df-012e-3c4d-00163e1b201c",
+    "podcast_title": "Monday Morning Podcast"
   },
   {
     "stamp": "2014-11-12T08:40:00Z",
@@ -2344,7 +4658,10 @@
         "from": 3762,
         "to": 3799
       }
-    ]
+    ],
+    "episode_title": "Monday Morning Podcast 11-10-14",
+    "podcast_uuid": "e0b82010-83df-012e-3c4d-00163e1b201c",
+    "podcast_title": "Monday Morning Podcast"
   },
   {
     "stamp": "2014-11-12T08:50:00Z",
@@ -2357,7 +4674,10 @@
         "from": 3799,
         "to": 3818
       }
-    ]
+    ],
+    "episode_title": "Monday Morning Podcast 11-10-14",
+    "podcast_uuid": "e0b82010-83df-012e-3c4d-00163e1b201c",
+    "podcast_title": "Monday Morning Podcast"
   },
   {
     "stamp": "2014-11-12T09:10:00Z",
@@ -2370,7 +4690,10 @@
         "from": 3818,
         "to": 4557
       }
-    ]
+    ],
+    "episode_title": "Monday Morning Podcast 11-10-14",
+    "podcast_uuid": "e0b82010-83df-012e-3c4d-00163e1b201c",
+    "podcast_title": "Monday Morning Podcast"
   },
   {
     "stamp": "2014-11-12T10:10:00Z",
@@ -2397,7 +4720,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "Ep169 - The Mother of All Podcasts",
+    "podcast_uuid": "42150f70-c66f-012f-7e7a-723c91aeae46",
+    "podcast_title": "The Bryan Callen Show"
   },
   {
     "stamp": "2014-11-12T11:10:00Z",
@@ -2424,7 +4750,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "TNT 1133: Google Lands an Airport",
+    "podcast_uuid": "77170eb0-0257-012e-f994-00163e1b201c",
+    "podcast_title": "Tech News Today (MP3)"
   },
   {
     "stamp": "2014-11-12T15:50:00Z",
@@ -2437,7 +4766,10 @@
         "from": "TYT-11.11.14",
         "to": "The Young Turks - 11.11.14: Putin, Filibuster, Ebola, Marijuana & Video Game Study"
       }
-    ]
+    ],
+    "episode_title": "The Young Turks - 11.11.14: Putin, Filibuster, Ebola, Marijuana & Video Game Study",
+    "podcast_uuid": "0fb72d80-4c95-0130-e3d5-723c91aeae46",
+    "podcast_title": "The Young Turks Audio Podcast"
   },
   {
     "stamp": "2014-11-12T17:00:00Z",
@@ -2450,7 +4782,10 @@
         "from": "Free Download: 'Intercepting a Shivery Light' by Composer Marcos Balter",
         "to": "Bonus Track: 'Intercepting a Shivery Light' by Marcos Balter"
       }
-    ]
+    ],
+    "episode_title": "Bonus Track: 'Intercepting a Shivery Light' by Marcos Balter",
+    "podcast_uuid": "31e13b40-dd4c-0131-3a26-723c91aeae46",
+    "podcast_title": "Meet the Composer"
   },
   {
     "stamp": "2014-11-12T17:10:00Z",
@@ -2483,7 +4818,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "Bonus Track: 'Intercepting a Shivery Light' by Marcos Balter",
+    "podcast_uuid": "31e13b40-dd4c-0131-3a26-723c91aeae46",
+    "podcast_title": "Meet the Composer"
   },
   {
     "stamp": "2014-11-12T18:00:00Z",
@@ -2496,7 +4834,10 @@
         "from": 2052,
         "to": 2174
       }
-    ]
+    ],
+    "episode_title": "132 JSJ MV Frameworks with Craig McKeachie",
+    "podcast_uuid": "58b79440-1f1f-0131-6ebd-723c91aeae46",
+    "podcast_title": "JavaScript Jabber"
   },
   {
     "stamp": "2014-11-12T18:30:00Z",
@@ -2509,7 +4850,10 @@
         "from": 2174,
         "to": 2930
       }
-    ]
+    ],
+    "episode_title": "132 JSJ MV Frameworks with Craig McKeachie",
+    "podcast_uuid": "58b79440-1f1f-0131-6ebd-723c91aeae46",
+    "podcast_title": "JavaScript Jabber"
   },
   {
     "stamp": "2014-11-12T19:30:00Z",
@@ -2522,7 +4866,10 @@
         "from": 2930,
         "to": 3236
       }
-    ]
+    ],
+    "episode_title": "132 JSJ MV Frameworks with Craig McKeachie",
+    "podcast_uuid": "58b79440-1f1f-0131-6ebd-723c91aeae46",
+    "podcast_title": "JavaScript Jabber"
   },
   {
     "stamp": "2014-11-12T22:20:00Z",
@@ -2549,7 +4896,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "129: Facebook's Sara Golemon and the PHP Language Specification",
+    "podcast_uuid": "70d13d50-9efe-0130-1b90-723c91aeae46",
+    "podcast_title": "The Changelog"
   },
   {
     "stamp": "2014-11-12T22:40:00Z",
@@ -2576,7 +4926,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "The Young Turks - 11.11.14: Putin, Filibuster, Ebola, Marijuana & Video Game Study",
+    "podcast_uuid": "0fb72d80-4c95-0130-e3d5-723c91aeae46",
+    "podcast_title": "The Young Turks Audio Podcast"
   },
   {
     "stamp": "2014-11-12T22:40:00Z",
@@ -2589,7 +4942,10 @@
         "from": null,
         "to": 994
       }
-    ]
+    ],
+    "episode_title": "129: Facebook's Sara Golemon and the PHP Language Specification",
+    "podcast_uuid": "70d13d50-9efe-0130-1b90-723c91aeae46",
+    "podcast_title": "The Changelog"
   },
   {
     "stamp": "2014-11-13T05:50:00Z",
@@ -2616,7 +4972,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "3.16- The Society of 1789",
+    "podcast_uuid": "b1ccb690-fd97-0130-c6ee-723c91aeae46",
+    "podcast_title": "Revolutions"
   },
   {
     "stamp": "2014-11-13T06:10:00Z",
@@ -2643,7 +5002,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "130: Inspeqtor and OSS Products With Mike Perham",
+    "podcast_uuid": "70d13d50-9efe-0130-1b90-723c91aeae46",
+    "podcast_title": "The Changelog"
   },
   {
     "stamp": "2014-11-13T07:10:00Z",
@@ -2656,7 +5018,10 @@
         "from": null,
         "to": 3786
       }
-    ]
+    ],
+    "episode_title": "130: Inspeqtor and OSS Products With Mike Perham",
+    "podcast_uuid": "70d13d50-9efe-0130-1b90-723c91aeae46",
+    "podcast_title": "The Changelog"
   },
   {
     "stamp": "2014-11-13T09:10:00Z",
@@ -2683,7 +5048,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "TNT 1134: Fiber to the Press Release",
+    "podcast_uuid": "77170eb0-0257-012e-f994-00163e1b201c",
+    "podcast_title": "Tech News Today (MP3)"
   },
   {
     "stamp": "2014-11-13T09:40:00Z",
@@ -2710,7 +5078,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "TWiG 275: We All Work For the Dolphins",
+    "podcast_uuid": "dde6abe0-04fe-012e-f9d3-00163e1b201c",
+    "podcast_title": "This Week in Google (MP3)"
   },
   {
     "stamp": "2014-11-13T10:10:00Z",
@@ -2723,7 +5094,10 @@
         "from": 628,
         "to": 647
       }
-    ]
+    ],
+    "episode_title": "TWiG 275: We All Work For the Dolphins",
+    "podcast_uuid": "dde6abe0-04fe-012e-f9d3-00163e1b201c",
+    "podcast_title": "This Week in Google (MP3)"
   },
   {
     "stamp": "2014-11-13T10:10:00Z",
@@ -2750,7 +5124,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "GlobalNews: 12 Nov 14 PM Space probe lands on a comet",
+    "podcast_uuid": "74a35900-0423-012e-f9a0-00163e1b201c",
+    "podcast_title": "Global News"
   },
   {
     "stamp": "2014-11-13T10:30:00Z",
@@ -2763,7 +5140,10 @@
         "from": 647,
         "to": 1177
       }
-    ]
+    ],
+    "episode_title": "TWiG 275: We All Work For the Dolphins",
+    "podcast_uuid": "dde6abe0-04fe-012e-f9d3-00163e1b201c",
+    "podcast_title": "This Week in Google (MP3)"
   },
   {
     "stamp": "2014-11-13T10:40:00Z",
@@ -2776,7 +5156,10 @@
         "from": 1177,
         "to": 1196
       }
-    ]
+    ],
+    "episode_title": "TWiG 275: We All Work For the Dolphins",
+    "podcast_uuid": "dde6abe0-04fe-012e-f9d3-00163e1b201c",
+    "podcast_title": "This Week in Google (MP3)"
   },
   {
     "stamp": "2014-11-13T10:50:00Z",
@@ -2789,7 +5172,10 @@
         "from": 1196,
         "to": 2084
       }
-    ]
+    ],
+    "episode_title": "TWiG 275: We All Work For the Dolphins",
+    "podcast_uuid": "dde6abe0-04fe-012e-f9d3-00163e1b201c",
+    "podcast_title": "This Week in Google (MP3)"
   },
   {
     "stamp": "2014-11-13T11:10:00Z",
@@ -2802,7 +5188,10 @@
         "from": 2084,
         "to": 3291
       }
-    ]
+    ],
+    "episode_title": "TWiG 275: We All Work For the Dolphins",
+    "podcast_uuid": "dde6abe0-04fe-012e-f9d3-00163e1b201c",
+    "podcast_title": "This Week in Google (MP3)"
   },
   {
     "stamp": "2014-11-13T11:20:00Z",
@@ -2815,7 +5204,10 @@
         "from": 3291,
         "to": 4021
       }
-    ]
+    ],
+    "episode_title": "TWiG 275: We All Work For the Dolphins",
+    "podcast_uuid": "dde6abe0-04fe-012e-f9d3-00163e1b201c",
+    "podcast_title": "This Week in Google (MP3)"
   },
   {
     "stamp": "2014-11-13T11:50:00Z",
@@ -2842,7 +5234,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "IOT: Brunel 13 Nov 14",
+    "podcast_uuid": "5e6125f0-0424-012e-f9a0-00163e1b201c",
+    "podcast_title": "In Our Time With Melvyn Bragg"
   },
   {
     "stamp": "2014-11-13T11:50:00Z",
@@ -2869,7 +5264,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "#574 - Dr. Mark Gordon, Matthew Gosney & Jason Hall",
+    "podcast_uuid": "873e7420-042d-012e-f9a4-00163e1b201c",
+    "podcast_title": "The Joe Rogan Experience"
   },
   {
     "stamp": "2014-11-13T12:10:00Z",
@@ -2882,7 +5280,10 @@
         "from": null,
         "to": 846
       }
-    ]
+    ],
+    "episode_title": "IOT: Brunel 13 Nov 14",
+    "podcast_uuid": "5e6125f0-0424-012e-f9a0-00163e1b201c",
+    "podcast_title": "In Our Time With Melvyn Bragg"
   },
   {
     "stamp": "2014-11-13T15:30:00Z",
@@ -2895,7 +5296,10 @@
         "from": null,
         "to": 1702
       }
-    ]
+    ],
+    "episode_title": "#574 - Dr. Mark Gordon, Matthew Gosney & Jason Hall",
+    "podcast_uuid": "873e7420-042d-012e-f9a4-00163e1b201c",
+    "podcast_title": "The Joe Rogan Experience"
   },
   {
     "stamp": "2014-11-13T16:10:00Z",
@@ -2908,7 +5312,10 @@
         "from": 1702,
         "to": 3502
       }
-    ]
+    ],
+    "episode_title": "#574 - Dr. Mark Gordon, Matthew Gosney & Jason Hall",
+    "podcast_uuid": "873e7420-042d-012e-f9a4-00163e1b201c",
+    "podcast_title": "The Joe Rogan Experience"
   },
   {
     "stamp": "2014-11-13T17:10:00Z",
@@ -2921,7 +5328,10 @@
         "from": 3502,
         "to": 7218
       }
-    ]
+    ],
+    "episode_title": "#574 - Dr. Mark Gordon, Matthew Gosney & Jason Hall",
+    "podcast_uuid": "873e7420-042d-012e-f9a4-00163e1b201c",
+    "podcast_title": "The Joe Rogan Experience"
   },
   {
     "stamp": "2014-11-13T17:40:00Z",
@@ -2948,7 +5358,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "016 AiA NG 1.3 and 2.0 with Brad Green, Igor Minar, and Miško Hevery",
+    "podcast_uuid": "80931490-01be-0132-a0fb-5f4c86fd3263",
+    "podcast_title": "Adventures in Angular"
   },
   {
     "stamp": "2014-11-13T18:30:00Z",
@@ -2961,7 +5374,10 @@
         "from": 683,
         "to": 978
       }
-    ]
+    ],
+    "episode_title": "016 AiA NG 1.3 and 2.0 with Brad Green, Igor Minar, and Miško Hevery",
+    "podcast_uuid": "80931490-01be-0132-a0fb-5f4c86fd3263",
+    "podcast_title": "Adventures in Angular"
   },
   {
     "stamp": "2014-11-13T19:50:00Z",
@@ -2974,7 +5390,10 @@
         "from": 978,
         "to": 1542
       }
-    ]
+    ],
+    "episode_title": "016 AiA NG 1.3 and 2.0 with Brad Green, Igor Minar, and Miško Hevery",
+    "podcast_uuid": "80931490-01be-0132-a0fb-5f4c86fd3263",
+    "podcast_title": "Adventures in Angular"
   },
   {
     "stamp": "2014-11-14T00:40:00Z",
@@ -3007,7 +5426,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "Patient Zero - Updated",
+    "podcast_uuid": "f5b97290-0422-012e-f9a0-00163e1b201c",
+    "podcast_title": "Radiolab from WNYC"
   },
   {
     "stamp": "2014-11-14T00:40:00Z",
@@ -3020,7 +5442,10 @@
         "from": 1542,
         "to": 2220
       }
-    ]
+    ],
+    "episode_title": "016 AiA NG 1.3 and 2.0 with Brad Green, Igor Minar, and Miško Hevery",
+    "podcast_uuid": "80931490-01be-0132-a0fb-5f4c86fd3263",
+    "podcast_title": "Adventures in Angular"
   },
   {
     "stamp": "2014-11-14T00:40:00Z",
@@ -3047,7 +5472,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "133 JSJ Remote Work with Mike Hostetler",
+    "podcast_uuid": "58b79440-1f1f-0131-6ebd-723c91aeae46",
+    "podcast_title": "JavaScript Jabber"
   },
   {
     "stamp": "2014-11-14T00:40:00Z",
@@ -3074,7 +5502,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "Consumers and Brands in the Digital Age - Tina Wells (Buzz Marketing Group)",
+    "podcast_uuid": "14cd6d90-0cc4-012e-fb69-00163e1b201c",
+    "podcast_title": "Entrepreneurial Thought Leaders"
   },
   {
     "stamp": "2014-11-14T00:40:00Z",
@@ -3087,7 +5518,10 @@
         "from": null,
         "to": 2
       }
-    ]
+    ],
+    "episode_title": "265: Hooked on social media. Hacking the mail. A CD that can't play. A brief history of time travel. Cyber attacks on human rights groups.",
+    "podcast_uuid": "05ccf3c0-1b97-012e-00b7-00163e1b201c",
+    "podcast_title": "Spark from CBC Radio"
   },
   {
     "stamp": "2014-11-14T03:10:00Z",
@@ -3120,7 +5554,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "Balancing a Nerdcore Music Career and a PhD with Sammus aka Enongo Lumumba-Kasongo",
+    "podcast_uuid": "ec18bbd0-0426-012e-f9a0-00163e1b201c",
+    "podcast_title": "Hanselminutes"
   },
   {
     "stamp": "2014-11-14T03:30:00Z",
@@ -3147,7 +5584,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "GlobalNews: 14 Nov 14 AM US declares progress on IS",
+    "podcast_uuid": "74a35900-0423-012e-f9a0-00163e1b201c",
+    "podcast_title": "Global News"
   },
   {
     "stamp": "2014-11-14T06:10:00Z",
@@ -3174,7 +5614,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "669 NA-669-2014-11-13",
+    "podcast_uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
+    "podcast_title": "No Agenda"
   },
   {
     "stamp": "2014-11-14T06:30:00Z",
@@ -3187,7 +5630,10 @@
         "from": 610,
         "to": 630
       }
-    ]
+    ],
+    "episode_title": "669 NA-669-2014-11-13",
+    "podcast_uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
+    "podcast_title": "No Agenda"
   },
   {
     "stamp": "2014-11-14T06:30:00Z",
@@ -3214,7 +5660,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "inscience: Rosetta; Thought-controlled genes; Biophonic Life; Arecibo msg 40 years on 13 Nov 14",
+    "podcast_uuid": "66084f00-c6b1-0130-34d2-723c91aeae46",
+    "podcast_title": "BBC Inside Science"
   },
   {
     "stamp": "2014-11-14T06:30:00Z",
@@ -3241,7 +5690,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "Monday Morning Podcast:  Joe Perry Edition",
+    "podcast_uuid": "e0b82010-83df-012e-3c4d-00163e1b201c",
+    "podcast_title": "Monday Morning Podcast"
   },
   {
     "stamp": "2014-11-14T06:30:00Z",
@@ -3268,7 +5720,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "Episode 24 – Git 101",
+    "podcast_uuid": "44557c00-40b4-0131-77d4-723c91aeae46",
+    "podcast_title": "Arrested DevOps"
   },
   {
     "stamp": "2014-11-14T09:00:00Z",
@@ -3295,7 +5750,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "The week ahead: Going to the polls",
+    "podcast_uuid": "fe2b3f90-0422-012e-f9a0-00163e1b201c",
+    "podcast_title": "The Economist: All audio"
   },
   {
     "stamp": "2014-11-14T09:10:00Z",
@@ -3308,7 +5766,10 @@
         "from": 630,
         "to": 1535
       }
-    ]
+    ],
+    "episode_title": "669 NA-669-2014-11-13",
+    "podcast_uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
+    "podcast_title": "No Agenda"
   },
   {
     "stamp": "2014-11-14T09:30:00Z",
@@ -3321,7 +5782,10 @@
         "from": 1535,
         "to": 1584
       }
-    ]
+    ],
+    "episode_title": "669 NA-669-2014-11-13",
+    "podcast_uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
+    "podcast_title": "No Agenda"
   },
   {
     "stamp": "2014-11-14T09:40:00Z",
@@ -3340,7 +5804,10 @@
         "from": 14549460,
         "to": 14549565
       }
-    ]
+    ],
+    "episode_title": "GlobalNews: 14 Nov 14 AM US declares progress on IS",
+    "podcast_uuid": "74a35900-0423-012e-f9a0-00163e1b201c",
+    "podcast_title": "Global News"
   },
   {
     "stamp": "2014-11-14T10:10:00Z",
@@ -3353,7 +5820,10 @@
         "from": 1584,
         "to": 3834
       }
-    ]
+    ],
+    "episode_title": "669 NA-669-2014-11-13",
+    "podcast_uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
+    "podcast_title": "No Agenda"
   },
   {
     "stamp": "2014-11-14T10:20:00Z",
@@ -3366,7 +5836,10 @@
         "from": 3834,
         "to": 4663
       }
-    ]
+    ],
+    "episode_title": "669 NA-669-2014-11-13",
+    "podcast_uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
+    "podcast_title": "No Agenda"
   },
   {
     "stamp": "2014-11-14T10:50:00Z",
@@ -3379,7 +5852,10 @@
         "from": 4663,
         "to": 7044
       }
-    ]
+    ],
+    "episode_title": "669 NA-669-2014-11-13",
+    "podcast_uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
+    "podcast_title": "No Agenda"
   },
   {
     "stamp": "2014-11-14T11:10:00Z",
@@ -3392,7 +5868,10 @@
         "from": 514,
         "to": 933
       }
-    ]
+    ],
+    "episode_title": "GlobalNews: 14 Nov 14 AM US declares progress on IS",
+    "podcast_uuid": "74a35900-0423-012e-f9a0-00163e1b201c",
+    "podcast_title": "Global News"
   },
   {
     "stamp": "2014-11-14T11:10:00Z",
@@ -3405,7 +5884,10 @@
         "from": 7044,
         "to": 7124
       }
-    ]
+    ],
+    "episode_title": "669 NA-669-2014-11-13",
+    "podcast_uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
+    "podcast_title": "No Agenda"
   },
   {
     "stamp": "2014-11-14T14:40:00Z",
@@ -3418,7 +5900,10 @@
         "from": "TYT-11.13.14",
         "to": "The Young Turks - 11.13.14: ISIS, Iraq, Glenn Beck, Brave New Films, VICE & Rosetta Mission"
       }
-    ]
+    ],
+    "episode_title": "The Young Turks - 11.13.14: ISIS, Iraq, Glenn Beck, Brave New Films, VICE & Rosetta Mission",
+    "podcast_uuid": "0fb72d80-4c95-0130-e3d5-723c91aeae46",
+    "podcast_title": "The Young Turks Audio Podcast"
   },
   {
     "stamp": "2014-11-14T15:50:00Z",
@@ -3445,7 +5930,8 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "Psychiatrists & the pharma industry are to blame for the current ‘epidemic’ of mental disorders"
   },
   {
     "stamp": "2014-11-14T15:50:00Z",
@@ -3458,7 +5944,10 @@
         "from": null,
         "to": 619
       }
-    ]
+    ],
+    "episode_title": "133 JSJ Remote Work with Mike Hostetler",
+    "podcast_uuid": "58b79440-1f1f-0131-6ebd-723c91aeae46",
+    "podcast_title": "JavaScript Jabber"
   },
   {
     "stamp": "2014-11-14T16:00:00Z",
@@ -3471,7 +5960,10 @@
         "from": 619,
         "to": 633
       }
-    ]
+    ],
+    "episode_title": "133 JSJ Remote Work with Mike Hostetler",
+    "podcast_uuid": "58b79440-1f1f-0131-6ebd-723c91aeae46",
+    "podcast_title": "JavaScript Jabber"
   },
   {
     "stamp": "2014-11-14T16:10:00Z",
@@ -3484,7 +5976,10 @@
         "from": 633,
         "to": 1012
       }
-    ]
+    ],
+    "episode_title": "133 JSJ Remote Work with Mike Hostetler",
+    "podcast_uuid": "58b79440-1f1f-0131-6ebd-723c91aeae46",
+    "podcast_title": "JavaScript Jabber"
   },
   {
     "stamp": "2014-11-14T16:30:00Z",
@@ -3497,7 +5992,10 @@
         "from": 1012,
         "to": 2303
       }
-    ]
+    ],
+    "episode_title": "133 JSJ Remote Work with Mike Hostetler",
+    "podcast_uuid": "58b79440-1f1f-0131-6ebd-723c91aeae46",
+    "podcast_title": "JavaScript Jabber"
   },
   {
     "stamp": "2014-11-14T16:50:00Z",
@@ -3516,7 +6014,10 @@
         "from": 14133016,
         "to": 14148424
       }
-    ]
+    ],
+    "episode_title": "GlobalNews: 14 Nov 14 PM Obama cautious about Burma progress",
+    "podcast_uuid": "74a35900-0423-012e-f9a0-00163e1b201c",
+    "podcast_title": "Global News"
   },
   {
     "stamp": "2014-11-14T22:30:00Z",
@@ -3529,7 +6030,10 @@
         "from": "http://hwcdn.libsyn.com/p/c/2/4/c24eaaed3e949095/scifri201411141.mp3?c_id=7879289&expiration=1416002281&hwt=ad2434559f82bae16721979e91ca7464",
         "to": "http://ec.libsyn.com/p/c/2/4/c24eaaed3e949095/scifri201411141.mp3?d13a76d516d9dec20c3d276ce028ed5089ab1ce3dae902ea1d06c98137d1cd545c2b&c_id=7879289"
       }
-    ]
+    ],
+    "episode_title": "The First Touchdown on a Comet",
+    "podcast_uuid": "52b13ce0-0d7b-012e-fba4-00163e1b201c",
+    "podcast_title": "Science Friday Audio Podcast"
   },
   {
     "stamp": "2014-11-14T22:30:00Z",
@@ -3542,7 +6046,10 @@
         "from": "http://hwcdn.libsyn.com/p/c/3/7/c37d0f1bcc19a5a8/scifri201411142.mp3?c_id=7879416&expiration=1416002732&hwt=b816cb4515caf3cb8c789590a723cc2c",
         "to": "http://ec.libsyn.com/p/c/3/7/c37d0f1bcc19a5a8/scifri201411142.mp3?d13a76d516d9dec20c3d276ce028ed5089ab1ce3dae902ea1d06c98137d1cd5530c5&c_id=7879416"
       }
-    ]
+    ],
+    "episode_title": "Lacking Funding, Some Scientists Turn to the Crowd",
+    "podcast_uuid": "52b13ce0-0d7b-012e-fba4-00163e1b201c",
+    "podcast_title": "Science Friday Audio Podcast"
   },
   {
     "stamp": "2014-11-14T22:30:00Z",
@@ -3555,7 +6062,10 @@
         "from": "http://ec.libsyn.com/p/2/4/b/24be7d1808bfb2d2/scifri201411145.mp3?d13a76d516d9dec20c3d276ce028ed5089ab1ce3dae902ea1d06c98137d1cb5db2d0&c_id=7879934",
         "to": "http://hwcdn.libsyn.com/p/2/4/b/24be7d1808bfb2d2/scifri201411145.mp3?c_id=7879934&expiration=1416004422&hwt=5fd786fae797bb493c6f91422463c376"
       }
-    ]
+    ],
+    "episode_title": "Mining Wikipedia Data to Track Disease",
+    "podcast_uuid": "52b13ce0-0d7b-012e-fba4-00163e1b201c",
+    "podcast_title": "Science Friday Audio Podcast"
   },
   {
     "stamp": "2014-11-15T00:40:00Z",
@@ -3582,7 +6092,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "The Taming Of The Cat - 2014/11/15 - Pt. 1",
+    "podcast_uuid": "52905800-287d-012e-0725-00163e1b201c",
+    "podcast_title": "Quirks and Quarks Segmented Show from CBC Radio"
   },
   {
     "stamp": "2014-11-15T00:50:00Z",
@@ -3609,7 +6122,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "Ant Queen Wins Sperm Battle - 2014/11/15 - Pt. 2",
+    "podcast_uuid": "52905800-287d-012e-0725-00163e1b201c",
+    "podcast_title": "Quirks and Quarks Segmented Show from CBC Radio"
   },
   {
     "stamp": "2014-11-15T00:50:00Z",
@@ -3636,7 +6152,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "Duck-billed Dinosaur Was A Distance Runner - 2014/11/15 - Pt. 3",
+    "podcast_uuid": "52905800-287d-012e-0725-00163e1b201c",
+    "podcast_title": "Quirks and Quarks Segmented Show from CBC Radio"
   },
   {
     "stamp": "2014-11-15T01:10:00Z",
@@ -3663,7 +6182,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "Birds & Music - 2014/11/15 - Pt. 5",
+    "podcast_uuid": "52905800-287d-012e-0725-00163e1b201c",
+    "podcast_title": "Quirks and Quarks Segmented Show from CBC Radio"
   },
   {
     "stamp": "2014-11-15T01:50:00Z",
@@ -3690,7 +6212,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "The First Touchdown on a Comet",
+    "podcast_uuid": "52b13ce0-0d7b-012e-fba4-00163e1b201c",
+    "podcast_title": "Science Friday Audio Podcast"
   },
   {
     "stamp": "2014-11-15T02:20:00Z",
@@ -3717,7 +6242,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "TNT 1136: Flying Dirtboxes",
+    "podcast_uuid": "77170eb0-0257-012e-f994-00163e1b201c",
+    "podcast_title": "Tech News Today (MP3)"
   },
   {
     "stamp": "2014-11-15T02:30:00Z",
@@ -3730,7 +6258,10 @@
         "from": 524,
         "to": 830
       }
-    ]
+    ],
+    "episode_title": "TNT 1136: Flying Dirtboxes",
+    "podcast_uuid": "77170eb0-0257-012e-f994-00163e1b201c",
+    "podcast_title": "Tech News Today (MP3)"
   },
   {
     "stamp": "2014-11-15T05:40:00Z",
@@ -3743,7 +6274,10 @@
         "from": "http://ec.libsyn.com/p/c/3/7/c37d0f1bcc19a5a8/scifri201411142.mp3?d13a76d516d9dec20c3d276ce028ed5089ab1ce3dae902ea1d06c98137d1cd5530c5&c_id=7879416",
         "to": "http://hwcdn.libsyn.com/p/c/3/7/c37d0f1bcc19a5a8/scifri201411142.mp3?c_id=7879416&expiration=1416030937&hwt=ca4c020fe9c931b001491052b5d07291"
       }
-    ]
+    ],
+    "episode_title": "Lacking Funding, Some Scientists Turn to the Crowd",
+    "podcast_uuid": "52b13ce0-0d7b-012e-fba4-00163e1b201c",
+    "podcast_title": "Science Friday Audio Podcast"
   },
   {
     "stamp": "2014-11-15T05:40:00Z",
@@ -3756,7 +6290,10 @@
         "from": "http://hwcdn.libsyn.com/p/b/2/f/b2f6c1f6d979bc10/scifri201411146.mp3?c_id=7880046&expiration=1416002705&hwt=6453694eb9263eb1cc3b5db2c3d3cfe8",
         "to": "http://ec.libsyn.com/p/b/2/f/b2f6c1f6d979bc10/scifri201411146.mp3?d13a76d516d9dec20c3d276ce028ed5089ab1ce3dae902ea1d06c98137d2c9552db3&c_id=7880046"
       }
-    ]
+    ],
+    "episode_title": "‘New Environmentalism’ Moves Beyond Pollution and Climate Change",
+    "podcast_uuid": "52b13ce0-0d7b-012e-fba4-00163e1b201c",
+    "podcast_title": "Science Friday Audio Podcast"
   },
   {
     "stamp": "2014-11-15T06:40:00Z",
@@ -3769,7 +6306,10 @@
         "from": 830,
         "to": 1400
       }
-    ]
+    ],
+    "episode_title": "TNT 1136: Flying Dirtboxes",
+    "podcast_uuid": "77170eb0-0257-012e-f994-00163e1b201c",
+    "podcast_title": "Tech News Today (MP3)"
   },
   {
     "stamp": "2014-11-15T06:50:00Z",
@@ -3782,7 +6322,10 @@
         "from": 1400,
         "to": 2196
       }
-    ]
+    ],
+    "episode_title": "TNT 1136: Flying Dirtboxes",
+    "podcast_uuid": "77170eb0-0257-012e-f994-00163e1b201c",
+    "podcast_title": "Tech News Today (MP3)"
   },
   {
     "stamp": "2014-11-15T07:20:00Z",
@@ -3795,7 +6338,10 @@
         "from": 2196,
         "to": 2205
       }
-    ]
+    ],
+    "episode_title": "TNT 1136: Flying Dirtboxes",
+    "podcast_uuid": "77170eb0-0257-012e-f994-00163e1b201c",
+    "podcast_title": "Tech News Today (MP3)"
   },
   {
     "stamp": "2014-11-15T07:20:00Z",
@@ -3822,7 +6368,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "76 - A Structuring Applications Show.",
+    "podcast_uuid": "25ca21a0-85c2-012e-3eb7-00163e1b201c",
+    "podcast_title": "NodeUp"
   },
   {
     "stamp": "2014-11-15T07:40:00Z",
@@ -3835,7 +6384,10 @@
         "from": 2340,
         "to": 3047
       }
-    ]
+    ],
+    "episode_title": "76 - A Structuring Applications Show.",
+    "podcast_uuid": "25ca21a0-85c2-012e-3eb7-00163e1b201c",
+    "podcast_title": "NodeUp"
   },
   {
     "stamp": "2014-11-15T08:20:00Z",
@@ -3868,7 +6420,10 @@
         "key": "starred",
         "to": false
       }
-    ]
+    ],
+    "episode_title": "Food glorious food...with Jen Grant and K Trevor Wilson",
+    "podcast_uuid": "3920d880-1b97-012e-00b9-00163e1b201c",
+    "podcast_title": "Laugh Out Loud from CBC Radio"
   },
   {
     "stamp": "2014-11-15T08:20:00Z",
@@ -3881,6 +6436,25 @@
         "from": 3047,
         "to": 3172
       }
-    ]
+    ],
+    "episode_title": "76 - A Structuring Applications Show.",
+    "podcast_uuid": "25ca21a0-85c2-012e-3eb7-00163e1b201c",
+    "podcast_title": "NodeUp"
+  },
+  {
+    "stamp": "2014-11-15T08:40:00Z",
+    "kind": "episode",
+    "uuid": "e412d190-4e6d-0132-ced0-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "played_up_to",
+        "from": 3172,
+        "to": 3890
+      }
+    ],
+    "episode_title": "76 - A Structuring Applications Show.",
+    "podcast_uuid": "25ca21a0-85c2-012e-3eb7-00163e1b201c",
+    "podcast_title": "NodeUp"
   }
 ]

@@ -13,7 +13,7 @@ var utils = require('./lib/utils');
 var credentials = require('./credentials.json');
 
 //TODO: clean this up!
-function fetchall(uuid) {
+function fetchall(uuid, stamp) {
   function fetchPage(page) {
     console.log('   -- podcasts.page', page);
     return API.find_by_podcast({
@@ -53,8 +53,8 @@ function fetchall(uuid) {
             // console.log('pages',pages);
             pages = _.pluck(pages, 'episodes');
             accum = accum.concat(_.flatten(pages));
-            utils.logStamp('Fetched '+accum.length+' episodes');
-            utils.writeResponse('podcasts/' + uuid, accum);
+            utils.logStamp('Fetched ' + accum.length + ' episodes');
+            utils.writeResponse('02-podcasts/' + uuid, accum,stamp);
             return accum;
           });
 
@@ -62,29 +62,32 @@ function fetchall(uuid) {
   }
 }
 
-  API.sign_in(credentials)
-    .then(API.podcasts_all())
-    .then(function(response) {
-      utils.writeResponse('podcasts', response);
-      return response.podcasts;
-    })
-    .then(function(podcasts) {
-      utils.logStamp('Found '+podcasts.length+' podcasts');
+// this shoulbe isolated/shared in Session: return by sign_in.
+var sessionStamp = utils.stamp('minute');
 
-      // just for lookupFun
-      var podcastByUuid = _.groupBy(podcasts,'uuid');
-      // assert unique uuids - 
+API.sign_in(credentials)
+  .then(API.podcasts_all())
+  .then(function(response) {
+    utils.writeResponse('01-podcasts', response,sessionStamp);
+    return response.podcasts;
+  })
+  .then(function(podcasts) {
+    utils.logStamp('Found ' + podcasts.length + ' podcasts');
 
-      return Promise.map(_.pluck(podcasts, 'uuid'), function(uuid) {
-        utils.logStamp('Fetching: '+podcastByUuid[uuid][0].title);
-        return fetchall(uuid)();
-      }, {
-        concurrency: 3
-      });
-    })
-    .catch(function(error) {
-      console.log('+++catch+++ ERROR', error);
+    // just for lookupFun
+    var podcastByUuid = _.groupBy(podcasts, 'uuid');
+    // assert unique uuids - 
+
+    return Promise.map(_.pluck(podcasts, 'uuid'), function(uuid) {
+      utils.logStamp('Fetching: ' + podcastByUuid[uuid][0].title);
+      return fetchall(uuid,sessionStamp)();
+    }, {
+      concurrency: 1
     });
+  })
+  .catch(function(error) {
+    console.log('+++catch+++ ERROR', error);
+  });
 
 
 if (0) { // Just an example exercising the API.

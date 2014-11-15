@@ -35,7 +35,7 @@ var history = []; // reset history
 
 function initialize() {
   var prefix = 'byDate//2014-11-07T08:34:00Z/';
-  var podcasts = loadJSON(prefix + 'podcasts.json').podcasts;
+  var podcasts = loadJSON(prefix + '01-podcasts.json').podcasts;
   // console.log(podcasts.length,podcasts[0]);
 
   var podcastsByUuid = _.groupBy(podcasts, 'uuid');
@@ -59,9 +59,9 @@ function loadEpisodesForPodcast(podcast_uuid) {
     return episodes;
   }
   try {
-    var prefix = 'byDate//2014-11-07T08:34:00Z/';
+    var prefix = 'byDate/2014-11-07T08:34:00Z/';
 
-    episodes = loadJSON(path.join(prefix+'podcasts', podcast_uuid + '.json'));
+    episodes = loadJSON(path.join(prefix+'02-podcasts', podcast_uuid + '.json'));
   } catch (err) {
     // console.log('episodes not found for:', podcast_uuid, err);
     console.log('episodes not found for:', podcast_uuid);

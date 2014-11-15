@@ -20,6 +20,9 @@ angular.module('scrobbleCast').factory('scrobbleSvc', function($http) {
     },
     podcasts: function() {
       return get('/data/podcasts.json');
+    },
+    history: function() {
+      return get('/data/history.json');
     }
   };
 

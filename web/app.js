@@ -1,4 +1,4 @@
-angular.module('scrobbleCast', ['ngMaterial',/*'ui.bootstrap','ui.utils'*/,'ui.router','ngAria','ngAnimate']);
+angular.module('scrobbleCast', ['ngMaterial','ui.router','ngAria','ngAnimate']);
 
 angular.module('scrobbleCast').config(function($stateProvider, $urlRouterProvider) {
   console.log('scrobbleCast.config');
@@ -7,8 +7,12 @@ angular.module('scrobbleCast').config(function($stateProvider, $urlRouterProvide
         url: '/home',
         templateUrl: 'partial/home/home.html'
     });
+    $stateProvider.state('history', {
+        url: '/history',
+        templateUrl: 'partial/history/history.html'
+    });
     /* Add New States Above */
-    $urlRouterProvider.otherwise('/home');
+    $urlRouterProvider.otherwise('/history');
 
 });
 

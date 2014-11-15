@@ -2,12 +2,7 @@
 
 Material Design (angular 1.3)
 
-## TODO
-
-* https://github.com/angular/bower-material/blob/master/README.md
-* Remove angular-bootstrap ?
-* ng-annotate replaces ngmin
-* grunt serve-dist (superstatic)
+## TODO - Moved to Evernote
 
 ## Setup
 

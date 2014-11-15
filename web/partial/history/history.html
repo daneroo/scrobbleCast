@@ -1,5 +1,4 @@
-
-<div class="home" ng-controller="HomeCtrl" md-theme="orange">
+<div class="home" ng-controller="HistoryCtrl" md-theme="orange">
 
   <md-content class="fullheight">
     <md-toolbar ng-if='true'>
@@ -8,6 +7,32 @@
       </h2>
     </md-toolbar>
     <section>
+      <md-subheader class="md-primary">History</md-subheader>
+      <md-list layout="vertical" layout-fill>
+        <div>History: {{history.length}} events</div>
+        <md-item ng-repeat="event in history">
+          <md-item-content>
+            <md-whiteframe class="md-whiteframe-z1" layout layout-fill layout-align="center start">
+              <div class="md-tile-left">
+                  <img ng-src="/images/podcast.jpg" class="face" alt="PodcastName">
+              </div>
+              <div class="md-tile-content">
+                <h3>{{event.episode_title}}</h3>
+                <h4>{{event.podcast_title}}</h4>
+                <div>|Δ|:{{event.changes.length}}</div>
+                <md-content>
+                  <div ng-repeat="change in event.changes| filter:changeFilter">
+                    <div> {{change.op}} {{change.key}} {{change.from}} {{change.to}}</div>
+                  </div>
+                </md-content>
+              </div>
+            </md-whiteframe>
+          </md-item-content>
+        </md-item>
+      </md-list>
+    </section>
+
+    <section ng-if='false'>
       <md-subheader class="md-primary">Podcasts</md-subheader>
       <md-list layout="vertical" layout-fill>
         <md-item ng-repeat="podcast in podcasts">
@@ -36,7 +61,7 @@
       </md-list>
     </section>
 
-    <section ng-repeat="kind in ['in_progress','new_releases']">
+    <section ng-if='false' ng-repeat="kind in ['in_progress','new_releases']">
       <md-subheader class="md-primary">{{kind}} Episodes</md-subheader>
       <md-list layout="vertical">
         <md-item ng-repeat="episode in in_progress.concat(new_releases)">
@@ -62,4 +87,3 @@
   </md-content>
 
 </div>
-

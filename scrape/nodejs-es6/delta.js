@@ -34,7 +34,7 @@ var allEpisodesByUuid = {};
 var history = []; // reset history
 
 function initialize() {
-  var prefix = 'byDate//2014-11-07T08:34:00Z/';
+  var prefix = 'byDate/2014-11-07T08:34:00Z/';
   var podcasts = loadJSON(prefix + '01-podcasts.json').podcasts;
   // console.log(podcasts.length,podcasts[0]);
 

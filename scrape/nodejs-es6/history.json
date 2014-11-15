@@ -3296,5 +3296,591 @@
         "to": false
       }
     ]
+  },
+  {
+    "stamp": "2014-11-14T09:10:00Z",
+    "kind": "episode",
+    "uuid": "4bbbb200-4da9-0132-ce6e-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "played_up_to",
+        "from": 630,
+        "to": 1535
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-14T09:30:00Z",
+    "kind": "episode",
+    "uuid": "4bbbb200-4da9-0132-ce6e-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "played_up_to",
+        "from": 1535,
+        "to": 1584
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-14T09:40:00Z",
+    "kind": "episode",
+    "uuid": "c3b8a1f0-4dce-0132-ce7f-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "url",
+        "from": "http://downloads.bbc.co.uk/podcasts/worldservice/globalnews/globalnews_20141114-0103a.mp3",
+        "to": "http://downloads.bbc.co.uk/podcasts/worldservice/globalnews/globalnews_20141114-0103c.mp3"
+      },
+      {
+        "op": "chg",
+        "key": "size",
+        "from": 14549460,
+        "to": 14549565
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-14T10:10:00Z",
+    "kind": "episode",
+    "uuid": "4bbbb200-4da9-0132-ce6e-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "played_up_to",
+        "from": 1584,
+        "to": 3834
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-14T10:20:00Z",
+    "kind": "episode",
+    "uuid": "4bbbb200-4da9-0132-ce6e-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "played_up_to",
+        "from": 3834,
+        "to": 4663
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-14T10:50:00Z",
+    "kind": "episode",
+    "uuid": "4bbbb200-4da9-0132-ce6e-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "played_up_to",
+        "from": 4663,
+        "to": 7044
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-14T11:10:00Z",
+    "kind": "episode",
+    "uuid": "c3b8a1f0-4dce-0132-ce7f-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "played_up_to",
+        "from": 514,
+        "to": 933
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-14T11:10:00Z",
+    "kind": "episode",
+    "uuid": "4bbbb200-4da9-0132-ce6e-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "played_up_to",
+        "from": 7044,
+        "to": 7124
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-14T14:40:00Z",
+    "kind": "episode",
+    "uuid": "90e011d0-4dcf-0132-ce80-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "title",
+        "from": "TYT-11.13.14",
+        "to": "The Young Turks - 11.13.14: ISIS, Iraq, Glenn Beck, Brave New Films, VICE & Rosetta Mission"
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-14T15:50:00Z",
+    "kind": "episode",
+    "uuid": "e6b35cf0-4e13-0132-cea4-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "new",
+        "key": "playing_status",
+        "to": 2
+      },
+      {
+        "op": "new",
+        "key": "played_up_to",
+        "to": 39
+      },
+      {
+        "op": "new",
+        "key": "is_deleted",
+        "to": false
+      },
+      {
+        "op": "new",
+        "key": "starred",
+        "to": false
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-14T15:50:00Z",
+    "kind": "episode",
+    "uuid": "8f0183d0-4cbc-0132-cdfc-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "played_up_to",
+        "from": null,
+        "to": 619
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-14T16:00:00Z",
+    "kind": "episode",
+    "uuid": "8f0183d0-4cbc-0132-cdfc-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "played_up_to",
+        "from": 619,
+        "to": 633
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-14T16:10:00Z",
+    "kind": "episode",
+    "uuid": "8f0183d0-4cbc-0132-cdfc-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "played_up_to",
+        "from": 633,
+        "to": 1012
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-14T16:30:00Z",
+    "kind": "episode",
+    "uuid": "8f0183d0-4cbc-0132-cdfc-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "played_up_to",
+        "from": 1012,
+        "to": 2303
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-14T16:50:00Z",
+    "kind": "episode",
+    "uuid": "8dd62440-4e46-0132-cebd-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "url",
+        "from": "http://downloads.bbc.co.uk/podcasts/worldservice/globalnews/globalnews_20141114-1548a.mp3",
+        "to": "http://downloads.bbc.co.uk/podcasts/worldservice/globalnews/globalnews_20141114-1548b.mp3"
+      },
+      {
+        "op": "chg",
+        "key": "size",
+        "from": 14133016,
+        "to": 14148424
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-14T22:30:00Z",
+    "kind": "episode",
+    "uuid": "103cffa0-4e75-0132-ced3-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "url",
+        "from": "http://hwcdn.libsyn.com/p/c/2/4/c24eaaed3e949095/scifri201411141.mp3?c_id=7879289&expiration=1416002281&hwt=ad2434559f82bae16721979e91ca7464",
+        "to": "http://ec.libsyn.com/p/c/2/4/c24eaaed3e949095/scifri201411141.mp3?d13a76d516d9dec20c3d276ce028ed5089ab1ce3dae902ea1d06c98137d1cd545c2b&c_id=7879289"
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-14T22:30:00Z",
+    "kind": "episode",
+    "uuid": "103e47d0-4e75-0132-ced3-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "url",
+        "from": "http://hwcdn.libsyn.com/p/c/3/7/c37d0f1bcc19a5a8/scifri201411142.mp3?c_id=7879416&expiration=1416002732&hwt=b816cb4515caf3cb8c789590a723cc2c",
+        "to": "http://ec.libsyn.com/p/c/3/7/c37d0f1bcc19a5a8/scifri201411142.mp3?d13a76d516d9dec20c3d276ce028ed5089ab1ce3dae902ea1d06c98137d1cd5530c5&c_id=7879416"
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-14T22:30:00Z",
+    "kind": "episode",
+    "uuid": "1041c840-4e75-0132-ced3-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "url",
+        "from": "http://ec.libsyn.com/p/2/4/b/24be7d1808bfb2d2/scifri201411145.mp3?d13a76d516d9dec20c3d276ce028ed5089ab1ce3dae902ea1d06c98137d1cb5db2d0&c_id=7879934",
+        "to": "http://hwcdn.libsyn.com/p/2/4/b/24be7d1808bfb2d2/scifri201411145.mp3?c_id=7879934&expiration=1416004422&hwt=5fd786fae797bb493c6f91422463c376"
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-15T00:40:00Z",
+    "kind": "episode",
+    "uuid": "3c5953e0-4e6e-0132-ced0-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "new",
+        "key": "playing_status",
+        "to": 2
+      },
+      {
+        "op": "new",
+        "key": "played_up_to",
+        "to": 14
+      },
+      {
+        "op": "new",
+        "key": "is_deleted",
+        "to": false
+      },
+      {
+        "op": "new",
+        "key": "starred",
+        "to": false
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-15T00:50:00Z",
+    "kind": "episode",
+    "uuid": "3c5bc260-4e6e-0132-ced0-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "new",
+        "key": "playing_status",
+        "to": 2
+      },
+      {
+        "op": "new",
+        "key": "played_up_to",
+        "to": 21
+      },
+      {
+        "op": "new",
+        "key": "is_deleted",
+        "to": false
+      },
+      {
+        "op": "new",
+        "key": "starred",
+        "to": false
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-15T00:50:00Z",
+    "kind": "episode",
+    "uuid": "3c5c96f0-4e6e-0132-ced0-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "new",
+        "key": "playing_status",
+        "to": 2
+      },
+      {
+        "op": "new",
+        "key": "played_up_to",
+        "to": 55
+      },
+      {
+        "op": "new",
+        "key": "is_deleted",
+        "to": false
+      },
+      {
+        "op": "new",
+        "key": "starred",
+        "to": false
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-15T01:10:00Z",
+    "kind": "episode",
+    "uuid": "d772a030-4e6c-0132-cecf-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "new",
+        "key": "playing_status",
+        "to": 2
+      },
+      {
+        "op": "new",
+        "key": "played_up_to",
+        "to": 270
+      },
+      {
+        "op": "new",
+        "key": "is_deleted",
+        "to": false
+      },
+      {
+        "op": "new",
+        "key": "starred",
+        "to": false
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-15T01:50:00Z",
+    "kind": "episode",
+    "uuid": "103cffa0-4e75-0132-ced3-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "new",
+        "key": "playing_status",
+        "to": 2
+      },
+      {
+        "op": "new",
+        "key": "played_up_to",
+        "to": 7
+      },
+      {
+        "op": "new",
+        "key": "is_deleted",
+        "to": false
+      },
+      {
+        "op": "new",
+        "key": "starred",
+        "to": false
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-15T02:20:00Z",
+    "kind": "episode",
+    "uuid": "404bd670-4e68-0132-cecd-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "new",
+        "key": "playing_status",
+        "to": 2
+      },
+      {
+        "op": "new",
+        "key": "played_up_to",
+        "to": 524
+      },
+      {
+        "op": "new",
+        "key": "is_deleted",
+        "to": false
+      },
+      {
+        "op": "new",
+        "key": "starred",
+        "to": false
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-15T02:30:00Z",
+    "kind": "episode",
+    "uuid": "404bd670-4e68-0132-cecd-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "played_up_to",
+        "from": 524,
+        "to": 830
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-15T05:40:00Z",
+    "kind": "episode",
+    "uuid": "103e47d0-4e75-0132-ced3-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "url",
+        "from": "http://ec.libsyn.com/p/c/3/7/c37d0f1bcc19a5a8/scifri201411142.mp3?d13a76d516d9dec20c3d276ce028ed5089ab1ce3dae902ea1d06c98137d1cd5530c5&c_id=7879416",
+        "to": "http://hwcdn.libsyn.com/p/c/3/7/c37d0f1bcc19a5a8/scifri201411142.mp3?c_id=7879416&expiration=1416030937&hwt=ca4c020fe9c931b001491052b5d07291"
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-15T05:40:00Z",
+    "kind": "episode",
+    "uuid": "104306f0-4e75-0132-ced3-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "url",
+        "from": "http://hwcdn.libsyn.com/p/b/2/f/b2f6c1f6d979bc10/scifri201411146.mp3?c_id=7880046&expiration=1416002705&hwt=6453694eb9263eb1cc3b5db2c3d3cfe8",
+        "to": "http://ec.libsyn.com/p/b/2/f/b2f6c1f6d979bc10/scifri201411146.mp3?d13a76d516d9dec20c3d276ce028ed5089ab1ce3dae902ea1d06c98137d2c9552db3&c_id=7880046"
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-15T06:40:00Z",
+    "kind": "episode",
+    "uuid": "404bd670-4e68-0132-cecd-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "played_up_to",
+        "from": 830,
+        "to": 1400
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-15T06:50:00Z",
+    "kind": "episode",
+    "uuid": "404bd670-4e68-0132-cecd-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "played_up_to",
+        "from": 1400,
+        "to": 2196
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-15T07:20:00Z",
+    "kind": "episode",
+    "uuid": "404bd670-4e68-0132-cecd-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "played_up_to",
+        "from": 2196,
+        "to": 2205
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-15T07:20:00Z",
+    "kind": "episode",
+    "uuid": "e412d190-4e6d-0132-ced0-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "new",
+        "key": "playing_status",
+        "to": 2
+      },
+      {
+        "op": "new",
+        "key": "played_up_to",
+        "to": 2340
+      },
+      {
+        "op": "new",
+        "key": "is_deleted",
+        "to": false
+      },
+      {
+        "op": "new",
+        "key": "starred",
+        "to": false
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-15T07:40:00Z",
+    "kind": "episode",
+    "uuid": "e412d190-4e6d-0132-ced0-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "played_up_to",
+        "from": 2340,
+        "to": 3047
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-15T08:20:00Z",
+    "kind": "episode",
+    "uuid": "bdb4d010-4ec7-0132-cefa-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "duration",
+        "from": 1651,
+        "to": 1698
+      },
+      {
+        "op": "new",
+        "key": "playing_status",
+        "to": null
+      },
+      {
+        "op": "new",
+        "key": "played_up_to",
+        "to": null
+      },
+      {
+        "op": "new",
+        "key": "is_deleted",
+        "to": false
+      },
+      {
+        "op": "new",
+        "key": "starred",
+        "to": false
+      }
+    ]
+  },
+  {
+    "stamp": "2014-11-15T08:20:00Z",
+    "kind": "episode",
+    "uuid": "e412d190-4e6d-0132-ced0-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "played_up_to",
+        "from": 3047,
+        "to": 3172
+      }
+    ]
   }
 ]

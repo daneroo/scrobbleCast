@@ -23,7 +23,7 @@ function stamp(grain){
     return now.toJSON();
   }
   // iso8601, remove millis
-  return stamp.toJSON().replace(/\.\d{3}Z$/, 'Z'); 
+  return now.toJSON().replace(/\.\d{3}Z$/, 'Z'); 
 }
 
 // TODO: pubsub would be good
@@ -39,10 +39,10 @@ function writeResponse(base, response, optionalStamp) {
   // announce what we are doing io.file
   logStamp(base);
 
-  var stamp = optionalStamp || stamp('minute');stamp('minute');
+  var stampForFile = optionalStamp || stamp('minute');
   // Note: base may include a path like: 'podcasts/f54c667'
   // e.g. ./data/byDate/2014-...Z/pocdasts/f54c667.json
-  var filename = path.join(dataDirname, 'byDate', stamp, [base, 'json'].join('.'));
+  var filename = path.join(dataDirname, 'byDate', stampForFile, [base, 'json'].join('.'));
 
   var dir = path.dirname(filename)
   mkdirp.sync(dir);

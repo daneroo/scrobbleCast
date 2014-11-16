@@ -9,7 +9,9 @@
     <section>
       <div ng-repeat="day in days">
         <md-subheader>
-          {{moment(day).format('ll')}}  <i>({{historyByDay[day].length}})</i>
+          <!-- {{moment(day).format('ll')}} -->
+          {{moment(day).calendar()}}
+          <i>({{historyByDay[day].length}})</i>
         </md-subheader>
 
         <md-list>
@@ -23,10 +25,17 @@
                 <div class="md-tile-content">
                   <h3>{{event.episode_title}} <small>{{moment(event.stamp).fromNow()}}</small></h3>
                   <h4>{{event.podcast_title}} <small>|Δ|:{{event.changes.length}}</small></h4>
-                  <md-content ng-if="(event.changes| filter:changeFilter).length>0">
-                    <div ng-repeat="change in event.changes| filter:changeFilter">
-                      <div> {{change.op}} {{change.key}} 
+                  <md-content ng-if="(event.changes| filter:changePlayedUpToFilter).length>0">
+                    <div ng-repeat="change in event.changes| filter:changePlayedUpToFilter">
+                      <div> 
+                        <!-- {{change.op}} {{change.key}}  -->
                         {{change.from}} <i class="fa fa-arrow-right"></i> {{change.to}}
+
+                        <!-- humanized duration -->
+<!--                         {{moment.duration(change.from,'seconds').humanize()}}
+                        <i class="fa fa-arrow-right"></i> 
+                        {{moment.duration(change.to,'seconds').humanize()}}
+ -->
                       </div>
                     </div>
                   </md-content>

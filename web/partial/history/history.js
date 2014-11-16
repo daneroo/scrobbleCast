@@ -1,7 +1,19 @@
 angular.module('scrobbleCast').controller('HistoryCtrl', function($scope, scrobbleSvc) {
   "use strict";
-  // export moment.js to view
+
+  // export moment.js to view : and localize calendar
   $scope.moment = moment;
+  // This should be done elsewhere... (module?)
+  moment.locale('en', {
+    calendar: {
+      sameDay: '[Today]', //'[Today at] LT',
+      nextDay: '[Tomorrow]', // '[Tomorrow at] LT',
+      nextWeek: '[Next] dddd', // 'dddd [at] LT',
+      lastDay: '[Yesterday]', //'[Yesterday at] LT',
+      lastWeek: '[Last] dddd', // '[Last] dddd [at] LT',
+      sameElse: 'LL' // 'L'
+    }
+  });
 
   // change in changes|filter:changeFilter
   $scope.playFilter = {
@@ -9,17 +21,18 @@ angular.module('scrobbleCast').controller('HistoryCtrl', function($scope, scrobb
   };
 
   // change in changes|filter:changeFilter
-  $scope.changeFilter = {
+  $scope.changePlayedUpToFilter = {
     op: 'chg',
     // key: 'duration'
     key: 'played_up_to'
   };
 
+
   $scope.lookupThumb = function(podcast_uuid) {
     var defaultUrl = '/images/podcast.jpg';
     var podcast = $scope.podcastsByUuid[podcast_uuid];
     // the groupBy makes arrays:
-    podcast = (podcast)?podcast[0]:{};
+    podcast = (podcast) ? podcast[0] : {};
     return podcast.thumbnail_url || defaultUrl;
   };
 
@@ -49,7 +62,6 @@ angular.module('scrobbleCast').controller('HistoryCtrl', function($scope, scrobb
     .then(function(result) {
       var podcastsByUuid = _.groupBy(result, 'uuid');
       $scope.podcastsByUuid = podcastsByUuid;
-      console.log('podcastsByUuid', podcastsByUuid);
     })
     .then(function() {
       return scrobbleSvc.history()

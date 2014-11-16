@@ -494,6 +494,52 @@
     "podcast_title": "Science Friday Audio Podcast"
   },
   {
+    "stamp": "2014-11-15T21:20:00Z",
+    "kind": "episode",
+    "uuid": "103e47d0-4e75-0132-ced3-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "new",
+        "key": "playing_status",
+        "to": 2
+      },
+      {
+        "op": "new",
+        "key": "played_up_to",
+        "to": 205
+      },
+      {
+        "op": "new",
+        "key": "is_deleted",
+        "to": false
+      },
+      {
+        "op": "new",
+        "key": "starred",
+        "to": false
+      }
+    ],
+    "episode_title": "Lacking Funding, Some Scientists Turn to the Crowd",
+    "podcast_uuid": "52b13ce0-0d7b-012e-fba4-00163e1b201c",
+    "podcast_title": "Science Friday Audio Podcast"
+  },
+  {
+    "stamp": "2014-11-15T21:40:00Z",
+    "kind": "episode",
+    "uuid": "103e47d0-4e75-0132-ced3-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "played_up_to",
+        "from": 205,
+        "to": 874
+      }
+    ],
+    "episode_title": "Lacking Funding, Some Scientists Turn to the Crowd",
+    "podcast_uuid": "52b13ce0-0d7b-012e-fba4-00163e1b201c",
+    "podcast_title": "Science Friday Audio Podcast"
+  },
+  {
     "stamp": "2014-11-14T22:30:00Z",
     "kind": "episode",
     "uuid": "1041c840-4e75-0132-ced3-5f4c86fd3263",
@@ -519,6 +565,68 @@
         "key": "url",
         "from": "http://hwcdn.libsyn.com/p/b/2/f/b2f6c1f6d979bc10/scifri201411146.mp3?c_id=7880046&expiration=1416002705&hwt=6453694eb9263eb1cc3b5db2c3d3cfe8",
         "to": "http://ec.libsyn.com/p/b/2/f/b2f6c1f6d979bc10/scifri201411146.mp3?d13a76d516d9dec20c3d276ce028ed5089ab1ce3dae902ea1d06c98137d2c9552db3&c_id=7880046"
+      }
+    ],
+    "episode_title": "‘New Environmentalism’ Moves Beyond Pollution and Climate Change",
+    "podcast_uuid": "52b13ce0-0d7b-012e-fba4-00163e1b201c",
+    "podcast_title": "Science Friday Audio Podcast"
+  },
+  {
+    "stamp": "2014-11-15T23:40:00Z",
+    "kind": "episode",
+    "uuid": "104306f0-4e75-0132-ced3-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "new",
+        "key": "playing_status",
+        "to": 2
+      },
+      {
+        "op": "new",
+        "key": "played_up_to",
+        "to": 304
+      },
+      {
+        "op": "new",
+        "key": "is_deleted",
+        "to": false
+      },
+      {
+        "op": "new",
+        "key": "starred",
+        "to": false
+      }
+    ],
+    "episode_title": "‘New Environmentalism’ Moves Beyond Pollution and Climate Change",
+    "podcast_uuid": "52b13ce0-0d7b-012e-fba4-00163e1b201c",
+    "podcast_title": "Science Friday Audio Podcast"
+  },
+  {
+    "stamp": "2014-11-16T00:50:00Z",
+    "kind": "episode",
+    "uuid": "104306f0-4e75-0132-ced3-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "played_up_to",
+        "from": 304,
+        "to": 403
+      }
+    ],
+    "episode_title": "‘New Environmentalism’ Moves Beyond Pollution and Climate Change",
+    "podcast_uuid": "52b13ce0-0d7b-012e-fba4-00163e1b201c",
+    "podcast_title": "Science Friday Audio Podcast"
+  },
+  {
+    "stamp": "2014-11-16T01:00:00Z",
+    "kind": "episode",
+    "uuid": "104306f0-4e75-0132-ced3-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "played_up_to",
+        "from": 403,
+        "to": 890
       }
     ],
     "episode_title": "‘New Environmentalism’ Moves Beyond Pollution and Climate Change",
@@ -810,6 +918,52 @@
     "podcast_title": "Tech News Today (MP3)"
   },
   {
+    "stamp": "2014-11-16T01:20:00Z",
+    "kind": "episode",
+    "uuid": "13365220-4e7a-0132-ced5-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "new",
+        "key": "playing_status",
+        "to": 2
+      },
+      {
+        "op": "new",
+        "key": "played_up_to",
+        "to": 365
+      },
+      {
+        "op": "new",
+        "key": "is_deleted",
+        "to": false
+      },
+      {
+        "op": "new",
+        "key": "starred",
+        "to": false
+      }
+    ],
+    "episode_title": "Doctors Without Borders Fight On Ebola's Front Lines",
+    "podcast_uuid": "bc383e00-0425-012e-f9a0-00163e1b201c",
+    "podcast_title": "Science Talk"
+  },
+  {
+    "stamp": "2014-11-16T02:10:00Z",
+    "kind": "episode",
+    "uuid": "13365220-4e7a-0132-ced5-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "played_up_to",
+        "from": 365,
+        "to": 804
+      }
+    ],
+    "episode_title": "Doctors Without Borders Fight On Ebola's Front Lines",
+    "podcast_uuid": "bc383e00-0425-012e-f9a0-00163e1b201c",
+    "podcast_title": "Science Talk"
+  },
+  {
     "stamp": "2014-11-13T06:10:00Z",
     "kind": "episode",
     "uuid": "13d16990-4bf9-0132-cd9f-5f4c86fd3263",
@@ -991,6 +1145,22 @@
         "key": "playing_status",
         "from": null,
         "to": 2
+      }
+    ],
+    "episode_title": "265: Hooked on social media. Hacking the mail. A CD that can't play. A brief history of time travel. Cyber attacks on human rights groups.",
+    "podcast_uuid": "05ccf3c0-1b97-012e-00b7-00163e1b201c",
+    "podcast_title": "Spark from CBC Radio"
+  },
+  {
+    "stamp": "2014-11-15T18:40:00Z",
+    "kind": "episode",
+    "uuid": "1cb7c550-48f5-0132-cbf0-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "played_up_to",
+        "from": null,
+        "to": 2476
       }
     ],
     "episode_title": "265: Hooked on social media. Hacking the mail. A CD that can't play. A brief history of time travel. Cyber attacks on human rights groups.",
@@ -4132,6 +4302,84 @@
     "podcast_title": "Global News"
   },
   {
+    "stamp": "2014-11-16T04:20:00Z",
+    "kind": "episode",
+    "uuid": "884615c0-4e9b-0132-cee5-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "new",
+        "key": "playing_status",
+        "to": 2
+      },
+      {
+        "op": "new",
+        "key": "played_up_to",
+        "to": 966
+      },
+      {
+        "op": "new",
+        "key": "is_deleted",
+        "to": false
+      },
+      {
+        "op": "new",
+        "key": "starred",
+        "to": false
+      }
+    ],
+    "episode_title": "TYT-11.14.14",
+    "podcast_uuid": "0fb72d80-4c95-0130-e3d5-723c91aeae46",
+    "podcast_title": "The Young Turks Audio Podcast"
+  },
+  {
+    "stamp": "2014-11-16T04:30:00Z",
+    "kind": "episode",
+    "uuid": "884615c0-4e9b-0132-cee5-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "played_up_to",
+        "from": 966,
+        "to": 1356
+      }
+    ],
+    "episode_title": "TYT-11.14.14",
+    "podcast_uuid": "0fb72d80-4c95-0130-e3d5-723c91aeae46",
+    "podcast_title": "The Young Turks Audio Podcast"
+  },
+  {
+    "stamp": "2014-11-16T04:40:00Z",
+    "kind": "episode",
+    "uuid": "884615c0-4e9b-0132-cee5-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "played_up_to",
+        "from": 1356,
+        "to": 2084
+      }
+    ],
+    "episode_title": "TYT-11.14.14",
+    "podcast_uuid": "0fb72d80-4c95-0130-e3d5-723c91aeae46",
+    "podcast_title": "The Young Turks Audio Podcast"
+  },
+  {
+    "stamp": "2014-11-16T04:50:00Z",
+    "kind": "episode",
+    "uuid": "884615c0-4e9b-0132-cee5-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "played_up_to",
+        "from": 2084,
+        "to": 2884
+      }
+    ],
+    "episode_title": "TYT-11.14.14",
+    "podcast_uuid": "0fb72d80-4c95-0130-e3d5-723c91aeae46",
+    "podcast_title": "The Young Turks Audio Podcast"
+  },
+  {
     "stamp": "2014-11-14T16:50:00Z",
     "kind": "episode",
     "uuid": "8dd62440-4e46-0132-cebd-5f4c86fd3263",
@@ -5884,6 +6132,22 @@
     "podcast_title": "Entrepreneurial Thought Leaders"
   },
   {
+    "stamp": "2014-11-15T20:40:00Z",
+    "kind": "episode",
+    "uuid": "d1749240-4d0a-0132-ce21-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "played_up_to",
+        "from": 50,
+        "to": 2379
+      }
+    ],
+    "episode_title": "Consumers and Brands in the Digital Age - Tina Wells (Buzz Marketing Group)",
+    "podcast_uuid": "14cd6d90-0cc4-012e-fb69-00163e1b201c",
+    "podcast_title": "Entrepreneurial Thought Leaders"
+  },
+  {
     "stamp": "2014-11-09T06:50:00Z",
     "kind": "episode",
     "uuid": "d188a9c0-495c-0132-cc2e-5f4c86fd3263",
@@ -6121,6 +6385,28 @@
         "key": "played_up_to",
         "from": 3172,
         "to": 3890
+      }
+    ],
+    "episode_title": "76 - A Structuring Applications Show.",
+    "podcast_uuid": "25ca21a0-85c2-012e-3eb7-00163e1b201c",
+    "podcast_title": "NodeUp"
+  },
+  {
+    "stamp": "2014-11-15T19:40:00Z",
+    "kind": "episode",
+    "uuid": "e412d190-4e6d-0132-ced0-5f4c86fd3263",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "played_up_to",
+        "from": 3890,
+        "to": 4279
+      },
+      {
+        "op": "chg",
+        "key": "starred",
+        "from": false,
+        "to": true
       }
     ],
     "episode_title": "76 - A Structuring Applications Show.",

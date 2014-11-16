@@ -6,6 +6,10 @@ angular.module('scrobbleCast').factory('scrobbleSvc', function($http) {
         // console.log('result', result);
         return result.data;
       })
+      .then(function(result) {
+        // select the data portion of  the result (.podcasts||.episodes||object itself) 
+        return result.episodes || result.podcasts || result;
+      })
       .catch(function(error) {
         console.error('error', error);
       });

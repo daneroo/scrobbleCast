@@ -60,12 +60,15 @@ function fetchall(uuid, stamp, isDeep) {
             // console.log('pages',pages);
             pages = _.pluck(pages, 'episodes');
             accum = accum.concat(_.flatten(pages));
-            utils.logStamp('Fetched ' + accum.length + ' episodes');
-            utils.writeResponse('02-podcasts/' + uuid, accum, stamp);
             return accum;
           });
-
+      })
+      .then(function(accum) {
+        utils.logStamp('Fetched ' + accum.length + ' episodes');
+        utils.writeResponse('02-podcasts/' + uuid, accum, stamp);
+        return accum;
       });
+
   }
 }
 

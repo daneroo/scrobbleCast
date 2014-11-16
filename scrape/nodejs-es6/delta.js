@@ -31,18 +31,38 @@ function loadJSON(file) {
   return result.episodes || result.podcasts || result;
 }
 
+function confirmSorted(files) {
+  var sorted = true;
+  var lastFile;
+  files.forEach(function(file) {
+    if (lastFile) {
+      var ok = file > lastFile;
+      if (!ok) {
+        console.log('***********', lastFile, file);
+        sorted = false;
+      }
+    }
+    lastFile = file;
+  });
+  if (!sorted) {
+    throw (new Error('files are not sorted'));
+  }
+  return files;
+}
+
 function find(pattern) {
   return pglob(pattern, {
       cwd: dataDirname
     })
     .then(function(files) {
       console.log('pglob.in_progress %s found: %d files', pattern, files.length);
-      // return _.map(files, resolve);
       return files;
     })
+    .then(confirmSorted)
     .catch(function(err) {
-      // not tested, Can;t think of an error...
+      // log and rethrow
       console.log('pglob.in_progress error:', err);
+      throw err;
     });
 }
 
@@ -59,7 +79,8 @@ function stampFromFile(file) {
 
 find('byDate/**/*.json')
   .then(function(files) {
-    utils.logStamp('Starting new Delta ' + files.length);
+    console.log('Delta?',files);
+    utils.logStamp('Starting:Delta ' + files.length);
 
     var uuidProperty = 'uuid'; // common to all: podcasts/episodes
     var podcastHistory = new delta.AccumulatorByUuid();
@@ -67,20 +88,24 @@ find('byDate/**/*.json')
 
     files.forEach(function(file) {
 
-      console.log('Accumulating: ' + file);
       var thingsToMerge = loadJSON(file);
       var stamp = stampFromFile(file);
       var source = file;
 
       if (file.match(/01-/)) {
-        console.log('|podcasts|', thingsToMerge.length);
+        console.log('|podcasts|', thingsToMerge.length,file);
         podcastHistory.mergeMany(thingsToMerge, uuidProperty, stamp, source);
       } else {
-        console.log('|episodes|', thingsToMerge.length);
+        console.log('|episodes|', thingsToMerge.length,file);
         episodeHistory.mergeMany(thingsToMerge, uuidProperty, stamp, source);
       }
     });
-    fs.writeFileSync('podcast-history.json', JSON.stringify(podcastHistory, null, 2));
-    fs.writeFileSync('episode-history.json', JSON.stringify(episodeHistory, null, 2));
-    utils.logStamp('Done new Delta ' + files.length);
+    // just write out the accumulators dictionary, it is the only attribute!
+    fs.writeFileSync('podcast-history.json', JSON.stringify(podcastHistory.accumulators, null, 2));
+    fs.writeFileSync('episode-history.json', JSON.stringify(episodeHistory.accumulators, null, 2));
+    utils.logStamp('Done:Delta ' + files.length);
+  })
+  .catch(function(error) {
+    console.error('Error:Delta', error);
+    utils.logStamp('Error:Delta ' + error);
   });

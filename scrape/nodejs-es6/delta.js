@@ -24,7 +24,8 @@ function resolve(file) {
 }
 
 function loadJSON(file) {
-  return require(resolve(file));
+  var result = require(resolve(file));
+  return result.episodes || result.podcasts || result;
 }
 
 // TODO: memoize these:
@@ -35,8 +36,8 @@ var history = []; // reset history
 
 function initialize() {
   var prefix = 'byDate/2014-11-07T08:34:00Z/';
-  podcasts = loadJSON(prefix + '01-podcasts.json').podcasts;
-  // console.log(podcasts.length,podcasts[0]);
+  podcasts = loadJSON(prefix + '01-podcasts.json');
+  console.log('init:|podcasts|',podcasts.length);
 
   podcastsByUuid = _.groupBy(podcasts, 'uuid');
   // console.log(podcastsByUuid);
@@ -49,7 +50,6 @@ function initialize() {
   };
   history = []; // reset history
 }
-initialize();
 
 // return cached (accumulated value) if available
 function loadEpisodesForPodcast(podcast_uuid) {
@@ -62,6 +62,7 @@ function loadEpisodesForPodcast(podcast_uuid) {
     var prefix = 'byDate/2014-11-07T08:34:00Z/';
 
     episodes = loadJSON(path.join(prefix + '02-podcasts', podcast_uuid + '.json'));
+    console.log('init:|episodes|',episodes.length);
   } catch (err) {
     console.log('episodes not found for:', podcast_uuid);
     // console.log(' **creating empty Array to cache negative result');
@@ -155,7 +156,8 @@ function stampFromFile(file) {
 function handleEpisodeUpdate(file) {
   // console.log('do something with', file);
   var stamp = stampFromFile(file);
-  var episodes = loadJSON(file).episodes;
+  var episodes = loadJSON(file);
+  console.log('stream:|episodes|',episodes.length);
   episodes.forEach(function(episode) {
     // possible unknown pocast or episode...
     var knownEpisodes = loadEpisodesForPodcast(episode.podcast_uuid);
@@ -169,18 +171,18 @@ function handleEpisodeUpdate(file) {
           kind: 'episode',
           // podcast_uuid ? if exists
           uuid: episode.uuid,
-          // source: file, // temporary for tracing
+          source: file, // temporary for tracing
           changes: d.changes
         };
-        console.log('episode with podcast:',episode.podcast_uuid);
+        console.log('episode with podcast:', episode.podcast_uuid);
         // safe lookup
-        var podcast = (podcastsByUuid[episode.podcast_uuid]||[{}])[0];
+        var podcast = (podcastsByUuid[episode.podcast_uuid] || [{}])[0];
         // decorate with titles
 
         // if we don't already have the episode title, lookit up
-        if (podcast && !episode.title){
+        if (podcast && !episode.title) {
           // safe lookup.
-          episode.title = (allEpisodesByUuid[episode.podcast_uuid]||{})[episode.uuid];
+          episode.title = (allEpisodesByUuid[episode.podcast_uuid] || {})[episode.uuid];
         }
         if (episode.title) {
           record.episode_title = episode.title;
@@ -201,6 +203,7 @@ function handleEpisodeUpdate(file) {
 }
 
 find('byDate/**/0[34]*.json')
+// find('byDate/**/0[2]*/*.json')
   .then(function(files) {
     initialize();
     files.sort();

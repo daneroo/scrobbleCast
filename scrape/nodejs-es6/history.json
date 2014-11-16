@@ -3,6 +3,7 @@
     "stamp": "2014-11-05T07:40:00Z",
     "kind": "episode",
     "uuid": "9c7be780-46bc-0132-cab4-5f4c86fd3263",
+    "source": "byDate/2014-11-05T07:40:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -63,6 +64,7 @@
     "stamp": "2014-11-05T07:40:00Z",
     "kind": "episode",
     "uuid": "e5b89230-469f-0132-ca9d-5f4c86fd3263",
+    "source": "byDate/2014-11-05T07:40:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -123,6 +125,7 @@
     "stamp": "2014-11-05T07:40:00Z",
     "kind": "episode",
     "uuid": "03b1aaa0-46ac-0132-caa2-5f4c86fd3263",
+    "source": "byDate/2014-11-05T07:40:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -183,6 +186,7 @@
     "stamp": "2014-11-05T07:40:00Z",
     "kind": "episode",
     "uuid": "6ecc95b0-4539-0132-c9c7-5f4c86fd3263",
+    "source": "byDate/2014-11-05T07:40:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -263,6 +267,7 @@
     "stamp": "2014-11-05T07:40:00Z",
     "kind": "episode",
     "uuid": "c46e6870-4491-0132-c967-5f4c86fd3263",
+    "source": "byDate/2014-11-05T07:40:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -343,6 +348,7 @@
     "stamp": "2014-11-05T07:50:00Z",
     "kind": "episode",
     "uuid": "6ecc95b0-4539-0132-c9c7-5f4c86fd3263",
+    "source": "byDate/2014-11-05T07:50:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -359,6 +365,7 @@
     "stamp": "2014-11-05T08:07:00Z",
     "kind": "episode",
     "uuid": "9c7be780-46bc-0132-cab4-5f4c86fd3263",
+    "source": "byDate/2014-11-05T08:07:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -389,6 +396,7 @@
     "stamp": "2014-11-05T09:05:00Z",
     "kind": "episode",
     "uuid": "9c7be780-46bc-0132-cab4-5f4c86fd3263",
+    "source": "byDate/2014-11-05T09:05:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -405,6 +413,7 @@
     "stamp": "2014-11-05T09:30:00Z",
     "kind": "episode",
     "uuid": "9c7be780-46bc-0132-cab4-5f4c86fd3263",
+    "source": "byDate/2014-11-05T09:30:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -421,6 +430,7 @@
     "stamp": "2014-11-05T09:33:00Z",
     "kind": "episode",
     "uuid": "8ebdaee0-46fc-0132-cadb-5f4c86fd3263",
+    "source": "byDate/2014-11-05T09:33:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -481,6 +491,7 @@
     "stamp": "2014-11-05T09:41:00Z",
     "kind": "episode",
     "uuid": "9c7be780-46bc-0132-cab4-5f4c86fd3263",
+    "source": "byDate/2014-11-05T09:41:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -497,6 +508,7 @@
     "stamp": "2014-11-05T09:46:00Z",
     "kind": "episode",
     "uuid": "9c7be780-46bc-0132-cab4-5f4c86fd3263",
+    "source": "byDate/2014-11-05T09:46:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -513,6 +525,7 @@
     "stamp": "2014-11-05T10:02:00Z",
     "kind": "episode",
     "uuid": "9c7be780-46bc-0132-cab4-5f4c86fd3263",
+    "source": "byDate/2014-11-05T10:02:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -529,6 +542,7 @@
     "stamp": "2014-11-05T15:28:00Z",
     "kind": "episode",
     "uuid": "3bc12130-472e-0132-cafe-5f4c86fd3263",
+    "source": "byDate/2014-11-05T15:28:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -589,6 +603,7 @@
     "stamp": "2014-11-05T16:39:00Z",
     "kind": "episode",
     "uuid": "12c96de0-4738-0132-cb04-5f4c86fd3263",
+    "source": "byDate/2014-11-05T16:39:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -649,6 +664,7 @@
     "stamp": "2014-11-05T17:36:00Z",
     "kind": "episode",
     "uuid": "16080a30-4740-0132-cb08-5f4c86fd3263",
+    "source": "byDate/2014-11-05T17:36:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -709,6 +725,7 @@
     "stamp": "2014-11-05T17:41:00Z",
     "kind": "episode",
     "uuid": "bc4c4af0-4740-0132-cb09-5f4c86fd3263",
+    "source": "byDate/2014-11-05T17:41:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -769,6 +786,7 @@
     "stamp": "2014-11-05T19:39:00Z",
     "kind": "episode",
     "uuid": "3e1a0c00-4751-0132-cb11-5f4c86fd3263",
+    "source": "byDate/2014-11-05T19:39:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -829,6 +847,7 @@
     "stamp": "2014-11-06T00:34:00Z",
     "kind": "episode",
     "uuid": "bc4c4af0-4740-0132-cb09-5f4c86fd3263",
+    "source": "byDate/2014-11-06T00:34:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -859,6 +878,7 @@
     "stamp": "2014-11-06T02:02:00Z",
     "kind": "episode",
     "uuid": "c9ddc040-4786-0132-cb2a-5f4c86fd3263",
+    "source": "byDate/2014-11-06T02:02:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -919,6 +939,7 @@
     "stamp": "2014-11-06T02:19:00Z",
     "kind": "episode",
     "uuid": "2a8f09f0-4789-0132-cb2b-5f4c86fd3263",
+    "source": "byDate/2014-11-06T02:19:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -979,6 +1000,7 @@
     "stamp": "2014-11-06T02:20:00Z",
     "kind": "episode",
     "uuid": "45738a00-4789-0132-cb2b-5f4c86fd3263",
+    "source": "byDate/2014-11-06T02:20:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -1039,6 +1061,7 @@
     "stamp": "2014-11-06T02:24:00Z",
     "kind": "episode",
     "uuid": "bc4c4af0-4740-0132-cb09-5f4c86fd3263",
+    "source": "byDate/2014-11-06T02:24:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -1055,6 +1078,7 @@
     "stamp": "2014-11-06T02:36:00Z",
     "kind": "episode",
     "uuid": "7c0537b0-478b-0132-cb2c-5f4c86fd3263",
+    "source": "byDate/2014-11-06T02:36:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -1115,6 +1139,7 @@
     "stamp": "2014-11-06T03:58:00Z",
     "kind": "episode",
     "uuid": "ee49c6a0-4796-0132-cb32-5f4c86fd3263",
+    "source": "byDate/2014-11-06T03:58:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -1175,6 +1200,7 @@
     "stamp": "2014-11-06T05:16:00Z",
     "kind": "episode",
     "uuid": "660e0360-4788-0132-cb2b-5f4c86fd3263",
+    "source": "byDate/2014-11-06T05:16:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -1205,6 +1231,7 @@
     "stamp": "2014-11-06T06:48:00Z",
     "kind": "episode",
     "uuid": "660e0360-4788-0132-cb2b-5f4c86fd3263",
+    "source": "byDate/2014-11-06T06:48:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -1221,6 +1248,7 @@
     "stamp": "2014-11-06T07:33:00Z",
     "kind": "episode",
     "uuid": "1d4710d0-4757-0132-cb13-5f4c86fd3263",
+    "source": "byDate/2014-11-06T07:33:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -1251,6 +1279,7 @@
     "stamp": "2014-11-06T08:02:00Z",
     "kind": "episode",
     "uuid": "ee49c6a0-4796-0132-cb32-5f4c86fd3263",
+    "source": "byDate/2014-11-06T08:02:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -1281,6 +1310,7 @@
     "stamp": "2014-11-06T09:55:00Z",
     "kind": "episode",
     "uuid": "ee49c6a0-4796-0132-cb32-5f4c86fd3263",
+    "source": "byDate/2014-11-06T09:55:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -1297,6 +1327,7 @@
     "stamp": "2014-11-06T10:40:00Z",
     "kind": "episode",
     "uuid": "ee49c6a0-4796-0132-cb32-5f4c86fd3263",
+    "source": "byDate/2014-11-06T10:40:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -1313,6 +1344,7 @@
     "stamp": "2014-11-06T15:30:00Z",
     "kind": "episode",
     "uuid": "6251a570-47f6-0132-cb6d-5f4c86fd3263",
+    "source": "byDate/2014-11-06T15:30:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -1373,6 +1405,7 @@
     "stamp": "2014-11-06T16:10:00Z",
     "kind": "episode",
     "uuid": "a1bdcae0-47fc-0132-cb70-5f4c86fd3263",
+    "source": "byDate/2014-11-06T16:10:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -1433,6 +1466,7 @@
     "stamp": "2014-11-06T16:30:00Z",
     "kind": "episode",
     "uuid": "f9e3b5b0-47ff-0132-cb71-5f4c86fd3263",
+    "source": "byDate/2014-11-06T16:30:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -1493,6 +1527,7 @@
     "stamp": "2014-11-06T16:40:00Z",
     "kind": "episode",
     "uuid": "26e16610-4800-0132-cb71-5f4c86fd3263",
+    "source": "byDate/2014-11-06T16:40:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -1553,6 +1588,7 @@
     "stamp": "2014-11-06T16:40:00Z",
     "kind": "episode",
     "uuid": "26e30460-4800-0132-cb71-5f4c86fd3263",
+    "source": "byDate/2014-11-06T16:40:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -1613,6 +1649,7 @@
     "stamp": "2014-11-06T17:10:00Z",
     "kind": "episode",
     "uuid": "7f82b100-4805-0132-cb74-5f4c86fd3263",
+    "source": "byDate/2014-11-06T17:10:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -1673,6 +1710,7 @@
     "stamp": "2014-11-06T17:10:00Z",
     "kind": "episode",
     "uuid": "9b9915a0-4804-0132-cb74-5f4c86fd3263",
+    "source": "byDate/2014-11-06T17:10:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -1733,6 +1771,7 @@
     "stamp": "2014-11-06T18:00:00Z",
     "kind": "episode",
     "uuid": "41fef130-480b-0132-cb77-5f4c86fd3263",
+    "source": "byDate/2014-11-06T18:00:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -1793,6 +1832,7 @@
     "stamp": "2014-11-06T18:50:00Z",
     "kind": "episode",
     "uuid": "72f6add0-4812-0132-cb7a-5f4c86fd3263",
+    "source": "byDate/2014-11-06T18:50:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -1853,6 +1893,7 @@
     "stamp": "2014-11-06T19:50:00Z",
     "kind": "episode",
     "uuid": "ade05310-481b-0132-cb7e-5f4c86fd3263",
+    "source": "byDate/2014-11-06T19:50:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -1913,6 +1954,7 @@
     "stamp": "2014-11-06T19:50:00Z",
     "kind": "episode",
     "uuid": "03b1aaa0-46ac-0132-caa2-5f4c86fd3263",
+    "source": "byDate/2014-11-06T19:50:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -1943,6 +1985,7 @@
     "stamp": "2014-11-06T21:10:00Z",
     "kind": "episode",
     "uuid": "10333f60-4827-0132-cb84-5f4c86fd3263",
+    "source": "byDate/2014-11-06T21:10:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -2003,6 +2046,7 @@
     "stamp": "2014-11-06T21:10:00Z",
     "kind": "episode",
     "uuid": "48fda890-4826-0132-cb83-5f4c86fd3263",
+    "source": "byDate/2014-11-06T21:10:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -2063,6 +2107,7 @@
     "stamp": "2014-11-06T21:40:00Z",
     "kind": "episode",
     "uuid": "6e0d6bd0-482a-0132-cb85-5f4c86fd3263",
+    "source": "byDate/2014-11-06T21:40:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -2123,6 +2168,7 @@
     "stamp": "2014-11-06T21:40:00Z",
     "kind": "episode",
     "uuid": "03b1aaa0-46ac-0132-caa2-5f4c86fd3263",
+    "source": "byDate/2014-11-06T21:40:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -2139,6 +2185,7 @@
     "stamp": "2014-11-06T23:10:00Z",
     "kind": "episode",
     "uuid": "ade05310-481b-0132-cb7e-5f4c86fd3263",
+    "source": "byDate/2014-11-06T23:10:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -2169,6 +2216,7 @@
     "stamp": "2014-11-06T23:20:00Z",
     "kind": "episode",
     "uuid": "ade05310-481b-0132-cb7e-5f4c86fd3263",
+    "source": "byDate/2014-11-06T23:20:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -2185,6 +2233,7 @@
     "stamp": "2014-11-06T23:20:00Z",
     "kind": "episode",
     "uuid": "72f6add0-4812-0132-cb7a-5f4c86fd3263",
+    "source": "byDate/2014-11-06T23:20:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -2215,6 +2264,7 @@
     "stamp": "2014-11-07T01:00:00Z",
     "kind": "episode",
     "uuid": "7dc961b0-4846-0132-cb93-5f4c86fd3263",
+    "source": "byDate/2014-11-07T01:00:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -2275,6 +2325,7 @@
     "stamp": "2014-11-07T01:10:00Z",
     "kind": "episode",
     "uuid": "a1bdcae0-47fc-0132-cb70-5f4c86fd3263",
+    "source": "byDate/2014-11-07T01:10:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -2305,6 +2356,7 @@
     "stamp": "2014-11-07T01:10:00Z",
     "kind": "episode",
     "uuid": "6251a570-47f6-0132-cb6d-5f4c86fd3263",
+    "source": "byDate/2014-11-07T01:10:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -2335,6 +2387,7 @@
     "stamp": "2014-11-07T01:30:00Z",
     "kind": "episode",
     "uuid": "7dc961b0-4846-0132-cb93-5f4c86fd3263",
+    "source": "byDate/2014-11-07T01:30:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -2365,6 +2418,7 @@
     "stamp": "2014-11-07T02:00:00Z",
     "kind": "episode",
     "uuid": "41fef130-480b-0132-cb77-5f4c86fd3263",
+    "source": "byDate/2014-11-07T02:00:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -2395,6 +2449,7 @@
     "stamp": "2014-11-07T02:10:00Z",
     "kind": "episode",
     "uuid": "9b9915a0-4804-0132-cb74-5f4c86fd3263",
+    "source": "byDate/2014-11-07T02:10:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -2425,6 +2480,7 @@
     "stamp": "2014-11-07T02:20:00Z",
     "kind": "episode",
     "uuid": "277ec520-4851-0132-cb98-5f4c86fd3263",
+    "source": "byDate/2014-11-07T02:20:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -2485,6 +2541,7 @@
     "stamp": "2014-11-07T06:50:00Z",
     "kind": "episode",
     "uuid": "a1bdcae0-47fc-0132-cb70-5f4c86fd3263",
+    "source": "byDate/2014-11-07T06:50:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -2501,6 +2558,7 @@
     "stamp": "2014-11-07T07:00:00Z",
     "kind": "episode",
     "uuid": "a1bdcae0-47fc-0132-cb70-5f4c86fd3263",
+    "source": "byDate/2014-11-07T07:00:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -2517,6 +2575,7 @@
     "stamp": "2014-11-07T07:40:00Z",
     "kind": "episode",
     "uuid": "22b2a7c0-487e-0132-cbb3-5f4c86fd3263",
+    "source": "byDate/2014-11-07T07:40:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -2577,6 +2636,7 @@
     "stamp": "2014-11-07T08:10:00Z",
     "kind": "episode",
     "uuid": "61db9410-487f-0132-cbb4-5f4c86fd3263",
+    "source": "byDate/2014-11-07T08:10:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -2613,6 +2673,7 @@
     "stamp": "2014-11-07T08:10:00Z",
     "kind": "episode",
     "uuid": "a1bdcae0-47fc-0132-cb70-5f4c86fd3263",
+    "source": "byDate/2014-11-07T08:10:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -2629,6 +2690,7 @@
     "stamp": "2014-11-07T08:20:00Z",
     "kind": "episode",
     "uuid": "a1bdcae0-47fc-0132-cb70-5f4c86fd3263",
+    "source": "byDate/2014-11-07T08:20:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -2645,6 +2707,7 @@
     "stamp": "2014-11-07T09:50:00Z",
     "kind": "episode",
     "uuid": "10333f60-4827-0132-cb84-5f4c86fd3263",
+    "source": "byDate/2014-11-07T09:50:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -2675,6 +2738,7 @@
     "stamp": "2014-11-07T10:00:00Z",
     "kind": "episode",
     "uuid": "10333f60-4827-0132-cb84-5f4c86fd3263",
+    "source": "byDate/2014-11-07T10:00:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -2691,6 +2755,7 @@
     "stamp": "2014-11-07T10:00:00Z",
     "kind": "episode",
     "uuid": "7f82b100-4805-0132-cb74-5f4c86fd3263",
+    "source": "byDate/2014-11-07T10:00:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -2721,6 +2786,7 @@
     "stamp": "2014-11-07T10:40:00Z",
     "kind": "episode",
     "uuid": "7f82b100-4805-0132-cb74-5f4c86fd3263",
+    "source": "byDate/2014-11-07T10:40:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -2737,6 +2803,7 @@
     "stamp": "2014-11-07T10:50:00Z",
     "kind": "episode",
     "uuid": "7f82b100-4805-0132-cb74-5f4c86fd3263",
+    "source": "byDate/2014-11-07T10:50:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -2753,6 +2820,7 @@
     "stamp": "2014-11-07T11:30:00Z",
     "kind": "episode",
     "uuid": "10333f60-4827-0132-cb84-5f4c86fd3263",
+    "source": "byDate/2014-11-07T11:30:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -2769,6 +2837,7 @@
     "stamp": "2014-11-07T12:30:00Z",
     "kind": "episode",
     "uuid": "10333f60-4827-0132-cb84-5f4c86fd3263",
+    "source": "byDate/2014-11-07T12:30:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -2785,6 +2854,7 @@
     "stamp": "2014-11-07T13:30:00Z",
     "kind": "episode",
     "uuid": "10333f60-4827-0132-cb84-5f4c86fd3263",
+    "source": "byDate/2014-11-07T13:30:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -2801,6 +2871,7 @@
     "stamp": "2014-11-07T19:30:00Z",
     "kind": "episode",
     "uuid": "03b1aaa0-46ac-0132-caa2-5f4c86fd3263",
+    "source": "byDate/2014-11-07T19:30:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -2817,6 +2888,7 @@
     "stamp": "2014-11-07T20:30:00Z",
     "kind": "episode",
     "uuid": "03b1aaa0-46ac-0132-caa2-5f4c86fd3263",
+    "source": "byDate/2014-11-07T20:30:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -2833,6 +2905,7 @@
     "stamp": "2014-11-07T20:40:00Z",
     "kind": "episode",
     "uuid": "03b1aaa0-46ac-0132-caa2-5f4c86fd3263",
+    "source": "byDate/2014-11-07T20:40:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -2849,6 +2922,7 @@
     "stamp": "2014-11-07T20:50:00Z",
     "kind": "episode",
     "uuid": "03b1aaa0-46ac-0132-caa2-5f4c86fd3263",
+    "source": "byDate/2014-11-07T20:50:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -2865,6 +2939,7 @@
     "stamp": "2014-11-07T22:20:00Z",
     "kind": "episode",
     "uuid": "1cb7c550-48f5-0132-cbf0-5f4c86fd3263",
+    "source": "byDate/2014-11-07T22:20:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -2901,6 +2976,7 @@
     "stamp": "2014-11-08T02:40:00Z",
     "kind": "episode",
     "uuid": "81a213f0-4912-0132-cbff-5f4c86fd3263",
+    "source": "byDate/2014-11-08T02:40:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -2917,6 +2993,7 @@
     "stamp": "2014-11-08T05:40:00Z",
     "kind": "episode",
     "uuid": "b6c21390-48fe-0132-cbf5-5f4c86fd3263",
+    "source": "byDate/2014-11-08T05:40:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -2933,6 +3010,7 @@
     "stamp": "2014-11-08T05:40:00Z",
     "kind": "episode",
     "uuid": "b6c546f0-48fe-0132-cbf5-5f4c86fd3263",
+    "source": "byDate/2014-11-08T05:40:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -2949,6 +3027,7 @@
     "stamp": "2014-11-08T07:50:00Z",
     "kind": "episode",
     "uuid": "99e6cfe0-4947-0132-cc1c-5f4c86fd3263",
+    "source": "byDate/2014-11-08T07:50:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -2985,6 +3064,7 @@
     "stamp": "2014-11-08T12:20:00Z",
     "kind": "episode",
     "uuid": "2c7ca260-4904-0132-cbf8-5f4c86fd3263",
+    "source": "byDate/2014-11-08T12:20:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -3015,6 +3095,7 @@
     "stamp": "2014-11-08T12:50:00Z",
     "kind": "episode",
     "uuid": "2c7ca260-4904-0132-cbf8-5f4c86fd3263",
+    "source": "byDate/2014-11-08T12:50:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -3031,6 +3112,7 @@
     "stamp": "2014-11-08T19:40:00Z",
     "kind": "episode",
     "uuid": "40c91d10-4990-0132-cc55-5f4c86fd3263",
+    "source": "byDate/2014-11-08T19:40:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -3061,6 +3143,7 @@
     "stamp": "2014-11-08T19:50:00Z",
     "kind": "episode",
     "uuid": "40c91d10-4990-0132-cc55-5f4c86fd3263",
+    "source": "byDate/2014-11-08T19:50:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -3077,6 +3160,7 @@
     "stamp": "2014-11-08T20:00:00Z",
     "kind": "episode",
     "uuid": "40c91d10-4990-0132-cc55-5f4c86fd3263",
+    "source": "byDate/2014-11-08T20:00:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -3093,6 +3177,7 @@
     "stamp": "2014-11-08T20:10:00Z",
     "kind": "episode",
     "uuid": "40c91d10-4990-0132-cc55-5f4c86fd3263",
+    "source": "byDate/2014-11-08T20:10:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -3109,6 +3194,7 @@
     "stamp": "2014-11-08T20:20:00Z",
     "kind": "episode",
     "uuid": "61db9410-487f-0132-cbb4-5f4c86fd3263",
+    "source": "byDate/2014-11-08T20:20:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -3131,6 +3217,7 @@
     "stamp": "2014-11-08T20:30:00Z",
     "kind": "episode",
     "uuid": "61db9410-487f-0132-cbb4-5f4c86fd3263",
+    "source": "byDate/2014-11-08T20:30:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -3147,6 +3234,7 @@
     "stamp": "2014-11-08T20:40:00Z",
     "kind": "episode",
     "uuid": "61db9410-487f-0132-cbb4-5f4c86fd3263",
+    "source": "byDate/2014-11-08T20:40:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -3163,6 +3251,7 @@
     "stamp": "2014-11-08T21:00:00Z",
     "kind": "episode",
     "uuid": "b8f2d8a0-494f-0132-cc24-5f4c86fd3263",
+    "source": "byDate/2014-11-08T21:00:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -3193,6 +3282,7 @@
     "stamp": "2014-11-08T21:20:00Z",
     "kind": "episode",
     "uuid": "030d9490-451e-0132-c9b8-5f4c86fd3263",
+    "source": "byDate/2014-11-08T21:20:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -3227,6 +3317,7 @@
     "stamp": "2014-11-08T21:30:00Z",
     "kind": "episode",
     "uuid": "030d9490-451e-0132-c9b8-5f4c86fd3263",
+    "source": "byDate/2014-11-08T21:30:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -3241,6 +3332,7 @@
     "stamp": "2014-11-08T21:50:00Z",
     "kind": "episode",
     "uuid": "030d9490-451e-0132-c9b8-5f4c86fd3263",
+    "source": "byDate/2014-11-08T21:50:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -3255,6 +3347,7 @@
     "stamp": "2014-11-08T22:00:00Z",
     "kind": "episode",
     "uuid": "030d9490-451e-0132-c9b8-5f4c86fd3263",
+    "source": "byDate/2014-11-08T22:00:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -3269,6 +3362,7 @@
     "stamp": "2014-11-08T22:20:00Z",
     "kind": "episode",
     "uuid": "70f29f30-48d4-0132-cbe1-5f4c86fd3263",
+    "source": "byDate/2014-11-08T22:20:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -3297,6 +3391,7 @@
     "stamp": "2014-11-08T22:50:00Z",
     "kind": "episode",
     "uuid": "70f29f30-48d4-0132-cbe1-5f4c86fd3263",
+    "source": "byDate/2014-11-08T22:50:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -3311,6 +3406,7 @@
     "stamp": "2014-11-08T23:00:00Z",
     "kind": "episode",
     "uuid": "277ec520-4851-0132-cb98-5f4c86fd3263",
+    "source": "byDate/2014-11-08T23:00:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -3341,6 +3437,7 @@
     "stamp": "2014-11-08T23:10:00Z",
     "kind": "episode",
     "uuid": "277ec520-4851-0132-cb98-5f4c86fd3263",
+    "source": "byDate/2014-11-08T23:10:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -3357,6 +3454,7 @@
     "stamp": "2014-11-08T23:20:00Z",
     "kind": "episode",
     "uuid": "277ec520-4851-0132-cb98-5f4c86fd3263",
+    "source": "byDate/2014-11-08T23:20:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -3373,6 +3471,7 @@
     "stamp": "2014-11-09T06:50:00Z",
     "kind": "episode",
     "uuid": "d188a9c0-495c-0132-cc2e-5f4c86fd3263",
+    "source": "byDate/2014-11-09T06:50:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -3403,6 +3502,7 @@
     "stamp": "2014-11-09T06:50:00Z",
     "kind": "episode",
     "uuid": "277ec520-4851-0132-cb98-5f4c86fd3263",
+    "source": "byDate/2014-11-09T06:50:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -3419,6 +3519,7 @@
     "stamp": "2014-11-09T07:00:00Z",
     "kind": "episode",
     "uuid": "d188a9c0-495c-0132-cc2e-5f4c86fd3263",
+    "source": "byDate/2014-11-09T07:00:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -3435,6 +3536,7 @@
     "stamp": "2014-11-09T07:10:00Z",
     "kind": "episode",
     "uuid": "d188a9c0-495c-0132-cc2e-5f4c86fd3263",
+    "source": "byDate/2014-11-09T07:10:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -3451,6 +3553,7 @@
     "stamp": "2014-11-09T07:20:00Z",
     "kind": "episode",
     "uuid": "81a213f0-4912-0132-cbff-5f4c86fd3263",
+    "source": "byDate/2014-11-09T07:20:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -3481,6 +3584,7 @@
     "stamp": "2014-11-09T07:40:00Z",
     "kind": "episode",
     "uuid": "81a213f0-4912-0132-cbff-5f4c86fd3263",
+    "source": "byDate/2014-11-09T07:40:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -3497,6 +3601,7 @@
     "stamp": "2014-11-09T09:20:00Z",
     "kind": "episode",
     "uuid": "946b09c0-4a11-0132-cc9f-5f4c86fd3263",
+    "source": "byDate/2014-11-09T09:20:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -3533,6 +3638,7 @@
     "stamp": "2014-11-09T09:20:00Z",
     "kind": "episode",
     "uuid": "81a213f0-4912-0132-cbff-5f4c86fd3263",
+    "source": "byDate/2014-11-09T09:20:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -3549,6 +3655,7 @@
     "stamp": "2014-11-09T09:40:00Z",
     "kind": "episode",
     "uuid": "81a213f0-4912-0132-cbff-5f4c86fd3263",
+    "source": "byDate/2014-11-09T09:40:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -3565,6 +3672,7 @@
     "stamp": "2014-11-09T10:20:00Z",
     "kind": "episode",
     "uuid": "9bf60b10-4a18-0132-cca6-5f4c86fd3263",
+    "source": "byDate/2014-11-09T10:20:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -3595,6 +3703,7 @@
     "stamp": "2014-11-09T12:20:00Z",
     "kind": "episode",
     "uuid": "946b09c0-4a11-0132-cc9f-5f4c86fd3263",
+    "source": "byDate/2014-11-09T12:20:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -3617,6 +3726,7 @@
     "stamp": "2014-11-09T18:30:00Z",
     "kind": "episode",
     "uuid": "d0cc4f80-4a5f-0132-ccd2-5f4c86fd3263",
+    "source": "byDate/2014-11-09T18:30:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -3647,6 +3757,7 @@
     "stamp": "2014-11-10T01:10:00Z",
     "kind": "episode",
     "uuid": "12c96de0-4738-0132-cb04-5f4c86fd3263",
+    "source": "byDate/2014-11-10T01:10:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -3677,6 +3788,7 @@
     "stamp": "2014-11-10T02:30:00Z",
     "kind": "episode",
     "uuid": "baae5150-4aa3-0132-ccf2-5f4c86fd3263",
+    "source": "byDate/2014-11-10T02:30:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -3711,6 +3823,7 @@
     "stamp": "2014-11-10T05:20:00Z",
     "kind": "episode",
     "uuid": "684dd9c0-4abd-0132-cd03-5f4c86fd3263",
+    "source": "byDate/2014-11-10T05:20:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -3741,6 +3854,7 @@
     "stamp": "2014-11-10T05:30:00Z",
     "kind": "episode",
     "uuid": "684dd9c0-4abd-0132-cd03-5f4c86fd3263",
+    "source": "byDate/2014-11-10T05:30:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -3757,6 +3871,7 @@
     "stamp": "2014-11-10T06:20:00Z",
     "kind": "episode",
     "uuid": "684dd9c0-4abd-0132-cd03-5f4c86fd3263",
+    "source": "byDate/2014-11-10T06:20:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -3773,6 +3888,7 @@
     "stamp": "2014-11-10T06:20:00Z",
     "kind": "episode",
     "uuid": "eee2c440-4a99-0132-ccee-5f4c86fd3263",
+    "source": "byDate/2014-11-10T06:20:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -3803,6 +3919,7 @@
     "stamp": "2014-11-10T07:00:00Z",
     "kind": "episode",
     "uuid": "659781d0-4a82-0132-cce3-5f4c86fd3263",
+    "source": "byDate/2014-11-10T07:00:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -3833,6 +3950,7 @@
     "stamp": "2014-11-10T07:20:00Z",
     "kind": "episode",
     "uuid": "659781d0-4a82-0132-cce3-5f4c86fd3263",
+    "source": "byDate/2014-11-10T07:20:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -3849,6 +3967,7 @@
     "stamp": "2014-11-10T09:00:00Z",
     "kind": "episode",
     "uuid": "659781d0-4a82-0132-cce3-5f4c86fd3263",
+    "source": "byDate/2014-11-10T09:00:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -3865,6 +3984,7 @@
     "stamp": "2014-11-10T09:10:00Z",
     "kind": "episode",
     "uuid": "6f693600-4aaa-0132-ccf6-5f4c86fd3263",
+    "source": "byDate/2014-11-10T09:10:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -3895,6 +4015,7 @@
     "stamp": "2014-11-10T09:10:00Z",
     "kind": "episode",
     "uuid": "659781d0-4a82-0132-cce3-5f4c86fd3263",
+    "source": "byDate/2014-11-10T09:10:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -3911,6 +4032,7 @@
     "stamp": "2014-11-10T09:20:00Z",
     "kind": "episode",
     "uuid": "6f693600-4aaa-0132-ccf6-5f4c86fd3263",
+    "source": "byDate/2014-11-10T09:20:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -3927,6 +4049,7 @@
     "stamp": "2014-11-10T10:10:00Z",
     "kind": "episode",
     "uuid": "659781d0-4a82-0132-cce3-5f4c86fd3263",
+    "source": "byDate/2014-11-10T10:10:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -3943,6 +4066,7 @@
     "stamp": "2014-11-10T10:20:00Z",
     "kind": "episode",
     "uuid": "659781d0-4a82-0132-cce3-5f4c86fd3263",
+    "source": "byDate/2014-11-10T10:20:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -3959,6 +4083,7 @@
     "stamp": "2014-11-10T11:20:00Z",
     "kind": "episode",
     "uuid": "684dd9c0-4abd-0132-cd03-5f4c86fd3263",
+    "source": "byDate/2014-11-10T11:20:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -3975,6 +4100,7 @@
     "stamp": "2014-11-10T12:20:00Z",
     "kind": "episode",
     "uuid": "684dd9c0-4abd-0132-cd03-5f4c86fd3263",
+    "source": "byDate/2014-11-10T12:20:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -3991,6 +4117,7 @@
     "stamp": "2014-11-10T15:20:00Z",
     "kind": "episode",
     "uuid": "bb235e60-4afc-0132-cd26-5f4c86fd3263",
+    "source": "byDate/2014-11-10T15:20:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -4021,6 +4148,7 @@
     "stamp": "2014-11-10T17:20:00Z",
     "kind": "episode",
     "uuid": "d289bcd0-4b1e-0132-cd36-5f4c86fd3263",
+    "source": "byDate/2014-11-10T17:20:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -4057,6 +4185,7 @@
     "stamp": "2014-11-10T20:50:00Z",
     "kind": "episode",
     "uuid": "13357220-4b43-0132-cd47-5f4c86fd3263",
+    "source": "byDate/2014-11-10T20:50:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -4087,6 +4216,7 @@
     "stamp": "2014-11-10T22:30:00Z",
     "kind": "episode",
     "uuid": "13357220-4b43-0132-cd47-5f4c86fd3263",
+    "source": "byDate/2014-11-10T22:30:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -4103,6 +4233,7 @@
     "stamp": "2014-11-10T22:40:00Z",
     "kind": "episode",
     "uuid": "13357220-4b43-0132-cd47-5f4c86fd3263",
+    "source": "byDate/2014-11-10T22:40:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -4119,6 +4250,7 @@
     "stamp": "2014-11-11T05:50:00Z",
     "kind": "episode",
     "uuid": "9f022090-4b76-0132-cd60-5f4c86fd3263",
+    "source": "byDate/2014-11-11T05:50:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -4149,6 +4281,7 @@
     "stamp": "2014-11-11T06:40:00Z",
     "kind": "episode",
     "uuid": "9f022090-4b76-0132-cd60-5f4c86fd3263",
+    "source": "byDate/2014-11-11T06:40:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -4165,6 +4298,7 @@
     "stamp": "2014-11-11T06:50:00Z",
     "kind": "episode",
     "uuid": "64e9bc50-4b79-0132-cd62-5f4c86fd3263",
+    "source": "byDate/2014-11-11T06:50:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -4195,6 +4329,7 @@
     "stamp": "2014-11-11T07:00:00Z",
     "kind": "episode",
     "uuid": "64e9bc50-4b79-0132-cd62-5f4c86fd3263",
+    "source": "byDate/2014-11-11T07:00:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -4211,6 +4346,7 @@
     "stamp": "2014-11-11T07:00:00Z",
     "kind": "episode",
     "uuid": "71686240-4b41-0132-cd46-5f4c86fd3263",
+    "source": "byDate/2014-11-11T07:00:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -4241,6 +4377,7 @@
     "stamp": "2014-11-11T07:10:00Z",
     "kind": "episode",
     "uuid": "d289bcd0-4b1e-0132-cd36-5f4c86fd3263",
+    "source": "byDate/2014-11-11T07:10:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -4263,6 +4400,7 @@
     "stamp": "2014-11-11T07:20:00Z",
     "kind": "episode",
     "uuid": "d289bcd0-4b1e-0132-cd36-5f4c86fd3263",
+    "source": "byDate/2014-11-11T07:20:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -4279,6 +4417,7 @@
     "stamp": "2014-11-11T07:40:00Z",
     "kind": "episode",
     "uuid": "64e9bc50-4b79-0132-cd62-5f4c86fd3263",
+    "source": "byDate/2014-11-11T07:40:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -4295,6 +4434,7 @@
     "stamp": "2014-11-11T08:00:00Z",
     "kind": "episode",
     "uuid": "64e9bc50-4b79-0132-cd62-5f4c86fd3263",
+    "source": "byDate/2014-11-11T08:00:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -4311,6 +4451,7 @@
     "stamp": "2014-11-11T09:50:00Z",
     "kind": "episode",
     "uuid": "64e9bc50-4b79-0132-cd62-5f4c86fd3263",
+    "source": "byDate/2014-11-11T09:50:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -4327,6 +4468,7 @@
     "stamp": "2014-11-11T10:00:00Z",
     "kind": "episode",
     "uuid": "875f5780-4b72-0132-cd5e-5f4c86fd3263",
+    "source": "byDate/2014-11-11T10:00:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -4349,6 +4491,7 @@
     "stamp": "2014-11-11T11:00:00Z",
     "kind": "episode",
     "uuid": "64e9bc50-4b79-0132-cd62-5f4c86fd3263",
+    "source": "byDate/2014-11-11T11:00:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -4365,6 +4508,7 @@
     "stamp": "2014-11-11T12:40:00Z",
     "kind": "episode",
     "uuid": "64e9bc50-4b79-0132-cd62-5f4c86fd3263",
+    "source": "byDate/2014-11-11T12:40:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -4381,6 +4525,7 @@
     "stamp": "2014-11-11T15:40:00Z",
     "kind": "episode",
     "uuid": "7169c200-4b41-0132-cd46-5f4c86fd3263",
+    "source": "byDate/2014-11-11T15:40:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -4411,6 +4556,7 @@
     "stamp": "2014-11-12T01:10:00Z",
     "kind": "episode",
     "uuid": "6f3412d0-4c06-0132-cda5-5f4c86fd3263",
+    "source": "byDate/2014-11-12T01:10:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -4441,6 +4587,7 @@
     "stamp": "2014-11-12T01:20:00Z",
     "kind": "episode",
     "uuid": "12c96de0-4738-0132-cb04-5f4c86fd3263",
+    "source": "byDate/2014-11-12T01:20:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -4457,6 +4604,7 @@
     "stamp": "2014-11-12T02:30:00Z",
     "kind": "episode",
     "uuid": "12c96de0-4738-0132-cb04-5f4c86fd3263",
+    "source": "byDate/2014-11-12T02:30:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -4479,6 +4627,7 @@
     "stamp": "2014-11-12T02:40:00Z",
     "kind": "episode",
     "uuid": "12c96de0-4738-0132-cb04-5f4c86fd3263",
+    "source": "byDate/2014-11-12T02:40:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -4495,6 +4644,7 @@
     "stamp": "2014-11-12T03:30:00Z",
     "kind": "episode",
     "uuid": "1ecf75d0-4c3b-0132-cdbe-5f4c86fd3263",
+    "source": "byDate/2014-11-12T03:30:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -4525,6 +4675,7 @@
     "stamp": "2014-11-12T03:40:00Z",
     "kind": "episode",
     "uuid": "1ecf75d0-4c3b-0132-cdbe-5f4c86fd3263",
+    "source": "byDate/2014-11-12T03:40:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -4541,6 +4692,7 @@
     "stamp": "2014-11-12T04:00:00Z",
     "kind": "episode",
     "uuid": "baae5150-4aa3-0132-ccf2-5f4c86fd3263",
+    "source": "byDate/2014-11-12T04:00:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -4561,6 +4713,7 @@
     "stamp": "2014-11-12T06:00:00Z",
     "kind": "episode",
     "uuid": "baae5150-4aa3-0132-ccf2-5f4c86fd3263",
+    "source": "byDate/2014-11-12T06:00:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -4575,6 +4728,7 @@
     "stamp": "2014-11-12T07:30:00Z",
     "kind": "episode",
     "uuid": "65f65780-4b6b-0132-cd5b-5f4c86fd3263",
+    "source": "byDate/2014-11-12T07:30:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -4605,6 +4759,7 @@
     "stamp": "2014-11-12T07:30:00Z",
     "kind": "episode",
     "uuid": "a880c430-4b42-0132-cd47-5f4c86fd3263",
+    "source": "byDate/2014-11-12T07:30:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -4635,6 +4790,7 @@
     "stamp": "2014-11-12T08:10:00Z",
     "kind": "episode",
     "uuid": "a880c430-4b42-0132-cd47-5f4c86fd3263",
+    "source": "byDate/2014-11-12T08:10:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -4651,6 +4807,7 @@
     "stamp": "2014-11-12T08:40:00Z",
     "kind": "episode",
     "uuid": "a880c430-4b42-0132-cd47-5f4c86fd3263",
+    "source": "byDate/2014-11-12T08:40:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -4667,6 +4824,7 @@
     "stamp": "2014-11-12T08:50:00Z",
     "kind": "episode",
     "uuid": "a880c430-4b42-0132-cd47-5f4c86fd3263",
+    "source": "byDate/2014-11-12T08:50:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -4683,6 +4841,7 @@
     "stamp": "2014-11-12T09:10:00Z",
     "kind": "episode",
     "uuid": "a880c430-4b42-0132-cd47-5f4c86fd3263",
+    "source": "byDate/2014-11-12T09:10:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -4699,6 +4858,7 @@
     "stamp": "2014-11-12T10:10:00Z",
     "kind": "episode",
     "uuid": "11c2a060-4c1b-0132-cdaf-5f4c86fd3263",
+    "source": "byDate/2014-11-12T10:10:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -4729,6 +4889,7 @@
     "stamp": "2014-11-12T11:10:00Z",
     "kind": "episode",
     "uuid": "3a7b53c0-4c0f-0132-cdaa-5f4c86fd3263",
+    "source": "byDate/2014-11-12T11:10:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -4759,6 +4920,7 @@
     "stamp": "2014-11-12T15:50:00Z",
     "kind": "episode",
     "uuid": "f4f17840-4c3d-0132-cdc0-5f4c86fd3263",
+    "source": "byDate/2014-11-12T15:50:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -4775,6 +4937,7 @@
     "stamp": "2014-11-12T17:00:00Z",
     "kind": "episode",
     "uuid": "ce510f50-4cae-0132-cdf5-5f4c86fd3263",
+    "source": "byDate/2014-11-12T17:00:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -4791,6 +4954,7 @@
     "stamp": "2014-11-12T17:10:00Z",
     "kind": "episode",
     "uuid": "ce510f50-4cae-0132-cdf5-5f4c86fd3263",
+    "source": "byDate/2014-11-12T17:10:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -4827,6 +4991,7 @@
     "stamp": "2014-11-12T18:00:00Z",
     "kind": "episode",
     "uuid": "12c96de0-4738-0132-cb04-5f4c86fd3263",
+    "source": "byDate/2014-11-12T18:00:00Z/04-in_progress.json",
     "changes": [
       {
         "op": "chg",
@@ -4843,6 +5008,7 @@
     "stamp": "2014-11-12T18:30:00Z",
     "kind": "episode",
     "uuid": "12c96de0-4738-0132-cb04-5f4c86fd3263",
+    "source": "byDate/2014-11-12T18:30:00Z/04-in_progress.json",
     "changes": [
       {
         "op": "chg",
@@ -4859,6 +5025,7 @@
     "stamp": "2014-11-12T19:30:00Z",
     "kind": "episode",
     "uuid": "12c96de0-4738-0132-cb04-5f4c86fd3263",
+    "source": "byDate/2014-11-12T19:30:00Z/04-in_progress.json",
     "changes": [
       {
         "op": "chg",
@@ -4875,6 +5042,7 @@
     "stamp": "2014-11-12T22:20:00Z",
     "kind": "episode",
     "uuid": "3f141e50-4bbb-0132-cd82-5f4c86fd3263",
+    "source": "byDate/2014-11-12T22:20:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -4905,6 +5073,7 @@
     "stamp": "2014-11-12T22:40:00Z",
     "kind": "episode",
     "uuid": "f4f17840-4c3d-0132-cdc0-5f4c86fd3263",
+    "source": "byDate/2014-11-12T22:40:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -4935,6 +5104,7 @@
     "stamp": "2014-11-12T22:40:00Z",
     "kind": "episode",
     "uuid": "3f141e50-4bbb-0132-cd82-5f4c86fd3263",
+    "source": "byDate/2014-11-12T22:40:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -4951,6 +5121,7 @@
     "stamp": "2014-11-13T05:50:00Z",
     "kind": "episode",
     "uuid": "be62d880-4ab8-0132-cd00-5f4c86fd3263",
+    "source": "byDate/2014-11-13T05:50:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -4981,6 +5152,7 @@
     "stamp": "2014-11-13T06:10:00Z",
     "kind": "episode",
     "uuid": "13d16990-4bf9-0132-cd9f-5f4c86fd3263",
+    "source": "byDate/2014-11-13T06:10:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -5011,6 +5183,7 @@
     "stamp": "2014-11-13T07:10:00Z",
     "kind": "episode",
     "uuid": "13d16990-4bf9-0132-cd9f-5f4c86fd3263",
+    "source": "byDate/2014-11-13T07:10:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -5027,6 +5200,7 @@
     "stamp": "2014-11-13T09:10:00Z",
     "kind": "episode",
     "uuid": "17509c60-4cd5-0132-ce07-5f4c86fd3263",
+    "source": "byDate/2014-11-13T09:10:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -5057,6 +5231,7 @@
     "stamp": "2014-11-13T09:40:00Z",
     "kind": "episode",
     "uuid": "f1bd5080-4cff-0132-ce1b-5f4c86fd3263",
+    "source": "byDate/2014-11-13T09:40:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -5087,6 +5262,7 @@
     "stamp": "2014-11-13T10:10:00Z",
     "kind": "episode",
     "uuid": "f1bd5080-4cff-0132-ce1b-5f4c86fd3263",
+    "source": "byDate/2014-11-13T10:10:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -5103,6 +5279,7 @@
     "stamp": "2014-11-13T10:10:00Z",
     "kind": "episode",
     "uuid": "5f531e70-4cba-0132-cdfb-5f4c86fd3263",
+    "source": "byDate/2014-11-13T10:10:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -5133,6 +5310,7 @@
     "stamp": "2014-11-13T10:30:00Z",
     "kind": "episode",
     "uuid": "f1bd5080-4cff-0132-ce1b-5f4c86fd3263",
+    "source": "byDate/2014-11-13T10:30:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -5149,6 +5327,7 @@
     "stamp": "2014-11-13T10:40:00Z",
     "kind": "episode",
     "uuid": "f1bd5080-4cff-0132-ce1b-5f4c86fd3263",
+    "source": "byDate/2014-11-13T10:40:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -5165,6 +5344,7 @@
     "stamp": "2014-11-13T10:50:00Z",
     "kind": "episode",
     "uuid": "f1bd5080-4cff-0132-ce1b-5f4c86fd3263",
+    "source": "byDate/2014-11-13T10:50:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -5181,6 +5361,7 @@
     "stamp": "2014-11-13T11:10:00Z",
     "kind": "episode",
     "uuid": "f1bd5080-4cff-0132-ce1b-5f4c86fd3263",
+    "source": "byDate/2014-11-13T11:10:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -5197,6 +5378,7 @@
     "stamp": "2014-11-13T11:20:00Z",
     "kind": "episode",
     "uuid": "f1bd5080-4cff-0132-ce1b-5f4c86fd3263",
+    "source": "byDate/2014-11-13T11:20:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -5213,6 +5395,7 @@
     "stamp": "2014-11-13T11:50:00Z",
     "kind": "episode",
     "uuid": "7d46efb0-4d56-0132-ce45-5f4c86fd3263",
+    "source": "byDate/2014-11-13T11:50:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -5243,6 +5426,7 @@
     "stamp": "2014-11-13T11:50:00Z",
     "kind": "episode",
     "uuid": "77752090-4cf9-0132-ce18-5f4c86fd3263",
+    "source": "byDate/2014-11-13T11:50:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -5273,6 +5457,7 @@
     "stamp": "2014-11-13T12:10:00Z",
     "kind": "episode",
     "uuid": "7d46efb0-4d56-0132-ce45-5f4c86fd3263",
+    "source": "byDate/2014-11-13T12:10:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -5289,6 +5474,7 @@
     "stamp": "2014-11-13T15:30:00Z",
     "kind": "episode",
     "uuid": "77752090-4cf9-0132-ce18-5f4c86fd3263",
+    "source": "byDate/2014-11-13T15:30:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -5305,6 +5491,7 @@
     "stamp": "2014-11-13T16:10:00Z",
     "kind": "episode",
     "uuid": "77752090-4cf9-0132-ce18-5f4c86fd3263",
+    "source": "byDate/2014-11-13T16:10:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -5321,6 +5508,7 @@
     "stamp": "2014-11-13T17:10:00Z",
     "kind": "episode",
     "uuid": "77752090-4cf9-0132-ce18-5f4c86fd3263",
+    "source": "byDate/2014-11-13T17:10:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -5337,6 +5525,7 @@
     "stamp": "2014-11-13T17:40:00Z",
     "kind": "episode",
     "uuid": "428943f0-4d7c-0132-ce58-5f4c86fd3263",
+    "source": "byDate/2014-11-13T17:40:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -5367,6 +5556,7 @@
     "stamp": "2014-11-13T18:30:00Z",
     "kind": "episode",
     "uuid": "428943f0-4d7c-0132-ce58-5f4c86fd3263",
+    "source": "byDate/2014-11-13T18:30:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -5383,6 +5573,7 @@
     "stamp": "2014-11-13T19:50:00Z",
     "kind": "episode",
     "uuid": "428943f0-4d7c-0132-ce58-5f4c86fd3263",
+    "source": "byDate/2014-11-13T19:50:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -5399,6 +5590,7 @@
     "stamp": "2014-11-14T00:40:00Z",
     "kind": "episode",
     "uuid": "1fb23f40-4dc3-0132-ce7a-5f4c86fd3263",
+    "source": "byDate/2014-11-14T00:40:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -5435,6 +5627,7 @@
     "stamp": "2014-11-14T00:40:00Z",
     "kind": "episode",
     "uuid": "428943f0-4d7c-0132-ce58-5f4c86fd3263",
+    "source": "byDate/2014-11-14T00:40:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -5451,6 +5644,7 @@
     "stamp": "2014-11-14T00:40:00Z",
     "kind": "episode",
     "uuid": "8f0183d0-4cbc-0132-cdfc-5f4c86fd3263",
+    "source": "byDate/2014-11-14T00:40:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -5481,6 +5675,7 @@
     "stamp": "2014-11-14T00:40:00Z",
     "kind": "episode",
     "uuid": "d1749240-4d0a-0132-ce21-5f4c86fd3263",
+    "source": "byDate/2014-11-14T00:40:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -5511,6 +5706,7 @@
     "stamp": "2014-11-14T00:40:00Z",
     "kind": "episode",
     "uuid": "1cb7c550-48f5-0132-cbf0-5f4c86fd3263",
+    "source": "byDate/2014-11-14T00:40:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -5527,6 +5723,7 @@
     "stamp": "2014-11-14T03:10:00Z",
     "kind": "episode",
     "uuid": "5ff11cb0-4dd4-0132-ce82-5f4c86fd3263",
+    "source": "byDate/2014-11-14T03:10:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -5563,6 +5760,7 @@
     "stamp": "2014-11-14T03:30:00Z",
     "kind": "episode",
     "uuid": "c3b8a1f0-4dce-0132-ce7f-5f4c86fd3263",
+    "source": "byDate/2014-11-14T03:30:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -5593,6 +5791,7 @@
     "stamp": "2014-11-14T06:10:00Z",
     "kind": "episode",
     "uuid": "4bbbb200-4da9-0132-ce6e-5f4c86fd3263",
+    "source": "byDate/2014-11-14T06:10:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -5623,6 +5822,7 @@
     "stamp": "2014-11-14T06:30:00Z",
     "kind": "episode",
     "uuid": "4bbbb200-4da9-0132-ce6e-5f4c86fd3263",
+    "source": "byDate/2014-11-14T06:30:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -5639,6 +5839,7 @@
     "stamp": "2014-11-14T06:30:00Z",
     "kind": "episode",
     "uuid": "738cb5a0-4d85-0132-ce5d-5f4c86fd3263",
+    "source": "byDate/2014-11-14T06:30:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -5669,6 +5870,7 @@
     "stamp": "2014-11-14T06:30:00Z",
     "kind": "episode",
     "uuid": "21b1beb0-4cf9-0132-ce18-5f4c86fd3263",
+    "source": "byDate/2014-11-14T06:30:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -5699,6 +5901,7 @@
     "stamp": "2014-11-14T06:30:00Z",
     "kind": "episode",
     "uuid": "6054e0e0-4dce-0132-ce7f-5f4c86fd3263",
+    "source": "byDate/2014-11-14T06:30:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -5729,6 +5932,7 @@
     "stamp": "2014-11-14T09:00:00Z",
     "kind": "episode",
     "uuid": "f1d7f2c0-4d99-0132-ce66-5f4c86fd3263",
+    "source": "byDate/2014-11-14T09:00:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -5759,6 +5963,7 @@
     "stamp": "2014-11-14T09:10:00Z",
     "kind": "episode",
     "uuid": "4bbbb200-4da9-0132-ce6e-5f4c86fd3263",
+    "source": "byDate/2014-11-14T09:10:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -5775,6 +5980,7 @@
     "stamp": "2014-11-14T09:30:00Z",
     "kind": "episode",
     "uuid": "4bbbb200-4da9-0132-ce6e-5f4c86fd3263",
+    "source": "byDate/2014-11-14T09:30:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -5791,6 +5997,7 @@
     "stamp": "2014-11-14T09:40:00Z",
     "kind": "episode",
     "uuid": "c3b8a1f0-4dce-0132-ce7f-5f4c86fd3263",
+    "source": "byDate/2014-11-14T09:40:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -5813,6 +6020,7 @@
     "stamp": "2014-11-14T10:10:00Z",
     "kind": "episode",
     "uuid": "4bbbb200-4da9-0132-ce6e-5f4c86fd3263",
+    "source": "byDate/2014-11-14T10:10:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -5829,6 +6037,7 @@
     "stamp": "2014-11-14T10:20:00Z",
     "kind": "episode",
     "uuid": "4bbbb200-4da9-0132-ce6e-5f4c86fd3263",
+    "source": "byDate/2014-11-14T10:20:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -5845,6 +6054,7 @@
     "stamp": "2014-11-14T10:50:00Z",
     "kind": "episode",
     "uuid": "4bbbb200-4da9-0132-ce6e-5f4c86fd3263",
+    "source": "byDate/2014-11-14T10:50:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -5861,6 +6071,7 @@
     "stamp": "2014-11-14T11:10:00Z",
     "kind": "episode",
     "uuid": "c3b8a1f0-4dce-0132-ce7f-5f4c86fd3263",
+    "source": "byDate/2014-11-14T11:10:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -5877,6 +6088,7 @@
     "stamp": "2014-11-14T11:10:00Z",
     "kind": "episode",
     "uuid": "4bbbb200-4da9-0132-ce6e-5f4c86fd3263",
+    "source": "byDate/2014-11-14T11:10:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -5893,6 +6105,7 @@
     "stamp": "2014-11-14T14:40:00Z",
     "kind": "episode",
     "uuid": "90e011d0-4dcf-0132-ce80-5f4c86fd3263",
+    "source": "byDate/2014-11-14T14:40:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -5909,6 +6122,7 @@
     "stamp": "2014-11-14T15:50:00Z",
     "kind": "episode",
     "uuid": "e6b35cf0-4e13-0132-cea4-5f4c86fd3263",
+    "source": "byDate/2014-11-14T15:50:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -5937,6 +6151,7 @@
     "stamp": "2014-11-14T15:50:00Z",
     "kind": "episode",
     "uuid": "8f0183d0-4cbc-0132-cdfc-5f4c86fd3263",
+    "source": "byDate/2014-11-14T15:50:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -5953,6 +6168,7 @@
     "stamp": "2014-11-14T16:00:00Z",
     "kind": "episode",
     "uuid": "8f0183d0-4cbc-0132-cdfc-5f4c86fd3263",
+    "source": "byDate/2014-11-14T16:00:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -5969,6 +6185,7 @@
     "stamp": "2014-11-14T16:10:00Z",
     "kind": "episode",
     "uuid": "8f0183d0-4cbc-0132-cdfc-5f4c86fd3263",
+    "source": "byDate/2014-11-14T16:10:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -5985,6 +6202,7 @@
     "stamp": "2014-11-14T16:30:00Z",
     "kind": "episode",
     "uuid": "8f0183d0-4cbc-0132-cdfc-5f4c86fd3263",
+    "source": "byDate/2014-11-14T16:30:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -6001,6 +6219,7 @@
     "stamp": "2014-11-14T16:50:00Z",
     "kind": "episode",
     "uuid": "8dd62440-4e46-0132-cebd-5f4c86fd3263",
+    "source": "byDate/2014-11-14T16:50:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -6023,6 +6242,7 @@
     "stamp": "2014-11-14T22:30:00Z",
     "kind": "episode",
     "uuid": "103cffa0-4e75-0132-ced3-5f4c86fd3263",
+    "source": "byDate/2014-11-14T22:30:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -6039,6 +6259,7 @@
     "stamp": "2014-11-14T22:30:00Z",
     "kind": "episode",
     "uuid": "103e47d0-4e75-0132-ced3-5f4c86fd3263",
+    "source": "byDate/2014-11-14T22:30:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -6055,6 +6276,7 @@
     "stamp": "2014-11-14T22:30:00Z",
     "kind": "episode",
     "uuid": "1041c840-4e75-0132-ced3-5f4c86fd3263",
+    "source": "byDate/2014-11-14T22:30:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -6071,6 +6293,7 @@
     "stamp": "2014-11-15T00:40:00Z",
     "kind": "episode",
     "uuid": "3c5953e0-4e6e-0132-ced0-5f4c86fd3263",
+    "source": "byDate/2014-11-15T00:40:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -6101,6 +6324,7 @@
     "stamp": "2014-11-15T00:50:00Z",
     "kind": "episode",
     "uuid": "3c5bc260-4e6e-0132-ced0-5f4c86fd3263",
+    "source": "byDate/2014-11-15T00:50:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -6131,6 +6355,7 @@
     "stamp": "2014-11-15T00:50:00Z",
     "kind": "episode",
     "uuid": "3c5c96f0-4e6e-0132-ced0-5f4c86fd3263",
+    "source": "byDate/2014-11-15T00:50:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -6161,6 +6386,7 @@
     "stamp": "2014-11-15T01:10:00Z",
     "kind": "episode",
     "uuid": "d772a030-4e6c-0132-cecf-5f4c86fd3263",
+    "source": "byDate/2014-11-15T01:10:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -6191,6 +6417,7 @@
     "stamp": "2014-11-15T01:50:00Z",
     "kind": "episode",
     "uuid": "103cffa0-4e75-0132-ced3-5f4c86fd3263",
+    "source": "byDate/2014-11-15T01:50:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -6221,6 +6448,7 @@
     "stamp": "2014-11-15T02:20:00Z",
     "kind": "episode",
     "uuid": "404bd670-4e68-0132-cecd-5f4c86fd3263",
+    "source": "byDate/2014-11-15T02:20:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -6251,6 +6479,7 @@
     "stamp": "2014-11-15T02:30:00Z",
     "kind": "episode",
     "uuid": "404bd670-4e68-0132-cecd-5f4c86fd3263",
+    "source": "byDate/2014-11-15T02:30:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -6267,6 +6496,7 @@
     "stamp": "2014-11-15T05:40:00Z",
     "kind": "episode",
     "uuid": "103e47d0-4e75-0132-ced3-5f4c86fd3263",
+    "source": "byDate/2014-11-15T05:40:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -6283,6 +6513,7 @@
     "stamp": "2014-11-15T05:40:00Z",
     "kind": "episode",
     "uuid": "104306f0-4e75-0132-ced3-5f4c86fd3263",
+    "source": "byDate/2014-11-15T05:40:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -6299,6 +6530,7 @@
     "stamp": "2014-11-15T06:40:00Z",
     "kind": "episode",
     "uuid": "404bd670-4e68-0132-cecd-5f4c86fd3263",
+    "source": "byDate/2014-11-15T06:40:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -6315,6 +6547,7 @@
     "stamp": "2014-11-15T06:50:00Z",
     "kind": "episode",
     "uuid": "404bd670-4e68-0132-cecd-5f4c86fd3263",
+    "source": "byDate/2014-11-15T06:50:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -6331,6 +6564,7 @@
     "stamp": "2014-11-15T07:20:00Z",
     "kind": "episode",
     "uuid": "404bd670-4e68-0132-cecd-5f4c86fd3263",
+    "source": "byDate/2014-11-15T07:20:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -6347,6 +6581,7 @@
     "stamp": "2014-11-15T07:20:00Z",
     "kind": "episode",
     "uuid": "e412d190-4e6d-0132-ced0-5f4c86fd3263",
+    "source": "byDate/2014-11-15T07:20:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -6377,6 +6612,7 @@
     "stamp": "2014-11-15T07:40:00Z",
     "kind": "episode",
     "uuid": "e412d190-4e6d-0132-ced0-5f4c86fd3263",
+    "source": "byDate/2014-11-15T07:40:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -6393,6 +6629,7 @@
     "stamp": "2014-11-15T08:20:00Z",
     "kind": "episode",
     "uuid": "bdb4d010-4ec7-0132-cefa-5f4c86fd3263",
+    "source": "byDate/2014-11-15T08:20:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -6429,6 +6666,7 @@
     "stamp": "2014-11-15T08:20:00Z",
     "kind": "episode",
     "uuid": "e412d190-4e6d-0132-ced0-5f4c86fd3263",
+    "source": "byDate/2014-11-15T08:20:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -6445,6 +6683,7 @@
     "stamp": "2014-11-15T08:40:00Z",
     "kind": "episode",
     "uuid": "e412d190-4e6d-0132-ced0-5f4c86fd3263",
+    "source": "byDate/2014-11-15T08:40:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -6461,6 +6700,7 @@
     "stamp": "2014-11-15T09:30:00Z",
     "kind": "episode",
     "uuid": "bdfe7110-4ecf-0132-cefe-5f4c86fd3263",
+    "source": "byDate/2014-11-15T09:30:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -6491,6 +6731,7 @@
     "stamp": "2014-11-15T10:40:00Z",
     "kind": "episode",
     "uuid": "bdfe7110-4ecf-0132-cefe-5f4c86fd3263",
+    "source": "byDate/2014-11-15T10:40:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -6507,6 +6748,7 @@
     "stamp": "2014-11-15T10:50:00Z",
     "kind": "episode",
     "uuid": "bdfe7110-4ecf-0132-cefe-5f4c86fd3263",
+    "source": "byDate/2014-11-15T10:50:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -6523,6 +6765,7 @@
     "stamp": "2014-11-15T11:00:00Z",
     "kind": "episode",
     "uuid": "c555be30-4e7c-0132-ced7-5f4c86fd3263",
+    "source": "byDate/2014-11-15T11:00:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -6553,6 +6796,7 @@
     "stamp": "2014-11-15T11:00:00Z",
     "kind": "episode",
     "uuid": "4bbbb200-4da9-0132-ce6e-5f4c86fd3263",
+    "source": "byDate/2014-11-15T11:00:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -6569,6 +6813,7 @@
     "stamp": "2014-11-15T11:20:00Z",
     "kind": "episode",
     "uuid": "4bbbb200-4da9-0132-ce6e-5f4c86fd3263",
+    "source": "byDate/2014-11-15T11:20:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -6585,6 +6830,7 @@
     "stamp": "2014-11-15T12:10:00Z",
     "kind": "episode",
     "uuid": "e66f4790-4e6e-0132-ced0-5f4c86fd3263",
+    "source": "byDate/2014-11-15T12:10:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -6615,6 +6861,7 @@
     "stamp": "2014-11-15T12:10:00Z",
     "kind": "episode",
     "uuid": "d1749240-4d0a-0132-ce21-5f4c86fd3263",
+    "source": "byDate/2014-11-15T12:10:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -6631,6 +6878,7 @@
     "stamp": "2014-11-15T12:20:00Z",
     "kind": "episode",
     "uuid": "e66f4790-4e6e-0132-ced0-5f4c86fd3263",
+    "source": "byDate/2014-11-15T12:20:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -6647,6 +6895,7 @@
     "stamp": "2014-11-15T16:00:00Z",
     "kind": "episode",
     "uuid": "103e47d0-4e75-0132-ced3-5f4c86fd3263",
+    "source": "byDate/2014-11-15T16:00:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -6663,6 +6912,7 @@
     "stamp": "2014-11-15T18:00:00Z",
     "kind": "episode",
     "uuid": "8f0183d0-4cbc-0132-cdfc-5f4c86fd3263",
+    "source": "byDate/2014-11-15T18:00:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -6679,6 +6929,7 @@
     "stamp": "2014-11-15T18:40:00Z",
     "kind": "episode",
     "uuid": "1cb7c550-48f5-0132-cbf0-5f4c86fd3263",
+    "source": "byDate/2014-11-15T18:40:00Z/04-in_progress.json",
     "changes": [
       {
         "op": "chg",
@@ -6695,6 +6946,7 @@
     "stamp": "2014-11-15T19:40:00Z",
     "kind": "episode",
     "uuid": "e412d190-4e6d-0132-ced0-5f4c86fd3263",
+    "source": "byDate/2014-11-15T19:40:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -6717,6 +6969,7 @@
     "stamp": "2014-11-15T20:40:00Z",
     "kind": "episode",
     "uuid": "d1749240-4d0a-0132-ce21-5f4c86fd3263",
+    "source": "byDate/2014-11-15T20:40:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -6733,6 +6986,7 @@
     "stamp": "2014-11-15T21:20:00Z",
     "kind": "episode",
     "uuid": "103e47d0-4e75-0132-ced3-5f4c86fd3263",
+    "source": "byDate/2014-11-15T21:20:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -6763,6 +7017,7 @@
     "stamp": "2014-11-15T21:40:00Z",
     "kind": "episode",
     "uuid": "103e47d0-4e75-0132-ced3-5f4c86fd3263",
+    "source": "byDate/2014-11-15T21:40:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -6779,6 +7034,7 @@
     "stamp": "2014-11-15T23:40:00Z",
     "kind": "episode",
     "uuid": "104306f0-4e75-0132-ced3-5f4c86fd3263",
+    "source": "byDate/2014-11-15T23:40:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -6809,6 +7065,7 @@
     "stamp": "2014-11-16T00:50:00Z",
     "kind": "episode",
     "uuid": "104306f0-4e75-0132-ced3-5f4c86fd3263",
+    "source": "byDate/2014-11-16T00:50:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -6825,6 +7082,7 @@
     "stamp": "2014-11-16T01:00:00Z",
     "kind": "episode",
     "uuid": "104306f0-4e75-0132-ced3-5f4c86fd3263",
+    "source": "byDate/2014-11-16T01:00:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -6841,6 +7099,7 @@
     "stamp": "2014-11-16T01:20:00Z",
     "kind": "episode",
     "uuid": "13365220-4e7a-0132-ced5-5f4c86fd3263",
+    "source": "byDate/2014-11-16T01:20:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -6871,6 +7130,7 @@
     "stamp": "2014-11-16T02:10:00Z",
     "kind": "episode",
     "uuid": "13365220-4e7a-0132-ced5-5f4c86fd3263",
+    "source": "byDate/2014-11-16T02:10:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -6887,6 +7147,7 @@
     "stamp": "2014-11-16T04:20:00Z",
     "kind": "episode",
     "uuid": "884615c0-4e9b-0132-cee5-5f4c86fd3263",
+    "source": "byDate/2014-11-16T04:20:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "new",
@@ -6917,6 +7178,7 @@
     "stamp": "2014-11-16T04:30:00Z",
     "kind": "episode",
     "uuid": "884615c0-4e9b-0132-cee5-5f4c86fd3263",
+    "source": "byDate/2014-11-16T04:30:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -6933,6 +7195,7 @@
     "stamp": "2014-11-16T04:40:00Z",
     "kind": "episode",
     "uuid": "884615c0-4e9b-0132-cee5-5f4c86fd3263",
+    "source": "byDate/2014-11-16T04:40:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -6949,6 +7212,7 @@
     "stamp": "2014-11-16T04:50:00Z",
     "kind": "episode",
     "uuid": "884615c0-4e9b-0132-cee5-5f4c86fd3263",
+    "source": "byDate/2014-11-16T04:50:00Z/03-new_releases.json",
     "changes": [
       {
         "op": "chg",
@@ -6960,5 +7224,198 @@
     "episode_title": "TYT-11.14.14",
     "podcast_uuid": "0fb72d80-4c95-0130-e3d5-723c91aeae46",
     "podcast_title": "The Young Turks Audio Podcast"
+  },
+  {
+    "stamp": "2014-11-16T06:10:00Z",
+    "kind": "episode",
+    "uuid": "e6b35cf0-4e13-0132-cea4-5f4c86fd3263",
+    "source": "byDate/2014-11-16T06:10:00Z/03-new_releases.json",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "played_up_to",
+        "from": 39,
+        "to": 1061
+      }
+    ],
+    "episode_title": "Psychiatrists & the pharma industry are to blame for the current ‘epidemic’ of mental disorders"
+  },
+  {
+    "stamp": "2014-11-16T06:40:00Z",
+    "kind": "episode",
+    "uuid": "e6b35cf0-4e13-0132-cea4-5f4c86fd3263",
+    "source": "byDate/2014-11-16T06:40:00Z/03-new_releases.json",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "played_up_to",
+        "from": 1061,
+        "to": 2831
+      }
+    ],
+    "episode_title": "Psychiatrists & the pharma industry are to blame for the current ‘epidemic’ of mental disorders"
+  },
+  {
+    "stamp": "2014-11-16T06:50:00Z",
+    "kind": "episode",
+    "uuid": "e6b35cf0-4e13-0132-cea4-5f4c86fd3263",
+    "source": "byDate/2014-11-16T06:50:00Z/03-new_releases.json",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "played_up_to",
+        "from": 2831,
+        "to": 3571
+      }
+    ],
+    "episode_title": "Psychiatrists & the pharma industry are to blame for the current ‘epidemic’ of mental disorders"
+  },
+  {
+    "stamp": "2014-11-16T07:10:00Z",
+    "kind": "episode",
+    "uuid": "e6b35cf0-4e13-0132-cea4-5f4c86fd3263",
+    "source": "byDate/2014-11-16T07:10:00Z/03-new_releases.json",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "played_up_to",
+        "from": 3571,
+        "to": 4671
+      }
+    ],
+    "episode_title": "Psychiatrists & the pharma industry are to blame for the current ‘epidemic’ of mental disorders"
+  },
+  {
+    "stamp": "2014-11-16T08:44:00Z",
+    "kind": "episode",
+    "uuid": "474d8be0-4f91-0132-cf66-5f4c86fd3263",
+    "source": "byDate/2014-11-16T08:44:00Z/03-new_releases.json",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "duration",
+        "from": 3820,
+        "to": 3862
+      },
+      {
+        "op": "new",
+        "key": "playing_status",
+        "to": null
+      },
+      {
+        "op": "new",
+        "key": "played_up_to",
+        "to": null
+      },
+      {
+        "op": "new",
+        "key": "is_deleted",
+        "to": false
+      },
+      {
+        "op": "new",
+        "key": "starred",
+        "to": false
+      }
+    ],
+    "episode_title": "Marilynne Robinson, Colm Toibin Podcast",
+    "podcast_uuid": "55c51e50-3318-012e-0d51-00163e1b201c",
+    "podcast_title": "Writers and Company from CBC Radio"
+  },
+  {
+    "stamp": "2014-11-16T08:54:00Z",
+    "kind": "episode",
+    "uuid": "2141f890-4f0f-0132-cf21-5f4c86fd3263",
+    "source": "byDate/2014-11-16T08:54:00Z/03-new_releases.json",
+    "changes": [
+      {
+        "op": "new",
+        "key": "playing_status",
+        "to": 2
+      },
+      {
+        "op": "new",
+        "key": "played_up_to",
+        "to": 118
+      },
+      {
+        "op": "new",
+        "key": "is_deleted",
+        "to": false
+      },
+      {
+        "op": "new",
+        "key": "starred",
+        "to": false
+      }
+    ],
+    "episode_title": "GlobalNews: 15 Nov 14 AM G20 warns Russia over Ukraine",
+    "podcast_uuid": "74a35900-0423-012e-f9a0-00163e1b201c",
+    "podcast_title": "Global News"
+  },
+  {
+    "stamp": "2014-11-16T09:04:00Z",
+    "kind": "episode",
+    "uuid": "2141f890-4f0f-0132-cf21-5f4c86fd3263",
+    "source": "byDate/2014-11-16T09:04:00Z/03-new_releases.json",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "played_up_to",
+        "from": 118,
+        "to": 937
+      }
+    ],
+    "episode_title": "GlobalNews: 15 Nov 14 AM G20 warns Russia over Ukraine",
+    "podcast_uuid": "74a35900-0423-012e-f9a0-00163e1b201c",
+    "podcast_title": "Global News"
+  },
+  {
+    "stamp": "2014-11-16T09:14:00Z",
+    "kind": "episode",
+    "uuid": "2141f890-4f0f-0132-cf21-5f4c86fd3263",
+    "source": "byDate/2014-11-16T09:14:00Z/03-new_releases.json",
+    "changes": [
+      {
+        "op": "chg",
+        "key": "played_up_to",
+        "from": 937,
+        "to": 1177
+      }
+    ],
+    "episode_title": "GlobalNews: 15 Nov 14 AM G20 warns Russia over Ukraine",
+    "podcast_uuid": "74a35900-0423-012e-f9a0-00163e1b201c",
+    "podcast_title": "Global News"
+  },
+  {
+    "stamp": "2014-11-16T11:04:00Z",
+    "kind": "episode",
+    "uuid": "626a4610-4dcc-0132-ce7e-5f4c86fd3263",
+    "source": "byDate/2014-11-16T11:04:00Z/03-new_releases.json",
+    "changes": [
+      {
+        "op": "new",
+        "key": "playing_status",
+        "to": 2
+      },
+      {
+        "op": "new",
+        "key": "played_up_to",
+        "to": 223
+      },
+      {
+        "op": "new",
+        "key": "is_deleted",
+        "to": false
+      },
+      {
+        "op": "new",
+        "key": "starred",
+        "to": false
+      }
+    ],
+    "episode_title": "Data Stories #42 — with Santiago Ortiz",
+    "podcast_uuid": "2cfd8eb0-58b1-012f-101d-525400c11844",
+    "podcast_title": "Data Stories"
   }
 ]

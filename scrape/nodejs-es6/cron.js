@@ -4,66 +4,40 @@ var fs = require('fs');
 var path = require('path');
 var mkdirp = require('mkdirp');
 var cron = require('cron');
-var API = require('./lib/pocketAPI');
-var Promise = require("bluebird");
-var _ = require('lodash');
-// dependencies
-
-// globals
-// external data for creds.
-var credentials = require('./credentials.json');
-var dataDirname = 'data';
-
-// use substack's node-mkdirp, in case the dirname ever goes deeper.
-mkdirp.sync(dataDirname);
-
-// pubsub would be good
-function logStamp(message) {
-  console.log(new Date().toJSON(), message);
-}
-
-
-// TODO: gonna need user id
-// merge with version in index, and move to lib
-function writeResponse(base, response) {
-  // remove millis, round seconds, convert to iso8601 string
-  function nowMinute() {
-    // remove millis
-    var stamp = new Date();
-    stamp.setSeconds(0);
-    return stamp.toJSON().replace(/\.\d{3}Z$/, 'Z'); // iso8601, remove millis
-  }
-
-  // announce what we are doing io.file
-  logStamp(base);
-
-  var stamp = nowMinute();
-  var content = JSON.stringify(response, null, 2);
-
-  var dir = path.join(dataDirname, 'byDate', stamp);
-  mkdirp.sync(dir);
-  var newfile = path.join(dir, [base, 'json'].join('.'));
-  console.log('+', newfile);
-  fs.writeFileSync(newfile, content);
-}
-
-function scrape() {
-  logStamp('Start scraping (quick)');
-  API.sign_in(credentials)
-    .then(API.new_releases_episodes())
-    .then(function(response) {
-      writeResponse('03-new_releases', response);
-    })
-    .then(API.in_progress_episodes())
-    .then(function(response) {
-      writeResponse('04-in_progress', response);
-    });
-}
+var tasks = require('./lib/tasks');
 
 var CronJob = cron.CronJob;
-var job = new CronJob({
-  cronTime: '0 */10 * * * *', // seconds included 6 params - standard 5 params supported
-  onTick: scrape,
+
+// TODO: this should become cronRunner, move to lib, receive/inject config
+// e.g. fomr index.js:
+//   require('./lib/cronRunner').run(config)
+
+// cron crash course:
+//  */5 :== 0-59/5, and
+//  1-59/5 :== 1,6,11,16,21
+//  4-59/10 :== 4,14,24,34
+// example
+// every 10 minutes
+//   cronTime: '0 */10 * * * *', // seconds included 6 params - standard 5 params supported
+
+// auto-start all three
+var deep = new CronJob({
+  cronTime: '0 0 * * * *', // seconds included 6 params - standard 5 params supported
+  onTick: tasks.deep,
+  start: true // default is true, else, if start:false, use job.start()
+  // timeZone: "America/Montreal" // npm install time, if you want to use TZ
+});
+
+var shallow = new CronJob({
+  cronTime: '0 3-59/10 * * * *', // seconds included 6 params - standard 5 params supported
+  onTick: tasks.shallow,
+  start: true // default is true, else, if start:false, use job.start()
+  // timeZone: "America/Montreal" // npm install time, if you want to use TZ
+});
+
+var quick = new CronJob({
+  cronTime: '0 4-59/10 * * * *', // seconds included 6 params - standard 5 params supported
+  onTick: tasks.quick,
   start: true // default is true, else, if start:false, use job.start()
   // timeZone: "America/Montreal" // npm install time, if you want to use TZ
 });

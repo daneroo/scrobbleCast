@@ -1,0 +1,51 @@
+{
+  "merged": {
+    "uuid": "d35640a0-bc37-0131-22ca-723c91aeae46",
+    "url": "http://www.podtrac.com/pts/redirect.mp3/twit.cachefly.net/audio/tnt/tnt1005/tnt1005.mp3",
+    "title": "TNT 1005: Just Plane Out of RAM",
+    "published_at": "2014-05-12 18:59:33",
+    "size": 20561629,
+    "duration": 2547,
+    "file_type": "audio/mp3",
+    "id": null,
+    "playing_status": 0,
+    "played_up_to": 0,
+    "is_deleted": 0,
+    "starred": 0,
+    "is_video": false
+  },
+  "history": [
+    {
+      "stamp": "2014-11-14T08:32:00Z",
+      "source": "byDate/2014-11-14T08:32:00Z/02-podcasts/77170eb0-0257-012e-f994-00163e1b201c.json",
+      "uuid": "d35640a0-bc37-0131-22ca-723c91aeae46",
+      "title": "TNT 1005: Just Plane Out of RAM",
+      "changes": [
+        {
+          "op": "chg",
+          "key": "playing_status",
+          "from": 3,
+          "to": 0
+        },
+        {
+          "op": "chg",
+          "key": "played_up_to",
+          "from": 2549,
+          "to": 0
+        },
+        {
+          "op": "chg",
+          "key": "is_deleted",
+          "from": false,
+          "to": 0
+        },
+        {
+          "op": "chg",
+          "key": "starred",
+          "from": false,
+          "to": 0
+        }
+      ]
+    }
+  ]
+}

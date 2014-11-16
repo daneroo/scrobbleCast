@@ -79,7 +79,6 @@ function stampFromFile(file) {
 
 find('byDate/**/*.json')
   .then(function(files) {
-    console.log('Delta?',files);
     utils.logStamp('Starting:Delta ' + files.length);
 
     var uuidProperty = 'uuid'; // common to all: podcasts/episodes
@@ -93,16 +92,18 @@ find('byDate/**/*.json')
       var source = file;
 
       if (file.match(/01-/)) {
-        console.log('|podcasts|', thingsToMerge.length,file);
+        // console.log('|podcasts|', thingsToMerge.length,file);
         podcastHistory.mergeMany(thingsToMerge, uuidProperty, stamp, source);
       } else {
-        console.log('|episodes|', thingsToMerge.length,file);
+        // console.log('|episodes|', thingsToMerge.length,file);
         episodeHistory.mergeMany(thingsToMerge, uuidProperty, stamp, source);
       }
     });
     // just write out the accumulators dictionary, it is the only attribute!
     fs.writeFileSync('podcast-history.json', JSON.stringify(podcastHistory.accumulators, null, 2));
     fs.writeFileSync('episode-history.json', JSON.stringify(episodeHistory.accumulators, null, 2));
+    var oneEpisode = 'd35640a0-bc37-0131-22ca-723c91aeae46';
+    fs.writeFileSync('one-episode-history.json', JSON.stringify(episodeHistory.accumulators[oneEpisode], null, 2));
     utils.logStamp('Done:Delta ' + files.length);
   })
   .catch(function(error) {

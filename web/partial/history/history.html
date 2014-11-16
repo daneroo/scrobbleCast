@@ -1,45 +1,43 @@
 <div class="home" ng-controller="HistoryCtrl" md-theme="orange">
 
   <md-content class="fullheight">
-    <md-toolbar ng-if='true'>
+    <md-toolbar>
       <h2 class="md-toolbar-tools">
-        <span>Toolbar: default</span>
+        <span>History</span>
       </h2>
     </md-toolbar>
     <section>
-<!--       <md-subheader ng-repeat="day in days" class="md-primary">
-        {{moment(day).startOf('day').calendar()}}
-        {{moment(day).format('ll')}}  <i>({{historyByDay[day].length}})</i>
-      </md-subheader>
- -->
-      <div ng-repeat="day in days" class="md-primary">
-        {{moment(day).format('ll')}}  <i>({{historyByDay[day].length}})</i>
-      </div>        
-      <md-subheader class="md-primary">History</md-subheader>
-      <md-list ng-if='true'>
-        <div>History: {{history.length}} events</div>
-        <md-item ng-repeat="event in history">
-          <md-item-content>
-            <md-whiteframe class="md-whiteframe-z1" layout layout-fill layout-align="center start">
-              <div class="md-tile-left">
-                  <img ng-src="/images/podcast.jpg" class="face" alt="PodcastName">
-              </div>
-              <div class="md-tile-content">
-                <h3>{{event.episode_title}} <small>{{moment(event.stamp).fromNow()}}</small></h3>
-                <h4>{{event.podcast_title}}</h4>
-                <div>|Δ|:{{event.changes.length}}</div>
-                <md-content>
-                  <div ng-repeat="change in event.changes| filter:changeFilter">
-                    <div> {{change.op}} {{change.key}} {{change.from}} {{change.to}}</div>
-                  </div>
-                </md-content>
-              </div>
-            </md-whiteframe>
-          </md-item-content>
-        </md-item>
-      </md-list>
+      <div ng-repeat="day in days">
+        <md-subheader>
+          {{moment(day).format('ll')}}  <i>({{historyByDay[day].length}})</i>
+        </md-subheader>
+
+        <md-list>
+          <md-item ng-repeat="event in historyByDay[day] | filter:playFilter">
+            <md-item-content>
+              <!--  wf-z0 does not exist -->
+              <md-whiteframe class="md-whiteframe-z1" layout layout-fill layout-align="center start">
+                <div class="md-tile-left">
+                    <img ng-src="{{lookupThumb(event.podcast_uuid)}}" class="podcast_thumb" alt="PodcastName">
+                </div>
+                <div class="md-tile-content">
+                  <h3>{{event.episode_title}} <small>{{moment(event.stamp).fromNow()}}</small></h3>
+                  <h4>{{event.podcast_title}} <small>|Δ|:{{event.changes.length}}</small></h4>
+                  <md-content ng-if="(event.changes| filter:changeFilter).length>0">
+                    <div ng-repeat="change in event.changes| filter:changeFilter">
+                      <div> {{change.op}} {{change.key}} 
+                        {{change.from}} <i class="fa fa-arrow-right"></i> {{change.to}}
+                      </div>
+                    </div>
+                  </md-content>
+                </div>
+              </md-whiteframe>
+            </md-item-content>
+            <md-divider inset ng-if="!$last"></md-divider>
+          </md-item>
+        </md-list>
+
+      </div>
+
     </section>
-
-   </md-content>
-
 </div>

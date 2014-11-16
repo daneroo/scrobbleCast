@@ -19,28 +19,27 @@ var CronJob = cron.CronJob;
 // example
 // every 10 minutes
 //   cronTime: '0 */10 * * * *', // seconds included 6 params - standard 5 params supported
+var recurrence = {
+  everyHourOnTheHour: '0 0 * * * *',
+  everyTenMinutesOffsetByThree: '0 3-59/10 * * * *',
+  everyTenMinutesOffsetByFour: '0 4-59/10 * * * *',
+};
+
+// auto-starts
+function runJob(task, when) {
+  var job = new CronJob({
+    cronTime: when,
+    onTick: task,
+    start: true // default is true, else, if start:false, use job.start()
+      // timeZone: "America/Montreal" // npm install time, if you want to use TZ
+  });
+  return job; // if you ever want to stop it.
+}
 
 // auto-start all three
-var deep = new CronJob({
-  cronTime: '0 0 * * * *', // seconds included 6 params - standard 5 params supported
-  onTick: tasks.deep,
-  start: true // default is true, else, if start:false, use job.start()
-  // timeZone: "America/Montreal" // npm install time, if you want to use TZ
-});
-
-var shallow = new CronJob({
-  cronTime: '0 3-59/10 * * * *', // seconds included 6 params - standard 5 params supported
-  onTick: tasks.shallow,
-  start: true // default is true, else, if start:false, use job.start()
-  // timeZone: "America/Montreal" // npm install time, if you want to use TZ
-});
-
-var quick = new CronJob({
-  cronTime: '0 4-59/10 * * * *', // seconds included 6 params - standard 5 params supported
-  onTick: tasks.quick,
-  start: true // default is true, else, if start:false, use job.start()
-  // timeZone: "America/Montreal" // npm install time, if you want to use TZ
-});
+runJob(tasks.deep,    recurrence.everyHourOnTheHour); // var deep = ...
+runJob(tasks.shallow, recurrence.everyTenMinutesOffsetByThree); // var shallow = 
+runJob(tasks.quick,   recurrence.everyTenMinutesOffsetByFour); // var quick = 
 
 // make this process hang around
 // closing stdin (^D/EOF) will exit.

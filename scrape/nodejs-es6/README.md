@@ -5,7 +5,19 @@
 * Try using promises
 * Try using ES6
 
-## TODO
+## Delta streams
+
+We may receive (by polling) 4 kinds of files
+- podcasts: the list : [podcast]
+- new_releases/in_progress: {[episode]| episode.podcast_uuid}
+- episodesForPodcast: {[episode]| implied episode.podcast_uuid}
+
+In order to produce an event stream of changes to these entities, we must find an ordered way to traverse the dataset that is ammenable to incremental processing.
+
+Represenation of current-state: accumulator:
+  podcasts: {[podcasts]} -> 
+
+## TODO - Moving to Evernote
 
 * Delta Events
   * prefix files: with 01-podcasts.json,02-podcasts/
@@ -19,7 +31,6 @@
 * compose 
   * all pages for a podcast:  Done, needs refactor
   * all podcasts (quick/deep, on fetchAll)
-* Cron (Done for quick - remain:shallow/deep)
 * docker with creds in `ENV`
 
 Done 

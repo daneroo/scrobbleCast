@@ -14,6 +14,8 @@ var Promise = require("bluebird");
 var glob = require("glob");
 var pglob = Promise.promisify(glob);
 var _ = require('lodash');
+var utils = require('./lib/utils');
+var delta = require('./lib/delta');
 
 // globals
 // external data for creds.
@@ -23,6 +25,7 @@ function resolve(file) {
   return path.resolve(dataDirname, file);
 }
 
+// make these Async/Promised
 function loadJSON(file) {
   var result = require(resolve(file));
   return result.episodes || result.podcasts || result;
@@ -32,12 +35,12 @@ function loadJSON(file) {
 var podcasts;
 var podcastsByUuid;
 var allEpisodesByUuid = {};
-var history = []; // reset history
+var history = [];
 
 function initialize() {
   var prefix = 'byDate/2014-11-07T08:34:00Z/';
   podcasts = loadJSON(prefix + '01-podcasts.json');
-  console.log('init:|podcasts|',podcasts.length);
+  console.log('init:|podcasts|', podcasts.length);
 
   podcastsByUuid = _.groupBy(podcasts, 'uuid');
   // console.log(podcastsByUuid);
@@ -62,7 +65,7 @@ function loadEpisodesForPodcast(podcast_uuid) {
     var prefix = 'byDate/2014-11-07T08:34:00Z/';
 
     episodes = loadJSON(path.join(prefix + '02-podcasts', podcast_uuid + '.json'));
-    console.log('init:|episodes|',episodes.length);
+    console.log('init:|episodes|', episodes.length);
   } catch (err) {
     console.log('episodes not found for:', podcast_uuid);
     // console.log(' **creating empty Array to cache negative result');
@@ -157,7 +160,7 @@ function handleEpisodeUpdate(file) {
   // console.log('do something with', file);
   var stamp = stampFromFile(file);
   var episodes = loadJSON(file);
-  console.log('stream:|episodes|',episodes.length);
+  console.log('stream:|episodes|', episodes.length);
   episodes.forEach(function(episode) {
     // possible unknown pocast or episode...
     var knownEpisodes = loadEpisodesForPodcast(episode.podcast_uuid);
@@ -202,8 +205,57 @@ function handleEpisodeUpdate(file) {
   });
 }
 
-find('byDate/**/0[34]*.json')
-// find('byDate/**/0[2]*/*.json')
+// new stuff:
+if (0) find('byDate/**/01-*.json')
+  .then(function(files) {
+    utils.logStamp('Starting new Delta (podcasts)' + files.length);
+
+    var historyByUuid = new delta.AccumulatorByUuid();
+    var pluckUuidFromProperty = 'uuid';
+    files.forEach(function(file) {
+      console.log('Accumulating: ' + file);
+      podcasts = loadJSON(file);
+      console.log('stream:|podcasts|', podcasts.length);
+      var stamp = stampFromFile(file);
+      var source = file;
+      historyByUuid.mergeMany(podcasts, null, pluckUuidFromProperty, stamp, source);
+    });
+    fs.writeFileSync('podcast-history.json', JSON.stringify(historyByUuid, null, 2));
+    utils.logStamp('Done new Delta (podcasts)' + files.length);
+  });
+
+// find('byDate/**/0[34]*.json')
+find('byDate/**/*.json')
+  .then(function(files) {
+    utils.logStamp('Starting new Delta ' + files.length);
+
+    var uuidProperty = 'uuid'; // common to all: podcasts/episodes
+    var podcastHistory = new delta.AccumulatorByUuid();
+    var episodeHistory = new delta.AccumulatorByUuid();
+
+    files.forEach(function(file) {
+
+      console.log('Accumulating: ' + file);
+      var thingsToMerge = loadJSON(file);
+      var stamp = stampFromFile(file);
+      var source = file;
+
+      if (file.match(/01-/)) {
+        console.log('|podcasts|', thingsToMerge.length);
+        podcastHistory.mergeMany(thingsToMerge, uuidProperty, stamp, source);
+      } else {
+        console.log('|episodes|', thingsToMerge.length);
+        episodeHistory.mergeMany(thingsToMerge, uuidProperty, stamp, source);
+      }
+    });
+    fs.writeFileSync('podcast-history.json', JSON.stringify(podcastHistory, null, 2));
+    fs.writeFileSync('episode-history.json', JSON.stringify(episodeHistory, null, 2));
+    utils.logStamp('Done new Delta ' + files.length);
+  });
+
+
+if (0) find('byDate/**/0[34]*.json')
+  // find('byDate/**/0[2]*/*.json')
   .then(function(files) {
     initialize();
     files.sort();

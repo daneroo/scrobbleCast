@@ -68,11 +68,13 @@ Accumulator.prototype.merge = function(thingToMerge, tagsForChangeSet) {
         changes: changes
       });
       this.history.push(record);
+
+      if (stamp) {
+        this.lastUpdated = stamp;
+      }
+
     }
 
-    if (stamp) {
-      this.lastUpdated = stamp;
-    }
     // don't modify the from, make a copy.
     this.merged = _.merge({}, from, to);
   }

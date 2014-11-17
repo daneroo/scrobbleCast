@@ -13,6 +13,8 @@ var utils = require('./utils');
 // Constructor
 function Accumulator() {
   // this.options = _.merge({},defaultOptions,options);
+  this.firstSeen = false; // set to stamp on first run
+  this.lastUpdated = false; // set to stamp when changes detected
   this.merged = {};
   this.history = []; // array of changesets
 }
@@ -21,6 +23,7 @@ function Accumulator() {
 // Accumulates (merges) and returns changes
 Accumulator.prototype.merge = function(thingToMerge, tagsForChangeSet) {
   // assume the objects are all shallow... (no nested properties for now)
+  var stamp = tagsForChangeSet.stamp;
   var from = this.merged;
   var to = thingToMerge;
   var changes = [];
@@ -67,9 +70,14 @@ Accumulator.prototype.merge = function(thingToMerge, tagsForChangeSet) {
       this.history.push(record);
     }
 
-    // not sure about this...
+    if (stamp) {
+      this.lastUpdated = stamp;
+    }
     // don't modify the from, make a copy.
-    this.merged = _.merge(_.merge({}, from), to);
+    this.merged = _.merge({}, from, to);
+  }
+  if (stamp && !this.firstSeen) {
+    this.firstSeen = stamp;
   }
   return changes;
 };

@@ -99,9 +99,15 @@ find('byDate/**/*.json')
         episodeHistory.mergeMany(thingsToMerge, uuidProperty, stamp, source);
       }
     });
-    // just write out the accumulators dictionary, it is the only attribute!
-    fs.writeFileSync('podcast-history.json', JSON.stringify(podcastHistory.accumulators, null, 2));
-    fs.writeFileSync('episode-history.json', JSON.stringify(episodeHistory.accumulators, null, 2));
+
+    function sortAndSave(outfile, history) {
+      // just write out the accumulators dictionary, it is the only attribute!
+      var sorted = _.sortBy(history.accumulators, 'lastUpdated').reverse();
+      fs.writeFileSync(outfile, JSON.stringify(sorted, null, 2));
+    }
+    sortAndSave('podcast-history.json', podcastHistory);
+    sortAndSave('episode-history.json', episodeHistory);
+
     var oneEpisode = 'd35640a0-bc37-0131-22ca-723c91aeae46';
     fs.writeFileSync('one-episode-history.json', JSON.stringify(episodeHistory.accumulators[oneEpisode], null, 2));
     utils.logStamp('Done:Delta ' + files.length);

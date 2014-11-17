@@ -28,6 +28,10 @@ Accumulator.prototype.merge = function(thingToMerge, tagsForChangeSet) {
   var to = thingToMerge;
   var changes = [];
 
+  if (stamp && !this.firstSeen) {
+    this.firstSeen = stamp;
+    this.lastUpdated = stamp; // initial value
+  }
   if (!_.isEqual(from, to)) {
     var toKeys = _.keys(to);
     var fromKeys = _.keys(from);
@@ -72,14 +76,9 @@ Accumulator.prototype.merge = function(thingToMerge, tagsForChangeSet) {
       if (stamp) {
         this.lastUpdated = stamp;
       }
-
     }
-
     // don't modify the from, make a copy.
     this.merged = _.merge({}, from, to);
-  }
-  if (stamp && !this.firstSeen) {
-    this.firstSeen = stamp;
   }
   return changes;
 };

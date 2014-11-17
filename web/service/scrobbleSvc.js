@@ -7,28 +7,23 @@ angular.module('scrobbleCast').factory('scrobbleSvc', function($http) {
         return result.data;
       })
       .then(function(result) {
-        // select the data portion of  the result (.podcasts||.episodes||object itself) 
-        return result.episodes || result.podcasts || result;
+        // this where we might cache, (intercept above)
+        return result;
       })
       .catch(function(error) {
         console.error('error', error);
       });
   }
 
+
+  // should I ./pluck('merged')
   var scrobbleSvc = {
-    in_progress: function() {
-      return get('/data/in_progress.2014-11-07T07:10:01Z.json');
-    },
-    new_releases: function() {
-      return get('/data/new_releases.2014-11-07T07:10:01Z.json');
-    },
     podcasts: function() {
-      return get('/data/podcasts.json');
+      return get('/data/podcast-history.json');
     },
-    history: function() {
-      return get('/data/history.json');
+    episodes: function() {
+      return get('/data/episode-history.json');
     }
   };
-
   return scrobbleSvc;
 });

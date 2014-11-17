@@ -11,25 +11,27 @@
         <md-subheader>
           <!-- {{moment(day).format('ll')}} -->
           {{moment(day).calendar()}}
-          <i>({{historyByDay[day].length}})</i>
+          <i>({{episodesByDay[day].length}})</i>
         </md-subheader>
 
         <md-list>
-          <md-item ng-repeat="event in historyByDay[day] | filter:playFilter">
+          <md-item ng-repeat="episodeHistory in episodesByDay[day]| filter:playFilter">
             <md-item-content>
               <!--  wf-z0 does not exist -->
               <md-whiteframe class="md-whiteframe-z1" layout layout-fill layout-align="center start">
                 <div class="md-tile-left">
-                    <img ng-src="{{lookupThumb(event.podcast_uuid)}}" class="podcast_thumb" alt="PodcastName">
+                    <img ng-src="{{lookupThumb(episodeHistory.merged.podcast_uuid)}}" class="podcast_thumb" alt="PodcastName">
                 </div>
                 <div class="md-tile-content">
-                  <h3>{{event.episode_title}} <small>{{moment(event.stamp).fromNow()}}</small></h3>
-                  <h4>{{event.podcast_title}} <small>|Δ|:{{event.changes.length}}</small></h4>
-                  <md-content ng-if="(event.changes| filter:changePlayedUpToFilter).length>0">
-                    <div ng-repeat="change in event.changes| filter:changePlayedUpToFilter">
-                      <div> 
+                  <h3>{{episodeHistory.merged.title}} <small>{{moment(episodeHistory.lastUpdated).fromNow()}}</small></h3>
+                  <h4>{{episodeHistory.merged.podcast_title||'PTitle'}} <small>|Δ|:{{episodeHistory.history.length}}</small></h4>
+                  <md-content ng-if="(episodeHistory.history)">
+                    <div ng-repeat="event in episodeHistory.history">
+                      <div ng-repeat="change in event.changes|filter:changePlayedUpToFilter"> 
+                        <!-- <pre>{{change}}</pre> -->
                         <!-- {{change.op}} {{change.key}}  -->
                         {{change.from}} <i class="fa fa-arrow-right"></i> {{change.to}}
+                        {{event.stamp}}
 
                         <!-- humanized duration -->
 <!--                         {{moment.duration(change.from,'seconds').humanize()}}

@@ -41,6 +41,7 @@ function fetchall(uuid, stamp, isDeep) {
           result.episodes.podcast_uuid=uuid;
           console.log('injected podcast_uuid',result.episodes.podcast_uuid);
         }
+        return result;
       });
       // could also normalize response here (return the episodes attr directly)
   };

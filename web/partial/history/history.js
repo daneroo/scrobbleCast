@@ -88,7 +88,7 @@ angular.module('scrobbleCast').controller('HistoryCtrl', function($scope, scrobb
   // group by day
   function handleEpisodes(result) {
     // keep the top level element {x|x.merged}
-    var episodes = result.slice(0, 100);
+    var episodes = result; // .slice(0, 100);
 
     var episodesByDay = _.groupBy(episodes, function(episode) {
       return moment(episode.lastUpdated).format('YYYY-MM-DD');

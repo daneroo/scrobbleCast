@@ -85,7 +85,7 @@ Accumulator.prototype.merge = function(thingToMerge, tagsForChangeSet) {
     });
 
     if (changes.length) {
-      // console.log('|Δ|', changes.length, tagsForChangeSet);
+      console.log('|Δ|', changes.length, tagsForChangeSet);
       var record = _.merge({}, tagsForChangeSet, {
         changes: changes
       });

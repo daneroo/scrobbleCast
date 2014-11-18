@@ -1,6 +1,49 @@
 [
   {
     "firstSeen": "2014-11-07T08:34:00Z",
+    "lastUpdated": "2014-11-17T14:53:00Z",
+    "merged": {
+      "id": 100772,
+      "uuid": "d8fb5c80-1d1e-012f-f6d4-525400c11844",
+      "title": "ShopTalk",
+      "author": "ShopTalk",
+      "thumbnail_url": "http://stscdn.paravel.netdna-cdn.com/wp-content/uploads/2012/08/shoptalk_album.jpeg",
+      "description": "ShopTalk is a podcast about front end web design, development and UX. Each week Chris Coyier and Dave Rupert are joined by a special guest to talk shop and answer listener submitted questions.",
+      "url": "http://shoptalkshow.com"
+    },
+    "history": [
+      {
+        "stamp": "2014-11-14T08:32:00Z",
+        "source": "byDate/2014-11-14T08:32:00Z/01-podcasts.json",
+        "uuid": "d8fb5c80-1d1e-012f-f6d4-525400c11844",
+        "title": "ShopTalk",
+        "changes": [
+          {
+            "op": "chg",
+            "key": "thumbnail_url",
+            "from": "http://stscdn.paravel.netdna-cdn.com/wp-content/uploads/2012/08/shoptalk_album.jpeg",
+            "to": "http://shoptalkshow.com/wp-content/uploads/2012/08/shoptalk_album.jpeg"
+          }
+        ]
+      },
+      {
+        "stamp": "2014-11-17T14:53:00Z",
+        "source": "byDate/2014-11-17T14:53:00Z/01-podcasts.json",
+        "uuid": "d8fb5c80-1d1e-012f-f6d4-525400c11844",
+        "title": "ShopTalk",
+        "changes": [
+          {
+            "op": "chg",
+            "key": "thumbnail_url",
+            "from": "http://shoptalkshow.com/wp-content/uploads/2012/08/shoptalk_album.jpeg",
+            "to": "http://stscdn.paravel.netdna-cdn.com/wp-content/uploads/2012/08/shoptalk_album.jpeg"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "firstSeen": "2014-11-07T08:34:00Z",
     "lastUpdated": "2014-11-16T21:43:00Z",
     "merged": {
       "id": 129249,
@@ -83,35 +126,6 @@
       "url": "http://www.thisamericanlife.org"
     },
     "history": []
-  },
-  {
-    "firstSeen": "2014-11-07T08:34:00Z",
-    "lastUpdated": "2014-11-14T08:32:00Z",
-    "merged": {
-      "id": 100772,
-      "uuid": "d8fb5c80-1d1e-012f-f6d4-525400c11844",
-      "title": "ShopTalk",
-      "author": "ShopTalk",
-      "thumbnail_url": "http://shoptalkshow.com/wp-content/uploads/2012/08/shoptalk_album.jpeg",
-      "description": "ShopTalk is a podcast about front end web design, development and UX. Each week Chris Coyier and Dave Rupert are joined by a special guest to talk shop and answer listener submitted questions.",
-      "url": "http://shoptalkshow.com"
-    },
-    "history": [
-      {
-        "stamp": "2014-11-14T08:32:00Z",
-        "source": "byDate/2014-11-14T08:32:00Z/01-podcasts.json",
-        "uuid": "d8fb5c80-1d1e-012f-f6d4-525400c11844",
-        "title": "ShopTalk",
-        "changes": [
-          {
-            "op": "chg",
-            "key": "thumbnail_url",
-            "from": "http://stscdn.paravel.netdna-cdn.com/wp-content/uploads/2012/08/shoptalk_album.jpeg",
-            "to": "http://shoptalkshow.com/wp-content/uploads/2012/08/shoptalk_album.jpeg"
-          }
-        ]
-      }
-    ]
   },
   {
     "firstSeen": "2014-11-07T08:34:00Z",

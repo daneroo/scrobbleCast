@@ -20,6 +20,9 @@ var credentials = require('../credentials.json');
 //TODO: clean this up!
 function fetchall(uuid, stamp, isDeep) {
   // local util
+  // this should be moved to API, as it is the only place we call this path from, 
+  // and we need the podcast_uuid inkjection fix.
+  // Also note that a fix for older files without the fix is in ./lib/delta.js/merge with a detailed explanation
   function fetchPage(page) {
     // console.log('   -- podcasts.page', page);
     return API.find_by_podcast({
@@ -29,9 +32,17 @@ function fetchall(uuid, stamp, isDeep) {
       .then(function(response) {
         if (!response || !response.result || !response.result.episodes) {
           throw new Error('Unexpected or malformed response');
-        }
+        }        
         return response.result;
+      }) 
+      .then(function(result) {
+        // this is the podcast_uuid injection fix
+        if (!result.episodes.podcast_uuid){
+          result.episodes.podcast_uuid=uuid;
+          console.log('injected podcast_uuid',result.episodes.podcast_uuid);
+        }
       });
+      // could also normalize response here (return the episodes attr directly)
   };
   // actual task
   return function _fetchAll() {

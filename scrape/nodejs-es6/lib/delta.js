@@ -32,6 +32,24 @@ Accumulator.prototype.merge = function(thingToMerge, tagsForChangeSet) {
     this.firstSeen = stamp;
     this.lastUpdated = stamp; // initial value
   }
+
+  // special fix for missing podcast_uuid
+  // if we only see an episode with 02-* ,
+  // the podcast_uuid (which is ommited in the /../find_by_podcast REST response),
+  // was not originally injected into the response, it is now fixed.
+  // we keep this fix here to accomodate the reading of previously grabbed scraped data
+  // Description restore the missing podcast_uuid, 
+  // which was encoded in the file_name, 
+  //   it is available here as the 'source' attribute in the tagsForChangeSet
+  if (!from.podcast_uuid) {
+    var match = tagsForChangeSet.source.match(/02-podcasts\/(.+).json/);
+    if (match) {
+      // just directly insert the pocdcast_uuid attribute into the .merged object
+      from.podcast_uuid = match[1];
+    }
+  }
+  // end of special fix
+
   if (!_.isEqual(from, to)) {
     var toKeys = _.keys(to);
     var fromKeys = _.keys(from);
@@ -67,7 +85,7 @@ Accumulator.prototype.merge = function(thingToMerge, tagsForChangeSet) {
     });
 
     if (changes.length) {
-      console.log('|Δ|', changes.length, tagsForChangeSet);
+      // console.log('|Δ|', changes.length, tagsForChangeSet);
       var record = _.merge({}, tagsForChangeSet, {
         changes: changes
       });

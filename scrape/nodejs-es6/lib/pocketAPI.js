@@ -8,6 +8,8 @@ var RateLimiter = require('limiter').RateLimiter;
 
 // globals limiter might be configures, injected, credentials as well...
 var limiter = new RateLimiter(20, 1000);
+
+// the actual endpoints
 var paths = {
   sign_in: '/users/sign_in',
   podcasts_all: '/web/podcasts/all.json',
@@ -109,5 +111,6 @@ var exports = module.exports = {
   new_releases_episodes: rebind(paths.new_releases_episodes),
   in_progress_episodes: rebind(paths.in_progress_episodes),
   find_by_podcast: rebind(paths.find_by_podcast),
+  // fetchPage in fetchall in tasks.js should move here with the podcast_uuid injection fix
   speedLimit: speedLimit
 };

@@ -23,21 +23,25 @@
                     <img ng-src="{{lookupThumb(episodeHistory.merged.podcast_uuid)}}" class="podcast_thumb" alt="PodcastName">
                 </div>
                 <div class="md-tile-content">
-                  <h3>{{episodeHistory.merged.title}} <small>{{moment(episodeHistory.lastUpdated).fromNow()}}</small></h3>
-                  <h4>{{episodeHistory.merged.podcast_title||'PTitle'}} <small>|Δ|:{{episodeHistory.history.length}}</small></h4>
+                  <h3>
+                    <i ng-if="episodeHistory.merged.starred" style="color: #F57C00;" class="fa fa-star fa-lg"></i>
+                    {{episodeHistory.merged.title}} 
+                    <small>{{moment(episodeHistory.lastUpdated).fromNow()}}</small></h3>
+                  <h4>{{lookupTitle(episodeHistory.merged.podcast_uuid)}}</h4>
                   <md-content ng-if="(episodeHistory.history)">
-                    <div ng-repeat="event in episodeHistory.history">
+                    <div layout="row" layout-padding>
+                      <md-button ng-click="toggleSelected(episodeHistory)" class="md-raised md-primary">|Δ|:{{episodeHistory.history.length}} ...</md-button>
+                      <div flex><md-progress-linear md-mode="determinate" value="{{100*change.episodeHistory.merged.played_up_to/episodeHistory.merged.duration}}"></md-progress-linear></div>
+                    </div>
+                    <div ng-if="isSelected(episodeHistory)" ng-repeat="event in episodeHistory.history">
                       <div ng-repeat="change in event.changes|filter:changePlayedUpToFilter"> 
-                        <!-- <pre>{{change}}</pre> -->
-                        <!-- {{change.op}} {{change.key}}  -->
-                        {{change.from}} <i class="fa fa-arrow-right"></i> {{change.to}}
-                        {{event.stamp}}
-
-                        <!-- humanized duration -->
-<!--                         {{moment.duration(change.from,'seconds').humanize()}}
-                        <i class="fa fa-arrow-right"></i> 
-                        {{moment.duration(change.to,'seconds').humanize()}}
- -->
+                        <md-progress-linear md-mode="buffer" value="{{100*change.from/episodeHistory.merged.duration}}" md-buffer-value="{{100*change.to/episodeHistory.merged.duration}}"></md-progress-linear>
+                        <div layout="row" layout-padding>
+                          <div flex> {{100*change.to/episodeHistory.merged.duration|number:0}}% </div>
+                          <div flex> {{hms(change.from)}}  <i class="fa fa-arrow-right"></i> {{hms(change.to)}}</div>
+                          <div flex>  of {{hms(episodeHistory.merged.duration)}}</div>
+                          <div flex>  <i>at {{moment(event.stamp).format('LT')}} {{moment(event.stamp).calendar()}} </i></div>
+                        </div>
                       </div>
                     </div>
                   </md-content>

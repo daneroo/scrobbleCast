@@ -15,9 +15,30 @@ angular.module('scrobbleCast').controller('HistoryCtrl', function($scope, scrobb
     }
   });
 
+  var selected= {};
+  $scope.toggleSelected = function(episodeHistory) {
+    selected[episodeHistory.merged.uuid] = !selected[episodeHistory.merged.uuid];
+  };
+  $scope.isSelected = function(episodeHistory) {
+    return selected[episodeHistory.merged.uuid];
+  };
+
   // change in changes|filter:changeFilter
   $scope.playFilter = {
     // changes:{length:true}
+  };
+
+  // select only {history | ∃ changes.key ∈ {playing_status,played_up_to}}
+  $scope.playFilter = function(episodeHistory) {
+    var found = episodeHistory.history.some(function(hist) {
+      return hist.changes.some(function(chg) {
+        return (chg.key === 'playing_status' || chg.key === 'played_up_to');
+      });
+    });
+    if (!found) {
+      return; // excludes from filter...
+    }
+    return episodeHistory;
   };
 
   // change in changes|filter:changeFilter
@@ -27,12 +48,26 @@ angular.module('scrobbleCast').controller('HistoryCtrl', function($scope, scrobb
     key: 'played_up_to'
   };
 
+  // seconds to 1h34m12s
+  $scope.hms = function(s) {
+    if (!s) {
+      return '0';
+    }
+    var m = Math.floor(s / 60);
+    var h = Math.floor(s / 3600);
+    s = s % 60;
+    return (h ? (h + 'h') : '') + (m ? (m + 'm') : '') + (s ? (s + 's') : '');
+  };
 
+  $scope.lookup = function(podcast_uuid) {
+    return $scope.podcastsByUuid[podcast_uuid] || {};
+  };
   $scope.lookupThumb = function(podcast_uuid) {
     var defaultUrl = '/images/podcast.jpg';
-    var podcast = $scope.podcastsByUuid[podcast_uuid] || {};
-    console.log('thumb:',podcast_uuid,podcast.title,podcast.thumbnail_url);
-    return podcast.thumbnail_url || defaultUrl;
+    return $scope.lookup(podcast_uuid).thumbnail_url || defaultUrl;
+  };
+  $scope.lookupTitle = function(podcast_uuid) {
+    return $scope.lookup(podcast_uuid).title;
   };
 
   $scope.podcastsByUuid = {};
@@ -53,14 +88,14 @@ angular.module('scrobbleCast').controller('HistoryCtrl', function($scope, scrobb
   // group by day
   function handleEpisodes(result) {
     // keep the top level element {x|x.merged}
-    var episodes = result.slice(0,100);
+    var episodes = result.slice(0, 100);
 
     var episodesByDay = _.groupBy(episodes, function(episode) {
       return moment(episode.lastUpdated).format('YYYY-MM-DD');
     });
     var days = Object.keys(episodesByDay);
     days = _.chain(days).sort().reverse().value();
-    console.log('days',days);
+    console.log('days', days);
 
     // _.pluck(result, 'merged');
     console.log('|episodesByDay|', _.size(episodes));

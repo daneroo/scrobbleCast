@@ -2,6 +2,7 @@
 
 * Auth
 * Wrap JSON Rest API in module
+* LevelDB Storage
 * Try using promises
 * Try using ES6
 
@@ -50,6 +51,9 @@ Done
   fetchall:  20s (concurrency:{page:5,podcasts:10},rate: 500/s)
   fetchall: 715s (concurrency:{page:1,podcasts:1},rate: 1/s)
 * Cron: `cron` npm module, just worked.
+* LevelDB, many addons to try (level-path,level-path-index)
+  * Install with `npm install level`, but could use `npm install levelup leveldown@0.10`
+  * LevelUp will be 1.0 soon, check then
 
 
 ## References

@@ -1,7 +1,7 @@
-var levelup = require('levelup')
+var level = require('level')
 
 // open a data store
-var db = levelup('/tmp/dprk.db')
+var db = level('./mydb')
 
 // a simple Put operation
 db.put('name', 'Kim Jong-un', function (err) {

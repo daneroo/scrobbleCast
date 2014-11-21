@@ -10,6 +10,51 @@ var _ = require('lodash');
 // mine
 var utils = require('./utils');
 
+// utility - exposed
+// returns a changeset
+function compare(from, to) {
+  // TODO: shortcut for: from.uuid !== to.uuid
+  // TODO: actually this could use the changeset stuff from level too.(later)
+
+  var changes = [];
+  if (!_.isEqual(from, to)) {
+    var toKeys = _.keys(to);
+    var fromKeys = _.keys(from);
+    var allKeys = _.union(fromKeys, toKeys);
+
+    allKeys.forEach(function(key) {
+      var f = from[key];
+      var t = to[key];
+      var op;
+      if (_.isUndefined(f)) { // new key
+        op = 'new';
+        // console.log('--new key', key);
+      } else if (_.isUndefined(t)) { // deleted key
+        op = 'del';
+        // console.log('--del key', key);
+      } else if (!_.isEqual(f, t)) {
+        op = 'chg';
+        // console.log('--chg:', key, f, t)
+      }
+
+      // ignore deletions... 
+      // or maybe specific ones? (podcast_id)
+      // if (op) {
+      // if (op && 'del' !== op) {
+      if (op && 'chg' === op) {
+        changes.push({
+          op: op,
+          key: key,
+          from: f,
+          to: t
+        });
+      }
+    });
+  }
+  return changes;
+}
+
+
 // Constructor
 function Accumulator() {
   // this.options = _.merge({},defaultOptions,options);
@@ -50,54 +95,20 @@ Accumulator.prototype.merge = function(thingToMerge, tagsForChangeSet) {
   }
   // end of special fix
 
-  if (!_.isEqual(from, to)) {
-    var toKeys = _.keys(to);
-    var fromKeys = _.keys(from);
-    var allKeys = _.union(fromKeys, toKeys);
-
-    allKeys.forEach(function(key) {
-      var f = from[key];
-      var t = to[key];
-      var op;
-      if (_.isUndefined(f)) { // new key
-        op = 'new';
-        // console.log('--new key', key);
-      } else if (_.isUndefined(t)) { // deleted key
-        op = 'del';
-        // console.log('--del key', key);
-      } else if (!_.isEqual(f, t)) {
-        op = 'chg';
-        // console.log('--chg:', key, f, t)
-      }
-
-      // ignore deletions... 
-      // or maybe specific ones? (podcast_id)
-      // if (op) {
-      // if (op && 'del' !== op) {
-      if (op && 'chg' === op) {
-        changes.push({
-          op: op,
-          key: key,
-          from: f,
-          to: t
-        });
-      }
+  var changes = compare(from, to);
+  if (changes.length) {
+    console.log('|Δ|', changes.length, tagsForChangeSet);
+    var record = _.merge({}, tagsForChangeSet, {
+      changes: changes
     });
+    this.history.push(record);
 
-    if (changes.length) {
-      console.log('|Δ|', changes.length, tagsForChangeSet);
-      var record = _.merge({}, tagsForChangeSet, {
-        changes: changes
-      });
-      this.history.push(record);
-
-      if (stamp) {
-        this.lastUpdated = stamp;
-      }
+    if (stamp) {
+      this.lastUpdated = stamp;
     }
-    // don't modify the from, make a copy.
-    this.merged = _.merge({}, from, to);
   }
+  // don't modify the from, make a copy.
+  this.merged = _.merge({}, from, to);
   return changes;
 };
 
@@ -142,6 +153,7 @@ AccumulatorByUuid.prototype.mergeMany = function(thingsToMerge, uuidProperty, st
 
 
 var exports = module.exports = {
+  compare: compare,
   Accumulator: Accumulator,
   AccumulatorByUuid: AccumulatorByUuid
 };

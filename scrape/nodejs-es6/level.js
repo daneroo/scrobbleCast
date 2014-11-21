@@ -83,17 +83,81 @@ function stampFromFile(file) {
   return stamp;
 }
 
-function levelSave(file, thingsToMerge) {
+// this fetches the previous key from level, (if it matches the file)
+// used to compare content
+// This could all be done with level-path..
+function getPrevious(file) {
+  var prefeixRE = /^byDate\/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z/;
   return new Promise(function(resolve, reject) {
-
-    db.put(file, thingsToMerge, function(error) {
-      if (error) {
-        return reject(error);
-      } else {
-        return resolve(file);
-      }
-    });
+    var found = null;
+    db.createReadStream({
+        lt: file,
+        reverse: true,
+        limit: 1
+      })
+      .on('data', function(data) {
+        // check if keys match enough..
+        //  but if the contents match the wrong key: so be it for now - not likely!!
+        // console.log(data.key, ' < ', file);
+        // should match up to file / not stamp
+        // byDate/2014-11-20T00:00:00Z/02-podcasts/17620ce0-77b4-0130-0031-723c91aeae46.json  
+        // byDate/2014-11-20T00:00:00Z/02-podcasts/1dbc2230-2b82-012e-0915-00163e1b201c.json
+        if (data.key) {
+          var prevNoStamp = data.key.replace(prefeixRE, '');
+          var fileNoStamp = file.replace(prefeixRE, '');
+          if (prevNoStamp === fileNoStamp) {
+            console.log(prevNoStamp, ' === ', fileNoStamp);
+            resolve(data.value);
+          }
+          console.log(prevNoStamp, ' =!= ', fileNoStamp);
+        }
+        // if key is not a match, then don't return a previous
+        resolve(null);
+      })
+      .on('error', function(err) {
+        reject(error);
+      })
+      //  do I need both close and end.. at least promises cant be resolved twice
+      .on('end', function() {
+        // console.log('getPrevious end');
+        resolve(found);
+      })
+      // close is not always called
+      .on('close', function() {
+        // console.log('getPrevious close');
+        resolve(found);
+      });
   });
+}
+
+// split the save and compareWithPrevious:boolean parts
+function levelSave(file, thingsToMerge) {
+  return getPrevious(file)
+    .then(function(prev) {
+
+      // TODO: filter changes (!del, !falso<->0,..)
+      if (prev) {
+        if (!prev.podcast_uuid) { // check for uuid fix.
+          console.log('::prev missing podcast_uuid ', file);
+        }
+        var changes = delta.compare(prev, thingsToMerge);
+        console.log('|Δ|', changes.length);
+        if (changes.length === 0) {
+          console.log('found duplicate - skip save ', file);
+          return "Skipped duplicate: " + file;
+        }
+      }
+      //  perform save
+      return new Promise(function(resolve, reject) {
+        db.put(file, thingsToMerge, function(error) {
+          if (error) {
+            return reject(error);
+          } else {
+            return resolve(file);
+          }
+        });
+      });
+    }); // then
 }
 
 function fetchAndSave(file) {
@@ -116,9 +180,11 @@ function fetchAndSave(file) {
 
 function dump() {
   return new Promise(function(resolve, reject) {
+    var count = 0;
     db.createReadStream()
       .on('data', function(data) {
-        console.log(data.key, '=', data.value.length)
+        console.log(data.key, '=', data.value.length);
+        count++;
       })
       .on('error', function(err) {
         console.log('Oh my!', err);
@@ -126,10 +192,10 @@ function dump() {
       })
       .on('close', function() {
         console.log('Stream closed');
-        resolve('Stream closed');
+        resolve('Stream closed count:', count);
       })
       .on('end', function() {
-        console.log('Stream ended');
+        console.log('Stream ended count:', count);
         resolve('Stream ended');
       });
   });
@@ -168,7 +234,7 @@ find('byDate/**/*.json')
     return new Promise(function(resolve, reject) {
       // db.repair is deprecated - find leveldown...
       var leveldown = require('./node_modules/level/node_modules/leveldown/');
-      leveldown.repair(levelDBName,function(err) {
+      leveldown.repair(levelDBName, function(err) {
         if (err) {
           reject(err);
         }

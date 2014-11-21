@@ -101,6 +101,7 @@ find('byDate/**/*.json')
     });
 
     function sortAndSave(outfile, history) {
+      console.log('|'+outfile+'|=',history.accumulators.length);
       // just write out the accumulators dictionary, it is the only attribute!
       var sorted = _.sortBy(history.accumulators, 'lastUpdated').reverse();
       fs.writeFileSync(outfile, JSON.stringify(sorted, null, 2));

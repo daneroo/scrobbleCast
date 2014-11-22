@@ -130,8 +130,76 @@ function getPrevious(file) {
   });
 }
 
+// a single episode/podcast
+function diffAndSaveOne(thing) {
+  var uuid = '';
+  var key = thing.uuid;
+
+}
+
+
+// -/podcast/<podast_uuid>/<stamp>/01-podcasts <-source type (url)
+// -/podcast/<podast_uuid>/episode/<episode_uuid_uuid>/<stamp>/0[234]-type <-source type 
+// -episode/<episode_uuid_uuid>/<stamp>/0[234]-type <-source type 
+// data/byDate/2014-11-07T08:34:00Z/02-podcasts/2cfd8eb0-58b1-012f-101d-525400c11844.json
+// data/byDate/2014-11-05T07:40:00Z/03-new_releases.json
+// data/byDate/2014-11-05T07:40:00Z/04-in_progress.json
+var count=0;
+function makeKeys(file, thingsToMerge) {
+  if (thingsToMerge.length === 0) return;
+
+  // var path = file.match(/01-podcasts.json$/) ? '/podcast' : '/podcast/episode';
+  // var path = file.match(/01-podcasts.json$/) ? '/podcast' : '/podcast/episode';
+  var stamp = stampFromFile(file);
+  // match the sourceType and optionally the podcast_uuid for 02-podcasts (old)
+  var match = file.match(/(01-podcasts|02-podcasts|03-new_releases|04-in_progress)(\/(.*))?\.json/);
+  var sourceType = match[1];
+  var podcast_uuid = match[3]
+  console.log('--file match:', sourceType, podcast_uuid);
+
+  // extra assert (02- fix)
+  if (sourceType === '02-podcasts' && !podcast_uuid) {
+    throw (new Error('-no podcast_uuid!'));
+  }
+  thingsToMerge.forEach(function(thing) {
+    if (!thing.uuid) {
+      throw (new Error('no uuid!'))
+    }
+    var key;
+    if (sourceType === '01-podcasts') {
+      // assert stuff
+      key = ['/podcast', thing.uuid, stamp, sourceType].join('/');
+    } else {
+      count++;
+      if (!thing.podcast_uuid) {
+        if (!podcast_uuid) {
+          console.log('XXXX', file, sourceType, match);
+          throw (new Error('+no podcast_uuid! for file:' + file));
+        }
+        // perform the fix
+        thing.podcast_uuid = podcast_uuid;
+      }
+      key = ['/podcast', thing.podcast_uuid, 'episode', thing.uuid, stamp, sourceType].join('/');
+    }
+    if (count%1000===0){
+      console.log('count',count,key,file);
+    }
+  });
+  console.log('total count',count);
+}
+
 // split the save and compareWithPrevious:boolean parts
 function levelSave(file, thingsToMerge) {
+  // console.log('levelSave:', file);
+  makeKeys(file, thingsToMerge);
+  return 0;
+  return Promise.map(thingsToMerge, diffAndSaveOne, {
+      concurrency: 1
+    })
+    .then(function(result) {
+
+    });
+
   return getPrevious(file)
     .then(function(prev) {
 
@@ -183,7 +251,7 @@ function dump() {
     var count = 0;
     db.createReadStream()
       .on('data', function(data) {
-        console.log(data.key, '=', data.value.length);
+        // console.log(data.key, '=', data.value.length);
         count++;
       })
       .on('error', function(err) {

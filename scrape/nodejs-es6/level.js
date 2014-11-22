@@ -155,12 +155,15 @@ function diffAndSaveOne(keyedThing) {
           }
         }
         var changes = delta.compare(prevThing, thing);
-        console.log('|Δ|', changes.length);
         if (changes.length === 0) {
-          console.log('found duplicate - skip save ', key);
+          // console.log('found duplicate - skip save ', key);
           return "Skipped duplicate: " + key;
+        } else {
+          // we have changes
+          console.log('|Δ|', changes.length,key);
         }
       }
+      // if we found a duplicate, we would have returnd by now
       // new content - persist away - perform save
       return new Promise(function(resolve, reject) {
         // console.log('about to save',key,thing);
@@ -196,7 +199,6 @@ function makeKeys(file, thingsToMerge) {
   var match = file.match(/(01-podcasts|02-podcasts|03-new_releases|04-in_progress)(\/(.*))?\.json/);
   var sourceType = match[1];
   var podcast_uuid = match[3]
-  console.log('--file match:', sourceType, podcast_uuid);
 
   // extra assert (02- fix)
   if (sourceType === '02-podcasts' && !podcast_uuid) {
@@ -222,15 +224,12 @@ function makeKeys(file, thingsToMerge) {
       }
       key = ['/podcast', thing.podcast_uuid, 'episode', thing.uuid, stamp, sourceType].join('/');
     }
-    if (count % 1000 === 0) {
-      console.log('count', count, key, file);
-    }
     return {
       key: key,
       value: thing
     };
   });
-  console.log('total count', count);
+  console.log('total key count', count);
   return keyedThings;
 }
 
@@ -242,7 +241,7 @@ function levelSave(file, thingsToMerge) {
       concurrency: 1
     })
     .then(function(result) {
-      console.log('saved', result);
+      console.log('saved', result.length,file);
     });
 }
 

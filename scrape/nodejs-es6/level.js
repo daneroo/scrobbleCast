@@ -86,30 +86,38 @@ function stampFromFile(file) {
 // this fetches the previous key from level, (if it matches the file)
 // used to compare content
 // This could all be done with level-path..
-function getPrevious(file) {
-  var prefeixRE = /^byDate\/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z/;
+function getPrevious(key) {
+  // console.log('<',key);  
+  var removeAfterStampRE = /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z.*/;
   return new Promise(function(resolve, reject) {
     var found = null;
     db.createReadStream({
-        lt: file,
+        lt: key,
         reverse: true,
         limit: 1
       })
       .on('data', function(data) {
         // check if keys match enough..
         //  but if the contents match the wrong key: so be it for now - not likely!!
-        // console.log(data.key, ' < ', file);
-        // should match up to file / not stamp
-        // byDate/2014-11-20T00:00:00Z/02-podcasts/17620ce0-77b4-0130-0031-723c91aeae46.json  
-        // byDate/2014-11-20T00:00:00Z/02-podcasts/1dbc2230-2b82-012e-0915-00163e1b201c.json
+        // console.log(data.key, ' < ', key);
+        // should match up to key / not stamp
+        // - /podcast/<podast_uuid>/<stamp>/01-podcasts <-source type (url)
+        // - /podcast/<podast_uuid>/episode/<episode_uuid_uuid>/<stamp>/0[234]-type <-source type 
+        // - /episode/<episode_uuid_uuid>/<stamp>/0[234]-type <-source type 
+
         if (data.key) {
-          var prevNoStamp = data.key.replace(prefeixRE, '');
-          var fileNoStamp = file.replace(prefeixRE, '');
-          if (prevNoStamp === fileNoStamp) {
-            console.log(prevNoStamp, ' === ', fileNoStamp);
-            resolve(data.value);
+          var prevPrefix = data.key.replace(removeAfterStampRE, '');
+          var keyPrefix = key.replace(removeAfterStampRE, '');
+          // console.log('prev', prevPrefix, data.key);
+          // console.log(' key', keyPrefix, key);
+          if (prevPrefix === keyPrefix) {
+            // console.log(prevPrefix, ' === ', keyPrefix);
+
+            found = data.value;
+            resolve(found);
+          } else {
+            // console.log(prevPrefix, ' =!= ', keyPrefix);
           }
-          console.log(prevNoStamp, ' =!= ', fileNoStamp);
         }
         // if key is not a match, then don't return a previous
         resolve(null);
@@ -117,7 +125,7 @@ function getPrevious(file) {
       .on('error', function(err) {
         reject(error);
       })
-      //  do I need both close and end.. at least promises cant be resolved twice
+      //  do I need both close and end.. at least promises cant be resolved thrice
       .on('end', function() {
         // console.log('getPrevious end');
         resolve(found);
@@ -131,20 +139,53 @@ function getPrevious(file) {
 }
 
 // a single episode/podcast
-function diffAndSaveOne(thing) {
-  var uuid = '';
-  var key = thing.uuid;
+function diffAndSaveOne(keyedThing) {
+  var key = keyedThing.key;
+  var thing = keyedThing.value;
+  return getPrevious(key)
+    .then(function(prevThing) {
 
+      // TODO: filter changes (!del, !falso<->0,..)
+      if (prevThing) {
+        if (!prevThing.podcast_uuid) { // check for uuid fix.
+          //  unless you are a podcast (not an episode)
+          if (!key.match(/01-podcasts/)) {
+            console.log('::prevThing missing podcast_uuid ', key);
+            throw new Error('prevThing missing podcast_uuid')
+          }
+        }
+        var changes = delta.compare(prevThing, thing);
+        console.log('|Δ|', changes.length);
+        if (changes.length === 0) {
+          console.log('found duplicate - skip save ', key);
+          return "Skipped duplicate: " + key;
+        }
+      }
+      // new content - persist away - perform save
+      return new Promise(function(resolve, reject) {
+        // console.log('about to save',key,thing);
+        db.put(key, thing, function(error) {
+          if (error) {
+            return reject(error);
+          } else {
+            return resolve(key);
+          }
+        });
+      });
+    }); // then
 }
 
 
-// -/podcast/<podast_uuid>/<stamp>/01-podcasts <-source type (url)
-// -/podcast/<podast_uuid>/episode/<episode_uuid_uuid>/<stamp>/0[234]-type <-source type 
-// -episode/<episode_uuid_uuid>/<stamp>/0[234]-type <-source type 
+// Key (path) definitions
+// - /podcast/<podast_uuid>/<stamp>/01-podcasts <-source type (url)
+// - /podcast/<podast_uuid>/episode/<episode_uuid_uuid>/<stamp>/0[234]-type <-source type 
+// - /episode/<episode_uuid_uuid>/<stamp>/0[234]-type <-source type 
+// example input patterns
 // data/byDate/2014-11-07T08:34:00Z/02-podcasts/2cfd8eb0-58b1-012f-101d-525400c11844.json
 // data/byDate/2014-11-05T07:40:00Z/03-new_releases.json
 // data/byDate/2014-11-05T07:40:00Z/04-in_progress.json
-var count=0;
+var count = 0;
+
 function makeKeys(file, thingsToMerge) {
   if (thingsToMerge.length === 0) return;
 
@@ -161,7 +202,7 @@ function makeKeys(file, thingsToMerge) {
   if (sourceType === '02-podcasts' && !podcast_uuid) {
     throw (new Error('-no podcast_uuid!'));
   }
-  thingsToMerge.forEach(function(thing) {
+  var keyedThings = thingsToMerge.map(function(thing) {
     if (!thing.uuid) {
       throw (new Error('no uuid!'))
     }
@@ -181,51 +222,28 @@ function makeKeys(file, thingsToMerge) {
       }
       key = ['/podcast', thing.podcast_uuid, 'episode', thing.uuid, stamp, sourceType].join('/');
     }
-    if (count%1000===0){
-      console.log('count',count,key,file);
+    if (count % 1000 === 0) {
+      console.log('count', count, key, file);
     }
+    return {
+      key: key,
+      value: thing
+    };
   });
-  console.log('total count',count);
+  console.log('total count', count);
+  return keyedThings;
 }
 
 // split the save and compareWithPrevious:boolean parts
 function levelSave(file, thingsToMerge) {
   // console.log('levelSave:', file);
-  makeKeys(file, thingsToMerge);
-  return 0;
-  return Promise.map(thingsToMerge, diffAndSaveOne, {
+  var keyedThings = makeKeys(file, thingsToMerge);
+  return Promise.map(keyedThings, diffAndSaveOne, {
       concurrency: 1
     })
     .then(function(result) {
-
+      console.log('saved', result);
     });
-
-  return getPrevious(file)
-    .then(function(prev) {
-
-      // TODO: filter changes (!del, !falso<->0,..)
-      if (prev) {
-        if (!prev.podcast_uuid) { // check for uuid fix.
-          console.log('::prev missing podcast_uuid ', file);
-        }
-        var changes = delta.compare(prev, thingsToMerge);
-        console.log('|Δ|', changes.length);
-        if (changes.length === 0) {
-          console.log('found duplicate - skip save ', file);
-          return "Skipped duplicate: " + file;
-        }
-      }
-      //  perform save
-      return new Promise(function(resolve, reject) {
-        db.put(file, thingsToMerge, function(error) {
-          if (error) {
-            return reject(error);
-          } else {
-            return resolve(file);
-          }
-        });
-      });
-    }); // then
 }
 
 function fetchAndSave(file) {
@@ -239,10 +257,11 @@ function fetchAndSave(file) {
   } else {
     console.log('|episodes|', thingsToMerge.length, file);
   }
-  // if (thingsToMerge.length === 0) {
-  //   console.log('|things|==0 nothing to do. ', thingsToMerge.length, file);
-  //   return file;
-  // }
+  if (thingsToMerge.length === 0) {
+    console.log('|things|==0 nothing to do. ', thingsToMerge.length, file);
+    return file;
+  }
+
   return levelSave(file, thingsToMerge);
 }
 

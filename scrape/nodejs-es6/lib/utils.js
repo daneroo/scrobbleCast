@@ -4,8 +4,8 @@
 var fs = require('fs');
 var path = require('path');
 
+var Promise = require("bluebird");
 var mkdirp = require('mkdirp');
-var rp = require('request-promise');
 var _ = require('lodash');
 
 //  candidate for config
@@ -13,9 +13,9 @@ var dataDirname = 'data';
 
 // expect to be called with 'minute','second' or no param
 // return an iso-8601 string
-function stamp(grain){
+function stamp(grain) {
   var now = new Date();
-  if (grain==='minute'){
+  if (grain === 'minute') {
     now.setSeconds(0);
   }
   if (!grain) {
@@ -23,7 +23,7 @@ function stamp(grain){
     return now.toJSON();
   }
   // iso8601, remove millis
-  return now.toJSON().replace(/\.\d{3}Z$/, 'Z'); 
+  return now.toJSON().replace(/\.\d{3}Z$/, 'Z');
 }
 
 // TODO: pubsub would be good
@@ -53,8 +53,32 @@ function writeResponse(base, response, optionalStamp) {
   logStamp('+ ' + filename);
 }
 
+//  similar to Promise.map but implies concurrrency=1, preserves order of result array
+//  *AND* calls reducer(item) in order
+// TODO: move to own file/module...
+function serialPromiseChainMap(arr, reducer) {
+  var resultArray = [];
+  return arr.reduce(function(promise, item) {
+    return promise.then(function() {
+      return Promise.resolve(reducer(item))
+        .then(function(result) {
+          resultArray.push(result);
+          return resultArray;
+        });
+    });
+  }, Promise.resolve('start'));
+  // .then(function(what){
+  //   console.log('serialPromiseMap what:',what.length);
+  //   console.log('serialPromiseMap |resultArray|:',resultArray.length);
+  //   return resultArray;
+  // });
+  // return Promise.resolve(resultArray);
+}
+
+
 var exports = module.exports = {
-  stamp:stamp,
+  stamp: stamp,
   logStamp: logStamp,
-  writeResponse: writeResponse
+  writeResponse: writeResponse,
+  serialPromiseChainMap:serialPromiseChainMap
 };

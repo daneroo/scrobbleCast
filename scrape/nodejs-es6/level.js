@@ -61,13 +61,13 @@ function find(pattern) {
       cwd: dataDirname
     })
     .then(function(files) {
-      console.log('pglob.in_progress %s found: %d files', pattern, files.length);
+      console.log('pglob %s found: %d files', pattern, files.length);
       return files;
     })
     .then(confirmSorted)
     .catch(function(err) {
       // log and rethrow
-      console.log('pglob.in_progress error:', err);
+      console.log('pglob error:', err);
       throw err;
     });
 }
@@ -139,6 +139,14 @@ function getPrevious(key) {
 }
 
 // a single episode/podcast
+var saveCount = 0;
+var skipCount = 0;
+var emptyCount = 0;
+var readCount = 0;
+var keyCount = 0;
+
+var deltaCountHisto = {};
+
 function diffAndSaveOne(keyedThing) {
   var key = keyedThing.key;
   var thing = keyedThing.value;
@@ -155,16 +163,20 @@ function diffAndSaveOne(keyedThing) {
           }
         }
         var changes = delta.compare(prevThing, thing);
+        deltaCountHisto[changes.length] = deltaCountHisto[changes.length] || 0;
+        deltaCountHisto[changes.length] ++;
         if (changes.length === 0) {
+          skipCount++;
           // console.log('found duplicate - skip save ', key);
           return "Skipped duplicate: " + key;
         } else {
           // we have changes
-          console.log('|Δ|', changes.length,key);
+          console.log('|Δ|', changes.length, key);
         }
       }
       // if we found a duplicate, we would have returnd by now
       // new content - persist away - perform save
+      saveCount++;
       return new Promise(function(resolve, reject) {
         // console.log('about to save',key,thing);
         db.put(key, thing, function(error) {
@@ -187,7 +199,6 @@ function diffAndSaveOne(keyedThing) {
 // data/byDate/2014-11-07T08:34:00Z/02-podcasts/2cfd8eb0-58b1-012f-101d-525400c11844.json
 // data/byDate/2014-11-05T07:40:00Z/03-new_releases.json
 // data/byDate/2014-11-05T07:40:00Z/04-in_progress.json
-var count = 0;
 
 function makeKeys(file, thingsToMerge) {
   if (thingsToMerge.length === 0) return;
@@ -213,7 +224,7 @@ function makeKeys(file, thingsToMerge) {
       // assert stuff
       key = ['/podcast', thing.uuid, stamp, sourceType].join('/');
     } else {
-      count++;
+      keyCount++;
       if (!thing.podcast_uuid) {
         if (!podcast_uuid) {
           console.log('XXXX', file, sourceType, match);
@@ -225,11 +236,11 @@ function makeKeys(file, thingsToMerge) {
       key = ['/podcast', thing.podcast_uuid, 'episode', thing.uuid, stamp, sourceType].join('/');
     }
     return {
+      type: 'put',
       key: key,
       value: thing
     };
   });
-  console.log('total key count', count);
   return keyedThings;
 }
 
@@ -237,12 +248,31 @@ function makeKeys(file, thingsToMerge) {
 function levelSave(file, thingsToMerge) {
   // console.log('levelSave:', file);
   var keyedThings = makeKeys(file, thingsToMerge);
-  return Promise.map(keyedThings, diffAndSaveOne, {
-      concurrency: 1
-    })
+  // return new Promise(function(resolve, reject) {
+  //   console.log('-batch (keyedThings)', keyedThings.length);
+  //   db.batch(keyedThings, function(error) {
+  //     if (error) {
+  //       return reject(error);
+  //     }
+  //     console.log('+batch (keyedThings)', keyedThings.length);
+  //     saveCount += keyedThings.length;
+  //     return resolve(file);
+  //   });
+  // });
+
+  return utils.serialPromiseChainMap(keyedThings, diffAndSaveOne)
     .then(function(result) {
-      console.log('saved', result.length,file);
+      console.log('saved', result.length, file);
+      return file;
     });
+  // unreachable
+  // return Promise.map(keyedThings, diffAndSaveOne, {
+  //     concurrency: 1
+  //   })
+  //   .then(function(result) {
+  //     console.log('saved', result.length, file);
+  //     return file;
+  //   });
 }
 
 function fetchAndSave(file) {
@@ -256,11 +286,14 @@ function fetchAndSave(file) {
   } else {
     console.log('|episodes|', thingsToMerge.length, file);
   }
+  readCount += thingsToMerge.length;
   if (thingsToMerge.length === 0) {
-    console.log('|things|==0 nothing to do. ', thingsToMerge.length, file);
+    // console.log('|things|==0 nothing to do. ', thingsToMerge.length, file);
     return file;
+  } else {
+    emptyCount++;
   }
-
+  console.log('-key', keyCount, 'save', saveCount, 'skip:', skipCount, 'empty:', emptyCount, 'read:', readCount);
   return levelSave(file, thingsToMerge);
 }
 
@@ -277,60 +310,69 @@ function dump() {
         reject(err);
       })
       .on('close', function() {
-        console.log('Stream closed');
-        resolve('Stream closed count:', count);
+        console.log('Stream closed', count);
+        resolve('Stream closed keyCount:' + count);
       })
       .on('end', function() {
         console.log('Stream ended count:', count);
-        resolve('Stream ended');
+        resolve('Stream ended keyCount:' + count);
       });
   });
-
 }
-find('byDate/**/*.json')
+
+
+// 2014-11-05* 2014-11-0* 2014-11-[01]*
+// find('byDate/**/*.json')
+find('byDate/2014-11-0*/**/*.json')
   .then(function(files) {
     utils.logStamp('Starting:Level ' + files.length);
 
-    return Promise.map(files, fetchAndSave, {
-        concurrency: 1
-      })
+    return utils.serialPromiseChainMap(files, fetchAndSave)
       .then(function(files) {
         console.log('Level:saved |files|', files.length);
         return files;
       });
-
+  })
+  .then(function() {
+    console.log('+key', keyCount, 'save', saveCount, 'skip:', skipCount, 'empty:', emptyCount, 'read:', readCount);
   })
   .then(function() {
     return dump();
   })
   .then(function(dumpCode) {
     console.log('dump returned:', dumpCode);
+  })
+  .then(function() {
     return new Promise(function(resolve, reject) {
       db.close(function(err) {
         if (err) {
           reject(err);
         }
-        resolve('Closed')
+        resolve('db.Closed')
       });
     });
   })
   .then(function(closeCode) {
-    console.log('close returned:', closeCode);
-
-    return new Promise(function(resolve, reject) {
-      // db.repair is deprecated - find leveldown...
-      var leveldown = require('./node_modules/level/node_modules/leveldown/');
-      leveldown.repair(levelDBName, function(err) {
-        if (err) {
-          reject(err);
-        }
-        resolve('Repaired')
-      });
-    });
+    console.log('db.close returned:', closeCode);
   })
-  .then(function(repairCode) {
-    console.log('repair returned:', repairCode);
+  .then(function() {
+    console.log('deltaCountHisto', deltaCountHisto);
   })
+  // .then(function() {
+  //   return new Promise(function(resolve, reject) {
+  //     // db.repair is deprecated - find leveldown...
+  //     var leveldown = require('./node_modules/level/node_modules/leveldown/');
+  //     leveldown.repair(levelDBName, function(err) {
+  //       if (err) {
+  //         reject(err);
+  //       }
+  //       resolve('Repaired')
+  //     });
+  //   });
+  // })
+  // .then(function(repairCode) {
+  //   console.log('repair returned:', repairCode);
+  // })
   .catch(function(error) {
     console.error('Error:Level', error);
     utils.logStamp('Error:Level ' + error);

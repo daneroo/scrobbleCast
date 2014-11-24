@@ -18,6 +18,24 @@ In order to produce an event stream of changes to these entities, we must find a
 Represenation of current-state: accumulator:
   podcasts: {[podcasts]} -> 
 
+### New high level flow: psudo-code, 
+Rewrite (spec) the delta process, to account for different uses, from file or cron (http get callback), to file(s), leveldb,couch and later synched up to (firebase/metor/couch).
+
+*Note to self: looks like this is turning into [stream programming](http://ejohn.org/blog/node-js-stream-playground/*
+
+* find('byDate/**/*.json')
+    * should be able to fragment (partition) the triggers (walking subrtrees/filters), partial scrape tasks, or leveldb index traversal.
+    * abstraction the entities are **generated** from file walking, db traversal or a scrape
+    * the output (event stream) has keys, and values (per entity)
+    * ensureSorted: abstraction guarantee the possibility of comparing to (previous) item
+* sink: output to files (new keys), leveldb (same keyes)
+    * buffered batch write to level
+* transform: map/reduce aggregation, and back to 
+    * delta (changeset) transorm
+    * summaries, and indexes
+    * backed by files or other tables (levels)
+
+
 ## TODO - Moving to Evernote
 
 * Delta Events

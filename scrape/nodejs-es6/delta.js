@@ -55,13 +55,13 @@ function find(pattern) {
       cwd: dataDirname
     })
     .then(function(files) {
-      console.log('pglob.in_progress %s found: %d files', pattern, files.length);
+      console.log('pglob %s found: %d files', pattern, files.length);
       return files;
     })
     .then(confirmSorted)
     .catch(function(err) {
       // log and rethrow
-      console.log('pglob.in_progress error:', err);
+      console.log('pglob error:', err);
       throw err;
     });
 }

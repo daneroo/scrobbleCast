@@ -1,6 +1,164 @@
 [
   {
     "firstSeen": "2014-11-07T08:34:00Z",
+    "lastUpdated": "2014-11-23T20:33:00Z",
+    "merged": {
+      "id": 129249,
+      "uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
+      "title": "No Agenda",
+      "author": "Adam Curry & John C Dvorak",
+      "thumbnail_url": "http://adam.curry.com/enc/20141123154114_na672artsm.jpg",
+      "description": "A show about politics with No Agenda, by Adam Curry and John C. Dvorak",
+      "url": "http://noagendashow.com"
+    },
+    "history": [
+      {
+        "stamp": "2014-11-14T08:32:00Z",
+        "source": "byDate/2014-11-14T08:32:00Z/01-podcasts.json",
+        "uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
+        "title": "No Agenda",
+        "changes": [
+          {
+            "op": "chg",
+            "key": "thumbnail_url",
+            "from": "http://adam.curry.com/enc/20141106190928_na667artsm.png",
+            "to": "http://adam.curry.com/enc/20141113164418_na669artsm.jpg"
+          }
+        ]
+      },
+      {
+        "stamp": "2014-11-16T21:43:00Z",
+        "source": "byDate/2014-11-16T21:43:00Z/01-podcasts.json",
+        "uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
+        "title": "No Agenda",
+        "changes": [
+          {
+            "op": "chg",
+            "key": "thumbnail_url",
+            "from": "http://adam.curry.com/enc/20141113164418_na669artsm.jpg",
+            "to": "http://adam.curry.com/enc/20141116175003_na670artsm.jpg"
+          }
+        ]
+      },
+      {
+        "stamp": "2014-11-20T21:23:00Z",
+        "source": "byDate/2014-11-20T21:23:00Z/01-podcasts.json",
+        "uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
+        "title": "No Agenda",
+        "changes": [
+          {
+            "op": "chg",
+            "key": "thumbnail_url",
+            "from": "http://adam.curry.com/enc/20141116175003_na670artsm.jpg",
+            "to": "http://adam.curry.com/enc/20141120164408_na671artsm.png"
+          }
+        ]
+      },
+      {
+        "stamp": "2014-11-23T20:33:00Z",
+        "source": "byDate/2014-11-23T20:33:00Z/01-podcasts.json",
+        "uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
+        "title": "No Agenda",
+        "changes": [
+          {
+            "op": "chg",
+            "key": "thumbnail_url",
+            "from": "http://adam.curry.com/enc/20141120164408_na671artsm.png",
+            "to": "http://adam.curry.com/enc/20141123154114_na672artsm.jpg"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "firstSeen": "2014-11-07T08:34:00Z",
+    "lastUpdated": "2014-11-20T17:13:00Z",
+    "merged": {
+      "id": 1149,
+      "uuid": "74a35900-0423-012e-f9a0-00163e1b201c",
+      "title": "Global News",
+      "author": "BBC World Service",
+      "thumbnail_url": "http://www.bbc.co.uk/podcasts/assets/artwork/globalnews.jpg",
+      "description": "The best stories, interviews and on the spot reporting from around the world. \r\n\r\nListen to up to 30 minutes of highlights from Newshour, World Update, Newsday, The Newsroom and Outside Source. Compiled twice a day from the 24 hour News coverage from BBC World Service.",
+      "url": "http://www.bbc.co.uk/news/world/"
+    },
+    "history": [
+      {
+        "stamp": "2014-11-20T17:13:00Z",
+        "source": "byDate/2014-11-20T17:13:00Z/01-podcasts.json",
+        "uuid": "74a35900-0423-012e-f9a0-00163e1b201c",
+        "title": "Global News",
+        "changes": [
+          {
+            "op": "chg",
+            "key": "description",
+            "from": "The best stories, interviews and on the spot reporting from around the world. \r\n\r\nListen to up to 30 minutes of highlights from Newshour, Newsday and The Newsroom. Compiled twice a day from the 24 hour News coverage from BBC World Service.",
+            "to": "The best stories, interviews and on the spot reporting from around the world. \r\n\r\nListen to up to 30 minutes of highlights from Newshour, World Update, Newsday, The Newsroom and Outside Source. Compiled twice a day from the 24 hour News coverage from BBC World Service."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "firstSeen": "2014-11-07T08:34:00Z",
+    "lastUpdated": "2014-11-18T19:53:00Z",
+    "merged": {
+      "id": 362948,
+      "uuid": "80931490-01be-0132-a0fb-5f4c86fd3263",
+      "title": "Adventures in Angular",
+      "author": "DevChat.tv",
+      "thumbnail_url": "https://admin.devchat.tv/uploads/show/cover_art/5/angular-thumb-1400x1400.jpg",
+      "description": "A weekly show about Angular.js and related technologies",
+      "url": "http://www.adventuresinangular.com"
+    },
+    "history": [
+      {
+        "stamp": "2014-11-18T19:53:00Z",
+        "source": "byDate/2014-11-18T19:53:00Z/01-podcasts.json",
+        "uuid": "80931490-01be-0132-a0fb-5f4c86fd3263",
+        "title": "Adventures in Angular",
+        "changes": [
+          {
+            "op": "chg",
+            "key": "thumbnail_url",
+            "from": "http://teachmetocode.com/wp-content/uploads/2014/08/angular-thumb-1400x1400.jpg",
+            "to": "https://admin.devchat.tv/uploads/show/cover_art/5/angular-thumb-1400x1400.jpg"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "firstSeen": "2014-11-07T08:34:00Z",
+    "lastUpdated": "2014-11-18T19:53:00Z",
+    "merged": {
+      "id": 264998,
+      "uuid": "58b79440-1f1f-0131-6ebd-723c91aeae46",
+      "title": "JavaScript Jabber",
+      "author": "DevChat.tv",
+      "thumbnail_url": "https://admin.devchat.tv/uploads/show/cover_art/2/javascript_jabber_thumb.jpg",
+      "description": "Weekly podcast discussion about Javascript on the front and back ends. Also discuss programming practices, coding environments, and the communities related to the technology.",
+      "url": "http://javascriptjabber.com"
+    },
+    "history": [
+      {
+        "stamp": "2014-11-18T19:53:00Z",
+        "source": "byDate/2014-11-18T19:53:00Z/01-podcasts.json",
+        "uuid": "58b79440-1f1f-0131-6ebd-723c91aeae46",
+        "title": "JavaScript Jabber",
+        "changes": [
+          {
+            "op": "chg",
+            "key": "thumbnail_url",
+            "from": "http://javascriptjabber.com/wp-content/uploads/2014/05/javascript_jabber_thumb1.jpg",
+            "to": "https://admin.devchat.tv/uploads/show/cover_art/2/javascript_jabber_thumb.jpg"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "firstSeen": "2014-11-07T08:34:00Z",
     "lastUpdated": "2014-11-17T14:53:00Z",
     "merged": {
       "id": 100772,
@@ -37,49 +195,6 @@
             "key": "thumbnail_url",
             "from": "http://shoptalkshow.com/wp-content/uploads/2012/08/shoptalk_album.jpeg",
             "to": "http://stscdn.paravel.netdna-cdn.com/wp-content/uploads/2012/08/shoptalk_album.jpeg"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "firstSeen": "2014-11-07T08:34:00Z",
-    "lastUpdated": "2014-11-16T21:43:00Z",
-    "merged": {
-      "id": 129249,
-      "uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
-      "title": "No Agenda",
-      "author": "Adam Curry & John C Dvorak",
-      "thumbnail_url": "http://adam.curry.com/enc/20141116175003_na670artsm.jpg",
-      "description": "A show about politics with No Agenda, by Adam Curry and John C. Dvorak",
-      "url": "http://noagendashow.com"
-    },
-    "history": [
-      {
-        "stamp": "2014-11-14T08:32:00Z",
-        "source": "byDate/2014-11-14T08:32:00Z/01-podcasts.json",
-        "uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
-        "title": "No Agenda",
-        "changes": [
-          {
-            "op": "chg",
-            "key": "thumbnail_url",
-            "from": "http://adam.curry.com/enc/20141106190928_na667artsm.png",
-            "to": "http://adam.curry.com/enc/20141113164418_na669artsm.jpg"
-          }
-        ]
-      },
-      {
-        "stamp": "2014-11-16T21:43:00Z",
-        "source": "byDate/2014-11-16T21:43:00Z/01-podcasts.json",
-        "uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
-        "title": "No Agenda",
-        "changes": [
-          {
-            "op": "chg",
-            "key": "thumbnail_url",
-            "from": "http://adam.curry.com/enc/20141113164418_na669artsm.jpg",
-            "to": "http://adam.curry.com/enc/20141116175003_na670artsm.jpg"
           }
         ]
       }
@@ -497,20 +612,6 @@
     "firstSeen": "2014-11-07T08:34:00Z",
     "lastUpdated": "2014-11-07T08:34:00Z",
     "merged": {
-      "id": 362948,
-      "uuid": "80931490-01be-0132-a0fb-5f4c86fd3263",
-      "title": "Adventures in Angular",
-      "author": "DevChat.tv",
-      "thumbnail_url": "http://teachmetocode.com/wp-content/uploads/2014/08/angular-thumb-1400x1400.jpg",
-      "description": "A weekly show about Angular.js and related technologies",
-      "url": "http://www.adventuresinangular.com"
-    },
-    "history": []
-  },
-  {
-    "firstSeen": "2014-11-07T08:34:00Z",
-    "lastUpdated": "2014-11-07T08:34:00Z",
-    "merged": {
       "id": 2875,
       "uuid": "7b376e30-1b93-012e-00b3-00163e1b201c",
       "title": "Wiretap from CBC Radio",
@@ -532,20 +633,6 @@
       "thumbnail_url": "http://feeds.twit.tv/coverart/tnt1400audio.jpg",
       "description": "Tech News Today with Mike Elgan delivers the top tech news in 30 minutes or less live each weekday at 10:00am Pacific, 1:00pm Eastern.\n\nGive us your news and views at 260-TNT-SHOW or tnt@twit.tv, or watch recorded shows on our website at http://twit.tv/tnt",
       "url": "http://twit.tv/tnt"
-    },
-    "history": []
-  },
-  {
-    "firstSeen": "2014-11-07T08:34:00Z",
-    "lastUpdated": "2014-11-07T08:34:00Z",
-    "merged": {
-      "id": 1149,
-      "uuid": "74a35900-0423-012e-f9a0-00163e1b201c",
-      "title": "Global News",
-      "author": "BBC World Service",
-      "thumbnail_url": "http://www.bbc.co.uk/podcasts/assets/artwork/globalnews.jpg",
-      "description": "The best stories, interviews and on the spot reporting from around the world. \r\n\r\nListen to up to 30 minutes of highlights from Newshour, Newsday and The Newsroom. Compiled twice a day from the 24 hour News coverage from BBC World Service.",
-      "url": "http://www.bbc.co.uk/news/world/"
     },
     "history": []
   },
@@ -616,20 +703,6 @@
       "thumbnail_url": "http://a921.phobos.apple.com/us/r30/Features/v4/dd/dd/ad/ddddad15-13df-6813-7d05-d81e45d88d9e/mza_5442136597615139731.170x170-75.jpg",
       "description": "Astronomy Cast offers you a fact based journey through the cosmos. Each week Fraser Cain (Universe Today) and Dr. Pamela Gay (SIUE / Slacker Astronomy) take on topics ranging from the nearby planets to ubiquitous dark matter.",
       "url": "http://www.astronomycast.com"
-    },
-    "history": []
-  },
-  {
-    "firstSeen": "2014-11-07T08:34:00Z",
-    "lastUpdated": "2014-11-07T08:34:00Z",
-    "merged": {
-      "id": 264998,
-      "uuid": "58b79440-1f1f-0131-6ebd-723c91aeae46",
-      "title": "JavaScript Jabber",
-      "author": "DevChat.tv",
-      "thumbnail_url": "http://javascriptjabber.com/wp-content/uploads/2014/05/javascript_jabber_thumb1.jpg",
-      "description": "Weekly podcast discussion about Javascript on the front and back ends. Also discuss programming practices, coding environments, and the communities related to the technology.",
-      "url": "http://javascriptjabber.com"
     },
     "history": []
   },

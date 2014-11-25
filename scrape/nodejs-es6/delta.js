@@ -7,10 +7,14 @@
 //     compare episode with known podcats/episode (if exists)
 
 
-var fs = require('fs');
+// var fs = require('fs');
+// for fs.readdirPromise
+var Promise = require("bluebird");
+var fs = Promise.promisifyAll(require("fs"), {
+  suffix: "Promise"
+});
 var path = require('path');
 var mkdirp = require('mkdirp');
-var Promise = require("bluebird");
 var glob = require("glob");
 var pglob = Promise.promisify(glob);
 var _ = require('lodash');
@@ -50,6 +54,8 @@ function confirmSorted(files) {
   return files;
 }
 
+//  just break this into parts by Date
+
 function find(pattern) {
   return pglob(pattern, {
       cwd: dataDirname
@@ -66,6 +72,11 @@ function find(pattern) {
     });
 }
 
+// get datestamps with fs.readdir on dataDirname
+// guaranteed to be sorted?
+function findByDate() {
+  return fs.readdirPromise(path.join(dataDirname, 'byDate'))
+}
 
 function stampFromFile(file) {
   var stamp = file.match(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z/);
@@ -77,31 +88,43 @@ function stampFromFile(file) {
   return stamp;
 }
 
-find('byDate/**/*.json')
-  .then(function(files) {
-    utils.logStamp('Starting:Delta ' + files.length);
+// find('byDate/**/*.json')
+findByDate()
+  .then(function(stamps) {
+    utils.logStamp('Starting:Delta ');
+    console.log('stamps', stamps);
+    console.log('|stamps|', stamps.length);
 
     var uuidProperty = 'uuid'; // common to all: podcasts/episodes
     var podcastHistory = new delta.AccumulatorByUuid();
     var episodeHistory = new delta.AccumulatorByUuid();
 
-    files.forEach(function(file) {
+    // should have a version without aggregation
+    utils.serialPromiseChainMap(stamps, function(stamp) {
+      console.log('--iteration stamp:', stamp);
+      return find(path.join('byDate',stamp, '**/*.json'))
+        .then(function(files) {
 
-      var thingsToMerge = loadJSON(file);
-      var stamp = stampFromFile(file);
-      var source = file;
+          // whoa this is synch...
+          files.forEach(function(file) {
 
-      if (file.match(/01-/)) {
-        // console.log('|podcasts|', thingsToMerge.length,file);
-        podcastHistory.mergeMany(thingsToMerge, uuidProperty, stamp, source);
-      } else {
-        // console.log('|episodes|', thingsToMerge.length,file);
-        episodeHistory.mergeMany(thingsToMerge, uuidProperty, stamp, source);
-      }
+            var thingsToMerge = loadJSON(file);
+            var stamp = stampFromFile(file);
+            var source = file;
+
+            if (file.match(/01-/)) {
+              // console.log('|podcasts|', thingsToMerge.length,file);
+              podcastHistory.mergeMany(thingsToMerge, uuidProperty, stamp, source);
+            } else {
+              // console.log('|episodes|', thingsToMerge.length,file);
+              episodeHistory.mergeMany(thingsToMerge, uuidProperty, stamp, source);
+            }
+          });
+        });
     });
 
     function sortAndSave(outfile, history) {
-      console.log('|'+outfile+'|=',Object.keys(history.accumulators).length);
+      console.log('|' + outfile + '|=', Object.keys(history.accumulators).length);
       // just write out the accumulators dictionary, it is the only attribute!
       var sorted = _.sortBy(history.accumulators, 'lastUpdated').reverse();
       fs.writeFileSync(outfile, JSON.stringify(sorted, null, 2));
@@ -111,7 +134,7 @@ find('byDate/**/*.json')
 
     var oneEpisode = '5e112290-5038-0132-cfbf-5f4c86fd3263';
     fs.writeFileSync('one-episode-history.json', JSON.stringify(episodeHistory.accumulators[oneEpisode], null, 2));
-    utils.logStamp('Done:Delta ' + files.length);
+    utils.logStamp('Done:Delta |e|:' + episodeHistory.accumulators.length);
   })
   .catch(function(error) {
     console.error('Error:Delta', error);

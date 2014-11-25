@@ -21,7 +21,15 @@ Represenation of current-state: accumulator:
 ### New high level flow: psudo-code, 
 Rewrite (spec) the delta process, to account for different uses, from file or cron (http get callback), to file(s), leveldb,couch and later synched up to (firebase/metor/couch).
 
-*Note to self: looks like this is turning into [stream programming](http://ejohn.org/blog/node-js-stream-playground/). Also check [Tim Caswell's post](http://howtonode.org/coding-challenges-with-streams)*
+*Note to self: looks like this is turning into [stream programming](http://ejohn.org/blog/node-js-stream-playground/)*. Also check:
+
+* [Tim Caswell's post](http://howtonode.org/coding-challenges-with-streams)
+* [Seth Fitzsimmons' Gist](https://gist.github.com/mojodna/8175805)
+* [Thorsten Lorenz blog post ](http://thlorenz.com/blog/event-stream)
+* [event-streams (by Dominic Tarr)](https://github.com/dominictarr/event-stream)
+* [replaced by his pull stream](https://github.com/dominictarr/pull-stream)
+
+New flow:
 
 * find('byDate/**/*.json')
     * should be able to fragment (partition) the triggers (walking subrtrees/filters), partial scrape tasks, or leveldb index traversal.

@@ -7,10 +7,14 @@
 //     compare episode with known podcats/episode (if exists)
 
 
-var fs = require('fs');
+// var fs = require('fs');
+// for fs.readdirPromise
+var Promise = require("bluebird");
+var fs = Promise.promisifyAll(require("fs"), {
+  suffix: "Promise"
+});
 var path = require('path');
 var mkdirp = require('mkdirp');
-var Promise = require("bluebird");
 var glob = require("glob");
 var pglob = Promise.promisify(glob);
 var _ = require('lodash');
@@ -33,7 +37,8 @@ function resolve(file) {
 
 // TODO: make these Async/Promised
 function loadJSON(file) {
-  var result = require(resolve(file));
+  // var result = require(resolve(file));
+  var result = JSON.parse(fs.readFileSync(resolve(file)));
   return result.episodes || result.podcasts || result;
 }
 
@@ -87,7 +92,7 @@ function stampFromFile(file) {
 // used to compare content
 // This could all be done with level-path..
 function getPrevious(key) {
-  // console.log('<',key);  
+  // console.log('<',key); 
   var removeAfterStampRE = /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z.*/;
   return new Promise(function(resolve, reject) {
     var found = null;
@@ -320,19 +325,46 @@ function dump() {
   });
 }
 
+// get datestamps with fs.readdir on dataDirname
+// guaranteed to be sorted?
+function findByDate() {
+  return fs.readdirPromise(path.join(dataDirname, 'byDate'))
+}
 
-// 2014-11-05* 2014-11-0* 2014-11-[01]*
-// find('byDate/**/*.json')
-find('byDate/2014-11-0*/**/*.json')
-  .then(function(files) {
-    utils.logStamp('Starting:Level ' + files.length);
+findByDate()
+  .then(function(stamps) {
+    utils.logStamp('Starting:Level ');
+    console.log('stamps', stamps);
+    console.log('|stamps|', stamps.length);
 
-    return utils.serialPromiseChainMap(files, fetchAndSave)
-      .then(function(files) {
-        console.log('Level:saved |files|', files.length);
-        return files;
+    var uuidProperty = 'uuid'; // common to all: podcasts/episodes
+    var podcastHistory = new delta.AccumulatorByUuid();
+    var episodeHistory = new delta.AccumulatorByUuid();
+
+    // should have a version without aggregation
+    return utils.serialPromiseChainMap(stamps, function(stamp) {
+      console.log('--iteration stamp:', stamp);
+      return find(path.join('byDate', stamp, '**/*.json'))
+        .then(function(files) {
+          return utils.serialPromiseChainMap(files, fetchAndSave)
+            .then(function(files) {
+              console.log('Level:saved |files|', files.length);
+              return files;
+            });
+          });
       });
   })
+// // 2014-11-05* 2014-11-0* 2014-11-[01]*
+// find('byDate/**/*.json')
+//   .then(function(files) {
+//     utils.logStamp('Starting:Level ' + files.length);
+
+//     return utils.serialPromiseChainMap(files, fetchAndSave)
+//       .then(function(files) {
+//         console.log('Level:saved |files|', files.length);
+//         return files;
+//       });
+//   })
   .then(function() {
     console.log('+key', keyCount, 'save', saveCount, 'skip:', skipCount, 'empty:', emptyCount, 'read:', readCount);
   })

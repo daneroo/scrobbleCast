@@ -208,7 +208,7 @@ findByDate()
 
         var oneEpisode = '5e112290-5038-0132-cfbf-5f4c86fd3263';
         fs.writeFileSync('one-episode-history.json', JSON.stringify(episodeHistory.accumulators[oneEpisode], null, 2));
-        utils.logStamp('Done:Delta |e|:' + _.size(episodeHistory.accumulators);
+        utils.logStamp('Done:Delta |e|:' + _.size(episodeHistory.accumulators));
         return stamps;
       });
 

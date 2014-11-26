@@ -79,6 +79,16 @@ function findByDate() {
   return fs.readdirPromise(path.join(dataDirname, 'byDate'))
 }
 
+function stampFromFile(file) {
+  var stamp = file.match(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z/);
+  if (stamp && stamp.length) {
+    stamp = new Date(stamp[0]);
+    stamp.setSeconds(0);
+    stamp = stamp.toJSON().replace(/\.\d{3}Z$/, 'Z');
+  }
+  return stamp;
+}
+
 // Key (path) definitions
 // - /podcast/<podast_uuid>/<stamp>/01-podcasts <-source type (url)
 // - /podcast/<podast_uuid>/episode/<episode_uuid_uuid>/<stamp>/0[234]-type <-source type 
@@ -88,6 +98,8 @@ function findByDate() {
 // data/byDate/2014-11-05T07:40:00Z/03-new_releases.json
 // data/byDate/2014-11-05T07:40:00Z/04-in_progress.json
 
+// generalise (hint,things)=>{keys:{podcast|episode{,podcast_uuid,},uuid,stamp,sourceType},value:thing}
+// factor out extraction (by Source type)
 function makeKeys(file, thingsToMerge) {
   if (thingsToMerge.length === 0) return;
 
@@ -130,16 +142,6 @@ function makeKeys(file, thingsToMerge) {
     };
   });
   return keyedThings;
-}
-
-function stampFromFile(file) {
-  var stamp = file.match(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z/);
-  if (stamp && stamp.length) {
-    stamp = new Date(stamp[0]);
-    stamp.setSeconds(0);
-    stamp = stamp.toJSON().replace(/\.\d{3}Z$/, 'Z');
-  }
-  return stamp;
 }
 
 // find('byDate/**/*.json')
@@ -196,7 +198,7 @@ findByDate()
       })
       .then(function(dontCare) {
         function sortAndSave(outfile, history) {
-          console.log('|' + outfile + '|=', Object.keys(history.accumulators).length);
+          console.log('|' + outfile + '|=', _.size(history.accumulators));
           // just write out the accumulators dictionary, it is the only attribute!
           var sorted = _.sortBy(history.accumulators, 'lastUpdated').reverse();
           fs.writeFileSync(outfile, JSON.stringify(sorted, null, 2));
@@ -206,7 +208,7 @@ findByDate()
 
         var oneEpisode = '5e112290-5038-0132-cfbf-5f4c86fd3263';
         fs.writeFileSync('one-episode-history.json', JSON.stringify(episodeHistory.accumulators[oneEpisode], null, 2));
-        utils.logStamp('Done:Delta |e|:' + episodeHistory.accumulators.length);
+        utils.logStamp('Done:Delta |e|:' + _.size(episodeHistory.accumulators);
         return stamps;
       });
 

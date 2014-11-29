@@ -1,12 +1,7 @@
 "use strict";
 
 // dependencies - core-public-internal
-var fs = require('fs');
-var path = require('path');
-
 var Promise = require("bluebird");
-var mkdirp = require('mkdirp');
-var _ = require('lodash');
 
 // expect to be called with 'minute','second' or no param
 // return an iso-8601 string

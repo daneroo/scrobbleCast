@@ -8,9 +8,6 @@ var Promise = require("bluebird");
 var mkdirp = require('mkdirp');
 var _ = require('lodash');
 
-//  candidate for config
-var dataDirname = 'data';
-
 // expect to be called with 'minute','second' or no param
 // return an iso-8601 string
 function stamp(grain) {
@@ -31,26 +28,15 @@ function logStamp(message) {
   console.log(stamp(), message);
 }
 
-// TODO: gonna need user id
-// merge with version in index, and move to lib
-// Note: Filename stamps rounded to minute
-function writeResponse(base, response, optionalStamp) {
-
-  // announce what we are doing io.file
-  logStamp(base);
-
-  var stampForFile = optionalStamp || stamp('minute');
-  // Note: base may include a path like: 'podcasts/f54c667'
-  // e.g. ./data/byDate/2014-...Z/pocdasts/f54c667.json
-  var filename = path.join(dataDirname, 'byDate', stampForFile, [base, 'json'].join('.'));
-
-  var dir = path.dirname(filename)
-  mkdirp.sync(dir);
-
-  var content = JSON.stringify(response, null, 2);
-  fs.writeFileSync(filename, content);
-
-  logStamp('+ ' + filename);
+// parse a stamp from a file/path
+function stampFromFile(file) {
+  var stamp = file.match(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z/);
+  if (stamp && stamp.length) {
+    stamp = new Date(stamp[0]);
+    stamp.setSeconds(0);
+    stamp = stamp.toJSON().replace(/\.\d{3}Z$/, 'Z');
+  }
+  return stamp;
 }
 
 //  similar to Promise.map but implies concurrrency=1, preserves order of result array
@@ -79,6 +65,6 @@ function serialPromiseChainMap(arr, reducer) {
 var exports = module.exports = {
   stamp: stamp,
   logStamp: logStamp,
-  writeResponse: writeResponse,
-  serialPromiseChainMap:serialPromiseChainMap
+  stampFromFile:stampFromFile,
+  serialPromiseChainMap: serialPromiseChainMap
 };

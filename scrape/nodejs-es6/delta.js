@@ -6,88 +6,12 @@
 //   for each episode in file.episodes
 //     compare episode with known podcats/episode (if exists)
 
-
-// var fs = require('fs');
-// for fs.readdirPromise
-var Promise = require("bluebird");
-var fs = Promise.promisifyAll(require("fs"), {
-  suffix: "Promise"
-});
+var fs = require('fs');
 var path = require('path');
-var mkdirp = require('mkdirp');
-var glob = require("glob");
-var pglob = Promise.promisify(glob);
 var _ = require('lodash');
 var utils = require('./lib/utils');
+var srcFile = require('./lib/source/file');
 var delta = require('./lib/delta');
-
-// globals
-// external data for creds.
-var dataDirname = 'data';
-
-function resolve(file) {
-  return path.resolve(dataDirname, file);
-}
-
-// TODO: make these Async/Promised
-function loadJSON(file) {
-  // var result = require(resolve(file));
-  var result = JSON.parse(fs.readFileSync(resolve(file)));
-  return result.episodes || result.podcasts || result;
-}
-
-function confirmSorted(files) {
-  var sorted = true;
-  var lastFile;
-  files.forEach(function(file) {
-    if (lastFile) {
-      var ok = file > lastFile;
-      if (!ok) {
-        console.log('***********', lastFile, file);
-        sorted = false;
-      }
-    }
-    lastFile = file;
-  });
-  if (!sorted) {
-    throw (new Error('files are not sorted'));
-  }
-  return files;
-}
-
-//  just break this into parts by Date
-
-function find(pattern) {
-  return pglob(pattern, {
-      cwd: dataDirname
-    })
-    .then(function(files) {
-      console.log('pglob %s found: %d files', pattern, files.length);
-      return files;
-    })
-    .then(confirmSorted)
-    .catch(function(err) {
-      // log and rethrow
-      console.log('pglob error:', err);
-      throw err;
-    });
-}
-
-// get datestamps with fs.readdir on dataDirname
-// guaranteed to be sorted?
-function findByDate() {
-  return fs.readdirPromise(path.join(dataDirname, 'byDate'))
-}
-
-function stampFromFile(file) {
-  var stamp = file.match(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z/);
-  if (stamp && stamp.length) {
-    stamp = new Date(stamp[0]);
-    stamp.setSeconds(0);
-    stamp = stamp.toJSON().replace(/\.\d{3}Z$/, 'Z');
-  }
-  return stamp;
-}
 
 // Key (path) definitions
 // - /podcast/<podast_uuid>/<stamp>/01-podcasts <-source type (url)
@@ -105,7 +29,7 @@ function makeKeys(file, thingsToMerge) {
 
   // var path = file.match(/01-podcasts.json$/) ? '/podcast' : '/podcast/episode';
   // var path = file.match(/01-podcasts.json$/) ? '/podcast' : '/podcast/episode';
-  var stamp = stampFromFile(file);
+  var stamp = utils.stampFromFile(file);
   // match the sourceType and optionally the podcast_uuid for 02-podcasts (old)
   var match = file.match(/(01-podcasts|02-podcasts|03-new_releases|04-in_progress)(\/(.*))?\.json/);
   var sourceType = match[1];
@@ -144,11 +68,11 @@ function makeKeys(file, thingsToMerge) {
   return keyedThings;
 }
 
-// find('byDate/**/*.json')
-findByDate()
+// srcFile.find('byDate/**/*.json')
+srcFile.findByDate()
   .then(function(stamps) {
     utils.logStamp('Starting:Delta ');
-    console.log('stamps', stamps);
+    // console.log('stamps', stamps);
     console.log('|stamps|', stamps.length);
 
     var uuidProperty = 'uuid'; // common to all: podcasts/episodes
@@ -158,7 +82,7 @@ findByDate()
     // should have a version without aggregation
     utils.serialPromiseChainMap(stamps, function(stamp) {
         console.log('--iteration stamp:', stamp);
-        return find(path.join('byDate', stamp, '**/*.json'))
+        return srcFile.find(path.join('byDate', stamp, '**/*.json'))
           .then(function(files) {
 
             //  spped - 
@@ -176,8 +100,8 @@ findByDate()
               // fs.createReadStream(path.join(dataDirname,file)).pipe(fs.createWriteStream('coco.json'));
               // return;
 
-              var thingsToMerge = loadJSON(file);
-              var stamp = stampFromFile(file);
+              var thingsToMerge = srcFile.loadJSON(file);
+              var stamp = utils.stampFromFile(file);
               var source = file;
 
               // write

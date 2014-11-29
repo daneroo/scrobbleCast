@@ -1,13 +1,13 @@
 [
   {
     "firstSeen": "2014-11-07T08:34:00Z",
-    "lastUpdated": "2014-11-23T20:33:00Z",
+    "lastUpdated": "2014-11-27T21:43:00Z",
     "merged": {
       "id": 129249,
       "uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
       "title": "No Agenda",
       "author": "Adam Curry & John C Dvorak",
-      "thumbnail_url": "http://adam.curry.com/enc/20141123154114_na672artsm.jpg",
+      "thumbnail_url": "http://adam.curry.com/enc/20141127203203_na673artsm.jpg",
       "description": "A show about politics with No Agenda, by Adam Curry and John C. Dvorak",
       "url": "http://noagendashow.com"
     },
@@ -65,6 +65,20 @@
             "key": "thumbnail_url",
             "from": "http://adam.curry.com/enc/20141120164408_na671artsm.png",
             "to": "http://adam.curry.com/enc/20141123154114_na672artsm.jpg"
+          }
+        ]
+      },
+      {
+        "stamp": "2014-11-27T21:43:00Z",
+        "source": "byDate/2014-11-27T21:43:00Z/01-podcasts.json",
+        "uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
+        "title": "No Agenda",
+        "changes": [
+          {
+            "op": "chg",
+            "key": "thumbnail_url",
+            "from": "http://adam.curry.com/enc/20141123154114_na672artsm.jpg",
+            "to": "http://adam.curry.com/enc/20141127203203_na673artsm.jpg"
           }
         ]
       }

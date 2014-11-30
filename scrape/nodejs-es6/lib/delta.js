@@ -66,19 +66,16 @@ function Accumulator() {
 
 // class methods
 // Accumulates (merges) and returns changes
-Accumulator.prototype.merge = function(thingToMerge, tagsForChangeSet) {
+Accumulator.prototype.merge = function(keyedThing) {
   // assume the objects are all shallow... (no nested properties for now)
-  var stamp = tagsForChangeSet.stamp;
+
+  var stamp = keyedThing.key.stamp;
   var from = this.merged;
-  var to = thingToMerge;
+  var to = keyedThing.value;
   var changes = [];
 
-  if (stamp && !this.firstSeen) {
-    this.firstSeen = stamp;
-    this.lastUpdated = stamp; // initial value
-  }
-
-  // special fix for missing podcast_uuid
+  // special fix for missing podcast_uuid in early 02-podcasts files
+  //  NOW Fixed in readByDate
   // if we only see an episode with 02-* ,
   // the podcast_uuid (which is ommited in the /../find_by_podcast REST response),
   // was not originally injected into the response, it is now fixed.
@@ -86,19 +83,20 @@ Accumulator.prototype.merge = function(thingToMerge, tagsForChangeSet) {
   // Description restore the missing podcast_uuid, 
   // which was encoded in the file_name, 
   //   it is available here as the 'source' attribute in the tagsForChangeSet
-  if (!from.podcast_uuid) {
-    var match = tagsForChangeSet.source.match(/02-podcasts\/(.+).json/);
-    if (match) {
-      // just directly insert the pocdcast_uuid attribute into the .merged object
-      from.podcast_uuid = match[1];
-    }
+  if (keyedThing.key.type === 'episode' && !to.podcast_uuid) {
+    throw (new Error('Accumulator.merge: no podcast_uuid! for episode:' + JSON.stringify(keyedThing)));
   }
-  // end of special fix
+  // end of special fix check
+
+  if (stamp && !this.firstSeen) {
+    this.firstSeen = stamp;
+    this.lastUpdated = stamp; // initial value
+  }
 
   var changes = compare(from, to);
   if (changes.length) {
-    console.log('|Δ|', changes.length, tagsForChangeSet);
-    var record = _.merge({}, tagsForChangeSet, {
+    console.log('|Δ|', changes.length, keyedThing.key);
+    var record = _.merge({}, keyedThing.key, {
       changes: changes
     });
     this.history.push(record);
@@ -127,26 +125,12 @@ AccumulatorByUuid.prototype.getAccumulator = function(uuid) {
   return this.accumulators[uuid];
 };
 
-AccumulatorByUuid.prototype.mergeMany = function(thingsToMerge, uuidProperty, stamp, source) {
-  var commonTagsForChangeSet = {
-    stamp: stamp, // always include or only if defined?
-    source: source
-  };
+AccumulatorByUuid.prototype.mergeMany = function(keyedThings) {
 
   var self = this;
-  thingsToMerge.forEach(function(thingToMerge) {
-
-    var uuid = thingToMerge[uuidProperty];
-    var acc = self.getAccumulator(uuid);
-    var tagsForChangeSet = _.merge({}, commonTagsForChangeSet, {
-      uuid: uuid,
-    });
-    // decorate with titles - for debugging
-    if (thingToMerge.title) {
-      tagsForChangeSet.title = thingToMerge.title;
-    }
-
-    acc.merge(thingToMerge, tagsForChangeSet);
+  keyedThings.forEach(function(keyedThing) {
+    var acc = self.getAccumulator(keyedThing.key.uuid);
+    acc.merge(keyedThing);
   });
 };
 

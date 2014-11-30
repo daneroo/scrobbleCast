@@ -13,22 +13,26 @@ var utils = require('./lib/utils');
 var srcFile = require('./lib/source/file');
 var delta = require('./lib/delta');
 
-// Key (path) definitions
+// Target Key (path) definitions
 // - /podcast/<podast_uuid>/<stamp>/01-podcasts <-source type (url)
 // - /podcast/<podast_uuid>/episode/<episode_uuid_uuid>/<stamp>/0[234]-type <-source type 
-// - /episode/<episode_uuid_uuid>/<stamp>/0[234]-type <-source type 
-// example input patterns
+// - /episode/<episode_uuid_uuid>/<stamp>/0[234]-type <-source type
+
+// example file input patterns
 // data/byDate/2014-11-07T08:34:00Z/02-podcasts/2cfd8eb0-58b1-012f-101d-525400c11844.json
 // data/byDate/2014-11-05T07:40:00Z/03-new_releases.json
 // data/byDate/2014-11-05T07:40:00Z/04-in_progress.json
 
-// generalise (hint,things)=>{keys:{podcast|episode{,podcast_uuid,},uuid,stamp,sourceType},value:thing}
-// factor out extraction (by Source type)
-function makeKeys(file, thingsToMerge) {
-  if (thingsToMerge.length === 0) return;
+// @param file(name)
+// @param thingsToMerge: [{podcast|episode}]
+// return  [{key:{type,[podcast_uuid],uuid,stamp,sourceType} values:[things]}]
+function readByDate(file) {
+  var thingsToMerge = srcFile.loadJSON(file);
+  if (thingsToMerge.length === 0) {
+    // throw new Error('readByDate: no things to split by keys: ' + file);
+    return [];
+  }
 
-  // var path = file.match(/01-podcasts.json$/) ? '/podcast' : '/podcast/episode';
-  // var path = file.match(/01-podcasts.json$/) ? '/podcast' : '/podcast/episode';
   var stamp = utils.stampFromFile(file);
   // match the sourceType and optionally the podcast_uuid for 02-podcasts (old)
   var match = file.match(/(01-podcasts|02-podcasts|03-new_releases|04-in_progress)(\/(.*))?\.json/);
@@ -37,30 +41,41 @@ function makeKeys(file, thingsToMerge) {
 
   // extra assert (02- fix)
   if (sourceType === '02-podcasts' && !podcast_uuid) {
-    throw (new Error('-no podcast_uuid!'));
+    throw (new Error('readByDate: no podcast_uuid for 02-podcasts: ' + file));
   }
   var keyedThings = thingsToMerge.map(function(thing) {
     if (!thing.uuid) {
-      throw (new Error('no uuid!'))
+      throw (new Error('readByDate: no uuid in thing!'))
     }
-    var key;
+    var key = {
+      // type: 'podcast|episode',
+      uuid: thing.uuid,
+      stamp: stamp,
+      sourceType: sourceType,
+      // decorate with source file - for debugging
+      source: file,
+    };
+    // decorate with titles - for debugging
+    if (thing.title) {
+      key.title = thing.title;
+    }
     if (sourceType === '01-podcasts') {
       // assert stuff
-      key = ['/podcast', thing.uuid, stamp, sourceType].join('/');
+      key.type = 'podcast';
     } else {
-      keyCount++;
+
       if (!thing.podcast_uuid) {
         if (!podcast_uuid) {
           console.log('XXXX', file, sourceType, match);
-          throw (new Error('+no podcast_uuid! for file:' + file));
+          throw (new Error('readByDate: no podcast_uuid! for file:' + file));
         }
         // perform the fix
         thing.podcast_uuid = podcast_uuid;
       }
-      key = ['/podcast', thing.podcast_uuid, 'episode', thing.uuid, stamp, sourceType].join('/');
+      key.type = 'episode';
+      key.podcast_uuid = podcast_uuid;
     }
     return {
-      type: 'put',
       key: key,
       value: thing
     };
@@ -73,7 +88,9 @@ srcFile.findByDate()
   .then(function(stamps) {
     utils.logStamp('Starting:Delta ');
     // console.log('stamps', stamps);
-    console.log('|stamps|', stamps.length);
+    console.log('-|stamps|', stamps.length);
+    // stamps = stamps.slice(0, 3000);
+    console.log('+|stamps|', stamps.length);
 
     var uuidProperty = 'uuid'; // common to all: podcasts/episodes
     var podcastHistory = new delta.AccumulatorByUuid();
@@ -85,37 +102,18 @@ srcFile.findByDate()
         return srcFile.find(path.join('byDate', stamp, '**/*.json'))
           .then(function(files) {
 
-            //  spped - 
-            //   copy
-            //   parse
-            //   parse - write 
-            //   parse - write (pretty)
-            //   parse and split
-
             files.forEach(function(file) {
 
               console.log('---file:', file);
 
-              // copy
-              // fs.createReadStream(path.join(dataDirname,file)).pipe(fs.createWriteStream('coco.json'));
-              // return;
-
-              var thingsToMerge = srcFile.loadJSON(file);
-              var stamp = utils.stampFromFile(file);
-              var source = file;
-
-              // write
-              // fs.writeFileSync('coco.json', JSON.stringify(thingsToMerge));
-              // write - pretty
-              // fs.writeFileSync('coco.json', JSON.stringify(thingsToMerge, null, 2));
-              // (split) make keys and write
+              var keyedThings = readByDate(file);
 
               if (file.match(/01-/)) {
                 // console.log('|podcasts|', thingsToMerge.length,file);
-                podcastHistory.mergeMany(thingsToMerge, uuidProperty, stamp, source);
+                podcastHistory.mergeMany(keyedThings);
               } else {
                 // console.log('|episodes|', thingsToMerge.length,file);
-                episodeHistory.mergeMany(thingsToMerge, uuidProperty, stamp, source);
+                episodeHistory.mergeMany(keyedThings);
               }
             });
           });

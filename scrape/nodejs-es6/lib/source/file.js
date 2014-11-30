@@ -77,7 +77,8 @@ function find(pattern) {
       cwd: dataDirname
     })
     .then(function(files) {
-      console.log('globPromise %s found: %d files', pattern, files.length);
+      // just for debugging
+      // console.log('globPromise %s found: %d files', pattern, files.length);
       return files;
     })
     .then(confirmSorted)

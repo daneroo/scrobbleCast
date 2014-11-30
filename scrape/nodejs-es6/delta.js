@@ -50,11 +50,16 @@ function readByDate(file) {
     if (!thing.uuid) {
       throw (new Error('readByDate: no uuid in thing!'))
     }
-    if (key.type === 'episode' && !thing.podcast_uuid && !podcast_uuid) {
-      throw (new Error('readByDate: no podcast_uuid! for file:' + file));
+    if (type === 'episode' && !thing.podcast_uuid && !podcast_uuid) {
+      throw (new Error('readByDate: no podcast_uuid for file:' + file));
     }
-    if (!thing.title) {
-      throw new Error('ZZZZZ missing title' + JSON.stringify(keyedThings));
+    if (!thing.title) { // just checking because we are adding to key - for tracing
+      throw new Error('readByDate missing title' + JSON.stringify(keyedThings));
+    }
+
+    // 02-fix
+    if (type === 'episode' && !thing.podcast_uuid) {
+      thing.podcast_uuid = podcast_uuid;
     }
 
     // mapping the key - try to preserve order...
@@ -65,7 +70,7 @@ function readByDate(file) {
       sourceType: sourceType,
     };
     if (key.type === 'episode') {
-      key.podcast_uuid = podcast_uuid;
+      key.podcast_uuid = thing.podcast_uuid;
     }
 
     // optional below

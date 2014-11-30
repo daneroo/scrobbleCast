@@ -102,12 +102,12 @@
         {
           "op": "new",
           "key": "is_deleted",
-          "to": 0
+          "to": false
         },
         {
           "op": "new",
           "key": "starred",
-          "to": 0
+          "to": false
         },
         {
           "op": "new",
@@ -136,18 +136,6 @@
           "key": "played_up_to",
           "from": 0,
           "to": 605
-        },
-        {
-          "op": "chg",
-          "key": "is_deleted",
-          "from": 0,
-          "to": false
-        },
-        {
-          "op": "chg",
-          "key": "starred",
-          "from": 0,
-          "to": false
         }
       ]
     },

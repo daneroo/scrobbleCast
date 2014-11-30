@@ -10,11 +10,52 @@ var _ = require('lodash');
 // mine
 var utils = require('./utils');
 
+// This is to remove noise from comparison
+// Some fileds:
+// * is_deleted, starred, (is_video ?) number<->boolean
+// * duration, played_up_to, playing_status null <-> number
+// Conclusion:
+// cast boolean fiels to their truthy value
+// omit null values from comparison
+//   which means that we may not have a merged value for these (duration)
+function normalize(thing) {
+  // clone thing
+  thing = _.merge({}, thing);
+  // thing = _.clone(thing);
+
+  // cast to boolean if !undefined
+  var booleanFields = ['is_deleted', 'starred', 'is_video'];
+  booleanFields.forEach(function(field) {
+    if (!_.isUndefined(thing[field])) {
+      if (thing[field] !== !!thing[field]){
+        // console.log('*** normalized !!',field,thing[field],!!thing[field]);
+        thing[field] = !!thing[field];
+      }
+    }
+  });
+
+  // omit field if null
+  var nullableFields = ['duration', 'played_up_to', 'playing_status'];
+  nullableFields.forEach(function(field) {
+    // cast to boolean if !undefined
+    if (_.isNull(thing[field])) {
+      // console.log('*** normalized --',field,thing[field]);
+      delete thing[field];
+    }
+  });
+  // return normalized modified object
+  return thing;
+}
+
 // utility - exposed
 // returns a changeset
 function compare(from, to) {
   // TODO: shortcut for: from.uuid !== to.uuid
   // TODO: actually this could use the changeset stuff from level too.(later)
+
+  // first normalize the operands (booleans and nullables)
+  from = normalize(from);
+  to = normalize(to);
 
   var changes = [];
   if (!_.isEqual(from, to)) {
@@ -40,8 +81,8 @@ function compare(from, to) {
       // ignore deletions... 
       // or maybe specific ones? (podcast_id)
       // if (op) {
-      if (op && 'del' !== op) {
-      // if (op && 'chg' === op) {
+      // if (op && 'chg' === op) { // only op:chg
+      if (op && 'del' !== op) { // op in {new,chg}
         changes.push({
           op: op,
           key: key,

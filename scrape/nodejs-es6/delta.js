@@ -126,6 +126,8 @@ srcFile.findByDate()
               var keyedThings = readByDate(file);
 
               keyedThings.forEach(function(keyedThing){
+                // watch this overwrite (could do my own mergeMany...)
+                // how about we normalize here (no cloning...)
                 var keyedThings = [keyedThing];
                 var changeCount = 0;
                 if (file.match(/01-/)) {

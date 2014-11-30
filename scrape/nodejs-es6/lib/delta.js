@@ -40,8 +40,8 @@ function compare(from, to) {
       // ignore deletions... 
       // or maybe specific ones? (podcast_id)
       // if (op) {
-      // if (op && 'del' !== op) {
-      if (op && 'chg' === op) {
+      if (op && 'del' !== op) {
+      // if (op && 'chg' === op) {
         changes.push({
           op: op,
           key: key,
@@ -91,6 +91,7 @@ Accumulator.prototype.merge = function(keyedThing) {
 
   if (stamp && !this.firstSeen) {
     this.firstSeen = stamp;
+    // could compare to epoch (start of import), and set to published date - if stamp == epoch
     this.lastUpdated = stamp; // initial value
   }
 

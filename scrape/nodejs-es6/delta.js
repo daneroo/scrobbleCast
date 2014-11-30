@@ -15,8 +15,8 @@ var delta = require('./lib/delta');
 
 // Target Key (path) definitions
 // - /podcast/<podast_uuid>/<stamp>/01-podcasts <-source type (url)
-// - /podcast/<podast_uuid>/episode/<episode_uuid_uuid>/<stamp>/0[234]-type <-source type 
-// - /episode/<episode_uuid_uuid>/<stamp>/0[234]-type <-source type
+// - /podcast/<podast_uuid>/episode/<episode_uuid>/<stamp>/0[234]-type <-source type 
+// - /episode/<episode_uuid>/<stamp>/0[234]-type <-source type
 
 // example file input patterns
 // data/byDate/2014-11-07T08:34:00Z/02-podcasts/2cfd8eb0-58b1-012f-101d-525400c11844.json
@@ -37,44 +37,44 @@ function readByDate(file) {
   // match the sourceType and optionally the podcast_uuid for 02-podcasts (old)
   var match = file.match(/(01-podcasts|02-podcasts|03-new_releases|04-in_progress)(\/(.*))?\.json/);
   var sourceType = match[1];
-  var podcast_uuid = match[3]
+  var podcast_uuid = match[3];
+  var type = (sourceType === '01-podcasts') ? 'podcast' : 'episode';
 
   // extra assert (02- fix)
   if (sourceType === '02-podcasts' && !podcast_uuid) {
     throw (new Error('readByDate: no podcast_uuid for 02-podcasts: ' + file));
   }
   var keyedThings = thingsToMerge.map(function(thing) {
+
+    // assertions
     if (!thing.uuid) {
       throw (new Error('readByDate: no uuid in thing!'))
     }
+    if (key.type === 'episode' && !thing.podcast_uuid && !podcast_uuid) {
+      throw (new Error('readByDate: no podcast_uuid! for file:' + file));
+    }
+    if (!thing.title) {
+      throw new Error('ZZZZZ missing title' + JSON.stringify(keyedThings));
+    }
+
+    // mapping the key - try to preserve order...
     var key = {
-      // type: 'podcast|episode',
+      type: type,
       uuid: thing.uuid,
       stamp: stamp,
       sourceType: sourceType,
-      // decorate with source file - for debugging
-      source: file,
     };
-    // decorate with titles - for debugging
-    if (thing.title) {
-      key.title = thing.title;
-    }
-    if (sourceType === '01-podcasts') {
-      // assert stuff
-      key.type = 'podcast';
-    } else {
-
-      if (!thing.podcast_uuid) {
-        if (!podcast_uuid) {
-          console.log('XXXX', file, sourceType, match);
-          throw (new Error('readByDate: no podcast_uuid! for file:' + file));
-        }
-        // perform the fix
-        thing.podcast_uuid = podcast_uuid;
-      }
-      key.type = 'episode';
+    if (key.type === 'episode') {
       key.podcast_uuid = podcast_uuid;
     }
+
+    // optional below
+    // decorate with source file/title - for tracing/debug
+    _.merge(key, {
+      source: file,
+      title: thing.title
+    });
+
     return {
       key: key,
       value: thing

@@ -8,6 +8,7 @@ var RateLimiter = require('limiter').RateLimiter;
 // mine
 var API = require('./pocketAPI');
 var utils = require('./utils');
+var sinkFile = require('./sink/file');
 
 // globals - move to configuration (ENV|config)
 // limiter (or config)
@@ -77,7 +78,7 @@ function fetchall(uuid, stamp, isDeep) {
       })
       .then(function(accum) {
         utils.logStamp('Fetched ' + accum.length + ' episodes');
-        utils.writeResponse('02-podcasts/' + uuid, accum, stamp);
+        sinkFile.writeByDate('02-podcasts/' + uuid, accum, stamp);
         return accum;
       });
 
@@ -89,11 +90,11 @@ function quick() {
   return API.sign_in(credentials)
     .then(API.new_releases_episodes())
     .then(function(response) {
-      utils.writeResponse('03-new_releases', response);
+      sinkFile.writeByDate('03-new_releases', response);
     })
     .then(API.in_progress_episodes())
     .then(function(response) {
-      utils.writeResponse('04-in_progress', response);
+      sinkFile.writeByDate('04-in_progress', response);
     })
     .then(function(response) {
       utils.logStamp('Done scraping (quick)');
@@ -110,7 +111,7 @@ function scrape(isDeep) {
   return API.sign_in(credentials)
     .then(API.podcasts_all())
     .then(function(response) {
-      utils.writeResponse('01-podcasts', response, sessionStamp);
+      sinkFile.writeByDate('01-podcasts', response, sessionStamp);
       return response.podcasts;
     })
     .then(function(podcasts) {

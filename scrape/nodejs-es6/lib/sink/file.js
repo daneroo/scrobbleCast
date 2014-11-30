@@ -21,27 +21,27 @@ var dataDirname = 'data';
 // - /podcast/<podast_uuid>/<stamp>/01-podcasts <-source type (url)
 // - /podcast/<podast_uuid>/episode/<episode_uuid>/<stamp>/0[234]-type <-source type 
 
-function pathFromKey(key){
-  var parts = ['type','uuid','stamp','sourceType'];
-  if (key.type==='episode') { // prepend with podcast_uuid
+function pathFromKey(key) {
+  var parts = ['type', 'uuid', 'stamp', 'sourceType'];
+  if (key.type === 'episode') { // prepend with podcast_uuid
     parts = ['podcast_uuid'].concat(parts);
   }
   // assertions - for key
-  parts.forEach(function(part){
-    if (!key[part]){
-      console.log('pathFromKey: missing key.'+part,key);
-      throw new Error('pathFromKey: missing key.'+part);
+  parts.forEach(function(part) {
+    if (!key[part]) {
+      console.log('pathFromKey: missing key.' + part, key);
+      throw new Error('pathFromKey: missing key.' + part);
     }
   });
 
-  var paths = parts.map(function(part){
+  var paths = parts.map(function(part) {
     return key[part];
   });
 
-  if (key.type==='episode'){
+  if (key.type === 'episode') {
     paths = ['podcast'].concat(paths);
   }
-  return paths.join('/');  
+  return paths.join('/');
 }
 
 // write byType
@@ -88,4 +88,5 @@ function writeByDate(base, response, optionalStamp) {
 // TODO: change API to .read/.write
 var exports = module.exports = {
   write: write,
+  writeByDate: writeByDate
 };

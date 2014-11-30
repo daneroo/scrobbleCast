@@ -11,6 +11,7 @@ var _ = require('lodash');
 var utils = require('./utils');
 
 // This is to remove noise from comparison
+//  -destructive if not cloned...(param?)
 // Some fileds:
 // * is_deleted, starred, (is_video ?) number<->boolean
 // * duration, played_up_to, playing_status null <-> number
@@ -19,8 +20,9 @@ var utils = require('./utils');
 // omit null values from comparison
 //   which means that we may not have a merged value for these (duration)
 function normalize(thing) {
-  // clone thing
-  thing = _.merge({}, thing);
+  // clone thing - or NOT
+  // if (param.clone)
+  // thing = _.merge({}, thing);
   // thing = _.clone(thing);
 
   // cast to boolean if !undefined
@@ -54,8 +56,8 @@ function compare(from, to) {
   // TODO: actually this could use the changeset stuff from level too.(later)
 
   // first normalize the operands (booleans and nullables)
-  from = normalize(from);
-  to = normalize(to);
+  // from = normalize(from);
+  // to = normalize(to);
 
   var changes = [];
   if (!_.isEqual(from, to)) {
@@ -183,6 +185,7 @@ AccumulatorByUuid.prototype.mergeMany = function(keyedThings) {
 
 
 var exports = module.exports = {
+  normalize:normalize,
   compare: compare,
   Accumulator: Accumulator,
   AccumulatorByUuid: AccumulatorByUuid

@@ -23,8 +23,8 @@ history.forEach(function(episode_history) {
       var justTypes = _.map(chgs, function(chg) {
         return {
           key: chg.key,
-          from: _.isNull(chg.from) ? 'null' : typeof chg.from,
-          to: _.isNull(chg.to) ? 'null' : typeof chg.to
+          from: getType(chg.from),
+          to: getType(chg.to)
         };
       });
       console.log(justTypes);
@@ -37,14 +37,80 @@ history.forEach(function(episode_history) {
   })
 });
 
+function getType(thing) {
+  return _.isNull(thing) ? 'null' : typeof thing
+}
 
-var typedChanges = _.uniq(typedChanges,function(chg){
-  return JSON.stringify(chg);
+// for boolean and null...
+function findTransitions(typeToFind) {
+  history.forEach(function(episode_history) {
+    var foundFields = [];
+    episode_history.history.forEach(function(entry) {
+      var chgs = _.filter(entry.changes, function(chg) {
+        if (getType(chg.from) === typeToFind || getType(chg.to) === typeToFind) {
+          // and not from===to ?
+          // and not op='new' ?
+          if (getType(chg.from)!==getType(chg.to) && chg.op!=='new'){
+            foundFields.push(chg.key);
+          }
+        }
+      });
+    });
+    foundFields = _.uniq(foundFields);
+    if (foundFields.length > 0) {      
+      // skip these for now
+      // if (_.isEqual(foundFields, ['id']) || _.isEqual(foundFields, ['is_video'])) {
+      //   return;
+      // }
+      console.log('episode with transitioning', typeToFind, foundFields);
+      foundFields.forEach(function(field) {
+        // console.log('  merged', field, episode_history.merged[field]);
+        var valueSequence=[];
+        episode_history.history.forEach(function(entry) {
+          var chgs = _.filter(entry.changes, {
+            key: field
+          });
+          if (chgs.length) {
+            // console.log('  -', chgs);
+            chgs.forEach(function(chg){
+              valueSequence.push(chg.to);
+            })
+          }
+        });
+        console.log('  key', field, valueSequence,episode_history.merged[field]);
+
+      });
+    }
+
+  });
+}
+
+var typedChanges = _.uniq(typedChanges, function(chg) {
+  return JSON.stringify(chg); // uniqueness criteria
 });
-console.log('typedChanges', typedChanges);
+// console.log('typedChanges', typedChanges);
 typedChanges = _.filter(typedChanges, function(chg) {
   return chg.from !== chg.to;
 })
 typedChanges = _.sortBy(typedChanges, ['key']);
 
-console.log('significant typedChanges', typedChanges);
+console.log('\n** typedChanges', typedChanges);
+
+// analysis of null transitions - is 0 always ok (duration)
+// duration,played_up_to,playing_status
+// end state is null ? (duration = 0|null)
+var nulled = _.filter(typedChanges, function(chg) {
+  return chg.from === 'null' || chg.to === 'null';
+});
+console.log('\n** nulled', nulled);
+// findTransitions('null');
+
+// analysis of boolean transitions - is 0 always ok
+// is_deleted, starred (is_video not observed but assumed)
+var booled = _.filter(typedChanges, function(chg) {
+  return chg.from === 'boolean' || chg.to === 'boolean';
+});
+console.log('\n** booled', booled);
+// findTransitions('boolean');
+
+// observe sequences by field...

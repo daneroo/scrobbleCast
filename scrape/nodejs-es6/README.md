@@ -44,6 +44,20 @@ New flow:
     * backed by files or other tables (levels)
 
 
+Normalization of values (histo.js):
+* `is_deleted, starred, (is_video ?)` number<->boolean
+* `duration, played_up_to, playing_status` null <-> number
+
+We have two choices, cast to appropriate type, or omit the offending value
+-Sometimes the last observed value is null, which means we should probably ignore these
+
+Conclusion
+* `is_deleted, starred, (is_video ?)` number<->boolean: cast to boolean
+* `duration, played_up_to, playing_status` null <-> number: remove
+
+We will do this in delta.compare -> normalize
+
+
 ## TODO - Moving to Evernote
 
 * Delta Events

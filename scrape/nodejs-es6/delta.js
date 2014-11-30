@@ -125,19 +125,21 @@ srcFile.findByDate()
 
               var keyedThings = readByDate(file);
 
-
-              var changeCount = 0;
-              if (file.match(/01-/)) {
-                // console.log('|podcasts|', thingsToMerge.length,file);
-                changeCount += podcastHistory.mergeMany(keyedThings);
-              } else {
-                // console.log('|episodes|', thingsToMerge.length,file);
-                changeCount += episodeHistory.mergeMany(keyedThings);
-              }
-              if (changeCount > 0) {
-                writeByType(keyedThings);
-                console.log('---changes:', changeCount, file);
-              }
+              keyedThings.forEach(function(keyedThing){
+                var keyedThings = [keyedThing];
+                var changeCount = 0;
+                if (file.match(/01-/)) {
+                  // console.log('|podcasts|', thingsToMerge.length,file);
+                  changeCount += podcastHistory.mergeMany(keyedThings);
+                } else {
+                  // console.log('|episodes|', thingsToMerge.length,file);
+                  changeCount += episodeHistory.mergeMany(keyedThings);
+                }
+                if (changeCount > 0) {
+                  writeByType(keyedThings);
+                  console.log('---changes:', changeCount, file);
+                }
+              });
             });
           });
       })

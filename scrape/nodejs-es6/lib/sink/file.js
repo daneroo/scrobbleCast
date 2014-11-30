@@ -57,10 +57,10 @@ function write(keyedThing) {
   mkdirp.sync(dir);
 
   var content = JSON.stringify(keyedThing, null, 2);
-  // fs.writeFileSync(filename, content);
+  fs.writeFileSync(filename, content);
 
   // utils.logStamp('wrote ' + filename);
-  // console.log('+++file:',filename);
+  console.log('+++file:',filename);
 }
 
 // deprecated - used by cron through tasks

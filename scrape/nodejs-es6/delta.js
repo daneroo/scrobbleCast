@@ -89,7 +89,7 @@ function readByDate(file) {
   return keyedThings;
 }
 
-function writeByType(keyedThings){
+function writeByType(keyedThings) {
   // should be async
   keyedThings.forEach(sinkFile.write);
   // keyedThings.forEach(function(keyedThing){
@@ -125,15 +125,19 @@ srcFile.findByDate()
 
               var keyedThings = readByDate(file);
 
-              writeByType(keyedThings);
 
-              // if (file.match(/01-/)) {
-              //   // console.log('|podcasts|', thingsToMerge.length,file);
-              //   podcastHistory.mergeMany(keyedThings);
-              // } else {
-              //   // console.log('|episodes|', thingsToMerge.length,file);
-              //   episodeHistory.mergeMany(keyedThings);
-              // }
+              var changeCount = 0;
+              if (file.match(/01-/)) {
+                // console.log('|podcasts|', thingsToMerge.length,file);
+                changeCount += podcastHistory.mergeMany(keyedThings);
+              } else {
+                // console.log('|episodes|', thingsToMerge.length,file);
+                changeCount += episodeHistory.mergeMany(keyedThings);
+              }
+              if (changeCount > 0) {
+                writeByType(keyedThings);
+                console.log('---changes:', changeCount, file);
+              }
             });
           });
       })

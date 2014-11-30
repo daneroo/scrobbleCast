@@ -84,7 +84,7 @@ Accumulator.prototype.merge = function(keyedThing) {
   // which was encoded in the file_name, 
   //   it is available here as the 'source' attribute in the tagsForChangeSet
   if (keyedThing.key.type === 'episode' && !to.podcast_uuid) {
-    console.log('Accumulator.merge: no podcast_uuid for episode:',keyedThing);
+    console.log('Accumulator.merge: no podcast_uuid for episode:', keyedThing);
     throw (new Error('Accumulator.merge: no podcast_uuid for episode:' + JSON.stringify(keyedThing)));
   }
   // end of special fix check
@@ -129,10 +129,13 @@ AccumulatorByUuid.prototype.getAccumulator = function(uuid) {
 AccumulatorByUuid.prototype.mergeMany = function(keyedThings) {
 
   var self = this;
+  var changeCount = 0;
   keyedThings.forEach(function(keyedThing) {
     var acc = self.getAccumulator(keyedThing.key.uuid);
-    acc.merge(keyedThing);
+    var changes = acc.merge(keyedThing);
+    changeCount += changes.length;
   });
+  return changeCount;
 };
 
 

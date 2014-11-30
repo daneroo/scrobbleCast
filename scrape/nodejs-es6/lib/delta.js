@@ -84,7 +84,8 @@ Accumulator.prototype.merge = function(keyedThing) {
   // which was encoded in the file_name, 
   //   it is available here as the 'source' attribute in the tagsForChangeSet
   if (keyedThing.key.type === 'episode' && !to.podcast_uuid) {
-    throw (new Error('Accumulator.merge: no podcast_uuid! for episode:' + JSON.stringify(keyedThing)));
+    console.log('Accumulator.merge: no podcast_uuid for episode:',keyedThing);
+    throw (new Error('Accumulator.merge: no podcast_uuid for episode:' + JSON.stringify(keyedThing)));
   }
   // end of special fix check
 

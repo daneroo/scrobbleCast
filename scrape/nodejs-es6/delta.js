@@ -11,6 +11,7 @@ var path = require('path');
 var _ = require('lodash');
 var utils = require('./lib/utils');
 var srcFile = require('./lib/source/file');
+var sinkFile = require('./lib/sink/file');
 var delta = require('./lib/delta');
 
 // Target Key (path) definitions
@@ -88,6 +89,17 @@ function readByDate(file) {
   return keyedThings;
 }
 
+function writeByType(keyedThings){
+  // should be async
+  keyedThings.forEach(sinkFile.write);
+  // keyedThings.forEach(function(keyedThing){
+  //   if (keyedThing.key.type==='episode'){
+  //     return;
+  //   }
+  //   sinkFile.write(keyedThing);
+  // });
+}
+
 // srcFile.find('byDate/**/*.json')
 srcFile.findByDate()
   .then(function(stamps) {
@@ -113,13 +125,15 @@ srcFile.findByDate()
 
               var keyedThings = readByDate(file);
 
-              if (file.match(/01-/)) {
-                // console.log('|podcasts|', thingsToMerge.length,file);
-                podcastHistory.mergeMany(keyedThings);
-              } else {
-                // console.log('|episodes|', thingsToMerge.length,file);
-                episodeHistory.mergeMany(keyedThings);
-              }
+              writeByType(keyedThings);
+
+              // if (file.match(/01-/)) {
+              //   // console.log('|podcasts|', thingsToMerge.length,file);
+              //   podcastHistory.mergeMany(keyedThings);
+              // } else {
+              //   // console.log('|episodes|', thingsToMerge.length,file);
+              //   episodeHistory.mergeMany(keyedThings);
+              // }
             });
           });
       })

@@ -8,7 +8,6 @@ var fs = Promise.promisifyAll(require("fs"), {
   suffix: 'Promise'
 });
 var path = require('path');
-var mkdirp = require('mkdirp');
 // a-la suffix: 'Promise'
 var globPromise = Promise.promisify(require('glob'));
 
@@ -26,28 +25,6 @@ function loadJSON(file) {
   // var result = require(resolveData(file)); // BAD
   var result = JSON.parse(fs.readFileSync(resolveData(file)));
   return result.episodes || result.podcasts || result;
-}
-
-// TODO: gonna need user id
-// merge with version in index, and move to lib
-// Note: Filename stamps rounded to minute
-function writeResponse(base, response, optionalStamp) {
-
-  // announce what we are doing io.file
-  logStamp(base);
-
-  var stampForFile = optionalStamp || stamp('minute');
-  // Note: base may include a path like: 'podcasts/f54c667'
-  // e.g. ./data/byDate/2014-...Z/pocdasts/f54c667.json
-  var filename = path.join(dataDirname, 'byDate', stampForFile, [base, 'json'].join('.'));
-
-  var dir = path.dirname(filename)
-  mkdirp.sync(dir);
-
-  var content = JSON.stringify(response, null, 2);
-  fs.writeFileSync(filename, content);
-
-  logStamp('+ ' + filename);
 }
 
 // internal (for checking find's results)
@@ -95,10 +72,9 @@ function findByDate() {
   return fs.readdirPromise(path.join(dataDirname, 'byDate'))
 }
 
-// TODO: change API to .read/.write
+// TODO: change API to .read
 var exports = module.exports = {
   loadJSON: loadJSON,
-  writeResponse: writeResponse,
   find: find,
   findByDate: findByDate
 };

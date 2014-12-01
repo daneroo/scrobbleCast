@@ -98,6 +98,10 @@ function quick() {
     })
     .then(function(response) {
       utils.logStamp('Done scraping (quick)');
+    })
+    .catch(function(error){
+      console.log('tasks.quick:',error);
+      throw error;
     });
 }
 
@@ -130,6 +134,10 @@ function scrape(isDeep) {
     })
     .then(function(podcasts) {
       utils.logStamp('Done scraping (' + mode + ') ' + sessionStamp);
+    })
+    .catch(function(error){
+      console.log('tasks.scrape:',mode,error);
+      throw error;
     });
 }
 

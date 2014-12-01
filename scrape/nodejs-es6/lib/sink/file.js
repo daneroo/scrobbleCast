@@ -69,7 +69,7 @@ function writeByDate(base, response, optionalStamp) {
   // announce what we are doing io.file
   utils.logStamp(base);
 
-  var stampForFile = optionalStamp || stamp('minute');
+  var stampForFile = optionalStamp || utils.stamp('minute');
   // Note: base may include a path like: 'podcasts/f54c667'
   // e.g. ./data/byDate/2014-...Z/pocdasts/f54c667.json
   var filename = path.join(dataDirname, 'byDate', stampForFile, [base, 'json'].join('.'));

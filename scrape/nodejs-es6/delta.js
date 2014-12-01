@@ -128,7 +128,7 @@ srcFile.findByDate()
               keyedThings.forEach(function(keyedThing){
                 // watch this overwrite (could do my own mergeMany...)
 
-                // how about we normalize here (no cloning...)
+                // Normalize values (bool/null) (no cloning...)
                 keyedThing.value = delta.normalize(keyedThing.value);
 
                 var keyedThings = [keyedThing];

@@ -31,7 +31,8 @@
                   <md-content ng-if="(episodeHistory.history)">
                     <div layout="row" layout-padding>
                       <md-button ng-click="toggleSelected(episodeHistory)" class="md-raised md-primary">|Δ|:{{episodeHistory.history.length}} ...</md-button>
-                      <div flex><md-progress-linear md-mode="determinate" value="{{100*change.episodeHistory.merged.played_up_to/episodeHistory.merged.duration}}"></md-progress-linear></div>
+                      <pre></pre>
+                      <div flex><md-progress-linear md-mode="determinate" value="{{100*episodeHistory.merged.played_up_to/episodeHistory.merged.duration}}"></md-progress-linear></div>
                     </div>
                     <div ng-if="isSelected(episodeHistory)" ng-repeat="event in episodeHistory.history">
                       <div ng-repeat="change in event.changes|filter:changePlayedUpToFilter"> 
@@ -44,6 +45,7 @@
                         </div>
                       </div>
                     </div>
+                    <pre ng-if="isSelected(episodeHistory)">{{episodeHistory|json}}</pre>
                   </md-content>
                 </div>
               </md-whiteframe>

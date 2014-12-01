@@ -15,7 +15,7 @@ angular.module('scrobbleCast').controller('HistoryCtrl', function($scope, scrobb
     }
   });
 
-  var selected= {};
+  var selected = {};
   $scope.toggleSelected = function(episodeHistory) {
     selected[episodeHistory.merged.uuid] = !selected[episodeHistory.merged.uuid];
   };
@@ -85,10 +85,41 @@ angular.module('scrobbleCast').controller('HistoryCtrl', function($scope, scrobb
   }
 
 
+  // This should be done on backend (delta2?)
+  function fix(episodes){
+    episodes.forEach(function(episodeHistory){
+      episodeHistory.history.forEach(function(history){
+        // remove all op:new
+        history.changes = _.reject(history.changes,{op:'new'});
+        history.changes = _.reject(history.changes,function(chg){
+          // remove played going down (to 0)
+          if (chg.key==='played_up_to' && chg.from>chg.to && chg.to===0){
+            return true;
+          }
+          // remove played going down (to 0)
+          if (chg.key==='playing_status' && chg.from>chg.to && chg.to===0){
+            return true;
+          }
+          return false;
+        });
+      });
+      episodeHistory.history = _.reject(episodeHistory.history,function(history){
+        return history.changes.length===0;
+      });
+    });
+    // resort
+    // episodes= _.sortBy(episodes, 'lastUpdated');//.reverse();
+  }
+
   // group by day
   function handleEpisodes(result) {
     // keep the top level element {x|x.merged}
     var episodes = result; // .slice(0, 100);
+
+    // fix
+    fix(episodes);
+    // slice
+    episodes = episodes.slice(0, 100);
 
     var episodesByDay = _.groupBy(episodes, function(episode) {
       return moment(episode.lastUpdated).format('YYYY-MM-DD');

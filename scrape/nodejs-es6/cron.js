@@ -41,6 +41,7 @@ function runJob(task, when) {
 runJob(tasks.deep,    recurrence.everyHourOnTheHour); // var deep = ...
 runJob(tasks.shallow, recurrence.everyTenMinutesOffsetByThree); // var shallow = 
 runJob(tasks.quick,   recurrence.everyTenMinutesOffsetByFour); // var quick = 
+// runJob(tasks.quick,   recurrence.everyMinute); // var quick = 
 
 // make this process hang around
 // closing stdin (^D/EOF) will exit.

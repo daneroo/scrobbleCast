@@ -23,6 +23,7 @@ var recurrence = {
   everyHourOnTheHour: '0 0 * * * *',
   everyTenMinutesOffsetByThree: '0 3-59/10 * * * *',
   everyTenMinutesOffsetByFour: '0 4-59/10 * * * *',
+  everyMinute: '0 * * * * *',
 };
 
 // auto-starts

@@ -1,0 +1,9 @@
+<div class="col-md-12" ng-controller="StatsCtrl">
+
+  <h2>Counts</h2>
+  <h6>podcasts: {{counts.podcasts}}</h6>
+  <h6>episodes: {{counts.episodes}}</h6>
+  <h6>listened: {{counts.played/60|number:0}}</h6>
+  <h6>total episode time: {{counts.duration/60|number:0}}</h6>
+  <pre>{{counts | json}}</pre>
+</div>

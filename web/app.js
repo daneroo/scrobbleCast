@@ -11,6 +11,10 @@ angular.module('scrobbleCast').config(function($stateProvider, $urlRouterProvide
     url: '/history',
     templateUrl: 'partial/history/history.html'
   });
+  $stateProvider.state('stats', {
+        url: '/stats',
+        templateUrl: 'partial/stats/stats.html'
+    });
   /* Add New States Above */
   $urlRouterProvider.otherwise('/history');
 

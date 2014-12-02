@@ -1,10 +1,14 @@
-<div class="home" ng-controller="HistoryCtrl" md-theme="orange">
+<div class="history" ng-controller="HistoryCtrl" md-theme="orange">
 
   <md-content class="fullheight">
     <md-toolbar>
       <h2 class="md-toolbar-tools">
+        <i class="fa fa-history"></i>
         <span>History</span>
       </h2>
+      <a ui-sref="stats"><md-button class="md-primary md-fab md-fab-top-right">
+        <i class="fa fa-pie-chart"></i>
+      </md-button></a>
     </md-toolbar>
     <section>
       <div ng-repeat="day in days">
@@ -12,6 +16,7 @@
           <!-- {{moment(day).format('ll')}} -->
           {{moment(day).calendar()}}
           <i>({{episodesByDay[day].length}})</i>
+          <i class="fa fa-history"></i>
         </md-subheader>
 
         <md-list>

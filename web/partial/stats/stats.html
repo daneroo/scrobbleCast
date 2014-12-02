@@ -1,9 +1,47 @@
-<div class="col-md-12" ng-controller="StatsCtrl">
+<div class="stats" ng-controller="StatsCtrl" md-theme="orange">
 
-  <h2>Counts</h2>
-  <h6>podcasts: {{counts.podcasts}}</h6>
-  <h6>episodes: {{counts.episodes}}</h6>
-  <h6>listened: {{counts.played/60|number:0}}</h6>
-  <h6>total episode time: {{counts.duration/60|number:0}}</h6>
-  <pre>{{counts | json}}</pre>
+  <md-content class="fullheight">
+    <md-toolbar ng-if='true'>
+      <h2 class="md-toolbar-tools">
+        <i class="fa fa-pie-chart"></i>
+        <span>Stats</span>
+      </h2>
+      <a ui-sref="home"><md-button class="md-primary md-fab md-fab-top-right">
+        <i class="fa fa-home"></i>
+      </md-button></a>
+    </md-toolbar>
+    <section>
+      <md-subheader class="md-primary">Counts</md-subheader>
+      <div layout="row" layout-sm="column"flex>
+        <md-card class="card" ng-repeat="key in ['podcasts','episodes']" flex>
+          <h2>{{key}}</h2>
+          <p>{{counts[key]}}</p> 
+        </md-card>
+      </div>
+      <md-subheader class="md-primary">Time</md-subheader>
+      <div layout="row" layout-sm="column" flex>
+        <md-card class="card" flex>
+          <h2>listened</h2>
+          <p>{{moment.duration(counts.played,'seconds').asMinutes()|number:0}} minutes</p> 
+          <p>{{moment.duration(counts.played,'seconds').humanize()}}</p> 
+        </md-card>
+        <md-card class="card" flex>
+          <h2>total episode time</h2>
+          <p>{{moment.duration(counts.duration,'seconds').asMinutes()|number:0}} minutes</p> 
+          <p>{{moment.duration(counts.duration,'seconds').humanize()}}</p> 
+        </md-card>
+      </div>
+
+<!--
+      <h6>podcasts: {{counts.podcasts}}</h6>
+      <h6>episodes: {{counts.episodes}}</h6>
+      <h6>listened: {{counts.played/60|number:0}}</h6>
+      <h6>total episode time: {{counts.duration/60|number:0}}</h6>
+      <pre>{{counts | json}}</pre>
+ -->
+    </section>
+
+  </md-content>
+
 </div>
+

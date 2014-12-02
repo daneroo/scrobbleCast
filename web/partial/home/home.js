@@ -1,4 +1,4 @@
-angular.module('scrobbleCast').controller('HomeCtrl', function($scope, scrobbleSvc) {
+angular.module('scrobblecast').controller('HomeCtrl', function($scope, scrobbleSvc) {
 	"use strict";
 	['podcasts'].forEach(function(service) {
 		scrobbleSvc[service]() // invoke the service by name

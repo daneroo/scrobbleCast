@@ -1,6 +1,6 @@
 describe('HomeCtrl', function() {
 
-	beforeEach(module('scrobbleCast'));
+	beforeEach(module('scrobblecast'));
 
 	var scope,ctrl;
 

@@ -1,0 +1,6 @@
+{
+  "name": "scrobblecast",
+  "root": "dist",
+  "clean_urls": false,
+  "error_page": "n"
+}

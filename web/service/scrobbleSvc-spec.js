@@ -1,6 +1,6 @@
 describe('scrobbleSvc', function() {
 
-  beforeEach(module('scrobbleCast'));
+  beforeEach(module('scrobblecast'));
 
   it('should ...', inject(function(scrobbleSvc) {
 

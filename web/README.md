@@ -1,4 +1,4 @@
-# scrobbleCast web app
+# scrobblecast web app
 
 Material Design (angular 1.3)
 

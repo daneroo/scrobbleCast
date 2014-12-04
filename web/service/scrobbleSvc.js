@@ -1,4 +1,4 @@
-angular.module('scrobbleCast').factory('scrobbleSvc', function($http) {
+angular.module('scrobblecast').factory('scrobbleSvc', function($http) {
 
   function get(url) {
     return $http.get(url)

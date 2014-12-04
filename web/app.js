@@ -1,6 +1,6 @@
-angular.module('scrobbleCast', ['ngMaterial', 'ui.router', 'ngAria', 'ngAnimate']);
+angular.module('scrobblecast', ['ngMaterial', 'ui.router', 'ngAria', 'ngAnimate']);
 
-angular.module('scrobbleCast').config(function($stateProvider, $urlRouterProvider) {
+angular.module('scrobblecast').config(function($stateProvider, $urlRouterProvider) {
   "use strict";
 
   $stateProvider.state('home', {
@@ -20,7 +20,7 @@ angular.module('scrobbleCast').config(function($stateProvider, $urlRouterProvide
 
 });
 
-angular.module('scrobbleCast').run(function($rootScope) {
+angular.module('scrobblecast').run(function($rootScope) {
   "use strict";
 
   $rootScope.safeApply = function(fn) {

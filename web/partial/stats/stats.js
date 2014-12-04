@@ -1,4 +1,4 @@
-angular.module('scrobbleCast').controller('StatsCtrl', function($scope, scrobbleSvc) {
+angular.module('scrobblecast').controller('StatsCtrl', function($scope, scrobbleSvc) {
   "use strict";
 
   // export moment.js to view : and localize calendar

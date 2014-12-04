@@ -1,5 +1,185 @@
 [
   {
+    "firstSeen": "2014-12-02T10:23:00Z",
+    "lastUpdated": "2014-12-02T10:23:00Z",
+    "merged": {
+      "id": 1316,
+      "uuid": "e6eb8660-0425-012e-f9a0-00163e1b201c",
+      "title": "- The Naked Scientists Podcast - Stripping Down Science",
+      "author": "Dr Chris Smith",
+      "thumbnail_url": "http://www.thenakedscientists.com/HTML/uploads/tx_naksciconfig/temp/NS_Podcasts_1400.png",
+      "description": "The Naked Scientists flagship science show brings you a lighthearted look at the latest scientific breakthroughs, interviews with the world's top scientists, answers to your science questions and science experiments to try at home.",
+      "url": "http://www.thenakedscientists.com/HTML/podcasts/"
+    },
+    "history": [
+      {
+        "type": "podcast",
+        "uuid": "e6eb8660-0425-012e-f9a0-00163e1b201c",
+        "stamp": "2014-12-02T10:23:00Z",
+        "sourceType": "01-podcasts",
+        "source": "byDate/2014-12-02T10:23:00Z/01-podcasts.json",
+        "title": "- The Naked Scientists Podcast - Stripping Down Science",
+        "changes": [
+          {
+            "op": "new",
+            "key": "id",
+            "to": 1316
+          },
+          {
+            "op": "new",
+            "key": "uuid",
+            "to": "e6eb8660-0425-012e-f9a0-00163e1b201c"
+          },
+          {
+            "op": "new",
+            "key": "title",
+            "to": "- The Naked Scientists Podcast - Stripping Down Science"
+          },
+          {
+            "op": "new",
+            "key": "author",
+            "to": "Dr Chris Smith"
+          },
+          {
+            "op": "new",
+            "key": "thumbnail_url",
+            "to": "http://www.thenakedscientists.com/HTML/uploads/tx_naksciconfig/temp/NS_Podcasts_1400.png"
+          },
+          {
+            "op": "new",
+            "key": "description",
+            "to": "The Naked Scientists flagship science show brings you a lighthearted look at the latest scientific breakthroughs, interviews with the world's top scientists, answers to your science questions and science experiments to try at home."
+          },
+          {
+            "op": "new",
+            "key": "url",
+            "to": "http://www.thenakedscientists.com/HTML/podcasts/"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "firstSeen": "2014-12-02T10:23:00Z",
+    "lastUpdated": "2014-12-02T10:23:00Z",
+    "merged": {
+      "id": 83118,
+      "uuid": "30c3aff0-eed5-012e-e176-525400c11844",
+      "title": "Physics World Science Podcast",
+      "author": "IOP Publishing",
+      "thumbnail_url": "http://images.iop.org/cws/cms/phw/feeds/images/logo-600x600.jpg",
+      "description": "Editors from Physics World magazine and its sister website physicsworld.com talk to leading scientists and science commentators about cutting-edge physics research, science education and the cultural and political issues shaping the international scientific community.",
+      "url": "http://physicsworld.com/cws/channel/multimedia/podcasts"
+    },
+    "history": [
+      {
+        "type": "podcast",
+        "uuid": "30c3aff0-eed5-012e-e176-525400c11844",
+        "stamp": "2014-12-02T10:23:00Z",
+        "sourceType": "01-podcasts",
+        "source": "byDate/2014-12-02T10:23:00Z/01-podcasts.json",
+        "title": "Physics World Science Podcast",
+        "changes": [
+          {
+            "op": "new",
+            "key": "id",
+            "to": 83118
+          },
+          {
+            "op": "new",
+            "key": "uuid",
+            "to": "30c3aff0-eed5-012e-e176-525400c11844"
+          },
+          {
+            "op": "new",
+            "key": "title",
+            "to": "Physics World Science Podcast"
+          },
+          {
+            "op": "new",
+            "key": "author",
+            "to": "IOP Publishing"
+          },
+          {
+            "op": "new",
+            "key": "thumbnail_url",
+            "to": "http://images.iop.org/cws/cms/phw/feeds/images/logo-600x600.jpg"
+          },
+          {
+            "op": "new",
+            "key": "description",
+            "to": "Editors from Physics World magazine and its sister website physicsworld.com talk to leading scientists and science commentators about cutting-edge physics research, science education and the cultural and political issues shaping the international scientific community."
+          },
+          {
+            "op": "new",
+            "key": "url",
+            "to": "http://physicsworld.com/cws/channel/multimedia/podcasts"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "firstSeen": "2014-12-02T10:23:00Z",
+    "lastUpdated": "2014-12-02T10:23:00Z",
+    "merged": {
+      "id": 1547,
+      "uuid": "0f752d70-042a-012e-f9a0-00163e1b201c",
+      "title": "Science Weekly",
+      "author": "theguardian.com",
+      "thumbnail_url": "http://static.guim.co.uk/sys-images/Guardian/Pix/pictures/2014/4/22/1398182483649/ScienceWeekly.png",
+      "description": "The Guardian's science team bring you the best analysis and interviews from the worlds of science and technology",
+      "url": "http://www.theguardian.com"
+    },
+    "history": [
+      {
+        "type": "podcast",
+        "uuid": "0f752d70-042a-012e-f9a0-00163e1b201c",
+        "stamp": "2014-12-02T10:23:00Z",
+        "sourceType": "01-podcasts",
+        "source": "byDate/2014-12-02T10:23:00Z/01-podcasts.json",
+        "title": "Science Weekly",
+        "changes": [
+          {
+            "op": "new",
+            "key": "id",
+            "to": 1547
+          },
+          {
+            "op": "new",
+            "key": "uuid",
+            "to": "0f752d70-042a-012e-f9a0-00163e1b201c"
+          },
+          {
+            "op": "new",
+            "key": "title",
+            "to": "Science Weekly"
+          },
+          {
+            "op": "new",
+            "key": "author",
+            "to": "theguardian.com"
+          },
+          {
+            "op": "new",
+            "key": "thumbnail_url",
+            "to": "http://static.guim.co.uk/sys-images/Guardian/Pix/pictures/2014/4/22/1398182483649/ScienceWeekly.png"
+          },
+          {
+            "op": "new",
+            "key": "description",
+            "to": "The Guardian's science team bring you the best analysis and interviews from the worlds of science and technology"
+          },
+          {
+            "op": "new",
+            "key": "url",
+            "to": "http://www.theguardian.com"
+          }
+        ]
+      }
+    ]
+  },
+  {
     "firstSeen": "2014-11-07T08:34:00Z",
     "lastUpdated": "2014-11-30T21:43:00Z",
     "merged": {

@@ -106,8 +106,8 @@ function dedup(file) {
   var dir = path.dirname(nuFilename)
   mkdirp.sync(dir);
 
+  fs.renameSync(oldFilename,nuFilename);
   console.log('-exec fs.renameSync(%s, %s)',oldFilename,nuFilename);
-
 }
 
 // srcFile.find('byDate/**/*.json')

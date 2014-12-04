@@ -92,12 +92,22 @@ function readByDate(file) {
 function writeByType(keyedThings) {
   // should be async
   keyedThings.forEach(sinkFile.write);
-  // keyedThings.forEach(function(keyedThing){
-  //   if (keyedThing.key.type==='episode'){
-  //     return;
-  //   }
-  //   sinkFile.write(keyedThing);
-  // });
+}
+
+// mv the file to dedup folder
+// should be async
+function dedup(file) {
+  var path = require('path');
+  var mkdirp = require('mkdirp');
+  var dataDirname = 'data';
+
+  var oldFilename = path.join(dataDirname, file);
+  var nuFilename = path.join(dataDirname, 'dedup',file);
+  var dir = path.dirname(nuFilename)
+  mkdirp.sync(dir);
+
+  console.log('-exec fs.renameSync(%s, %s)',oldFilename,nuFilename);
+
 }
 
 // srcFile.find('byDate/**/*.json')
@@ -113,6 +123,11 @@ srcFile.findByDate()
     var podcastHistory = new delta.AccumulatorByUuid();
     var episodeHistory = new delta.AccumulatorByUuid();
 
+    var partCount = 0;
+    var fileCount = 0;
+    var dedupPartCount = 0;
+    var dedupFileCount = 0;
+
     // should have a version without aggregation
     utils.serialPromiseChainMap(stamps, function(stamp) {
         console.log('--iteration stamp:', stamp);
@@ -125,7 +140,10 @@ srcFile.findByDate()
 
               var keyedThings = readByDate(file);
 
-              keyedThings.forEach(function(keyedThing){
+              fileCount++;
+              var fileHasChanges = false;
+              keyedThings.forEach(function(keyedThing) {
+                partCount++;
                 // watch this overwrite (could do my own mergeMany...)
 
                 // Normalize values (bool/null) (no cloning...)
@@ -141,10 +159,19 @@ srcFile.findByDate()
                   changeCount += episodeHistory.mergeMany(keyedThings);
                 }
                 if (changeCount > 0) {
+                  fileHasChanges = true;
                   writeByType(keyedThings);
                   console.log('---changes:', changeCount, file);
+                } else {
+                  dedupPartCount++;
                 }
               });
+              if (!fileHasChanges) {
+                dedupFileCount++;
+                dedup(file);
+                console.log('---dedup: file %d/%d  part %d/%d', dedupFileCount, fileCount, dedupPartCount, partCount);
+              }
+
             });
           });
       })

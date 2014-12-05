@@ -1,5 +1,177 @@
 [
   {
+    "firstSeen": "2014-11-07T08:34:00Z",
+    "lastUpdated": "2014-12-04T21:13:00Z",
+    "merged": {
+      "id": 129249,
+      "uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
+      "title": "No Agenda",
+      "author": "Adam Curry & John C Dvorak",
+      "thumbnail_url": "http://adam.curry.com/enc/20141204162738_na675artsm.jpg",
+      "description": "A show about politics with No Agenda, by Adam Curry and John C. Dvorak",
+      "url": "http://noagendashow.com"
+    },
+    "history": [
+      {
+        "type": "podcast",
+        "uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
+        "stamp": "2014-11-07T08:34:00Z",
+        "sourceType": "01-podcasts",
+        "source": "byDate/2014-11-07T08:34:00Z/01-podcasts.json",
+        "title": "No Agenda",
+        "changes": [
+          {
+            "op": "new",
+            "key": "id",
+            "to": 129249
+          },
+          {
+            "op": "new",
+            "key": "uuid",
+            "to": "8c4c6bd0-a696-012f-4480-525400c11844"
+          },
+          {
+            "op": "new",
+            "key": "title",
+            "to": "No Agenda"
+          },
+          {
+            "op": "new",
+            "key": "author",
+            "to": "Adam Curry & John C Dvorak"
+          },
+          {
+            "op": "new",
+            "key": "thumbnail_url",
+            "to": "http://adam.curry.com/enc/20141106190928_na667artsm.png"
+          },
+          {
+            "op": "new",
+            "key": "description",
+            "to": "A show about politics with No Agenda, by Adam Curry and John C. Dvorak"
+          },
+          {
+            "op": "new",
+            "key": "url",
+            "to": "http://noagendashow.com"
+          }
+        ]
+      },
+      {
+        "type": "podcast",
+        "uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
+        "stamp": "2014-11-14T08:32:00Z",
+        "sourceType": "01-podcasts",
+        "source": "byDate/2014-11-14T08:32:00Z/01-podcasts.json",
+        "title": "No Agenda",
+        "changes": [
+          {
+            "op": "chg",
+            "key": "thumbnail_url",
+            "from": "http://adam.curry.com/enc/20141106190928_na667artsm.png",
+            "to": "http://adam.curry.com/enc/20141113164418_na669artsm.jpg"
+          }
+        ]
+      },
+      {
+        "type": "podcast",
+        "uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
+        "stamp": "2014-11-16T21:43:00Z",
+        "sourceType": "01-podcasts",
+        "source": "byDate/2014-11-16T21:43:00Z/01-podcasts.json",
+        "title": "No Agenda",
+        "changes": [
+          {
+            "op": "chg",
+            "key": "thumbnail_url",
+            "from": "http://adam.curry.com/enc/20141113164418_na669artsm.jpg",
+            "to": "http://adam.curry.com/enc/20141116175003_na670artsm.jpg"
+          }
+        ]
+      },
+      {
+        "type": "podcast",
+        "uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
+        "stamp": "2014-11-20T21:23:00Z",
+        "sourceType": "01-podcasts",
+        "source": "byDate/2014-11-20T21:23:00Z/01-podcasts.json",
+        "title": "No Agenda",
+        "changes": [
+          {
+            "op": "chg",
+            "key": "thumbnail_url",
+            "from": "http://adam.curry.com/enc/20141116175003_na670artsm.jpg",
+            "to": "http://adam.curry.com/enc/20141120164408_na671artsm.png"
+          }
+        ]
+      },
+      {
+        "type": "podcast",
+        "uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
+        "stamp": "2014-11-23T20:33:00Z",
+        "sourceType": "01-podcasts",
+        "source": "byDate/2014-11-23T20:33:00Z/01-podcasts.json",
+        "title": "No Agenda",
+        "changes": [
+          {
+            "op": "chg",
+            "key": "thumbnail_url",
+            "from": "http://adam.curry.com/enc/20141120164408_na671artsm.png",
+            "to": "http://adam.curry.com/enc/20141123154114_na672artsm.jpg"
+          }
+        ]
+      },
+      {
+        "type": "podcast",
+        "uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
+        "stamp": "2014-11-27T21:43:00Z",
+        "sourceType": "01-podcasts",
+        "source": "byDate/2014-11-27T21:43:00Z/01-podcasts.json",
+        "title": "No Agenda",
+        "changes": [
+          {
+            "op": "chg",
+            "key": "thumbnail_url",
+            "from": "http://adam.curry.com/enc/20141123154114_na672artsm.jpg",
+            "to": "http://adam.curry.com/enc/20141127203203_na673artsm.jpg"
+          }
+        ]
+      },
+      {
+        "type": "podcast",
+        "uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
+        "stamp": "2014-11-30T21:43:00Z",
+        "sourceType": "01-podcasts",
+        "source": "byDate/2014-11-30T21:43:00Z/01-podcasts.json",
+        "title": "No Agenda",
+        "changes": [
+          {
+            "op": "chg",
+            "key": "thumbnail_url",
+            "from": "http://adam.curry.com/enc/20141127203203_na673artsm.jpg",
+            "to": "http://adam.curry.com/enc/20141130170834_na674artsm.jpg"
+          }
+        ]
+      },
+      {
+        "type": "podcast",
+        "uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
+        "stamp": "2014-12-04T21:13:00Z",
+        "sourceType": "01-podcasts",
+        "source": "byDate/2014-12-04T21:13:00Z/01-podcasts.json",
+        "title": "No Agenda",
+        "changes": [
+          {
+            "op": "chg",
+            "key": "thumbnail_url",
+            "from": "http://adam.curry.com/enc/20141130170834_na674artsm.jpg",
+            "to": "http://adam.curry.com/enc/20141204162738_na675artsm.jpg"
+          }
+        ]
+      }
+    ]
+  },
+  {
     "firstSeen": "2014-12-02T10:23:00Z",
     "lastUpdated": "2014-12-02T10:23:00Z",
     "merged": {
@@ -174,162 +346,6 @@
             "op": "new",
             "key": "url",
             "to": "http://www.theguardian.com"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "firstSeen": "2014-11-07T08:34:00Z",
-    "lastUpdated": "2014-11-30T21:43:00Z",
-    "merged": {
-      "id": 129249,
-      "uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
-      "title": "No Agenda",
-      "author": "Adam Curry & John C Dvorak",
-      "thumbnail_url": "http://adam.curry.com/enc/20141130170834_na674artsm.jpg",
-      "description": "A show about politics with No Agenda, by Adam Curry and John C. Dvorak",
-      "url": "http://noagendashow.com"
-    },
-    "history": [
-      {
-        "type": "podcast",
-        "uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
-        "stamp": "2014-11-07T08:34:00Z",
-        "sourceType": "01-podcasts",
-        "source": "byDate/2014-11-07T08:34:00Z/01-podcasts.json",
-        "title": "No Agenda",
-        "changes": [
-          {
-            "op": "new",
-            "key": "id",
-            "to": 129249
-          },
-          {
-            "op": "new",
-            "key": "uuid",
-            "to": "8c4c6bd0-a696-012f-4480-525400c11844"
-          },
-          {
-            "op": "new",
-            "key": "title",
-            "to": "No Agenda"
-          },
-          {
-            "op": "new",
-            "key": "author",
-            "to": "Adam Curry & John C Dvorak"
-          },
-          {
-            "op": "new",
-            "key": "thumbnail_url",
-            "to": "http://adam.curry.com/enc/20141106190928_na667artsm.png"
-          },
-          {
-            "op": "new",
-            "key": "description",
-            "to": "A show about politics with No Agenda, by Adam Curry and John C. Dvorak"
-          },
-          {
-            "op": "new",
-            "key": "url",
-            "to": "http://noagendashow.com"
-          }
-        ]
-      },
-      {
-        "type": "podcast",
-        "uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
-        "stamp": "2014-11-14T08:32:00Z",
-        "sourceType": "01-podcasts",
-        "source": "byDate/2014-11-14T08:32:00Z/01-podcasts.json",
-        "title": "No Agenda",
-        "changes": [
-          {
-            "op": "chg",
-            "key": "thumbnail_url",
-            "from": "http://adam.curry.com/enc/20141106190928_na667artsm.png",
-            "to": "http://adam.curry.com/enc/20141113164418_na669artsm.jpg"
-          }
-        ]
-      },
-      {
-        "type": "podcast",
-        "uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
-        "stamp": "2014-11-16T21:43:00Z",
-        "sourceType": "01-podcasts",
-        "source": "byDate/2014-11-16T21:43:00Z/01-podcasts.json",
-        "title": "No Agenda",
-        "changes": [
-          {
-            "op": "chg",
-            "key": "thumbnail_url",
-            "from": "http://adam.curry.com/enc/20141113164418_na669artsm.jpg",
-            "to": "http://adam.curry.com/enc/20141116175003_na670artsm.jpg"
-          }
-        ]
-      },
-      {
-        "type": "podcast",
-        "uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
-        "stamp": "2014-11-20T21:23:00Z",
-        "sourceType": "01-podcasts",
-        "source": "byDate/2014-11-20T21:23:00Z/01-podcasts.json",
-        "title": "No Agenda",
-        "changes": [
-          {
-            "op": "chg",
-            "key": "thumbnail_url",
-            "from": "http://adam.curry.com/enc/20141116175003_na670artsm.jpg",
-            "to": "http://adam.curry.com/enc/20141120164408_na671artsm.png"
-          }
-        ]
-      },
-      {
-        "type": "podcast",
-        "uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
-        "stamp": "2014-11-23T20:33:00Z",
-        "sourceType": "01-podcasts",
-        "source": "byDate/2014-11-23T20:33:00Z/01-podcasts.json",
-        "title": "No Agenda",
-        "changes": [
-          {
-            "op": "chg",
-            "key": "thumbnail_url",
-            "from": "http://adam.curry.com/enc/20141120164408_na671artsm.png",
-            "to": "http://adam.curry.com/enc/20141123154114_na672artsm.jpg"
-          }
-        ]
-      },
-      {
-        "type": "podcast",
-        "uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
-        "stamp": "2014-11-27T21:43:00Z",
-        "sourceType": "01-podcasts",
-        "source": "byDate/2014-11-27T21:43:00Z/01-podcasts.json",
-        "title": "No Agenda",
-        "changes": [
-          {
-            "op": "chg",
-            "key": "thumbnail_url",
-            "from": "http://adam.curry.com/enc/20141123154114_na672artsm.jpg",
-            "to": "http://adam.curry.com/enc/20141127203203_na673artsm.jpg"
-          }
-        ]
-      },
-      {
-        "type": "podcast",
-        "uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
-        "stamp": "2014-11-30T21:43:00Z",
-        "sourceType": "01-podcasts",
-        "source": "byDate/2014-11-30T21:43:00Z/01-podcasts.json",
-        "title": "No Agenda",
-        "changes": [
-          {
-            "op": "chg",
-            "key": "thumbnail_url",
-            "from": "http://adam.curry.com/enc/20141127203203_na673artsm.jpg",
-            "to": "http://adam.curry.com/enc/20141130170834_na674artsm.jpg"
           }
         ]
       }

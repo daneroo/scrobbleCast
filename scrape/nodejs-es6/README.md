@@ -18,6 +18,12 @@ In order to produce an event stream of changes to these entities, we must find a
 Represenation of current-state: accumulator:
   podcasts: {[podcasts]} -> 
 
+### Operations
+
+Running `delta.js`; also prune empty dirs after
+
+    time ./dedup.sh
+
 ### New high level flow: psudo-code, 
 Rewrite (spec) the delta process, to account for different uses, from file or cron (http get callback), to file(s), leveldb,couch and later synched up to (firebase/metor/couch).
 

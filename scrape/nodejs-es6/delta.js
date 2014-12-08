@@ -112,16 +112,19 @@ function dedup(file) {
   console.log('-exec fs.renameSync(%s, %s)',oldFilename,nuFilename);
 
   // now prune oldDir (and parent) - if empty
-  console.log('-exec fs.rmdirSync(%s)',oldDir);
   try {
     fs.rmdirSync(oldDir);
+    // only prints if emtpy - no error
+    console.log('-exec fs.rmdirSync(%s)',oldDir);
     // and parent - unless oldDir already not empty...
     fs.rmdirSync(path.dirname(oldDir));
+    // only prints if emtpy - no error
+    console.log('-exec fs.rmdirSync(%s)',path.dirname(oldDir));
   } catch (e) {
     // code: 'ENOTEMPTY'
     // console.log('rmdir error:',e);
   } finally {
-    console.log('+exec fs.rmdirSync(%s) (and parent)',oldDir);
+    // console.log('+exec fs.rmdirSync(%s) (and parent)',oldDir);
   }
 }
 

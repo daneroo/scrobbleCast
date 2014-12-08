@@ -10,6 +10,7 @@
 //  source byType/podcast/<podcast_uuid>[/episonde/<uuid>] /<stamp>/<type>.json
 //  sink episode|podcast _hitsory.json
 
+var util = require('util');
 var fs = require('fs');
 var path = require('path');
 var _ = require('lodash');
@@ -107,7 +108,7 @@ srcFile.findByDate()
 
     // should have a version without aggregation
     utils.serialPromiseChainMap(stamps, function(stamp) {
-        console.log('--iteration stamp:', stamp);
+        utils.logStamp(util.format('--iteration stamp: %s',stamp));
         return srcFile.find(path.join('byDate', stamp, '**/*.json'))
           .then(function(files) {
 

@@ -127,7 +127,6 @@ srcFile.findByDate()
                 console.log('---part',keyedThing.key.title);
               });
               // summary so far...
-              utils.logStamp(util.format('Done:Delta2 |files|:%d |parts|',fileCount,partCount);
               console.log('---transform: |files|:%d |parts|', fileCount, partCount);
             });
           });

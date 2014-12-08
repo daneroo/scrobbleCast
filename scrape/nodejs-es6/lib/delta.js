@@ -140,7 +140,7 @@ Accumulator.prototype.merge = function(keyedThing) {
 
   var changes = compare(from, to);
   if (changes.length) {
-    console.log('|Δ|', changes.length, keyedThing.key);
+    // console.log('|Δ|', changes.length, keyedThing.key);
     var record = _.merge({}, keyedThing.key, {
       changes: changes
     });

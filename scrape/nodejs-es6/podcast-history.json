@@ -1,13 +1,73 @@
 [
   {
+    "firstSeen": "2014-12-08T00:03:00Z",
+    "lastUpdated": "2014-12-08T00:03:00Z",
+    "merged": {
+      "id": 1131,
+      "uuid": "421c79d0-0423-012e-f9a0-00163e1b201c",
+      "title": "Discovery",
+      "author": "BBC World Service",
+      "thumbnail_url": "http://www.bbc.co.uk/podcasts/assets/artwork/discovery.jpg",
+      "description": "The science documentary series that looks in depth at the most significant ideas, discoveries and trends in science. \r\n\r\nAvailable to download weekly on Mondays.",
+      "url": "http://www.bbc.co.uk/programmes/p002w557"
+    },
+    "history": [
+      {
+        "type": "podcast",
+        "uuid": "421c79d0-0423-012e-f9a0-00163e1b201c",
+        "stamp": "2014-12-08T00:03:00Z",
+        "sourceType": "01-podcasts",
+        "source": "byDate/2014-12-08T00:03:00Z/01-podcasts.json",
+        "title": "Discovery",
+        "changes": [
+          {
+            "op": "new",
+            "key": "id",
+            "to": 1131
+          },
+          {
+            "op": "new",
+            "key": "uuid",
+            "to": "421c79d0-0423-012e-f9a0-00163e1b201c"
+          },
+          {
+            "op": "new",
+            "key": "title",
+            "to": "Discovery"
+          },
+          {
+            "op": "new",
+            "key": "author",
+            "to": "BBC World Service"
+          },
+          {
+            "op": "new",
+            "key": "thumbnail_url",
+            "to": "http://www.bbc.co.uk/podcasts/assets/artwork/discovery.jpg"
+          },
+          {
+            "op": "new",
+            "key": "description",
+            "to": "The science documentary series that looks in depth at the most significant ideas, discoveries and trends in science. \r\n\r\nAvailable to download weekly on Mondays."
+          },
+          {
+            "op": "new",
+            "key": "url",
+            "to": "http://www.bbc.co.uk/programmes/p002w557"
+          }
+        ]
+      }
+    ]
+  },
+  {
     "firstSeen": "2014-11-07T08:34:00Z",
-    "lastUpdated": "2014-12-04T21:13:00Z",
+    "lastUpdated": "2014-12-07T21:13:00Z",
     "merged": {
       "id": 129249,
       "uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
       "title": "No Agenda",
       "author": "Adam Curry & John C Dvorak",
-      "thumbnail_url": "http://adam.curry.com/enc/20141204162738_na675artsm.jpg",
+      "thumbnail_url": "http://adam.curry.com/enc/20141207164549_na676artsm.jpg",
       "description": "A show about politics with No Agenda, by Adam Curry and John C. Dvorak",
       "url": "http://noagendashow.com"
     },
@@ -166,6 +226,22 @@
             "key": "thumbnail_url",
             "from": "http://adam.curry.com/enc/20141130170834_na674artsm.jpg",
             "to": "http://adam.curry.com/enc/20141204162738_na675artsm.jpg"
+          }
+        ]
+      },
+      {
+        "type": "podcast",
+        "uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
+        "stamp": "2014-12-07T21:13:00Z",
+        "sourceType": "01-podcasts",
+        "source": "byDate/2014-12-07T21:13:00Z/01-podcasts.json",
+        "title": "No Agenda",
+        "changes": [
+          {
+            "op": "chg",
+            "key": "thumbnail_url",
+            "from": "http://adam.curry.com/enc/20141204162738_na675artsm.jpg",
+            "to": "http://adam.curry.com/enc/20141207164549_na676artsm.jpg"
           }
         ]
       }

@@ -102,12 +102,27 @@ function dedup(file) {
   var dataDirname = 'data';
 
   var oldFilename = path.join(dataDirname, file);
-  var nuFilename = path.join(dataDirname, 'dedup',file);
-  var dir = path.dirname(nuFilename)
-  mkdirp.sync(dir);
+  var oldDir = path.dirname(oldFilename);
 
+  var nuFilename = path.join(dataDirname, 'dedup',file);
+  var nuDir = path.dirname(nuFilename)
+
+  mkdirp.sync(nuDir);
   fs.renameSync(oldFilename,nuFilename);
   console.log('-exec fs.renameSync(%s, %s)',oldFilename,nuFilename);
+
+  // now prune oldDir (and parent) - if empty
+  console.log('-exec fs.rmdirSync(%s)',oldDir);
+  try {
+    fs.rmdirSync(oldDir);
+    // and parent - unless oldDir already not empty...
+    fs.rmdirSync(path.dirname(oldDir));
+  } catch (e) {
+    // code: 'ENOTEMPTY'
+    // console.log('rmdir error:',e);
+  } finally {
+    console.log('+exec fs.rmdirSync(%s) (and parent)',oldDir);
+  }
 }
 
 // srcFile.find('byDate/**/*.json')
@@ -136,8 +151,7 @@ srcFile.findByDate()
 
             files.forEach(function(file) {
 
-              console.log('---file:', file);
-
+              // console.log('---file:', file);
               var keyedThings = readByDate(file);
 
               fileCount++;
@@ -161,7 +175,7 @@ srcFile.findByDate()
                 if (changeCount > 0) {
                   fileHasChanges = true;
                   writeByType(keyedThings);
-                  console.log('---changes:', changeCount, file);
+                  console.log('---|Δ|', changeCount, keyedThing.key.title);
                 } else {
                   dedupPartCount++;
                 }

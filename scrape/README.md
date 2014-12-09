@@ -11,3 +11,4 @@ This is what we found:
 * Authentication: using a simple csrf-token, (fetched from the auth page html meta tag, or in a returnd cookie)
 * Then using a simple json post, we can mimick the data feeds the app fetches.
 
+Moving on to implementation the `nodejs-es6` directory contains a first stab at a scraping utility, data/stream/storage models.

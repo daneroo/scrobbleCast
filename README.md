@@ -1,8 +1,9 @@
 # scrobbleCast
 
-Idea: capture and present podcast metadata about *listening events*, as well as *rating* and *categorization*.
+* __Idea__: capture and present podcast metadata about *listening events*, as well as *rating* and *categorization*. This can extend to a social network of participants' influence stream.
+* __Stretch Goal__: Distributed consesus and processing; sharing influence, directing serendipity.
 
-## Objective 
+## Objectives 
 
 * Obtain a representaion of our listening pattterns tastes and habits
 * Provide useful recommendations (episode, point in episode) based on those patterns.

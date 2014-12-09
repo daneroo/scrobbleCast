@@ -6,6 +6,13 @@
 * Try using promises
 * Try using ES6
 
+## Universal streams
+
+Having toyed with both control flow pattterns and storage models, we have arrived at a flexible represeantion which may be the output of a scrape operation, amenable to storage (file/leveldb/pouch), as well as processing (aggregation). We have started down the path of a _promise based_ control structure, but we may yet investigate [pull-streams](https://github.com/dominictarr/pull-stream).
+
+* {key:<descriptor fields>, values:<content of scrape>}
+* aggreated in files/stream as a single array or json lines.
+
 ## Delta streams
 
 We may receive (by polling) 4 kinds of files

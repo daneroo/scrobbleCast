@@ -106,6 +106,7 @@ srcFile.findByDate()
     var partCount = 0;
     var fileCount = 0;
 
+    var accumulatedKeyedThings=[];
     // should have a version without aggregation
     utils.serialPromiseChainMap(stamps, function(stamp) {
         utils.logStamp(util.format('--iteration stamp: %s',stamp));
@@ -123,8 +124,10 @@ srcFile.findByDate()
                 partCount++;
                 // Normalize values (bool/null) (no cloning...)
                 keyedThing.value = delta.normalize(keyedThing.value);
+                // accumulate
+                accumulatedKeyedThings.push(keyedThing);
                 // write to sink
-                writeByType(keyedThings);
+                // sinkFile.write(keyedThing);
                 console.log('---part',keyedThing.key.title);
               });
               // summary so far...
@@ -133,6 +136,9 @@ srcFile.findByDate()
           });
       })
       .then(function(dontCare) {
+        console.log('|accumulatedKeyedThings|',accumulatedKeyedThings.length);
+        fs.writeFileSync('coco.json', JSON.stringify(accumulatedKeyedThings, null, 2));
+
         utils.logStamp(util.format('Done:Delta2 |files|:%d |parts|',fileCount,partCount));
         return stamps;
       });

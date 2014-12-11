@@ -177,7 +177,7 @@ srcFile.findByDate()
                 }
                 if (changeCount > 0) {
                   fileHasChanges = true;
-                  writeByType(keyedThings);
+                  // writeByType(keyedThings);
                   console.log('---|Δ|', changeCount, keyedThing.key.title);
                 } else {
                   dedupPartCount++;

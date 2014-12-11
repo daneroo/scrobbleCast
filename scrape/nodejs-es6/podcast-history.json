@@ -1,5 +1,81 @@
 [
   {
+    "firstSeen": "2014-11-14T08:32:00Z",
+    "lastUpdated": "2014-12-09T02:13:00Z",
+    "merged": {
+      "id": 275563,
+      "uuid": "8ea0e990-390d-0131-77d4-723c91aeae46",
+      "title": "Android Developers Backstage",
+      "author": "Android Developers",
+      "thumbnail_url": "http://storage.googleapis.com/androiddevelopers/android_developers_backstage/adb.png",
+      "description": "Android Backstage, a podcast by and for Android developers. Hosted by developers from the Android engineering team, this show covers topics of interest to Android programmers, with in-depth discussions and interviews with engineers on the Android team at Google.",
+      "url": "http://androidbackstage.blogspot.com/"
+    },
+    "history": [
+      {
+        "type": "podcast",
+        "uuid": "8ea0e990-390d-0131-77d4-723c91aeae46",
+        "stamp": "2014-11-14T08:32:00Z",
+        "sourceType": "01-podcasts",
+        "source": "byDate/2014-11-14T08:32:00Z/01-podcasts.json",
+        "title": "Android Developers Backstage",
+        "changes": [
+          {
+            "op": "new",
+            "key": "id",
+            "to": 275563
+          },
+          {
+            "op": "new",
+            "key": "uuid",
+            "to": "8ea0e990-390d-0131-77d4-723c91aeae46"
+          },
+          {
+            "op": "new",
+            "key": "title",
+            "to": "Android Developers Backstage"
+          },
+          {
+            "op": "new",
+            "key": "author",
+            "to": "Android Developers"
+          },
+          {
+            "op": "new",
+            "key": "thumbnail_url",
+            "to": "http://commondatastorage.googleapis.com/androiddevelopers/PodCastCover_1.png"
+          },
+          {
+            "op": "new",
+            "key": "description",
+            "to": "Android Backstage, a podcast by and for Android developers. Hosted by developers from the Android engineering team, this show covers topics of interest to Android programmers, with in-depth discussions and interviews with engineers on the Android team at Google."
+          },
+          {
+            "op": "new",
+            "key": "url",
+            "to": "http://androidbackstage.blogspot.com/"
+          }
+        ]
+      },
+      {
+        "type": "podcast",
+        "uuid": "8ea0e990-390d-0131-77d4-723c91aeae46",
+        "stamp": "2014-12-09T02:13:00Z",
+        "sourceType": "01-podcasts",
+        "source": "byDate/2014-12-09T02:13:00Z/01-podcasts.json",
+        "title": "Android Developers Backstage",
+        "changes": [
+          {
+            "op": "chg",
+            "key": "thumbnail_url",
+            "from": "http://commondatastorage.googleapis.com/androiddevelopers/PodCastCover_1.png",
+            "to": "http://storage.googleapis.com/androiddevelopers/android_developers_backstage/adb.png"
+          }
+        ]
+      }
+    ]
+  },
+  {
     "firstSeen": "2014-12-08T00:03:00Z",
     "lastUpdated": "2014-12-08T00:03:00Z",
     "merged": {
@@ -742,66 +818,6 @@
             "key": "thumbnail_url",
             "from": "http://shoptalkshow.com/wp-content/uploads/2012/08/shoptalk_album.jpeg",
             "to": "http://stscdn.paravel.netdna-cdn.com/wp-content/uploads/2012/08/shoptalk_album.jpeg"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "firstSeen": "2014-11-14T08:32:00Z",
-    "lastUpdated": "2014-11-14T08:32:00Z",
-    "merged": {
-      "id": 275563,
-      "uuid": "8ea0e990-390d-0131-77d4-723c91aeae46",
-      "title": "Android Developers Backstage",
-      "author": "Android Developers",
-      "thumbnail_url": "http://commondatastorage.googleapis.com/androiddevelopers/PodCastCover_1.png",
-      "description": "Android Backstage, a podcast by and for Android developers. Hosted by developers from the Android engineering team, this show covers topics of interest to Android programmers, with in-depth discussions and interviews with engineers on the Android team at Google.",
-      "url": "http://androidbackstage.blogspot.com/"
-    },
-    "history": [
-      {
-        "type": "podcast",
-        "uuid": "8ea0e990-390d-0131-77d4-723c91aeae46",
-        "stamp": "2014-11-14T08:32:00Z",
-        "sourceType": "01-podcasts",
-        "source": "byDate/2014-11-14T08:32:00Z/01-podcasts.json",
-        "title": "Android Developers Backstage",
-        "changes": [
-          {
-            "op": "new",
-            "key": "id",
-            "to": 275563
-          },
-          {
-            "op": "new",
-            "key": "uuid",
-            "to": "8ea0e990-390d-0131-77d4-723c91aeae46"
-          },
-          {
-            "op": "new",
-            "key": "title",
-            "to": "Android Developers Backstage"
-          },
-          {
-            "op": "new",
-            "key": "author",
-            "to": "Android Developers"
-          },
-          {
-            "op": "new",
-            "key": "thumbnail_url",
-            "to": "http://commondatastorage.googleapis.com/androiddevelopers/PodCastCover_1.png"
-          },
-          {
-            "op": "new",
-            "key": "description",
-            "to": "Android Backstage, a podcast by and for Android developers. Hosted by developers from the Android engineering team, this show covers topics of interest to Android programmers, with in-depth discussions and interviews with engineers on the Android team at Google."
-          },
-          {
-            "op": "new",
-            "key": "url",
-            "to": "http://androidbackstage.blogspot.com/"
           }
         ]
       }

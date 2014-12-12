@@ -17,36 +17,33 @@
      PANTONE 16-4120 Dusk Blue
          #7da1bf  #8ac cadetblue hsl(207,34,61) rgb(125,161,191)
     */
-    .button {stroke: none; fill: rgb(29,78,137);}
-    .dot {fill: rgb(149,82,81);}
-    .symbol {stroke: rgb(199,141,107); stroke-width:0.25; stroke-linecap:round; fill:none;}
+    .classicblue {fill:rgb(29,78,137); stroke: none;}
+    .sandstone {stroke:rgb(199,141,107); fill:none;}
+    .marsala {fill: rgb(149,82,81); stroke:none;}
+
+    .round { stroke-width:0.25; stroke-linecap:round; }
+
+    /* How about Droid? */
+    .blurb {font-family:"sans-serif"; fill:rgb(125,161,191);}
   </style>
 
-  <svg>
-      <defs>
-          <g id="rss">
-            <circle class="dot" cx="0" cy="0" r=".15" />
-            <!--      x1,y1 --> rx ry  x-rot lg sw x2,y2
-            <path d="m 0,1   A  1 1      0    0 0  1,0" class="symbol" />
-            <path d="m 0,.5   A  .5 .5   0    0 0  .5,0" class="symbol" />
-          </g>
-      </defs>
-  </svg>
+  <defs>
+      <g id="_rss">
+        <circle cx="0" cy="0" r=".15" class="marsala" />
+        <!--      x1,y1 --> rx ry  x-rot lg sw x2,y2
+        <path d="m 0,1   A  1 1      0    0 0  1,0" class="round sandstone" />
+        <path d="m 0,.5   A  .5 .5   0    0 0  .5,0" class="round sandstone" />
+      </g>
+      <g id="rss">
+        <use xlink:href="#_rss" transform="scale(.8) translate(-1.0) rotate(0)"/>
+        <use xlink:href="#_rss" transform="scale(.8) translate(1,0) rotate(-180)"/>
+      </g>
+  </defs>
 
-  <rect class="button" x="-1" y="-1" width="2" height="2" rx="0.1" />
-  <!-- <use xlink:href="#rss" transform="scale(1) translate(0) rotate(0)"/> -->
-  <g transform="translate(0,-.1) scale(.6) rotate(-45) rotate (10)">
-    <use xlink:href="#rss" transform="scale(.8) translate(-1.0) rotate(0)"/>
-    <use xlink:href="#rss" transform="scale(.8) translate(1,0) rotate(-180)"/>
-  </g>
+  <rect class="classicblue" x="-1" y="-1" width="2" height="2" rx="0.1" />
 
-  <text style="fill:rgb(125,161,191);" transform="translate(0,0.9) scale(0.015)" text-anchor="middle" fill="red">Scrobble Cast</text>
-<!--
-  <text transform="scale(0.01)" text-anchor="end" fill="red">Scrobble</text>
-  <text transform="scale(0.01)" text-anchor="start" fill="red">Cast</text>
- -->
- <!--
-  <rect class="dot" x="0" y=".9" width="0.1" height="0.1" rx="0.05" />
-  <rect class="dot" x=".9" y="0" width="0.1" height="0.1" rx="0.05" />
- -->
+  <use xlink:href="#rss" transform="translate(0,-.1) scale(.6) rotate(-45) rotate (10)"/>
+
+  <text class="blurb" transform="translate(0,0.9) scale(0.015)" text-anchor="middle">Scrobble Cast</text>
+
 </svg>

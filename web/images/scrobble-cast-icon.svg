@@ -37,7 +37,7 @@
       </g>
   </defs>
 
-  <rect class="sandstone" x="-1" y="-1" width="2" height="2" rx="0.0" />
+  <rect class="sandstone" x="-1" y="-1" width="2" height="2" rx="0.1" />
   <use xlink:href="#rss" transform="translate(0,0) scale(.7) rotate(-45) rotate (10)"/>
 
 </svg>

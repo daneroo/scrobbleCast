@@ -1,5 +1,345 @@
 [
   {
+    "firstSeen": "2014-11-07T08:34:00Z",
+    "lastUpdated": "2014-12-11T21:03:00Z",
+    "merged": {
+      "id": 129249,
+      "uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
+      "title": "No Agenda",
+      "author": "Adam Curry & John C Dvorak",
+      "thumbnail_url": "http://adam.curry.com/enc/20141211165801_na677artsm.jpg",
+      "description": "A show about politics with No Agenda, by Adam Curry and John C. Dvorak",
+      "url": "http://noagendashow.com"
+    },
+    "history": [
+      {
+        "type": "podcast",
+        "uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
+        "stamp": "2014-11-07T08:34:00Z",
+        "sourceType": "01-podcasts",
+        "source": "byDate/2014-11-07T08:34:00Z/01-podcasts.json",
+        "title": "No Agenda",
+        "changes": [
+          {
+            "op": "new",
+            "key": "id",
+            "to": 129249
+          },
+          {
+            "op": "new",
+            "key": "uuid",
+            "to": "8c4c6bd0-a696-012f-4480-525400c11844"
+          },
+          {
+            "op": "new",
+            "key": "title",
+            "to": "No Agenda"
+          },
+          {
+            "op": "new",
+            "key": "author",
+            "to": "Adam Curry & John C Dvorak"
+          },
+          {
+            "op": "new",
+            "key": "thumbnail_url",
+            "to": "http://adam.curry.com/enc/20141106190928_na667artsm.png"
+          },
+          {
+            "op": "new",
+            "key": "description",
+            "to": "A show about politics with No Agenda, by Adam Curry and John C. Dvorak"
+          },
+          {
+            "op": "new",
+            "key": "url",
+            "to": "http://noagendashow.com"
+          }
+        ]
+      },
+      {
+        "type": "podcast",
+        "uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
+        "stamp": "2014-11-14T08:32:00Z",
+        "sourceType": "01-podcasts",
+        "source": "byDate/2014-11-14T08:32:00Z/01-podcasts.json",
+        "title": "No Agenda",
+        "changes": [
+          {
+            "op": "chg",
+            "key": "thumbnail_url",
+            "from": "http://adam.curry.com/enc/20141106190928_na667artsm.png",
+            "to": "http://adam.curry.com/enc/20141113164418_na669artsm.jpg"
+          }
+        ]
+      },
+      {
+        "type": "podcast",
+        "uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
+        "stamp": "2014-11-16T21:43:00Z",
+        "sourceType": "01-podcasts",
+        "source": "byDate/2014-11-16T21:43:00Z/01-podcasts.json",
+        "title": "No Agenda",
+        "changes": [
+          {
+            "op": "chg",
+            "key": "thumbnail_url",
+            "from": "http://adam.curry.com/enc/20141113164418_na669artsm.jpg",
+            "to": "http://adam.curry.com/enc/20141116175003_na670artsm.jpg"
+          }
+        ]
+      },
+      {
+        "type": "podcast",
+        "uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
+        "stamp": "2014-11-20T21:23:00Z",
+        "sourceType": "01-podcasts",
+        "source": "byDate/2014-11-20T21:23:00Z/01-podcasts.json",
+        "title": "No Agenda",
+        "changes": [
+          {
+            "op": "chg",
+            "key": "thumbnail_url",
+            "from": "http://adam.curry.com/enc/20141116175003_na670artsm.jpg",
+            "to": "http://adam.curry.com/enc/20141120164408_na671artsm.png"
+          }
+        ]
+      },
+      {
+        "type": "podcast",
+        "uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
+        "stamp": "2014-11-23T20:33:00Z",
+        "sourceType": "01-podcasts",
+        "source": "byDate/2014-11-23T20:33:00Z/01-podcasts.json",
+        "title": "No Agenda",
+        "changes": [
+          {
+            "op": "chg",
+            "key": "thumbnail_url",
+            "from": "http://adam.curry.com/enc/20141120164408_na671artsm.png",
+            "to": "http://adam.curry.com/enc/20141123154114_na672artsm.jpg"
+          }
+        ]
+      },
+      {
+        "type": "podcast",
+        "uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
+        "stamp": "2014-11-27T21:43:00Z",
+        "sourceType": "01-podcasts",
+        "source": "byDate/2014-11-27T21:43:00Z/01-podcasts.json",
+        "title": "No Agenda",
+        "changes": [
+          {
+            "op": "chg",
+            "key": "thumbnail_url",
+            "from": "http://adam.curry.com/enc/20141123154114_na672artsm.jpg",
+            "to": "http://adam.curry.com/enc/20141127203203_na673artsm.jpg"
+          }
+        ]
+      },
+      {
+        "type": "podcast",
+        "uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
+        "stamp": "2014-11-30T21:43:00Z",
+        "sourceType": "01-podcasts",
+        "source": "byDate/2014-11-30T21:43:00Z/01-podcasts.json",
+        "title": "No Agenda",
+        "changes": [
+          {
+            "op": "chg",
+            "key": "thumbnail_url",
+            "from": "http://adam.curry.com/enc/20141127203203_na673artsm.jpg",
+            "to": "http://adam.curry.com/enc/20141130170834_na674artsm.jpg"
+          }
+        ]
+      },
+      {
+        "type": "podcast",
+        "uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
+        "stamp": "2014-12-04T21:13:00Z",
+        "sourceType": "01-podcasts",
+        "source": "byDate/2014-12-04T21:13:00Z/01-podcasts.json",
+        "title": "No Agenda",
+        "changes": [
+          {
+            "op": "chg",
+            "key": "thumbnail_url",
+            "from": "http://adam.curry.com/enc/20141130170834_na674artsm.jpg",
+            "to": "http://adam.curry.com/enc/20141204162738_na675artsm.jpg"
+          }
+        ]
+      },
+      {
+        "type": "podcast",
+        "uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
+        "stamp": "2014-12-07T21:13:00Z",
+        "sourceType": "01-podcasts",
+        "source": "byDate/2014-12-07T21:13:00Z/01-podcasts.json",
+        "title": "No Agenda",
+        "changes": [
+          {
+            "op": "chg",
+            "key": "thumbnail_url",
+            "from": "http://adam.curry.com/enc/20141204162738_na675artsm.jpg",
+            "to": "http://adam.curry.com/enc/20141207164549_na676artsm.jpg"
+          }
+        ]
+      },
+      {
+        "type": "podcast",
+        "uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
+        "stamp": "2014-12-11T21:03:00Z",
+        "sourceType": "01-podcasts",
+        "source": "byDate/2014-12-11T21:03:00Z/01-podcasts.json",
+        "title": "No Agenda",
+        "changes": [
+          {
+            "op": "chg",
+            "key": "thumbnail_url",
+            "from": "http://adam.curry.com/enc/20141207164549_na676artsm.jpg",
+            "to": "http://adam.curry.com/enc/20141211165801_na677artsm.jpg"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "firstSeen": "2014-11-14T08:32:00Z",
+    "lastUpdated": "2014-12-09T02:13:00Z",
+    "merged": {
+      "id": 275563,
+      "uuid": "8ea0e990-390d-0131-77d4-723c91aeae46",
+      "title": "Android Developers Backstage",
+      "author": "Android Developers",
+      "thumbnail_url": "http://storage.googleapis.com/androiddevelopers/android_developers_backstage/adb.png",
+      "description": "Android Backstage, a podcast by and for Android developers. Hosted by developers from the Android engineering team, this show covers topics of interest to Android programmers, with in-depth discussions and interviews with engineers on the Android team at Google.",
+      "url": "http://androidbackstage.blogspot.com/"
+    },
+    "history": [
+      {
+        "type": "podcast",
+        "uuid": "8ea0e990-390d-0131-77d4-723c91aeae46",
+        "stamp": "2014-11-14T08:32:00Z",
+        "sourceType": "01-podcasts",
+        "source": "byDate/2014-11-14T08:32:00Z/01-podcasts.json",
+        "title": "Android Developers Backstage",
+        "changes": [
+          {
+            "op": "new",
+            "key": "id",
+            "to": 275563
+          },
+          {
+            "op": "new",
+            "key": "uuid",
+            "to": "8ea0e990-390d-0131-77d4-723c91aeae46"
+          },
+          {
+            "op": "new",
+            "key": "title",
+            "to": "Android Developers Backstage"
+          },
+          {
+            "op": "new",
+            "key": "author",
+            "to": "Android Developers"
+          },
+          {
+            "op": "new",
+            "key": "thumbnail_url",
+            "to": "http://commondatastorage.googleapis.com/androiddevelopers/PodCastCover_1.png"
+          },
+          {
+            "op": "new",
+            "key": "description",
+            "to": "Android Backstage, a podcast by and for Android developers. Hosted by developers from the Android engineering team, this show covers topics of interest to Android programmers, with in-depth discussions and interviews with engineers on the Android team at Google."
+          },
+          {
+            "op": "new",
+            "key": "url",
+            "to": "http://androidbackstage.blogspot.com/"
+          }
+        ]
+      },
+      {
+        "type": "podcast",
+        "uuid": "8ea0e990-390d-0131-77d4-723c91aeae46",
+        "stamp": "2014-12-09T02:13:00Z",
+        "sourceType": "01-podcasts",
+        "source": "byDate/2014-12-09T02:13:00Z/01-podcasts.json",
+        "title": "Android Developers Backstage",
+        "changes": [
+          {
+            "op": "chg",
+            "key": "thumbnail_url",
+            "from": "http://commondatastorage.googleapis.com/androiddevelopers/PodCastCover_1.png",
+            "to": "http://storage.googleapis.com/androiddevelopers/android_developers_backstage/adb.png"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "firstSeen": "2014-12-08T00:03:00Z",
+    "lastUpdated": "2014-12-08T00:03:00Z",
+    "merged": {
+      "id": 1131,
+      "uuid": "421c79d0-0423-012e-f9a0-00163e1b201c",
+      "title": "Discovery",
+      "author": "BBC World Service",
+      "thumbnail_url": "http://www.bbc.co.uk/podcasts/assets/artwork/discovery.jpg",
+      "description": "The science documentary series that looks in depth at the most significant ideas, discoveries and trends in science. \r\n\r\nAvailable to download weekly on Mondays.",
+      "url": "http://www.bbc.co.uk/programmes/p002w557"
+    },
+    "history": [
+      {
+        "type": "podcast",
+        "uuid": "421c79d0-0423-012e-f9a0-00163e1b201c",
+        "stamp": "2014-12-08T00:03:00Z",
+        "sourceType": "01-podcasts",
+        "source": "byDate/2014-12-08T00:03:00Z/01-podcasts.json",
+        "title": "Discovery",
+        "changes": [
+          {
+            "op": "new",
+            "key": "id",
+            "to": 1131
+          },
+          {
+            "op": "new",
+            "key": "uuid",
+            "to": "421c79d0-0423-012e-f9a0-00163e1b201c"
+          },
+          {
+            "op": "new",
+            "key": "title",
+            "to": "Discovery"
+          },
+          {
+            "op": "new",
+            "key": "author",
+            "to": "BBC World Service"
+          },
+          {
+            "op": "new",
+            "key": "thumbnail_url",
+            "to": "http://www.bbc.co.uk/podcasts/assets/artwork/discovery.jpg"
+          },
+          {
+            "op": "new",
+            "key": "description",
+            "to": "The science documentary series that looks in depth at the most significant ideas, discoveries and trends in science. \r\n\r\nAvailable to download weekly on Mondays."
+          },
+          {
+            "op": "new",
+            "key": "url",
+            "to": "http://www.bbc.co.uk/programmes/p002w557"
+          }
+        ]
+      }
+    ]
+  },
+  {
     "firstSeen": "2014-12-02T10:23:00Z",
     "lastUpdated": "2014-12-02T10:23:00Z",
     "merged": {
@@ -174,162 +514,6 @@
             "op": "new",
             "key": "url",
             "to": "http://www.theguardian.com"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "firstSeen": "2014-11-07T08:34:00Z",
-    "lastUpdated": "2014-11-30T21:43:00Z",
-    "merged": {
-      "id": 129249,
-      "uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
-      "title": "No Agenda",
-      "author": "Adam Curry & John C Dvorak",
-      "thumbnail_url": "http://adam.curry.com/enc/20141130170834_na674artsm.jpg",
-      "description": "A show about politics with No Agenda, by Adam Curry and John C. Dvorak",
-      "url": "http://noagendashow.com"
-    },
-    "history": [
-      {
-        "type": "podcast",
-        "uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
-        "stamp": "2014-11-07T08:34:00Z",
-        "sourceType": "01-podcasts",
-        "source": "byDate/2014-11-07T08:34:00Z/01-podcasts.json",
-        "title": "No Agenda",
-        "changes": [
-          {
-            "op": "new",
-            "key": "id",
-            "to": 129249
-          },
-          {
-            "op": "new",
-            "key": "uuid",
-            "to": "8c4c6bd0-a696-012f-4480-525400c11844"
-          },
-          {
-            "op": "new",
-            "key": "title",
-            "to": "No Agenda"
-          },
-          {
-            "op": "new",
-            "key": "author",
-            "to": "Adam Curry & John C Dvorak"
-          },
-          {
-            "op": "new",
-            "key": "thumbnail_url",
-            "to": "http://adam.curry.com/enc/20141106190928_na667artsm.png"
-          },
-          {
-            "op": "new",
-            "key": "description",
-            "to": "A show about politics with No Agenda, by Adam Curry and John C. Dvorak"
-          },
-          {
-            "op": "new",
-            "key": "url",
-            "to": "http://noagendashow.com"
-          }
-        ]
-      },
-      {
-        "type": "podcast",
-        "uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
-        "stamp": "2014-11-14T08:32:00Z",
-        "sourceType": "01-podcasts",
-        "source": "byDate/2014-11-14T08:32:00Z/01-podcasts.json",
-        "title": "No Agenda",
-        "changes": [
-          {
-            "op": "chg",
-            "key": "thumbnail_url",
-            "from": "http://adam.curry.com/enc/20141106190928_na667artsm.png",
-            "to": "http://adam.curry.com/enc/20141113164418_na669artsm.jpg"
-          }
-        ]
-      },
-      {
-        "type": "podcast",
-        "uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
-        "stamp": "2014-11-16T21:43:00Z",
-        "sourceType": "01-podcasts",
-        "source": "byDate/2014-11-16T21:43:00Z/01-podcasts.json",
-        "title": "No Agenda",
-        "changes": [
-          {
-            "op": "chg",
-            "key": "thumbnail_url",
-            "from": "http://adam.curry.com/enc/20141113164418_na669artsm.jpg",
-            "to": "http://adam.curry.com/enc/20141116175003_na670artsm.jpg"
-          }
-        ]
-      },
-      {
-        "type": "podcast",
-        "uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
-        "stamp": "2014-11-20T21:23:00Z",
-        "sourceType": "01-podcasts",
-        "source": "byDate/2014-11-20T21:23:00Z/01-podcasts.json",
-        "title": "No Agenda",
-        "changes": [
-          {
-            "op": "chg",
-            "key": "thumbnail_url",
-            "from": "http://adam.curry.com/enc/20141116175003_na670artsm.jpg",
-            "to": "http://adam.curry.com/enc/20141120164408_na671artsm.png"
-          }
-        ]
-      },
-      {
-        "type": "podcast",
-        "uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
-        "stamp": "2014-11-23T20:33:00Z",
-        "sourceType": "01-podcasts",
-        "source": "byDate/2014-11-23T20:33:00Z/01-podcasts.json",
-        "title": "No Agenda",
-        "changes": [
-          {
-            "op": "chg",
-            "key": "thumbnail_url",
-            "from": "http://adam.curry.com/enc/20141120164408_na671artsm.png",
-            "to": "http://adam.curry.com/enc/20141123154114_na672artsm.jpg"
-          }
-        ]
-      },
-      {
-        "type": "podcast",
-        "uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
-        "stamp": "2014-11-27T21:43:00Z",
-        "sourceType": "01-podcasts",
-        "source": "byDate/2014-11-27T21:43:00Z/01-podcasts.json",
-        "title": "No Agenda",
-        "changes": [
-          {
-            "op": "chg",
-            "key": "thumbnail_url",
-            "from": "http://adam.curry.com/enc/20141123154114_na672artsm.jpg",
-            "to": "http://adam.curry.com/enc/20141127203203_na673artsm.jpg"
-          }
-        ]
-      },
-      {
-        "type": "podcast",
-        "uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
-        "stamp": "2014-11-30T21:43:00Z",
-        "sourceType": "01-podcasts",
-        "source": "byDate/2014-11-30T21:43:00Z/01-podcasts.json",
-        "title": "No Agenda",
-        "changes": [
-          {
-            "op": "chg",
-            "key": "thumbnail_url",
-            "from": "http://adam.curry.com/enc/20141127203203_na673artsm.jpg",
-            "to": "http://adam.curry.com/enc/20141130170834_na674artsm.jpg"
           }
         ]
       }
@@ -650,66 +834,6 @@
             "key": "thumbnail_url",
             "from": "http://shoptalkshow.com/wp-content/uploads/2012/08/shoptalk_album.jpeg",
             "to": "http://stscdn.paravel.netdna-cdn.com/wp-content/uploads/2012/08/shoptalk_album.jpeg"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "firstSeen": "2014-11-14T08:32:00Z",
-    "lastUpdated": "2014-11-14T08:32:00Z",
-    "merged": {
-      "id": 275563,
-      "uuid": "8ea0e990-390d-0131-77d4-723c91aeae46",
-      "title": "Android Developers Backstage",
-      "author": "Android Developers",
-      "thumbnail_url": "http://commondatastorage.googleapis.com/androiddevelopers/PodCastCover_1.png",
-      "description": "Android Backstage, a podcast by and for Android developers. Hosted by developers from the Android engineering team, this show covers topics of interest to Android programmers, with in-depth discussions and interviews with engineers on the Android team at Google.",
-      "url": "http://androidbackstage.blogspot.com/"
-    },
-    "history": [
-      {
-        "type": "podcast",
-        "uuid": "8ea0e990-390d-0131-77d4-723c91aeae46",
-        "stamp": "2014-11-14T08:32:00Z",
-        "sourceType": "01-podcasts",
-        "source": "byDate/2014-11-14T08:32:00Z/01-podcasts.json",
-        "title": "Android Developers Backstage",
-        "changes": [
-          {
-            "op": "new",
-            "key": "id",
-            "to": 275563
-          },
-          {
-            "op": "new",
-            "key": "uuid",
-            "to": "8ea0e990-390d-0131-77d4-723c91aeae46"
-          },
-          {
-            "op": "new",
-            "key": "title",
-            "to": "Android Developers Backstage"
-          },
-          {
-            "op": "new",
-            "key": "author",
-            "to": "Android Developers"
-          },
-          {
-            "op": "new",
-            "key": "thumbnail_url",
-            "to": "http://commondatastorage.googleapis.com/androiddevelopers/PodCastCover_1.png"
-          },
-          {
-            "op": "new",
-            "key": "description",
-            "to": "Android Backstage, a podcast by and for Android developers. Hosted by developers from the Android engineering team, this show covers topics of interest to Android programmers, with in-depth discussions and interviews with engineers on the Android team at Google."
-          },
-          {
-            "op": "new",
-            "key": "url",
-            "to": "http://androidbackstage.blogspot.com/"
           }
         ]
       }

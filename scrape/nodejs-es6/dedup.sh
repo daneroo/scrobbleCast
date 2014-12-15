@@ -14,4 +14,7 @@ echo '-Empty dir count:' `find data/by* -type d -empty |wc -l`
 #find data/by* -type d -empty -exec rmdir {} \; 2>/dev/null
 #echo '+Empty dir count:' `find data/by* -type d -empty |wc -l`
 
+# Here is where we could prune deduped files
+#find data/dedup -mtime +2 -type f -exec rm {} \;
+
 date -u +'%Y-%m-%dT%H:%M:%SZ Done'

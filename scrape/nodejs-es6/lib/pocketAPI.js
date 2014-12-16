@@ -3,7 +3,7 @@
 var Promise = require("bluebird");
 var rp = require('request-promise');
 var _ = require('lodash');
-var helper = require('./reqHelpers');
+var Session = require('./Session');
 var RateLimiter = require('limiter').RateLimiter;
 
 // globals limiter might be configured, injected, credentials as well...
@@ -75,7 +75,7 @@ function sign_in(credentials) {
   //  Note: the POST returns a 302, which rejects the promise, 
   //  whereas a faled login returns the login page content again (200)
   //  the 302 response also has a new XSRF-TOKEN cookie
-  var session = new helper();
+  var session = new Session();
   return rp(session.reqGen(paths.sign_in, {
       resolveWithFullResponse: true
     }))

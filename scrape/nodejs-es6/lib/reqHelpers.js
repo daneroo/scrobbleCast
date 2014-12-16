@@ -2,28 +2,31 @@
 
 var rp = require('request-promise');
 var _ = require('lodash');
-//  jar singleton to persist cookies (for now)
-var jar = rp.jar();
+
+// This Object represents the http session context (with it's cookie jar)
+function Session() {
+  this.jar = rp.jar();
+}
 
 // base for all requests.
-var baseUri = 'https://play.pocketcasts.com';
+Session.prototype.baseURI = 'https://play.pocketcasts.com';
 
 // TODO: we can actually wrap this with rp, 
 // or find another way to wrap both rp, and ratelimitting in one decorator.
-function reqJSON(path, params) {
-  return reqGenXSRF(path, {
+Session.prototype.reqJSON = function(path, params) {
+  return this.reqGenXSRF(path, {
     headers: {
       'Content-Type': 'application/json;charset=UTF-8'
     },
     json: params || {},
   });
-}
+};
 
-function reqGenXSRF(path, options) {
-  var o = _.merge(reqGen(path, {
+Session.prototype.reqGenXSRF = function(path, options) {
+  var o = _.merge(this.reqGen(path, {
     method: 'POST',
     headers: {
-      'X-XSRF-TOKEN': XSRF()
+      'X-XSRF-TOKEN': this.XSRF()
     }
   }), options);
   // console.log('*X*', o.headers['X-XSRF-TOKEN'] );
@@ -31,26 +34,26 @@ function reqGenXSRF(path, options) {
   //   return (key === "jar") ? undefined : value;
   // }));
   return o;
-}
+};
 
 // Generate a new option base for request invocation (rp)
 // dependency on lodash's `_.merge` deep copy.
-function reqGen(path, options) {
+Session.prototype.reqGen = function(path, options) {
   return _.merge({
-    jar: jar,
-    uri: baseUri + path,
+    jar: this.jar,
+    uri: this.baseURI + path,
   }, options);
-}
+};
 
 // Cookie helpers
 
-function XSRF() {
+Session.prototype.XSRF = function() {
   // for XSRF we decodeURIComponent(value)
-  return decodeURIComponent(getCookieValue('XSRF-TOKEN'));
-}
+  return decodeURIComponent(this.getCookieValue('XSRF-TOKEN'));
+};
 
-function getCookieValue(name) {
-  var cookies = jar.getCookies(baseUri);
+Session.prototype.getCookieValue = function(name) {
+  var cookies = this.jar.getCookies(this.baseURI);
   // console.log('--=-=-= jar.getCookieString', jar.getCookieString('https://play.pocketcasts.com'));
 
   var value;
@@ -61,13 +64,6 @@ function getCookieValue(name) {
     }
   });
   return value;
-}
-
-var exports = module.exports = {
-  baseUri:baseUri,
-  getCookieValue: getCookieValue,
-  XSRF: XSRF,
-  reqGen: reqGen,
-  reqGenXSRF: reqGenXSRF,
-  reqJSON: reqJSON
 };
+
+var exports = module.exports = Session;

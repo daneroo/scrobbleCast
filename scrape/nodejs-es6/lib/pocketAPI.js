@@ -6,7 +6,7 @@ var _ = require('lodash');
 var helper = require('./reqHelpers');
 var RateLimiter = require('limiter').RateLimiter;
 
-// globals limiter might be configures, injected, credentials as well...
+// globals limiter might be configured, injected, credentials as well...
 var limiter = new RateLimiter(20, 1000);
 
 // the actual endpoints
@@ -75,26 +75,27 @@ function sign_in(credentials) {
   //  Note: the POST returns a 302, which rejects the promise, 
   //  whereas a faled login returns the login page content again (200)
   //  the 302 response also has a new XSRF-TOKEN cookie
-  return rp(helper.reqGen(paths.sign_in, {
+  var session = new helper();
+  return rp(session.reqGen(paths.sign_in, {
       resolveWithFullResponse: true
     }))
     .then(function(response) {
       var form = _.merge({
-        authenticity_token: helper.XSRF()
+        authenticity_token: session.XSRF()
       }, credentials);
 
       // now do a form post for login, expect a 302, which is not followed for POST.        
       // unless followAllRedirects: true, but that only follows back to / and causes an extra fetch
       return new Promise(function(resolve, reject) {
-        rp(helper.reqGenXSRF(paths.sign_in, {
+        rp(session.reqGenXSRF(paths.sign_in, {
           form: form
         })).then(function(response) {
           console.log('response OK, expecting 302, reject.', response);
           reject('Login NOT OK');
         }).catch(function(error) { // error: {error:,options,response,statusCode}
-          if (error.statusCode === 302 && error.response.headers.location === helper.baseUri + '/') {
+          if (error.statusCode === 302 && error.response.headers.location === session.baseURI + '/') {
             console.log('Login OK: Got expected redirection: 302');
-            resolve('Login OK');
+            resolve(session);
           } else {
             console.log('Got unexpected ERROR, reject.', error);
             reject(error);

@@ -10,44 +10,55 @@
 
 
 var _ = require('lodash');
-var API = require('./lib/pocketAPI');
+var PocketAPI = require('./lib/pocketAPI');
 var utils = require('./lib/utils');
 
-function show(msg,response){
-  response = response.episodes || response.podcasts || response;
-  console.log('\n',msg,_.pluck(response.slice(0,4),'title'));
+function show(msg, response) {
+  var rr = response;
+  console.log('\n',msg);
+  console.log(_.pluck(rr.slice(0, 2), 'title'));
+  // console.log(_.pluck(rr.slice(0, 2), 'type'));
+  // console.log(_.pluck(rr.slice(0, 2), 'sourceType'));
+  // console.log(_.pluck(rr.slice(0, 2), 'user'));
+  // console.log('[0]=', response[0]);
 }
+
 function quick(credentials) {
   utils.logStamp('Start scraping (quick)');
-  var session;
-  return API.sign_in(credentials)
-    .then(function(s){
-      // grab the session
-      session = s;      
+  var apiSession = new PocketAPI();
+  return apiSession.sign_in(credentials)
+    .then(apiSession.podcasts())
+    .then(function(response) {
+      show('01-podcasts', response);
     })
-    // .then(API.podcasts_all())
-    // .then(function(response) {
-    //   show('01-podcasts',response);
-    // })
-    // .then(API.new_releases_episodes())
-    // .then(function(response) {
-    //   show('03-new_releases',response);
-    // })
-    // .then(API.in_progress_episodes())
-    // .then(function(response) {
-    //   show('04-in_progress',response);
-    // })
+    .then(apiSession.find_by_podcast({
+      // Spark from CBC Radio  05ccf3c0-1b97-012e-00b7-00163e1b201c    
+      uuid: '05ccf3c0-1b97-012e-00b7-00163e1b201c',
+      page: 1
+    }))
+    .then(function(response) {
+      // console.log('02-podcasts', response);
+      show('02-podcasts', response);
+    })
+    .then(apiSession.new_releases())
+    .then(function(response) {
+      show('03-new_releases', response);
+    })
+    .then(apiSession.in_progress_episodes())
+    .then(function(response) {
+      show('04-in_progress', response);
+    })
     .then(function(response) {
       utils.logStamp('Done scraping (quick)');
     })
-    .catch(function(error){
-      console.log('tasks.quick:',error);
+    .catch(function(error) {
+      console.log('tasks.quick:', error);
       throw error;
     });
 }
 
 var credentials = require('./credentials.json');
 utils.serialPromiseChainMap(credentials, function(creds) {
-  console.log('\n--creds',creds.name,creds['user[email]']);
+  console.log('\n--creds', creds.name, creds['user[email]']);
   return quick(creds);
 })

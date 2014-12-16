@@ -8,6 +8,13 @@ var RateLimiter = require('limiter').RateLimiter;
 
 // globals limiter might be configured, injected, credentials as well...
 var limiter = new RateLimiter(20, 1000);
+// var limiter = new RateLimiter(1, 1000);
+
+function PocketAPI() {
+  // must somehow grab user identifier during/after login..
+  // put it in session?
+  this.session = new Session();
+}
 
 // the actual endpoints
 var paths = {
@@ -18,17 +25,36 @@ var paths = {
   find_by_podcast: '/web/episodes/find_by_podcast.json'
 }
 
-// curry the path param
-function rebind(path) {
-  return function(params) {
-    // console.log('defined with params', params, path);
-    return function() {
-      // console.log('invoked with params', params, path);
-      return speedLimit()
-        .then(fetch(path, params));
-    };
-  }
-}
+
+// JSON post with param (requires prior login)
+PocketAPI.prototype._fetch = function(path, params) {
+  var self = this;
+  var verbose = false;
+  // return function() {
+    // if (params && params.page){
+    //   console.log('fetching page',params.page);
+    // }
+    return speedLimit()
+      .then(function() {
+        return rp(self.session.reqJSON(path, params))
+          .then(function(response) {
+            if (verbose) {
+              console.log('* path', path);
+              if (response.episodes) {
+                console.log('    * episodes', response.episodes.length);
+              }
+              if (response.podcasts) {
+                console.log('    * podcasts', response.podcasts.length);
+              }
+              if (response.result && response.result.episodes) {
+                console.log('    * podcasts.page len,total:', response.result.episodes.length, response.result.total);
+              }
+            }
+            return response;
+          });
+      });
+  // }
+};
 
 
 // promise token.
@@ -42,76 +68,112 @@ function speedLimit(input) {
   });
 }
 
-// JSON post with param (requires prior login)
-function fetch(path, params) {
-  var verbose=false;
-  return function() {
-    // if (params && params.page){
-    //   console.log('fetching page',params.page);
-    // }
-    return rp(helper.reqJSON(path, params))
-      .then(function(response) {
-        if (verbose){
-          console.log('* path', path);
-          if (response.episodes) {
-            console.log('    * episodes', response.episodes.length);
-          }
-          if (response.podcasts) {
-            console.log('    * podcasts', response.podcasts.length);
-          }
-          if (response.result && response.result.episodes) {
-            console.log('    * podcasts.page len,total:', response.result.episodes.length,response.result.total);
-          }
-        }
-        return response;
-      });
+function extractMember(sourceType, response) {
+  if (sourceType === '01-podcasts') {
+    // console.log('extract 01-podcasts');
+    if (!response || !response.podcasts) {
+      throw new Error('Unexpected or malformed response');
+    }
+    return response.podcasts;
+  }
+  if (sourceType === '02-podcasts') {
+    if (!response || !response.result || !response.result.episodes) {
+      throw new Error('Unexpected or malformed response');
+    }
+    return response.result.episodes;
+  }
+  if (sourceType === '03-new_releases' || sourceType === '04-in_progress') {
+    if (!response || !response.episodes) {
+      throw new Error('Unexpected or malformed response:' + sourceType);
+    }
+    return response.episodes;
   }
 }
+
+// Use this function to normalize output
+// -remove response top level member: {podcasts:[..]} => [..]
+// -inject type/sourceType: 01-podcasts|02-podcasts|03-new_releases|04-in_progress
+// - ?? possibly inject stamp, podcast_uuid
+function normalize(sourceType,self) {
+  // if (!response || !response.result || !response.result.episodes) {
+  console.log('defining normalize');
+  return function(response) {
+    var items = extractMember(sourceType,response);
+    var type = (sourceType === '01-podcasts') ? 'podcast' : 'episode';
+    return _.map(items, function(item) {
+      return _.merge({
+        type: type,
+        sourceType: sourceType,
+        user: self.user
+      }, item);
+    });
+  };
+}
+PocketAPI.prototype.podcasts = function() {
+  var self=this;
+  return function(){
+    return self._fetch(paths.podcasts_all).then(normalize('01-podcasts',self));
+  };
+};
+
+PocketAPI.prototype.new_releases = function(params) {
+  var self=this;
+  return function(){
+    return self._fetch(paths.new_releases_episodes).then(normalize('03-new_releases',self));
+  }
+};
+PocketAPI.prototype.in_progress_episodes = function(params) {
+  var self=this;
+  return function(){
+    return self._fetch(paths.in_progress_episodes).then(normalize('04-in_progress',self));
+  }
+};
+PocketAPI.prototype.find_by_podcast = function(params) {
+  var self=this;
+  return function(){
+    return self._fetch(paths.find_by_podcast,params).then(normalize('02-podcasts',self));
+  }
+};
+
 // not a function factory actually invokes login.
-function sign_in(credentials) {
+PocketAPI.prototype.sign_in = function(credentials) {
   // Login process:
   // GET /users/sign_in, to get cookies (XSRF-TOKEN)
   // POST form to /users/sign_in, with authenticity_token and credentials
   //  Note: the POST returns a 302, which rejects the promise, 
   //  whereas a faled login returns the login page content again (200)
   //  the 302 response also has a new XSRF-TOKEN cookie
-  var session = new Session();
-  return rp(session.reqGen(paths.sign_in, {
+  var self = this;
+  return rp(self.session.reqGen(paths.sign_in, {
       resolveWithFullResponse: true
     }))
     .then(function(response) {
       var form = _.merge({
-        authenticity_token: session.XSRF()
+        authenticity_token: self.session.XSRF()
       }, credentials);
 
       // now do a form post for login, expect a 302, which is not followed for POST.        
       // unless followAllRedirects: true, but that only follows back to / and causes an extra fetch
       return new Promise(function(resolve, reject) {
-        rp(session.reqGenXSRF(paths.sign_in, {
+        rp(self.session.reqGenXSRF(paths.sign_in, {
           form: form
         })).then(function(response) {
           console.log('response OK, expecting 302, reject.', response);
           reject('Login NOT OK');
         }).catch(function(error) { // error: {error:,options,response,statusCode}
-          if (error.statusCode === 302 && error.response.headers.location === session.baseURI + '/') {
+          if (error.statusCode === 302 && error.response.headers.location === self.session.baseURI + '/') {
             console.log('Login OK: Got expected redirection: 302');
-            resolve(session);
+            self.user = credentials.name;
+            resolve(true);
           } else {
             console.log('Got unexpected ERROR, reject.', error);
+            self.user = null;
             reject(error);
           }
         });
       });
     })
-}
+};
 
 // Exported API
-var exports = module.exports = {
-  sign_in: sign_in,
-  podcasts_all: rebind(paths.podcasts_all),
-  new_releases_episodes: rebind(paths.new_releases_episodes),
-  in_progress_episodes: rebind(paths.in_progress_episodes),
-  find_by_podcast: rebind(paths.find_by_podcast),
-  // fetchPage in fetchall in tasks.js should move here with the podcast_uuid injection fix
-  speedLimit: speedLimit
-};
+var exports = module.exports = PocketAPI;

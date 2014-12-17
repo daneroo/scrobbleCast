@@ -1,19 +1,23 @@
 "use strict";
 
+// dependencies - core-public-internal
+
 var Promise = require("bluebird");
 var rp = require('request-promise');
 var _ = require('lodash');
-var Session = require('./Session');
 var RateLimiter = require('limiter').RateLimiter;
+var Session = require('./Session');
+var utils = require('./utils');
 
 // globals limiter might be configured, injected, credentials as well...
-var limiter = new RateLimiter(20, 1000);
-// var limiter = new RateLimiter(1, 1000);
+// var limiter = new RateLimiter(20, 1000);
+var limiter = new RateLimiter(1, 1000);
 
-function PocketAPI() {
-  // must somehow grab user identifier during/after login..
-  // put it in session?
+function PocketAPI(options) {
   this.session = new Session();
+  this.user = null; // set by sign_in
+  // maybe default stamp should be time of fetch not time of session init...
+  this.stamp = (options && options.stamp) ? options.stamp : utils.stamp('minute');
 }
 
 // the actual endpoints
@@ -30,30 +34,28 @@ var paths = {
 PocketAPI.prototype._fetch = function(path, params) {
   var self = this;
   var verbose = false;
-  // return function() {
-    // if (params && params.page){
-    //   console.log('fetching page',params.page);
-    // }
-    return speedLimit()
-      .then(function() {
-        return rp(self.session.reqJSON(path, params))
-          .then(function(response) {
-            if (verbose) {
-              console.log('* path', path);
-              if (response.episodes) {
-                console.log('    * episodes', response.episodes.length);
-              }
-              if (response.podcasts) {
-                console.log('    * podcasts', response.podcasts.length);
-              }
-              if (response.result && response.result.episodes) {
-                console.log('    * podcasts.page len,total:', response.result.episodes.length, response.result.total);
-              }
+  if (verbose && params && params.page) {
+    console.log('fetching page', params.page);
+  }
+  return speedLimit()
+    .then(function() {
+      return rp(self.session.reqJSON(path, params))
+        .then(function(response) {
+          if (verbose) {
+            console.log('* path', path);
+            if (response.episodes) {
+              console.log('    * episodes', response.episodes.length);
             }
-            return response;
-          });
-      });
-  // }
+            if (response.podcasts) {
+              console.log('    * podcasts', response.podcasts.length);
+            }
+            if (response.result && response.result.episodes) {
+              console.log('    * podcasts.page len,total:', response.result.episodes.length, response.result.total);
+            }
+          }
+          return response;
+        });
+    });
 };
 
 
@@ -67,6 +69,7 @@ function speedLimit(input) {
     });
   });
 }
+
 
 function extractMember(sourceType, response) {
   if (sourceType === '01-podcasts') {
@@ -92,46 +95,58 @@ function extractMember(sourceType, response) {
 
 // Use this function to normalize output
 // -remove response top level member: {podcasts:[..]} => [..]
-// -inject type/sourceType: 01-podcasts|02-podcasts|03-new_releases|04-in_progress
-// - ?? possibly inject stamp, podcast_uuid
-function normalize(sourceType,self) {
-  // if (!response || !response.result || !response.result.episodes) {
-  console.log('defining normalize');
+// -inject __type/__sourceType: 01-podcasts|02-podcasts|03-new_releases|04-in_progress
+// -inject __stamp, __podcast_uuid
+function normalize(sourceType, self, extra) {
   return function(response) {
-    var items = extractMember(sourceType,response);
-    var type = (sourceType === '01-podcasts') ? 'podcast' : 'episode';
+    var items = extractMember(sourceType, response);
+
+    // prepend our extra descriptor fields (to optionally passed in values)
+    extra = _.merge({
+      __type: (sourceType === '01-podcasts') ? 'podcast' : 'episode',
+      __sourceType: sourceType,
+      __user: self.user,
+      __stamp: self.stamp
+    }, extra || {});
+
+    // prepend extra descriptor fiels to each item
     return _.map(items, function(item) {
-      return _.merge({
-        type: type,
-        sourceType: sourceType,
-        user: self.user
-      }, item);
+      return _.merge({}, extra, item);
     });
   };
 }
+
 PocketAPI.prototype.podcasts = function() {
-  var self=this;
-  return function(){
-    return self._fetch(paths.podcasts_all).then(normalize('01-podcasts',self));
+  var self = this;
+  return function() {
+    return self._fetch(paths.podcasts_all).then(normalize('01-podcasts', self));
   };
 };
 
-PocketAPI.prototype.new_releases = function(params) {
-  var self=this;
-  return function(){
-    return self._fetch(paths.new_releases_episodes).then(normalize('03-new_releases',self));
+PocketAPI.prototype.new_releases = function() {
+  var self = this;
+  return function() {
+    return self._fetch(paths.new_releases_episodes).then(normalize('03-new_releases', self));
   }
 };
-PocketAPI.prototype.in_progress_episodes = function(params) {
-  var self=this;
-  return function(){
-    return self._fetch(paths.in_progress_episodes).then(normalize('04-in_progress',self));
+PocketAPI.prototype.in_progress = function() {
+  var self = this;
+  return function() {
+    return self._fetch(paths.in_progress_episodes).then(normalize('04-in_progress', self));
   }
 };
-PocketAPI.prototype.find_by_podcast = function(params) {
-  var self=this;
-  return function(){
-    return self._fetch(paths.find_by_podcast,params).then(normalize('02-podcasts',self));
+PocketAPI.prototype.podcastPage = function(params) {
+  if (!params.uuid) {
+    throw new Error('podcastPage::missing podcast uuid');
+  }
+  if (!params.page) { // starts at page 1
+    throw new Error('podcastPage::missing podcast page');
+  }
+  var self = this;
+  return function() {
+    return self._fetch(paths.find_by_podcast, params).then(normalize('02-podcasts', self, {
+      podcast_uuid: params.uuid
+    }));
   }
 };
 

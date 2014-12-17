@@ -3,7 +3,7 @@
 // dependencies - core-public-internal
 var Promise = require("bluebird");
 
-// expect to be called with 'minute','second' or no param
+// expect to be called with 'minute','second' or no param (millis)
 // return an iso-8601 string
 function stamp(grain) {
   var now = new Date();

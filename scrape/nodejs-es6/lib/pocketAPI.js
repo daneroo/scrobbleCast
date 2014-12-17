@@ -10,8 +10,8 @@ var Session = require('./Session');
 var utils = require('./utils');
 
 // globals limiter might be configured, injected, credentials as well...
-// var limiter = new RateLimiter(20, 1000);
-var limiter = new RateLimiter(1, 1000);
+var limiter = new RateLimiter(20, 1000);
+// var limiter = new RateLimiter(1, 1000);
 
 function PocketAPI(options) {
   this.session = new Session();

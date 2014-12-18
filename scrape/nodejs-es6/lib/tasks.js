@@ -1,6 +1,7 @@
 "use strict";
 
 // dependencies - core-public-internal
+var util = require('util');
 var Promise = require("bluebird");
 var rp = require('request-promise');
 var _ = require('lodash');
@@ -9,32 +10,34 @@ var PocketAPI = require('./pocketAPI');
 var utils = require('./utils');
 var sinkFile = require('./sink/file');
 
-
-function show(msg, response) {
-  console.log('|%s|: %d', msg, response.length);
-  // console.log(_.pluck(response.slice(0, 2), 'title'));
-  // console.log(_.pluck(response.slice(0, 20), '__page'));
-  // console.log('totalPages',_.pluck(response, '__totalPages'));
+// Task quick: start for daniel
+function lifecycle(task,verb,user) {
+  var out = util.format('Task %s: %s for %s', task,verb,user);
+  utils.logStamp(out);
+}
+function progress(msg, response) {
+  var out = util.format('|%s|: %d', msg, response.length);
+  utils.logStamp(out);
 }
 
 function quick(credentials) {
-  utils.logStamp('Start scraping (quick)');
+  lifecycle('quick','start',credentials.name);
   var apiSession = new PocketAPI({
     stamp: utils.stamp('minute')
   });
   return apiSession.sign_in(credentials)
     .then(apiSession.new_releases())
     .then(function(response) {
-      show('03-new_releases', response);
+      progress('03-new_releases', response);
       sinkFile.writeByUserStamp(response);
     })
     .then(apiSession.in_progress())
     .then(function(response) {
-      show('04-in_progress', response);
+      progress('04-in_progress', response);
       sinkFile.writeByUserStamp(response);
     })
     .then(function() {
-      utils.logStamp('Done scraping (quick)');
+      lifecycle('quick','done',credentials.name);
     })
     .catch(function(error) {
       console.log('tasks.quick:', error);
@@ -50,12 +53,13 @@ function scrape(credentials, isDeep) {
     stamp: utils.stamp('minute')
   });
   var mode = isDeep ? 'deep' : 'shallow';
-  utils.logStamp('Start scraping (' + mode + ') ' + apiSession.stamp);
+  lifecycle(mode,'start',credentials.name); // ? apiSession.stamp
+
   return apiSession.sign_in(credentials)
     .then(apiSession.podcasts())
     .then(function(response) {
       // sinkFile.writeByUserStamp(response, apiSession);
-      show('01-podcasts', response);
+      progress('01-podcasts', response);
       return response
     })
     .then(function(podcasts) {
@@ -75,15 +79,15 @@ function scrape(credentials, isDeep) {
           }))
           .then(function(response) {
             sinkFile.writeByUserStamp(response);
-            show('02-podcasts', response);
+            progress('02-podcasts', response);
             return response;
           })
       }, {
         concurrency: 1
       });
     })
-    .then(function(podcasts) {
-      utils.logStamp('Done scraping (' + mode + ') ' + apiSession.stamp);
+    .then(function() {
+      lifecycle(mode,'done',credentials.name);
     })
     .catch(function(error) {
       console.log('tasks.scrape:', mode, error);

@@ -1,12 +1,17 @@
 "use strict";
 
+// dependencies - core-public-internal
 var fs = require('fs');
 var path = require('path');
 var mkdirp = require('mkdirp');
 var cron = require('cron');
-var tasks = require('./lib/tasks');
-
 var CronJob = cron.CronJob;
+var tasks = require('./lib/tasks');
+var utils = require('./lib/utils');
+
+// globals
+var allCredentials = require('./credentials.json');
+
 
 // TODO: this should become cronRunner, move to lib, receive/inject config
 // e.g. fomr index.js:
@@ -26,13 +31,23 @@ var recurrence = {
   everyMinute: '0 * * * * *',
 };
 
+// serial executionof <task> for each credentialed user
+// return a function
+function forEachUser(task){
+  return function(){
+    return utils.serialPromiseChainMap(allCredentials, function(credentials) {
+      utils.logStamp('Starting job for '+credentials.name);
+      return task(credentials);
+    });
+  }
+}
 // auto-starts
 function runJob(task, when) {
   var job = new CronJob({
     cronTime: when,
-    onTick: task,
+    onTick: forEachUser(task),
     start: true // default is true, else, if start:false, use job.start()
-      // timeZone: "America/Montreal" // npm install time, if you want to use TZ
+    // timeZone: "America/Montreal" // npm install time, if you want to use TZ
   });
   return job; // if you ever want to stop it.
 }

@@ -71,11 +71,11 @@ function tryemall(credentials) {
     });
 }
 
-var credentials = require('./credentials.json').slice(1,2);
-utils.serialPromiseChainMap(credentials, function(creds) {
-  console.log('\n--creds', creds.name, creds['user[email]']);
-  return tryemall(creds);
-  // return tasks.quick(creds);
-  // return tasks.shallow(creds);
-  // return tasks.deep(creds);
+var allCredentials = require('./credentials.json');
+utils.serialPromiseChainMap(allCredentials, function(credentials) {
+  utils.logStamp('Starting job for '+credentials.name);
+  return tryemall(credentials);
+  // return tasks.quick(credentials);
+  // return tasks.shallow(credentials);
+  // return tasks.deep(credentials);
 })

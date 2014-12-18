@@ -70,7 +70,7 @@ function writeByUserStamp(items) {
 
   var basename = pathForItems(items);
   // announce what we are doing io.file
-  utils.logStamp('Writing '+basename);
+  // utils.logStamp('Writing '+basename);
 
   var filename = path.join(dataDirname, 'byUserStamp', [basename, 'json'].join('.'));
 

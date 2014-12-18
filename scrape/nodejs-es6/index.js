@@ -5,6 +5,7 @@ var tasks = require('./lib/tasks');
 var _ = require('lodash');
 var PocketAPI = require('./lib/pocketAPI');
 var utils = require('./lib/utils');
+var sinkFile = require('./lib/sink/file');
 
 
 // tasks.deep();
@@ -34,6 +35,7 @@ function tryemall(credentials) {
     .then(apiSession.podcasts())
     .then(function(response) {
       show('01-podcasts', response);
+      // sinkFile.writeByUserStamp(response);
     })
     .then(apiSession.podcastPages({
       // maxPage:10,
@@ -48,14 +50,17 @@ function tryemall(credentials) {
     .then(function(response) {
       // console.log('02-podcasts', response);
       show('02-podcasts', response);
+      // sinkFile.writeByUserStamp(response);
     })
     .then(apiSession.new_releases())
     .then(function(response) {
       show('03-new_releases', response);
+      // sinkFile.writeByUserStamp(response);
     })
     .then(apiSession.in_progress())
     .then(function(response) {
       show('04-in_progress', response);
+      // sinkFile.writeByUserStamp(response);
     })
     .then(function(response) {
       utils.logStamp('Done Try-em-all');

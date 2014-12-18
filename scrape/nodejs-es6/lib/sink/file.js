@@ -9,6 +9,7 @@ var fs = Promise.promisifyAll(require("fs"), {
 });
 var path = require('path');
 var mkdirp = require('mkdirp');
+var _ = require('lodash');
 var utils = require('../utils');
 
 
@@ -16,47 +17,67 @@ var utils = require('../utils');
 var dataDirname = 'data';
 
 
-//  extract keyToPath into common place.
-// Target Key (path) definitions
-// - /podcast/<podast_uuid>/<stamp>/01-podcasts <-source type (url)
-// - /podcast/<podast_uuid>/episode/<episode_uuid>/<stamp>/0[234]-type <-source type 
+// items => <__user>/<__stamp>/__sourceType[-<podast_uuid>].json
+// items should not be empty
+// assert common parts common to all titems
+function pathForItems(items) {
+  // take first element as representative
+  var item = items[0];
+  var keys = {
+    __user: item.__user,
+    __stamp: item.__stamp,
+    __sourceType: item.__sourceType
+  };
 
-function pathFromKey(key) {
-  var parts = ['type', 'uuid', 'stamp', 'sourceType'];
-  if (key.type === 'episode') { // prepend with podcast_uuid
-    parts = ['podcast_uuid'].concat(parts);
+  if (item.__sourceType === '02-podcasts') {
+    keys.podcast_uuid = item.podcast_uuid;
   }
-  // assertions - for key
-  parts.forEach(function(part) {
-    if (!key[part]) {
-      console.log('pathFromKey: missing key.' + part, key);
-      throw new Error('pathFromKey: missing key.' + part);
+
+  // assertions - for keys
+  _.keys(keys).forEach(function(key) {
+    if (!keys[key]) {
+      console.log('pathForItems: missing key: ' + key);
+      console.log('keys', keys);
+      throw new Error('pathForItems: missing key: ' + key);
     }
   });
 
-  var paths = parts.map(function(part) {
-    return key[part];
-  });
 
-  if (key.type === 'episode') {
-    paths = ['podcast'].concat(paths);
+  // assertions - all items have same key elements - using lodash where notation
+  if (!_.every(items, keys)) {
+      console.log('keys', keys);
+      throw new Error('pathForItems: nonuniform key items.');
   }
+
+  var paths = [keys.__user,keys.__stamp]
+  if (keys.podcast_uuid) {
+    paths.push(keys.__sourceType+'-'+keys.podcast_uuid);
+  } else{
+    paths.push(keys.__sourceType);
+  }
+
   return paths.join('/');
 }
 
-// write byType
-function write(keyedThing) {
+// write byUserStamp
+// write a collection of items into a json file
+// - byUserStamp/<__user>/<__stamp>/__sourceType[-<podast_uuid>].json
+function writeByUserStamp(items) {
+  if (!items || !items.length) {
+    utils.logStamp('writeByUserStamp: nothing to write');
+    return;
+  }
 
-  var paths = pathFromKey(keyedThing.key);
+  var basename = pathForItems(items);
   // announce what we are doing io.file
-  // utils.logStamp('writing '+paths);
+  utils.logStamp('Writing '+basename);
 
-  var filename = path.join(dataDirname, 'byType', [paths, 'json'].join('.'));
+  var filename = path.join(dataDirname, 'byUserStamp', [basename, 'json'].join('.'));
 
   var dir = path.dirname(filename)
   mkdirp.sync(dir);
 
-  var content = JSON.stringify(keyedThing, null, 2);
+  var content = JSON.stringify(items, null, 2);
   fs.writeFileSync(filename, content);
 
   // utils.logStamp('wrote ' + filename);
@@ -83,10 +104,8 @@ function writeByDate(base, response, optionalStamp) {
   utils.logStamp('+ ' + filename);
 }
 
-
-
 // TODO: change API to .read/.write
 var exports = module.exports = {
-  write: write,
+  writeByUserStamp: writeByUserStamp,
   writeByDate: writeByDate
 };

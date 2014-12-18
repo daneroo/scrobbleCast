@@ -178,8 +178,17 @@ PocketAPI.prototype.podcastPages = function(params) {
       });
   }
 
+  function cleanup(items){
+    // remove the __page and __totalPages attributes, now that we are done
+    items.forEach(function(item) {
+      delete item.__page;
+      delete item.__totalPages;
+    });
+    return items;
+  }
+
   return function() {
-    var accum = [];
+    var allItems = [];
     return fetchPage(1).then(function(result) {
 
       // turns out this is possible...
@@ -191,16 +200,16 @@ PocketAPI.prototype.podcastPages = function(params) {
       }
 
       var totalPages = result[0].__totalPages;
-      accum = result;
+      allItems = result;
 
       if (totalPages == 1 || params.maxPage === 1) {
-        return accum;
+        return cleanup(allItems);
       }
 
       if (params.maxPage) {
         totalPages = Math.min(totalPages, params.maxPage)
       }
-      utils.logStamp('Fetching pages: [2..' + totalPages + ']');
+      utils.logStamp('Fetching pages: 2..' + totalPages);
 
 
       // otherwise append the other pages
@@ -214,8 +223,8 @@ PocketAPI.prototype.podcastPages = function(params) {
         })
         .then(function(pages) {
           // pages is an array of results: flatten and concat.
-          accum = accum.concat(_.flatten(pages));
-          return accum;
+          allItems = allItems.concat(_.flatten(pages));
+          return cleanup(allItems);
         });
 
     });

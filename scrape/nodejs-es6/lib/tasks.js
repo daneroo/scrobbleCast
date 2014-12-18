@@ -10,77 +10,10 @@ var utils = require('./utils');
 var sinkFile = require('./sink/file');
 
 
-//TODO: clean this up!
-function fetchall(uuid, stamp, isDeep) {
-  // local util
-  // this should be moved to API, as it is the only place we call this path from, 
-  // and we need the podcast_uuid inkjection fix.
-  // Also note that a fix for older files without the fix is in ./lib/delta.js/merge with a detailed explanation
-  function fetchPage(page) {
-    // console.log('   -- podcasts.page', page);
-    return API.find_by_podcast({
-        uuid: uuid,
-        page: page
-      })() // yes invoke it.
-      .then(function(response) {
-        if (!response || !response.result || !response.result.episodes) {
-          throw new Error('Unexpected or malformed response');
-        }
-        return response.result;
-      })
-      .then(function(result) {
-        // this is the podcast_uuid injection fix
-        if (!result.episodes.podcast_uuid) {
-          result.episodes.podcast_uuid = uuid;
-          console.log('injected podcast_uuid', result.episodes.podcast_uuid);
-        }
-        return result;
-      });
-    // could also normalize response here (return the episodes attr directly)
-  };
-
-  // actual task
-  return function _fetchAll() {
-    var accum = [];
-    return fetchPage(1)
-      .then(function(result) {
-        var perPage = 12;
-        var totalPages = Math.ceil(result.total / perPage);
-        console.log('   ** podcasts.page 1 of ', totalPages, ' #podcasts:', result.total);
-        accum = result.episodes;
-
-        if (!isDeep || totalPages == 1) {
-          return accum;
-        }
-
-        // otherwise append the other pages
-        // [2..totalPages]
-        var restOfPages = _.times(totalPages - 1, function(page) {
-          return page + 2;
-        });
-
-        return Promise.map(restOfPages, fetchPage, {
-            concurrency: 2
-          })
-          .then(function(pages) {
-            // console.log('pages',pages);
-            pages = _.pluck(pages, 'episodes');
-            accum = accum.concat(_.flatten(pages));
-            return accum;
-          });
-      })
-      .then(function(accum) {
-        utils.logStamp('Fetched ' + accum.length + ' episodes');
-        sinkFile.writeByDate('02-podcasts/' + uuid, accum, stamp);
-        return accum;
-      });
-
-  }
-}
-
 function show(msg, response) {
   console.log('|%s|: %d', msg, response.length);
   // console.log(_.pluck(response.slice(0, 2), 'title'));
+  // console.log(_.pluck(response.slice(0, 20), '__page'));
   // console.log('totalPages',_.pluck(response, '__totalPages'));
 }
 
@@ -92,12 +25,13 @@ function quick(credentials) {
   return apiSession.sign_in(credentials)
     .then(apiSession.new_releases())
     .then(function(response) {
-      // sinkFile.writeByUserStamp(response);
       show('03-new_releases', response);
+      sinkFile.writeByUserStamp(response);
     })
     .then(apiSession.in_progress())
     .then(function(response) {
       show('04-in_progress', response);
+      sinkFile.writeByUserStamp(response);
     })
     .then(function() {
       utils.logStamp('Done scraping (quick)');
@@ -140,8 +74,7 @@ function scrape(credentials, isDeep) {
             maxPage: isDeep ? 0 : 1,
           }))
           .then(function(response) {
-            // console.log('02-podcasts', response);
-            // sinkFile.writeByUserStamp(response);
+            sinkFile.writeByUserStamp(response);
             show('02-podcasts', response);
             return response;
           })

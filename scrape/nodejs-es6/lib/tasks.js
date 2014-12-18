@@ -1,22 +1,14 @@
 "use strict";
 
+// dependencies - core-public-internal
 var Promise = require("bluebird");
 var rp = require('request-promise');
 var _ = require('lodash');
-var helper = require('./reqHelpers');
-var RateLimiter = require('limiter').RateLimiter;
 // mine
-var API = require('./pocketAPI');
+var PocketAPI = require('./pocketAPI');
 var utils = require('./utils');
 var sinkFile = require('./sink/file');
 
-// globals - move to configuration (ENV|config)
-// limiter (or config)
-//  - var limiter = new RateLimiter(20, 1000);
-// this shoulbe isolated/shared in Session: return by sign_in.
-var sessionStamp = utils.stamp('minute');
-// - credentials
-var credentials = require('../credentials.json');
 
 //TODO: clean this up!
 function fetchall(uuid, stamp, isDeep) {
@@ -33,19 +25,20 @@ function fetchall(uuid, stamp, isDeep) {
       .then(function(response) {
         if (!response || !response.result || !response.result.episodes) {
           throw new Error('Unexpected or malformed response');
-        }        
+        }
         return response.result;
-      }) 
+      })
       .then(function(result) {
         // this is the podcast_uuid injection fix
-        if (!result.episodes.podcast_uuid){
-          result.episodes.podcast_uuid=uuid;
-          console.log('injected podcast_uuid',result.episodes.podcast_uuid);
+        if (!result.episodes.podcast_uuid) {
+          result.episodes.podcast_uuid = uuid;
+          console.log('injected podcast_uuid', result.episodes.podcast_uuid);
         }
         return result;
       });
-      // could also normalize response here (return the episodes attr directly)
+    // could also normalize response here (return the episodes attr directly)
   };
+
   // actual task
   return function _fetchAll() {
     var accum = [];
@@ -85,38 +78,51 @@ function fetchall(uuid, stamp, isDeep) {
   }
 }
 
-function quick() {
+function show(msg, response) {
+  console.log('|%s|: %d', msg, response.length);
+  // console.log(_.pluck(response.slice(0, 2), 'title'));
+  // console.log('totalPages',_.pluck(response, '__totalPages'));
+}
+
+function quick(credentials) {
   utils.logStamp('Start scraping (quick)');
-  return API.sign_in(credentials)
-    .then(API.new_releases_episodes())
+  var apiSession = new PocketAPI({
+    stamp: utils.stamp('minute')
+  });
+  return apiSession.sign_in(credentials)
+    .then(apiSession.new_releases())
     .then(function(response) {
-      sinkFile.writeByDate('03-new_releases', response);
+      // sinkFile.writeByUserStamp(response);
+      show('03-new_releases', response);
     })
-    .then(API.in_progress_episodes())
+    .then(apiSession.in_progress())
     .then(function(response) {
-      sinkFile.writeByDate('04-in_progress', response);
+      show('04-in_progress', response);
     })
-    .then(function(response) {
+    .then(function() {
       utils.logStamp('Done scraping (quick)');
     })
-    .catch(function(error){
-      console.log('tasks.quick:',error);
+    .catch(function(error) {
+      console.log('tasks.quick:', error);
       throw error;
     });
 }
 
 
-// generalize: concurrelcy/shallow (Session?)
-function scrape(isDeep) {
+// get podcasts then foreach: podcastPages->file
+function scrape(credentials, isDeep) {
   // this shoulbe isolated/shared in Session: return by sign_in.
-  var sessionStamp = utils.stamp('minute');
+  var apiSession = new PocketAPI({
+    stamp: utils.stamp('minute')
+  });
   var mode = isDeep ? 'deep' : 'shallow';
-  utils.logStamp('Start scraping (' + mode + ') ' + sessionStamp);
-  return API.sign_in(credentials)
-    .then(API.podcasts_all())
+  utils.logStamp('Start scraping (' + mode + ') ' + apiSession.stamp);
+  return apiSession.sign_in(credentials)
+    .then(apiSession.podcasts())
     .then(function(response) {
-      sinkFile.writeByDate('01-podcasts', response, sessionStamp);
-      return response.podcasts;
+      // sinkFile.writeByUserStamp(response, apiSession);
+      show('01-podcasts', response);
+      return response
     })
     .then(function(podcasts) {
       utils.logStamp('Found ' + podcasts.length + ' podcasts');
@@ -127,28 +133,39 @@ function scrape(isDeep) {
 
       return Promise.map(_.pluck(podcasts, 'uuid'), function(uuid) {
         utils.logStamp('Fetching: ' + podcastByUuid[uuid][0].title);
-        return fetchall(uuid, sessionStamp, isDeep)();
+
+        return Promise.resolve(42)
+          .then(apiSession.podcastPages({
+            uuid: uuid,
+            maxPage: isDeep ? 0 : 1,
+          }))
+          .then(function(response) {
+            // console.log('02-podcasts', response);
+            // sinkFile.writeByUserStamp(response);
+            show('02-podcasts', response);
+            return response;
+          })
       }, {
         concurrency: 1
       });
     })
     .then(function(podcasts) {
-      utils.logStamp('Done scraping (' + mode + ') ' + sessionStamp);
+      utils.logStamp('Done scraping (' + mode + ') ' + apiSession.stamp);
     })
-    .catch(function(error){
-      console.log('tasks.scrape:',mode,error);
+    .catch(function(error) {
+      console.log('tasks.scrape:', mode, error);
       throw error;
     });
 }
 
-function shallow() {
+function shallow(credentials) {
   var isDeep = false;
-  return scrape(isDeep);
+  return scrape(credentials,isDeep);
 }
 
-function deep() {
+function deep(credentials) {
   var isDeep = true;
-  return scrape(isDeep);
+  return scrape(credentials,isDeep);
 }
 
 // Exported API

@@ -89,11 +89,6 @@ function readByDate(file) {
   return keyedThings;
 }
 
-function writeByType(keyedThings) {
-  // should be async
-  keyedThings.forEach(sinkFile.write);
-}
-
 // mv the file to dedup folder
 // should be async
 function dedup(file) {
@@ -177,7 +172,6 @@ srcFile.findByDate()
                 }
                 if (changeCount > 0) {
                   fileHasChanges = true;
-                  // writeByType(keyedThings);
                   console.log('---|Δ|', changeCount, keyedThing.key.title);
                 } else {
                   dedupPartCount++;

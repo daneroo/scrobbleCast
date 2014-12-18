@@ -97,10 +97,16 @@ function extractMember(sourceType, response) {
 // -remove response top level member: {podcasts:[..]} => [..]
 // -inject __type/__sourceType: 01-podcasts|02-podcasts|03-new_releases|04-in_progress
 // -inject __stamp, __podcast_uuid
+// -inject __page,__totalPages if sourceType==02-podcasts
 function normalize(sourceType, self, extra) {
   return function(response) {
     var items = extractMember(sourceType, response);
 
+    // inject __totalPages
+    if (sourceType === '02-podcasts') {
+      var perPage = 12;
+      extra.__totalPages = Math.ceil(response.result.total / perPage);
+    }
     // prepend our extra descriptor fields (to optionally passed in values)
     extra = _.merge({
       __type: (sourceType === '01-podcasts') ? 'podcast' : 'episode',
@@ -136,19 +142,85 @@ PocketAPI.prototype.in_progress = function() {
   }
 };
 PocketAPI.prototype.podcastPage = function(params) {
+  var self = this;
   if (!params.uuid) {
     throw new Error('podcastPage::missing podcast uuid');
   }
   if (!params.page) { // starts at page 1
     throw new Error('podcastPage::missing podcast page');
   }
-  var self = this;
   return function() {
     return self._fetch(paths.find_by_podcast, params).then(normalize('02-podcasts', self, {
-      podcast_uuid: params.uuid
+      podcast_uuid: params.uuid,
+      __page: params.page
     }));
   }
 };
+
+// fetch first or all pages, (or max pages)
+// params.uuid: podcast_uuid
+// params.maxPage: optional (all)
+PocketAPI.prototype.podcastPages = function(params) {
+  var self = this;
+  if (!params.uuid) {
+    throw new Error('podcastPage::missing podcast uuid');
+  }
+
+  // utility function (wrap and invoke)
+  function fetchPage(page) {
+    return self.podcastPage({
+        uuid: params.uuid,
+        page: page
+      })()
+      .then(function(result) {
+        // console.log('|fetchPage-%d|: %d', page, result.length);
+        return result;
+      });
+  }
+
+  return function() {
+    var accum = [];
+    return fetchPage(1).then(function(result) {
+
+      // turns out this is possible...
+      if (result.length == 0) {
+        return result;
+      }
+      if (!result[0].__totalPages) {
+        throw new Error('podcastPages::missing total pages in result');
+      }
+
+      var totalPages = result[0].__totalPages;
+      accum = result;
+
+      if (totalPages == 1 || params.maxPage === 1) {
+        return accum;
+      }
+
+      if (params.maxPage) {
+        totalPages = Math.min(totalPages, params.maxPage)
+      }
+      utils.logStamp('Fetching pages: [2..' + totalPages + ']');
+
+
+      // otherwise append the other pages
+      // [2..totalPages]
+      var restOfPages = _.times(totalPages - 1, function(page) {
+        return page + 2;
+      });
+
+      return Promise.map(restOfPages, fetchPage, {
+          concurrency: 2
+        })
+        .then(function(pages) {
+          // pages is an array of results: flatten and concat.
+          accum = accum.concat(_.flatten(pages));
+          return accum;
+        });
+
+    });
+  }
+}
 
 // not a function factory actually invokes login.
 PocketAPI.prototype.sign_in = function(credentials) {
@@ -177,7 +249,7 @@ PocketAPI.prototype.sign_in = function(credentials) {
           reject('Login NOT OK');
         }).catch(function(error) { // error: {error:,options,response,statusCode}
           if (error.statusCode === 302 && error.response.headers.location === self.session.baseURI + '/') {
-            console.log('Login OK: Got expected redirection: 302');
+            // console.log('Login OK: Got expected redirection: 302');
             self.user = credentials.name;
             resolve(true);
           } else {

@@ -89,11 +89,6 @@ function readByDate(file) {
   return keyedThings;
 }
 
-function writeByType(keyedThings) {
-  // should be async
-  keyedThings.forEach(sinkFile.write);
-}
-
 // srcFile.find('byDate/**/*.json')
 srcFile.findByDate()
   .then(function(stamps) {
@@ -127,7 +122,6 @@ srcFile.findByDate()
                 // accumulate
                 accumulatedKeyedThings.push(keyedThing);
                 // write to sink
-                // sinkFile.write(keyedThing);
                 console.log('---part',keyedThing.key.title);
               });
               // summary so far...

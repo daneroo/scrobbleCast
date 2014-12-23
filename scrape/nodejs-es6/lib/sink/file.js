@@ -59,6 +59,23 @@ function pathForItems(items) {
   return paths.join('/');
 }
 
+function verifyIdenticalOrWrite(filename, items) {
+  if (fs.existsSync(filename)) {
+    console.log('---- checking %s',filename);
+    var olditems = JSON.parse(fs.readFileSync(filename));
+    if (!_.isEqual(olditems, items)){
+      throw new Error('verifyIdentical: overwrite prevented');
+    } else {
+      console.log('---- verified %s',filename);
+    }
+  } else {
+      var content = JSON.stringify(items, null, 2);
+      fs.writeFileSync(filename, content);
+      console.log('---- wrote %s',filename);
+  }
+}
+
+
 // write byUserStamp
 // write a collection of items into a json file
 // - byUserStamp/<__user>/<__stamp>/__sourceType[-<podast_uuid>].json
@@ -77,8 +94,10 @@ function writeByUserStamp(items) {
   var dir = path.dirname(filename)
   mkdirp.sync(dir);
 
-  var content = JSON.stringify(items, null, 2);
-  fs.writeFileSync(filename, content);
+  verifyIdenticalOrWrite(filename,items);
+
+  // var content = JSON.stringify(items, null, 2);
+  // fs.writeFileSync(filename, content);
 
   // utils.logStamp('wrote ' + filename);
   // console.log('+++file:',filename);

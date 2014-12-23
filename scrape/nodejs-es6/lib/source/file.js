@@ -47,8 +47,20 @@ function confirmSorted(files) {
   return files;
 }
 
-//  just break this into parts by Date
+// get datestamps with fs.readdir on dataDirname/byUserStamp/user
+// guaranteed to be sorted?
+function findByUserStamp(user) {
+  var dir = path.join(dataDirname, 'byUserStamp', user);
+  return fs.readdirPromise(dir)
+    .then(confirmSorted)
+    .catch(function(err) {
+      // log and rethrow
+      console.log('findByUserStamp error:', err);
+      throw err;
+    });
+}
 
+//  just break this into parts by Date
 function find(pattern) {
   return globPromise(pattern, {
       cwd: dataDirname
@@ -67,14 +79,15 @@ function find(pattern) {
 }
 
 // get datestamps with fs.readdir on dataDirname
-// guaranteed to be sorted?
+// still used for toUserStamp
 function findByDate() {
-  return fs.readdirPromise(path.join(dataDirname, 'byDate'))
+  return fs.readdirPromise(path.join(dataDirname, 'byDate'));
 }
 
 // TODO: change API to .read
 var exports = module.exports = {
   loadJSON: loadJSON,
   find: find,
-  findByDate: findByDate
+  findByDate: findByDate,
+  findByUserStamp: findByUserStamp
 };

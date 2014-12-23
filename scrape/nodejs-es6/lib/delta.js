@@ -12,7 +12,7 @@ var utils = require('./utils');
 
 // This is to remove noise from comparison
 //  -destructive if not cloned...(param?)
-// Some fileds:
+// Some fields:
 // * is_deleted, starred, (is_video ?) number<->boolean
 // * duration, played_up_to, playing_status null <-> number
 // Conclusion:

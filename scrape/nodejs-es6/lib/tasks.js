@@ -58,7 +58,7 @@ function scrape(credentials, isDeep) {
   return apiSession.sign_in(credentials)
     .then(apiSession.podcasts())
     .then(function(response) {
-      // sinkFile.writeByUserStamp(response, apiSession);
+      sinkFile.writeByUserStamp(response);
       progress('01-podcasts', response);
       return response
     })

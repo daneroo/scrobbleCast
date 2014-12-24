@@ -59,6 +59,8 @@ function pathForItems(items) {
   return paths.join('/');
 }
 
+
+// This was useful for toUserStamp.js - can be removed?
 function verifyIdenticalOrWrite(filename, items) {
   if (fs.existsSync(filename)) {
     console.log('---- checking %s',filename);

@@ -20,8 +20,6 @@ var allCredentials = require('./credentials.json');
 // mv the file to dedup folder
 // should be async
 function dedup(file) {
-  throw new Error('Dedup not yet blessed!');
-
   var path = require('path');
   var mkdirp = require('mkdirp');
   var dataDirname = 'data';
@@ -110,7 +108,7 @@ utils.serialPromiseChainMap(allCredentials, function(credentials) {
                 // TODO write redux
                 if (!fileHasChanges) {
                   dedupFileCount++;
-                  // dedup(file);
+                  dedup(file);
                   // console.log('---dedup: file %d/%d  part %d/%d', dedupFileCount, fileCount, dedupPartCount, partCount);
                 }
 

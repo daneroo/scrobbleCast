@@ -64,6 +64,8 @@ function verifyIdenticalOrWrite(filename, items) {
     console.log('---- checking %s',filename);
     var olditems = JSON.parse(fs.readFileSync(filename));
     if (!_.isEqual(olditems, items)){
+      fs.writeFileSync('bad-olditems.json', JSON.stringify(olditems,null,2));
+      fs.writeFileSync('bad-newitems.json', JSON.stringify(items,null,2));
       throw new Error('verifyIdentical: overwrite prevented');
     } else {
       console.log('---- verified %s',filename);

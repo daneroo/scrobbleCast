@@ -20,6 +20,8 @@ var allCredentials = require('./credentials.json');
 // mv the file to dedup folder
 // should be async
 function dedup(file) {
+  throw new Error('Dedup not yet blessed!');
+
   var path = require('path');
   var mkdirp = require('mkdirp');
   var dataDirname = 'data';
@@ -56,7 +58,7 @@ utils.serialPromiseChainMap(allCredentials, function(credentials) {
 
   return srcFile.findByUserStamp(credentials.name)
     .then(function(stamps) {
-      utils.logStamp('Starting:Dedup for '+credentials.name);
+      utils.logStamp('Starting:Dedup for ' + credentials.name);
       console.log('-|stamps|', stamps.length);
 
       var uuidProperty = 'uuid'; // common to all: podcasts/episodes
@@ -76,39 +78,41 @@ utils.serialPromiseChainMap(allCredentials, function(credentials) {
 
               files.forEach(function(file) {
 
-                console.log('---file:', file);
+                // console.log('---file:', file);
                 var items = srcFile.loadJSON(file);
 
                 fileCount++;
-                partCount += items.length;
-                // var fileHasChanges = false;
-                // keyedThings.forEach(function(keyedThing) {
-                //   partCount++;
-                //   // watch this overwrite (could do my own mergeMany...)
-                //   // Normalize values (bool/null) (no cloning...)
-                //   keyedThing.value = delta.normalize(keyedThing.value);
+                var fileHasChanges = false;
+                items.forEach(function(item) {
+                  partCount++;
 
-                //   var keyedThings = [keyedThing];
-                //   var changeCount = 0;
-                //   if (file.match(/01-/)) {
-                //     // console.log('|podcasts|', thingsToMerge.length,file);
-                //     changeCount += podcastHistory.mergeMany(keyedThings);
-                //   } else {
-                //     // console.log('|episodes|', thingsToMerge.length,file);
-                //     changeCount += episodeHistory.mergeMany(keyedThings);
-                //   }
-                //   if (changeCount > 0) {
-                //     fileHasChanges = true;
-                //     console.log('---|Δ|', changeCount, keyedThing.key.title);
-                //   } else {
-                //     dedupPartCount++;
-                //   }
-                // });
-                // if (!fileHasChanges) {
-                //   dedupFileCount++;
-                //   dedup(file);
-                //   console.log('---dedup: file %d/%d  part %d/%d', dedupFileCount, fileCount, dedupPartCount, partCount);
-                // }
+                  // passed item is cloned, and normalized in accumulator
+
+                  var changeCount = 0;
+                  if (item.__type === 'episode') {
+                    // console.log('|episode|', thingsToMerge.length,file);
+                    changeCount += episodeHistory.merge(item);
+                  } else {
+                    // console.log('|podcasts|', thingsToMerge.length,file);
+                    changeCount += podcastHistory.merge(item);
+                  }
+
+                  if (changeCount > 0) {
+                    fileHasChanges = true;
+                    console.log('---|Δ|', changeCount, item.title);
+                    // TODO append to redux
+                  } else {
+                    dedupPartCount++;
+                  }
+
+                });
+
+                // TODO write redux
+                if (!fileHasChanges) {
+                  dedupFileCount++;
+                  // dedup(file);
+                  // console.log('---dedup: file %d/%d  part %d/%d', dedupFileCount, fileCount, dedupPartCount, partCount);
+                }
 
               });
             });
@@ -120,10 +124,11 @@ utils.serialPromiseChainMap(allCredentials, function(credentials) {
               var sorted = _.sortBy(history.accumulators, 'lastUpdated').reverse();
               fs.writeFileSync(outfile, JSON.stringify(sorted, null, 2));
             }
-            // sortAndSave('podcast-history.json', podcastHistory);
-            // sortAndSave('episode-history.json', episodeHistory);
+            sortAndSave('podcast-history-'+credentials.name+'.json', podcastHistory);
+            sortAndSave('episode-history-'+credentials.name+'.json', episodeHistory);
 
-          utils.logStamp('Done:Dedup['+credentials.name+'] |f|:' + fileCount + ' |e|:' + partCount);
+          console.log('Done:dedup[%s] |f|: %d/%d  |p|: %d/%d',credentials.name, dedupFileCount, fileCount, dedupPartCount, partCount);
+          utils.logStamp('Done:Dedup[' + credentials.name + '] |f|:' + fileCount + ' |p|:' + partCount);
           return stamps;
         });
 

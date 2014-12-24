@@ -29,7 +29,7 @@ function normalize(thing) {
   var booleanFields = ['is_deleted', 'starred', 'is_video'];
   booleanFields.forEach(function(field) {
     if (!_.isUndefined(thing[field])) {
-      if (thing[field] !== !!thing[field]){
+      if (thing[field] !== !!thing[field]) {
         // console.log('*** normalized !!',field,thing[field],!!thing[field]);
         thing[field] = !!thing[field];
       }
@@ -109,26 +109,24 @@ function Accumulator() {
 
 // class methods
 // Accumulates (merges) and returns changes
-Accumulator.prototype.merge = function(keyedThing) {
+Accumulator.prototype.merge = function(item) {
   // assume the objects are all shallow... (no nested properties for now)
+  // -clone item, 
+  // -normalize attributes,  
+  // -delete __stamp,__sourceType property for compare
 
-  var stamp = keyedThing.key.stamp;
+  var stamp = item.__stamp;
   var from = this.merged;
-  var to = keyedThing.value;
+  var to = normalize(_.clone(item));
+  delete to.__stamp;
+  delete to.__sourceType;
+
+
   var changes = [];
 
-  // special fix for missing podcast_uuid in early 02-podcasts files
-  //  NOW Fixed in readByDate
-  // if we only see an episode with 02-* ,
-  // the podcast_uuid (which is ommited in the /../find_by_podcast REST response),
-  // was not originally injected into the response, it is now fixed.
-  // we keep this fix here to accomodate the reading of previously grabbed scraped data
-  // Description restore the missing podcast_uuid, 
-  // which was encoded in the file_name, 
-  //   it is available here as the 'source' attribute in the tagsForChangeSet
-  if (keyedThing.key.type === 'episode' && !to.podcast_uuid) {
-    console.log('Accumulator.merge: no podcast_uuid for episode:', keyedThing);
-    throw (new Error('Accumulator.merge: no podcast_uuid for episode:' + JSON.stringify(keyedThing)));
+  if (item.__type === 'episode' && !to.podcast_uuid) {
+    console.log('Accumulator.merge: no podcast_uuid for episode:', item);
+    throw (new Error('Accumulator.merge: no podcast_uuid for episode:' + JSON.stringify(item)));
   }
   // end of special fix check
 
@@ -141,8 +139,10 @@ Accumulator.prototype.merge = function(keyedThing) {
   var changes = compare(from, to);
   if (changes.length) {
     // console.log('|Δ|', changes.length, keyedThing.key);
-    var record = _.merge({}, keyedThing.key, {
-      changes: changes
+    var record = _.merge({}, {
+      __stamp: stamp,
+      __sourceType: item.__sourceType,
+      changes:changes
     });
     this.history.push(record);
 
@@ -170,22 +170,18 @@ AccumulatorByUuid.prototype.getAccumulator = function(uuid) {
   return this.accumulators[uuid];
 };
 
-AccumulatorByUuid.prototype.mergeMany = function(keyedThings) {
+AccumulatorByUuid.prototype.merge = function(item) {
 
-  var self = this;
-  var changeCount = 0;
-  keyedThings.forEach(function(keyedThing) {
-    var acc = self.getAccumulator(keyedThing.key.uuid);
-    var changes = acc.merge(keyedThing);
-    changeCount += changes.length;
-  });
+  var acc = this.getAccumulator(item.uuid);
+  var changes = acc.merge(item);
+  var changeCount = changes.length;
   return changeCount;
 };
 
 
 
 var exports = module.exports = {
-  normalize:normalize,
+  normalize: normalize,
   compare: compare,
   Accumulator: Accumulator,
   AccumulatorByUuid: AccumulatorByUuid

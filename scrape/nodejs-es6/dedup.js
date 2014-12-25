@@ -78,6 +78,7 @@ utils.serialPromiseChainMap(allCredentials, function(credentials) {
 
                 // console.log('---file:', file);
                 var items = srcFile.loadJSON(file);
+                var redux = [];
 
                 fileCount++;
                 var fileHasChanges = false;
@@ -97,6 +98,7 @@ utils.serialPromiseChainMap(allCredentials, function(credentials) {
 
                   if (changeCount > 0) {
                     fileHasChanges = true;
+                    redux.push(item);
                     console.log('---|Δ|', changeCount, item.title);
                     // TODO append to redux
                   } else {
@@ -105,11 +107,18 @@ utils.serialPromiseChainMap(allCredentials, function(credentials) {
 
                 });
 
-                // TODO write redux
+
+                // fileHasChanges === redux.length>0
                 if (!fileHasChanges) {
                   dedupFileCount++;
                   dedup(file);
                   // console.log('---dedup: file %d/%d  part %d/%d', dedupFileCount, fileCount, dedupPartCount, partCount);
+                }
+                // else: fileHasHasganges===true or redux.length>0
+                if (redux.length > 0) {
+                  console.log('---redux: |parts|: %d file: %s', redux.length,file);
+                  var basepath = path.join(sinkFile.dataDirname,'redux');
+                  sinkFile.writeByUserStamp(redux,basepath);
                 }
 
               });
@@ -117,15 +126,15 @@ utils.serialPromiseChainMap(allCredentials, function(credentials) {
         })
         .then(function(dontCare) {
           function sortAndSave(outfile, history) {
-              console.log('|' + outfile + '|=', _.size(history.accumulators));
-              // just write out the accumulators dictionary, it is the only attribute!
-              var sorted = _.sortBy(history.accumulators, 'lastUpdated').reverse();
-              fs.writeFileSync(outfile, JSON.stringify(sorted, null, 2));
-            }
-            sortAndSave('podcast-history-'+credentials.name+'.json', podcastHistory);
-            sortAndSave('episode-history-'+credentials.name+'.json', episodeHistory);
+            console.log('|' + outfile + '|=', _.size(history.accumulators));
+            // just write out the accumulators dictionary, it is the only attribute!
+            var sorted = _.sortBy(history.accumulators, 'lastUpdated').reverse();
+            fs.writeFileSync(outfile, JSON.stringify(sorted, null, 2));
+          }
+          sortAndSave('podcast-history-' + credentials.name + '.json', podcastHistory);
+          sortAndSave('episode-history-' + credentials.name + '.json', episodeHistory);
 
-          console.log('Done:dedup[%s] |f|: %d/%d  |p|: %d/%d',credentials.name, dedupFileCount, fileCount, dedupPartCount, partCount);
+          console.log('Done:dedup[%s] |f|: %d/%d  |p|: %d/%d', credentials.name, dedupFileCount, fileCount, dedupPartCount, partCount);
           utils.logStamp('Done:Dedup[' + credentials.name + '] |f|:' + fileCount + ' |p|:' + partCount);
           return stamps;
         });

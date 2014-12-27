@@ -54,6 +54,8 @@ function dedup(file) {
 utils.serialPromiseChainMap(allCredentials, function(credentials) {
   utils.logStamp('Starting job for ' + credentials.name);
 
+  var basepath = path.join(sinkFile.dataDirname, 'redux');
+
   return srcFile.findByUserStamp(credentials.name)
     .then(function(stamps) {
       utils.logStamp('Starting:Dedup for ' + credentials.name);
@@ -71,7 +73,7 @@ utils.serialPromiseChainMap(allCredentials, function(credentials) {
       // should have a version without aggregation
       return utils.serialPromiseChainMap(stamps, function(stamp) {
           console.log('--iteration stamp:', credentials.name, stamp);
-          return srcFile.find(path.join('byUserStamp', credentials.name, stamp, '**/*.json'))
+          return srcFile.find(path.join('redux/byUserStamp', credentials.name, stamp, '**/*.json'))
             .then(function(files) {
 
               files.forEach(function(file) {
@@ -116,9 +118,9 @@ utils.serialPromiseChainMap(allCredentials, function(credentials) {
                 }
                 // else: fileHasHasganges===true or redux.length>0
                 if (redux.length > 0) {
-                  console.log('---redux: |parts|: %d file: %s', redux.length,file);
-                  var basepath = path.join(sinkFile.dataDirname,'redux');
-                  sinkFile.writeByUserStamp(redux,basepath);
+                  console.log('---redux: |parts|: %d file: %s', redux.length, file);
+                  var basepath = path.join(sinkFile.dataDirname, 'redux');
+                  sinkFile.writeByUserStamp(redux, basepath);
                 }
 
               });

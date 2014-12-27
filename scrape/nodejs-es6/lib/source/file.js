@@ -49,8 +49,11 @@ function confirmSorted(files) {
 
 // get datestamps with fs.readdir on dataDirname/byUserStamp/user
 // guaranteed to be sorted?
-function findByUserStamp(user) {
-  var dir = path.join(dataDirname, 'byUserStamp', user);
+// basepath default is dataDirname
+function findByUserStamp(user, basepath) {
+  basepath = basepath || dataDirname;
+  // basepath default is dataDirname
+  var dir = path.join(basepath, 'byUserStamp', user);
   return fs.readdirPromise(dir)
     .then(confirmSorted)
     .catch(function(err) {

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 date -u +'%Y-%m-%dT%H:%M:%SZ Dedup - start'
-time node dedup.js
+time node dedup.js | grep Dedup
 
 date -u +'%Y-%m-%dT%H:%M:%SZ Dedup - done'
 

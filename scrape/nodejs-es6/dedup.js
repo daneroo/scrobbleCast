@@ -1,10 +1,8 @@
 "use strict";
 
-// High level,
-// load podcasts/episodes (as needed)
-// for each file in (new_releases, then in_progress)
-//   for each episode in file.episodes
-//     compare episode with known podcats/episode (if exists)
+// Acculumalte delta history per user, over <data>/byUserStamp
+// remove null change files (<data>/dedup/byUserStamp)
+// write minimal changeset to <data>/redux/byUserStamp
 
 var fs = require('fs');
 var path = require('path');

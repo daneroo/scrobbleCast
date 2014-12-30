@@ -1,7 +1,6 @@
 "use strict";
 
-// High level,
-// histogram by field (type>type)
+// Examine transition histograms in history
 var _ = require('lodash');
 
 

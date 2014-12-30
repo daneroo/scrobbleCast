@@ -77,10 +77,52 @@ utils.serialPromiseChainMap(allCredentials, function(credentials) {
           sortAndSave('podcast-history-' + credentials.name + '.json', podcastHistory);
           sortAndSave('episode-history-' + credentials.name + '.json', episodeHistory);
 
-          function filterPlayHistory(episodeHistory){
-            console.log('|episodes|: %d',episodeHistory.length)
+          function filterPlayHistory(outfile, history) {
+            console.log('|' + outfile + '|=', _.size(history.accumulators));
+            var filtered = _.map(history.accumulators, function(episode) {
+              episode - _.cloneDeep(episode);
+              // some kind of epoch value for : 'Never Played'
+              // episode.lastPlayed='2009-01-03T18:15:05.000Z'; // Bitcoin Genesis
+              episode.lastPlayed='1970-01-01T00:00:00Z';
+              var history = episode.history;
+              var plays = [];
+              history.forEach(function(h) {
+                var pertinent = false;
+                var playHistory = {
+                  __stamp: h.__stamp,
+                  __sourceType : h.__sourceType
+                };
+                h.changes.forEach(function(chg) {
+                  if (chg.key==='playing_status'){
+                    pertinent=true;
+                    playHistory.playing_status = chg.to;
+                    if (chg.to > 0){
+                      episode.lastPlayed=playHistory.__stamp;
+                    }
+                  }
+                  if (chg.key==='played_up_to'){
+                    pertinent=true;
+                    playHistory.played_up_to = chg.to;
+                    if (chg.to > 0){
+                      episode.lastPlayed=playHistory.__stamp;
+                    }
+                  }
+                });
+                if (pertinent) {
+                  plays.push(playHistory);
+                }
+              });
+              delete episode.history;
+              episode.plays = plays;
+              return episode;
+            });
+
+            var sorted = _.sortBy(filtered, ['lastPlayed','lastUpdated']).reverse();
+
+            fs.writeFileSync(outfile, JSON.stringify(sorted, null, 2));
           }
-          filterPlayHistory(episodeHistory);
+
+          filterPlayHistory('episode-play-history-' + credentials.name + '.json', episodeHistory);
 
           console.log('Done:dedup[%s] |f|: %d  |p|: %d', credentials.name, fileCount, partCount);
           utils.logStamp('Done:Dedup[' + credentials.name + '] |f|:' + fileCount + ' |p|:' + partCount);

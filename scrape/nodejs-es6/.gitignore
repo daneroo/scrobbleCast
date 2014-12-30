@@ -2,5 +2,6 @@ node_modules/
 credentials.json
 data/
 data.201[45]-*.tgz
-episode-history-*.json
 podcast-history-*.json
+episode-history-*.json
+episode-play-history-*.json

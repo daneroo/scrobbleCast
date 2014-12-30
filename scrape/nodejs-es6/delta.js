@@ -56,7 +56,7 @@ utils.serialPromiseChainMap(allCredentials, function(credentials) {
 
   var basepath = path.join(sinkFile.dataDirname, 'redux');
 
-  return srcFile.findByUserStamp(credentials.name)
+  return srcFile.findByUserStamp(credentials.name, basepath)
     .then(function(stamps) {
       utils.logStamp('Starting:Dedup for ' + credentials.name);
       console.log('-|stamps|', stamps.length);

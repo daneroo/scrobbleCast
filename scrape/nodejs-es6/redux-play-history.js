@@ -1,6 +1,7 @@
 "use strict";
 
 // Acculumalte delta history per user, over <data>/redux
+// Note: run dedup first...
 
 var fs = require('fs');
 var path = require('path');
@@ -75,6 +76,11 @@ utils.serialPromiseChainMap(allCredentials, function(credentials) {
           }
           sortAndSave('podcast-history-' + credentials.name + '.json', podcastHistory);
           sortAndSave('episode-history-' + credentials.name + '.json', episodeHistory);
+
+          function filterPlayHistory(episodeHistory){
+            console.log('|episodes|: %d',episodeHistory.length)
+          }
+          filterPlayHistory(episodeHistory);
 
           console.log('Done:dedup[%s] |f|: %d  |p|: %d', credentials.name, fileCount, partCount);
           utils.logStamp('Done:Dedup[' + credentials.name + '] |f|:' + fileCount + ' |p|:' + partCount);

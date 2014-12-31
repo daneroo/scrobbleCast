@@ -1,8 +1,26 @@
+"use strict";
+
 // Fetches and updates many documents
 
-Promise = require('bluebird');
+var Promise = require('bluebird');
 var PouchDB = require('pouchdb');
 var db = new PouchDB('pouchdb');
+
+function showAll(msg) {
+  return function() {
+    return db.allDocs({
+        include_docs: true
+      })
+      .then(function(response) {
+        // console.log(msg, JSON.stringify(response, null, 2));
+        response.rows.forEach(function(item) {
+          console.log(msg, JSON.stringify(item.doc));
+        });
+        console.log('total',response.total);
+        return response;
+      });
+  }
+}
 
 function create(episodeNum) {
   var key = 'episode-' + episodeNum;

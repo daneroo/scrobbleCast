@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
-    "level": "^0.18.0"
+    "bluebird": "^2.5.3",
+    "level": "^0.18.0",
+    "pouchdb": "^3.2.0"
   },
   "devDependencies": {},
   "scripts": {

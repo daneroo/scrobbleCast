@@ -15,8 +15,9 @@ function showAll(msg) {
         // console.log(msg, JSON.stringify(response, null, 2));
         response.rows.forEach(function(item) {
           console.log(msg, JSON.stringify(item.doc));
+
         });
-        console.log('total',response.total);
+        console.log(msg,'total_rows',response.total_rows);
         return response;
       });
   }
@@ -53,22 +54,6 @@ function updateSome() {
     }
   });
   return Promise.map(some, createAndUpdate);
-}
-
-function showAll(msg) {
-  return function() {
-    return db.allDocs({
-        include_docs: true
-      })
-      .then(function(response) {
-        // console.log(msg, JSON.stringify(response, null, 2));
-        response.rows.forEach(function(item) {
-          console.log(msg, JSON.stringify(item.doc));
-
-        });
-        return response;
-      });
-  }
 }
 
 Promise.resolve(42)

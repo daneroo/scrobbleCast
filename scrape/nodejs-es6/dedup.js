@@ -6,6 +6,7 @@
 
 var fs = require('fs');
 var path = require('path');
+var crypto = require('crypto');
 var _ = require('lodash');
 var utils = require('./lib/utils');
 var srcFile = require('./lib/source/file');
@@ -47,6 +48,11 @@ function dedup(file) {
   } finally {
     // console.log('+exec fs.rmdirSync(%s) (and parent)',oldDir);
   }
+}
+
+function md5(str) {
+  var hash = crypto.createHash('md5').update(str).digest('hex');
+  return hash;
 }
 
 utils.serialPromiseChainMap(allCredentials, function(credentials) {
@@ -114,9 +120,9 @@ utils.serialPromiseChainMap(allCredentials, function(credentials) {
                 }
                 // else: fileHasHasganges===true or redux.length>0
                 if (redux.length > 0) {
-                  console.log('---redux: |parts|: %d file: %s', redux.length,file);
-                  var basepath = path.join(sinkFile.dataDirname,'redux');
-                  sinkFile.writeByUserStamp(redux,basepath);
+                  console.log('---redux: |parts|: %d file: %s', redux.length, file);
+                  var basepath = path.join(sinkFile.dataDirname, 'redux');
+                  sinkFile.writeByUserStamp(redux, basepath);
                 }
 
               });
@@ -127,7 +133,9 @@ utils.serialPromiseChainMap(allCredentials, function(credentials) {
             console.log('|' + outfile + '|=', _.size(history.accumulators));
             // just write out the accumulators dictionary, it is the only attribute!
             var sorted = _.sortBy(history.accumulators, 'lastUpdated').reverse();
-            fs.writeFileSync(outfile, JSON.stringify(sorted, null, 2));
+            var json = JSON.stringify(sorted, null, 2);
+            fs.writeFileSync(outfile, json);
+            utils.logStamp('Wrote:Dedup[' + outfile + '] md5:' + md5(json));
           }
           sortAndSave('podcast-history-' + credentials.name + '.json', podcastHistory);
           sortAndSave('episode-history-' + credentials.name + '.json', episodeHistory);

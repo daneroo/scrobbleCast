@@ -6,6 +6,7 @@
 
 var fs = require('fs');
 var path = require('path');
+var mkdirp = require('mkdirp');
 var crypto = require('crypto');
 var _ = require('lodash');
 var utils = require('./lib/utils');
@@ -16,37 +17,78 @@ var delta = require('./lib/delta');
 // globals
 var allCredentials = require('./credentials.json');
 
-// mv the file to dedup folder
-// should be async
+// construct path rooted at dataDirName, poosibly with a base path extension:
+// base==null -> data/byUserStamp/<file>
+// base=='dedup' -> data/dedup/byUserStamp/<file>
+// base=='noredux' -> data/noredux/byUserStamp/<file>
+function filenameAtBase(file, basePartialPath) {
+    var dataDirname = sinkFile.dataDirname;
+    if (!basePartialPath) {
+      return path.join(dataDirname, file);
+    } else {
+      return path.join(dataDirname, basePartialPath, file);
+    }
+  }
+  // move file from one basepath to another:
+  // e.g.:  data/<fromPath>/<file> -> data/<toPath>/<file>
+  // from and to: should be one of: null,'dedup','noredux'
+function move(file, fromPath, toPath) {
+
+    var oldFilename = filenameAtBase(file, fromPath);
+    var oldDir = path.dirname(oldFilename);
+
+    var nuFilename = filenameAtBase(file, toPath);
+    var nuDir = path.dirname(nuFilename)
+
+    // refuse to clober an existing file
+    if (fs.existsSync(nuFilename)) {
+      console.log('Dedup:move %s -> %s', oldFilename, nuFilename);
+      console.log('Dedup:move refusing to clobber %s', nuFilename);
+    }
+    mkdirp.sync(nuDir);
+    fs.renameSync(oldFilename, nuFilename);
+    console.log('-exec fs.renameSync(%s, %s)', oldFilename, nuFilename);
+
+    // now prune oldDir (and parent) - if empty
+    try {
+      fs.rmdirSync(oldDir);
+      // only prints if emtpy - no error
+      console.log('-exec fs.rmdirSync(%s)', oldDir);
+      // and parent - unless oldDir already not empty...
+      fs.rmdirSync(path.dirname(oldDir));
+      // only prints if emtpy - no error
+      console.log('-exec fs.rmdirSync(%s)', path.dirname(oldDir));
+    } catch (e) {
+      // code: 'ENOTEMPTY'
+      // console.log('rmdir error:',e);
+    } finally {
+      // console.log('+exec fs.rmdirSync(%s) (and parent)',oldDir);
+    }
+  }
+  // mv the file to dedup folder
+  // should be async
 function dedup(file) {
-  var path = require('path');
-  var mkdirp = require('mkdirp');
-  var dataDirname = 'data';
+  move(file, null, 'dedup');
+}
 
-  var oldFilename = path.join(dataDirname, file);
-  var oldDir = path.dirname(oldFilename);
+// Replace the original file with redux:(only changes items) if appropriate
+// if items==redux: do nothing
+// -move the original file to 'noredux' folder
+// -write the redux file to the
+function replaceRedux(file, origItems, reduxItems) {
+  if (!_.isEqual(origItems, reduxItems)) {
+    console.log('Dedup:redux %s', file);
 
-  var nuFilename = path.join(dataDirname, 'dedup', file);
-  var nuDir = path.dirname(nuFilename)
+    // write the redux file
+    var basepath = path.join(sinkFile.dataDirname, 'redux');
+    sinkFile.writeByUserStamp(reduxItems, basepath);
 
-  mkdirp.sync(nuDir);
-  fs.renameSync(oldFilename, nuFilename);
-  console.log('-exec fs.renameSync(%s, %s)', oldFilename, nuFilename);
+    // move the original to noredux
+    move(file, null, 'noredux');
 
-  // now prune oldDir (and parent) - if empty
-  try {
-    fs.rmdirSync(oldDir);
-    // only prints if emtpy - no error
-    console.log('-exec fs.rmdirSync(%s)', oldDir);
-    // and parent - unless oldDir already not empty...
-    fs.rmdirSync(path.dirname(oldDir));
-    // only prints if emtpy - no error
-    console.log('-exec fs.rmdirSync(%s)', path.dirname(oldDir));
-  } catch (e) {
-    // code: 'ENOTEMPTY'
-    // console.log('rmdir error:',e);
-  } finally {
-    // console.log('+exec fs.rmdirSync(%s) (and parent)',oldDir);
+    // move the redux version back to original
+    move(file, 'redux', null);
+
   }
 }
 
@@ -103,7 +145,7 @@ utils.serialPromiseChainMap(allCredentials, function(credentials) {
                   if (changeCount > 0) {
                     fileHasChanges = true;
                     redux.push(item);
-                    console.log('---|Δ|', changeCount, item.title);
+                    // console.log('---|Δ|', changeCount, item.title);
                     // TODO append to redux
                   } else {
                     dedupPartCount++;
@@ -120,9 +162,8 @@ utils.serialPromiseChainMap(allCredentials, function(credentials) {
                 }
                 // else: fileHasHasganges===true or redux.length>0
                 if (redux.length > 0) {
-                  console.log('---redux: |parts|: %d file: %s', redux.length, file);
-                  var basepath = path.join(sinkFile.dataDirname, 'redux');
-                  sinkFile.writeByUserStamp(redux, basepath);
+                  // console.log('---redux: |parts|: %d file: %s', redux.length, file);
+                  replaceRedux(file,items,redux);
                 }
 
               });

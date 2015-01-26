@@ -41,6 +41,7 @@ function deep(credentials) {
   return scrape(credentials, isDeep);
 }
 
+// -- Implementation functions
 function quickWithSession(apiSession) {
   return function() {
     return Promise.resolve(42)
@@ -108,7 +109,8 @@ function scrape(credentials, isDeep) {
     .then(function() {
       lifecycle(mode, 'done', apiSession.user);
     })
-    // .then(quickWithSession(apiSession))
+    // Now call quick
+    .then(quickWithSession(apiSession))
     .catch(function(error) {
       console.log('tasks.scrape:', mode, error);
       throw error;

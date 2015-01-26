@@ -23,7 +23,6 @@ var exports = module.exports = {
 };
 
 function quick(credentials) {
-  lifecycle('quick', 'start', credentials.name);
   var apiSession = new PocketAPI({
     stamp: utils.stamp('minute')
   });
@@ -44,6 +43,7 @@ function deep(credentials) {
 // -- Implementation functions
 function quickWithSession(apiSession) {
   return function() {
+    lifecycle('quick', 'start', credentials.name);
     return Promise.resolve(42)
       .then(apiSession.new_releases())
       .then(function(response) {

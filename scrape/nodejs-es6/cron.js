@@ -25,10 +25,13 @@ var allCredentials = require('./credentials.json');
 // every 10 minutes
 //   cronTime: '0 */10 * * * *', // seconds included 6 params - standard 5 params supported
 var recurrence = {
-  everyHourOnTheHour: '0 0 * * * *',
-  everyTenMinutesOffsetByThree: '0 3-59/10 * * * *',
-  everyTenMinutesOffsetByFour: '0 4-59/10 * * * *',
-  everyMinute: '0 * * * * *',
+  everyDayAtMidnight: '0 0 0 * * *',
+  everyHourExceptMidnight: '0 0 1-23/* * * *',
+  everyFiveExceptOnTheHour: '0 5-59/5 * * * *',
+  // everyHourOnTheHour: '0 0 * * * *',
+  // everyTenMinutesOffsetByThree: '0 3-59/10 * * * *',
+  // everyTenMinutesOffsetByFour: '0 4-59/10 * * * *',
+  everyMinute: '0 * * * * *'
 };
 
 // serial executionof <task> for each credentialed user
@@ -53,9 +56,9 @@ function runJob(task, when) {
 }
 
 // auto-start all three
-runJob(tasks.deep,    recurrence.everyHourOnTheHour); // var deep = ...
-runJob(tasks.shallow, recurrence.everyTenMinutesOffsetByThree); // var shallow = 
-runJob(tasks.quick,   recurrence.everyTenMinutesOffsetByFour); // var quick = 
+runJob(tasks.deep,    recurrence.everyDayAtMidnight); // var deep = ...
+runJob(tasks.shallow, recurrence.everyHourExceptMidnight); // var shallow = 
+runJob(tasks.quick,   recurrence.everyFiveExceptOnTheHour); // var quick = 
 // runJob(tasks.quick,   recurrence.everyMinute); // var quick = 
 
 // make this process hang around

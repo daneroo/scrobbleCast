@@ -43,7 +43,7 @@ function deep(credentials) {
 // -- Implementation functions
 function quickWithSession(apiSession) {
   return function() {
-    lifecycle('quick', 'start', credentials.name);
+    lifecycle('quick', 'start', apiSession.user);
     return Promise.resolve(42)
       .then(apiSession.new_releases())
       .then(function(response) {
@@ -73,7 +73,7 @@ function scrape(credentials, isDeep) {
     stamp: utils.stamp('minute')
   });
   var mode = isDeep ? 'deep' : 'shallow';
-  lifecycle(mode, 'start', credentials.name); // ? apiSession.stamp
+  lifecycle(mode, 'start', apiSession.user); // ? apiSession.stamp
 
   return apiSession.sign_in(credentials)
     .then(apiSession.podcasts())

@@ -26,8 +26,8 @@ var allCredentials = require('./credentials.json');
 //   cronTime: '0 */10 * * * *', // seconds included 6 params - standard 5 params supported
 var recurrence = {
   everyDayAtMidnight: '0 0 0 * * *',
-  everyHourExceptMidnight: '0 0 1-23/* * * *',
-  everyFiveExceptOnTheHour: '0 5-59/5 * * * *',
+  everyHourExceptMidnight: '0 0 1-23/1 * * *',
+  everyTenExceptOnTheHour: '0 10-59/10 * * * *',
   // everyHourOnTheHour: '0 0 * * * *',
   // everyTenMinutesOffsetByThree: '0 3-59/10 * * * *',
   // everyTenMinutesOffsetByFour: '0 4-59/10 * * * *',
@@ -58,7 +58,7 @@ function runJob(task, when) {
 // auto-start all three
 runJob(tasks.deep,    recurrence.everyDayAtMidnight); // var deep = ...
 runJob(tasks.shallow, recurrence.everyHourExceptMidnight); // var shallow = 
-runJob(tasks.quick,   recurrence.everyFiveExceptOnTheHour); // var quick = 
+runJob(tasks.quick,   recurrence.everyTenExceptOnTheHour); // var quick = 
 // runJob(tasks.quick,   recurrence.everyMinute); // var quick = 
 
 // make this process hang around

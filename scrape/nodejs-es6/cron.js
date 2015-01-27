@@ -24,14 +24,15 @@ var allCredentials = require('./credentials.json');
 // example
 // every 10 minutes
 //   cronTime: '0 */10 * * * *', // seconds included 6 params - standard 5 params supported
+// Every recurrence pattern is offset by 10 seconds to avoid timestamping in previous minute!
 var recurrence = {
-  everyDayAtMidnight: '0 0 0 * * *',
-  everyHourExceptMidnight: '0 0 1-23/1 * * *',
-  everyTenExceptOnTheHour: '0 10-59/10 * * * *',
-  // everyHourOnTheHour: '0 0 * * * *',
-  // everyTenMinutesOffsetByThree: '0 3-59/10 * * * *',
-  // everyTenMinutesOffsetByFour: '0 4-59/10 * * * *',
-  everyMinute: '0 * * * * *'
+  everyDayAtMidnight: '10 0 0 * * *',
+  everyHourExceptMidnight: '10 0 1-23/1 * * *',
+  everyTenExceptOnTheHour: '10 10-59/10 * * * *',
+  // everyHourOnTheHour: '10 0 * * * *',
+  // everyTenMinutesOffsetByThree: '10 3-59/10 * * * *',
+  // everyTenMinutesOffsetByFour: '10 4-59/10 * * * *',
+  everyMinute: '10 * * * * *'
 };
 
 // serial executionof <task> for each credentialed user

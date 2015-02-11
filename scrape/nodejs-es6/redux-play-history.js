@@ -16,7 +16,8 @@ var allCredentials = require('./credentials.json');
 utils.serialPromiseChainMap(allCredentials, function(credentials) {
   utils.logStamp('Starting job for ' + credentials.name);
 
-  var basepath = path.join(srcFile.dataDirname, 'redux');
+  // var basepath = path.join(srcFile.dataDirname, 'redux');
+  var basepath = srcFile.dataDirname;
 
   return srcFile.findByUserStamp(credentials.name, basepath)
     .then(function(stamps) {
@@ -33,7 +34,7 @@ utils.serialPromiseChainMap(allCredentials, function(credentials) {
       // should have a version without aggregation
       return utils.serialPromiseChainMap(stamps, function(stamp) {
           console.log('--iteration stamp:', credentials.name, stamp);
-          return srcFile.find(path.join('redux/byUserStamp', credentials.name, stamp, '**/*.json'))
+          return srcFile.find(path.join('byUserStamp', credentials.name, stamp, '**/*.json'))
             .then(function(files) {
 
               files.forEach(function(file) {

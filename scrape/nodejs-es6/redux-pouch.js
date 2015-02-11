@@ -20,12 +20,17 @@ function showAll(msg) {
       })
       .then(function(response) {
         // console.log(msg, JSON.stringify(response, null, 2));
-        response.rows.forEach(function(item) {
-          console.log(msg, JSON.stringify(item.doc));
-
-        });
+        // response.rows.forEach(function(item) {
+        //   console.log(msg, JSON.stringify(item.doc));
+        // });
         console.log(msg,'total_rows',response.total_rows);
         return response;
+      // })
+      // .then(function(){
+      //   return db.compact();
+      // })
+      // .then(function(response) {
+      //   console.log('compacted',response);
       });
   }
 }
@@ -64,7 +69,8 @@ var allCredentials = require('./credentials.json');
 utils.serialPromiseChainMap(allCredentials, function(credentials) {
   utils.logStamp('Starting job for ' + credentials.name);
 
-  var basepath = path.join(srcFile.dataDirname, 'redux');
+  // var basepath = path.join(srcFile.dataDirname, 'redux');
+  var basepath = srcFile.dataDirname;
 
   return srcFile.findByUserStamp(credentials.name, basepath)
     .then(function(stamps) {
@@ -77,7 +83,7 @@ utils.serialPromiseChainMap(allCredentials, function(credentials) {
       // should have a version without aggregation
       return utils.serialPromiseChainMap(stamps, function(stamp) {
           console.log('--iteration stamp:', credentials.name, stamp);
-          return srcFile.find(path.join('redux/byUserStamp', credentials.name, stamp, '**/*.json'))
+          return srcFile.find(path.join('byUserStamp', credentials.name, stamp, '**/*.json'))
             .then(function(files) {
 
               return Promise.map(files, function(file) {

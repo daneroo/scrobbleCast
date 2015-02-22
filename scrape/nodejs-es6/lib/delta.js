@@ -1,14 +1,12 @@
 "use strict";
 
-// Usage: 
+// Usage:
 // Accumulator = new require(...delta.js).Accumulator
 // var a = new Accuumulator()
 // for (i in inputs) a.merge(i);
 // --> a.merged, a.changes,
 
 var _ = require('lodash');
-// mine
-var utils = require('./utils');
 
 // This is to remove noise from comparison
 //  -destructive if not cloned...(param?)
@@ -29,7 +27,7 @@ function normalize(thing) {
   var booleanFields = ['is_deleted', 'starred', 'is_video'];
   booleanFields.forEach(function(field) {
     if (!_.isUndefined(thing[field])) {
-      if (thing[field] !== !!thing[field]) {
+      if (!_.isBoolean(thing[field])) {
         // console.log('*** normalized !!',field,thing[field],!!thing[field]);
         thing[field] = !!thing[field];
       }
@@ -80,7 +78,7 @@ function compare(from, to) {
         // console.log('--chg:', key, f, t)
       }
 
-      // ignore deletions... 
+      // ignore deletions...
       // or maybe specific ones? (podcast_id)
       // if (op) {
       // if (op && 'chg' === op) { // only op:chg
@@ -111,8 +109,8 @@ function Accumulator() {
 // Accumulates (merges) and returns changes
 Accumulator.prototype.merge = function(item) {
   // assume the objects are all shallow... (no nested properties for now)
-  // -clone item, 
-  // -normalize attributes,  
+  // -clone item,
+  // -normalize attributes,
   // -delete __stamp,__sourceType property for compare
 
   var stamp = item.__stamp;
@@ -121,8 +119,6 @@ Accumulator.prototype.merge = function(item) {
   delete to.__stamp;
   delete to.__sourceType;
 
-
-  var changes = [];
 
   if (item.__type === 'episode' && !to.podcast_uuid) {
     console.log('Accumulator.merge: no podcast_uuid for episode:', item);
@@ -158,7 +154,7 @@ Accumulator.prototype.merge = function(item) {
 // need a new name:
 // options may include : uuid, ignoreDelete, ..
 function AccumulatorByUuid( /*options*/ ) {
-  this.accumulators = {}; // by uuid  
+  this.accumulators = {}; // by uuid
 }
 
 AccumulatorByUuid.prototype.getAccumulator = function(uuid) {
@@ -180,7 +176,7 @@ AccumulatorByUuid.prototype.merge = function(item) {
 
 
 
-var exports = module.exports = {
+exports = module.exports = {
   normalize: normalize,
   compare: compare,
   Accumulator: Accumulator,

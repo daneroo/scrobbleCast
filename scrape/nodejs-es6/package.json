@@ -7,7 +7,9 @@
     "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": {
+    "name": "Daniel Lauzon"
+  },
   "license": "ISC",
   "dependencies": {
     "bluebird": "^2.3.10",
@@ -20,5 +22,18 @@
     "pouchdb": "^3.2.0",
     "pull-stream": "^2.26.0",
     "request-promise": "^0.2.4"
+  },
+  "devDependencies": {
+    "gulp": "^3.8.11",
+    "gulp-bump": "^0.1.13",
+    "gulp-istanbul": "^0.6.0",
+    "gulp-jscs": "^1.4.0",
+    "gulp-jshint": "^1.9.2",
+    "gulp-load-plugins": "^0.8.0",
+    "gulp-mocha": "^2.0.0",
+    "gulp-plumber": "^0.6.6",
+    "gulp-util": "^3.0.3",
+    "jshint-stylish": "^1.0.0",
+    "should": "^5.0.1"
   }
 }

@@ -1,4 +1,5 @@
 node_modules/
+coverage/
 credentials.json
 data/
 data.201[45]-*.tgz

@@ -11,7 +11,7 @@ function Session() {
 // base for all requests.
 Session.prototype.baseURI = 'https://play.pocketcasts.com';
 
-// TODO: we can actually wrap this with rp, 
+// TODO: we can actually wrap this with rp,
 // or find another way to wrap both rp, and ratelimitting in one decorator.
 Session.prototype.reqJSON = function(path, params) {
   return this.reqGenXSRF(path, {
@@ -66,4 +66,4 @@ Session.prototype.getCookieValue = function(name) {
   return value;
 };
 
-var exports = module.exports = Session;
+exports = module.exports = Session;

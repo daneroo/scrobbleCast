@@ -4,7 +4,7 @@
 // var fs = require('fs');
 // for fs.readdirPromise
 var Promise = require("bluebird");
-var fs = Promise.promisifyAll(require("fs"), {
+var fs = Promise.promisifyAll(require('fs'), {
   suffix: 'Promise'
 });
 var path = require('path');
@@ -13,7 +13,6 @@ var globPromise = Promise.promisify(require('glob'));
 
 // globals - candidate for config
 var dataDirname = 'data';
-
 
 // dataDirname relative filename (internal)
 function resolveData(file) {

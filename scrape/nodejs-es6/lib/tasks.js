@@ -62,7 +62,7 @@ function quickWithSession(apiSession) {
         console.log('tasks.quick:', error);
         throw error;
       });
-  }
+  };
 
 }
 
@@ -87,7 +87,7 @@ function scrape(credentials, isDeep) {
 
       // just for lookupFun
       var podcastByUuid = _.groupBy(podcasts, 'uuid');
-      // assert unique uuids - 
+      // assert unique uuids -
 
       return Promise.map(_.pluck(podcasts, 'uuid'), function(uuid) {
         utils.logStamp('Fetching: ' + podcastByUuid[uuid][0].title);

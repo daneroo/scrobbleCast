@@ -27,7 +27,7 @@ var paths = {
   new_releases_episodes: '/web/episodes/new_releases_episodes.json',
   in_progress_episodes: '/web/episodes/in_progress_episodes.json',
   find_by_podcast: '/web/episodes/find_by_podcast.json'
-}
+};
 
 
 // JSON post with param (requires prior login)
@@ -133,13 +133,13 @@ PocketAPI.prototype.new_releases = function() {
   var self = this;
   return function() {
     return self._fetch(paths.new_releases_episodes).then(normalize('03-new_releases', self));
-  }
+  };
 };
 PocketAPI.prototype.in_progress = function() {
   var self = this;
   return function() {
     return self._fetch(paths.in_progress_episodes).then(normalize('04-in_progress', self));
-  }
+  };
 };
 PocketAPI.prototype.podcastPage = function(params) {
   var self = this;
@@ -154,7 +154,7 @@ PocketAPI.prototype.podcastPage = function(params) {
       podcast_uuid: params.uuid,
       __page: params.page
     }));
-  }
+  };
 };
 
 // fetch first or all pages, (or max pages)
@@ -192,7 +192,7 @@ PocketAPI.prototype.podcastPages = function(params) {
     return fetchPage(1).then(function(result) {
 
       // turns out this is possible...
-      if (result.length == 0) {
+      if (result.length === 0) {
         return result;
       }
       if (!result[0].__totalPages) {
@@ -202,12 +202,12 @@ PocketAPI.prototype.podcastPages = function(params) {
       var totalPages = result[0].__totalPages;
       allItems = result;
 
-      if (totalPages == 1 || params.maxPage === 1) {
+      if (totalPages === 1 || params.maxPage === 1) {
         return cleanup(allItems);
       }
 
       if (params.maxPage) {
-        totalPages = Math.min(totalPages, params.maxPage)
+        totalPages = Math.min(totalPages, params.maxPage);
       }
       utils.logStamp('Fetching pages: 2..' + totalPages);
 
@@ -228,15 +228,15 @@ PocketAPI.prototype.podcastPages = function(params) {
         });
 
     });
-  }
-}
+  };
+};
 
 // not a function factory actually invokes login.
 PocketAPI.prototype.sign_in = function(credentials) {
   // Login process:
   // GET /users/sign_in, to get cookies (XSRF-TOKEN)
   // POST form to /users/sign_in, with authenticity_token and credentials
-  //  Note: the POST returns a 302, which rejects the promise, 
+  //  Note: the POST returns a 302, which rejects the promise,
   //  whereas a faled login returns the login page content again (200)
   //  the 302 response also has a new XSRF-TOKEN cookie
   var self = this;
@@ -248,7 +248,7 @@ PocketAPI.prototype.sign_in = function(credentials) {
         authenticity_token: self.session.XSRF()
       }, credentials);
 
-      // now do a form post for login, expect a 302, which is not followed for POST.        
+      // now do a form post for login, expect a 302, which is not followed for POST.
       // unless followAllRedirects: true, but that only follows back to / and causes an extra fetch
       return new Promise(function(resolve, reject) {
         rp(self.session.reqGenXSRF(paths.sign_in, {
@@ -268,8 +268,8 @@ PocketAPI.prototype.sign_in = function(credentials) {
           }
         });
       });
-    })
+    });
 };
 
 // Exported API
-var exports = module.exports = PocketAPI;
+exports = module.exports = PocketAPI;

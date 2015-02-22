@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 // Usage:
 // Accumulator = new require(...delta.js).Accumulator
@@ -95,7 +95,6 @@ function compare(from, to) {
   return changes;
 }
 
-
 // Constructor
 function Accumulator() {
   // this.options = _.merge({},defaultOptions,options);
@@ -118,7 +117,6 @@ Accumulator.prototype.merge = function(item) {
   var to = normalize(_.clone(item));
   delete to.__stamp;
   delete to.__sourceType;
-
 
   if (item.__type === 'episode' && !to.podcast_uuid) {
     console.log('Accumulator.merge: no podcast_uuid for episode:', item);
@@ -173,8 +171,6 @@ AccumulatorByUuid.prototype.merge = function(item) {
   var changeCount = changes.length;
   return changeCount;
 };
-
-
 
 exports = module.exports = {
   normalize: normalize,

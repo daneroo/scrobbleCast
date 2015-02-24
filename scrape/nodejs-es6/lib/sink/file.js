@@ -49,7 +49,7 @@ function pathForItems(items) {
     throw new Error('pathForItems: nonuniform key items.');
   }
 
-  var paths = [keys.__user, keys.__stamp]
+  var paths = [keys.__user, keys.__stamp];
   if (keys.podcast_uuid) {
     paths.push(keys.__sourceType + '-' + keys.podcast_uuid);
   } else {
@@ -102,7 +102,7 @@ function writeByUserStamp(items, basepath) {
 
   var filename = path.join(basepath, 'byUserStamp', [basename, 'json'].join('.'));
 
-  var dir = path.dirname(filename)
+  var dir = path.dirname(filename);
   mkdirp.sync(dir);
 
   // could turnoff verification
@@ -121,7 +121,7 @@ function writeByDate(base, response, optionalStamp) {
   // e.g. ./data/byDate/2014-...Z/pocdasts/f54c667.json
   var filename = path.join(dataDirname, 'byDate', stampForFile, [base, 'json'].join('.'));
 
-  var dir = path.dirname(filename)
+  var dir = path.dirname(filename);
   mkdirp.sync(dir);
 
   var content = JSON.stringify(response, null, 2);
@@ -131,7 +131,7 @@ function writeByDate(base, response, optionalStamp) {
 }
 
 // TODO: change API to .read/.write
-var exports = module.exports = {
+exports = module.exports = {
   dataDirname: dataDirname,
   writeByUserStamp: writeByUserStamp,
   writeByDate: writeByDate

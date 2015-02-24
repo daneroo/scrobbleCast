@@ -8,7 +8,6 @@
 // dependencies - core-public-internal
 var util = require('util');
 var Promise = require("bluebird");
-var rp = require('request-promise');
 var _ = require('lodash');
 // mine
 var PocketAPI = require('./pocketAPI');
@@ -16,7 +15,7 @@ var utils = require('./utils');
 var sinkFile = require('./sink/file');
 
 // Exported API
-var exports = module.exports = {
+exports = module.exports = {
   quick: quick,
   shallow: shallow,
   deep: deep
@@ -80,7 +79,7 @@ function scrape(credentials, isDeep) {
     .then(function(response) {
       sinkFile.writeByUserStamp(response);
       progress('01-podcasts', response);
-      return response
+      return response;
     })
     .then(function(podcasts) {
       utils.logStamp('Found ' + podcasts.length + ' podcasts');
@@ -101,7 +100,7 @@ function scrape(credentials, isDeep) {
             sinkFile.writeByUserStamp(response);
             progress('02-podcasts', response);
             return response;
-          })
+          });
       }, {
         concurrency: 1
       });

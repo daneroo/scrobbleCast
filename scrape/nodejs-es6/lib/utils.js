@@ -57,7 +57,7 @@ function serialPromiseChainMap(arr, reducer) {
 }
 
 
-var exports = module.exports = {
+exports = module.exports = {
   stamp: stamp,
   logStamp: logStamp,
   stampFromFile:stampFromFile,

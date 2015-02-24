@@ -1,9 +1,6 @@
 "use strict";
 
 // dependencies - core-public-internal
-var fs = require('fs');
-var path = require('path');
-var mkdirp = require('mkdirp');
 var cron = require('cron');
 var CronJob = cron.CronJob;
 var tasks = require('./lib/tasks');
@@ -43,7 +40,7 @@ function forEachUser(task){
       utils.logStamp('Starting job for '+credentials.name);
       return task(credentials);
     });
-  }
+  };
 }
 // auto-starts
 function runJob(task, when) {
@@ -58,9 +55,9 @@ function runJob(task, when) {
 
 // auto-start all three
 runJob(tasks.deep,    recurrence.everyDayAtMidnight); // var deep = ...
-runJob(tasks.shallow, recurrence.everyHourExceptMidnight); // var shallow = 
-runJob(tasks.quick,   recurrence.everyTenExceptOnTheHour); // var quick = 
-// runJob(tasks.quick,   recurrence.everyMinute); // var quick = 
+runJob(tasks.shallow, recurrence.everyHourExceptMidnight); // var shallow =
+runJob(tasks.quick,   recurrence.everyTenExceptOnTheHour); // var quick =
+// runJob(tasks.quick,   recurrence.everyMinute); // var quick =
 
 // make this process hang around
 // closing stdin (^D/EOF) will exit.

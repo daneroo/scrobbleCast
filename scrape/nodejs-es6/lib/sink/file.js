@@ -1,10 +1,10 @@
-"use strict";
+'use strict';
 
 // dependencies - core-public-internal
 // var fs = require('fs');
 // for fs.readdirPromise
-var Promise = require("bluebird");
-var fs = Promise.promisifyAll(require("fs"), {
+var Promise = require('bluebird');
+var fs = Promise.promisifyAll(require('fs'), {
   suffix: 'Promise'
 });
 var path = require('path');
@@ -12,10 +12,8 @@ var mkdirp = require('mkdirp');
 var _ = require('lodash');
 var utils = require('../utils');
 
-
 // globals - candidate for config
 var dataDirname = 'data';
-
 
 // items => <__user>/<__stamp>/__sourceType[-<podast_uuid>].json
 // items should not be empty
@@ -42,7 +40,6 @@ function pathForItems(items) {
     }
   });
 
-
   // assertions - all items have same key elements - using lodash where notation
   if (!_.every(items, keys)) {
     console.log('keys', keys);
@@ -58,7 +55,6 @@ function pathForItems(items) {
 
   return paths.join('/');
 }
-
 
 // This was originally called: verifyIdenticalOrWrite
 // This was useful for toUserStamp.js verification

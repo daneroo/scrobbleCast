@@ -1,8 +1,8 @@
-"use strict";
+'use strict';
 
 // dependencies - core-public-internal
 
-var Promise = require("bluebird");
+var Promise = require('bluebird');
 var rp = require('request-promise');
 var _ = require('lodash');
 var RateLimiter = require('limiter').RateLimiter;
@@ -28,7 +28,6 @@ var paths = {
   in_progress_episodes: '/web/episodes/in_progress_episodes.json',
   find_by_podcast: '/web/episodes/find_by_podcast.json'
 };
-
 
 // JSON post with param (requires prior login)
 PocketAPI.prototype._fetch = function(path, params) {
@@ -58,7 +57,6 @@ PocketAPI.prototype._fetch = function(path, params) {
     });
 };
 
-
 // promise token.
 function speedLimit(input) {
   return new Promise(function(resolve, reject) {
@@ -69,7 +67,6 @@ function speedLimit(input) {
     });
   });
 }
-
 
 function extractMember(sourceType, response) {
   if (sourceType === '01-podcasts') {
@@ -210,7 +207,6 @@ PocketAPI.prototype.podcastPages = function(params) {
         totalPages = Math.min(totalPages, params.maxPage);
       }
       utils.logStamp('Fetching pages: 2..' + totalPages);
-
 
       // otherwise append the other pages
       // [2..totalPages]

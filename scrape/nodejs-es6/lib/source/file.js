@@ -1,9 +1,9 @@
-"use strict";
+'use strict';
 
 // dependencies - core-public-internal
 // var fs = require('fs');
 // for fs.readdirPromise
-var Promise = require("bluebird");
+var Promise = require('bluebird');
 var fs = Promise.promisifyAll(require('fs'), {
   suffix: 'Promise'
 });

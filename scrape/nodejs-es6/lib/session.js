@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var rp = require('request-promise');
 var _ = require('lodash');

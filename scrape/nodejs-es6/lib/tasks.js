@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 // There are three scraping tasks:
 // -quick (only 03-new-releases/04-in_progress)
@@ -7,7 +7,7 @@
 
 // dependencies - core-public-internal
 var util = require('util');
-var Promise = require("bluebird");
+var Promise = require('bluebird');
 var _ = require('lodash');
 // mine
 var PocketAPI = require('./pocketAPI');
@@ -115,7 +115,6 @@ function scrape(credentials, isDeep) {
       throw error;
     });
 }
-
 
 //--- Utility functions
 // Task quick: start for daniel

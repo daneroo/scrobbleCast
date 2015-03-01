@@ -87,7 +87,7 @@ function findByDate() {
 }
 
 // TODO: change API to .read
-var exports = module.exports = {
+exports = module.exports = {
   dataDirname: dataDirname,
   loadJSON: loadJSON,
   find: find,

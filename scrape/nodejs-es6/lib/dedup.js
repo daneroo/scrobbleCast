@@ -15,13 +15,20 @@ var srcFile = require('./source/file');
 var sinkFile = require('./sink/file');
 var delta = require('./delta');
 
-// globals
-var allCredentials = require('../credentials.json');
-utils.serialPromiseChainMap(allCredentials, dedupTask);
+// Exported API
+exports = module.exports = {
+  dedupTask: dedupTask
+};
+
+if (require.main === module) {
+  console.log('called directly');
+  var allCredentials = require('../credentials.json');
+  utils.serialPromiseChainMap(allCredentials, dedupTask);
+} else {
+  console.log('required as a module');
+}
 
 function dedupTask(credentials) {
-  utils.logStamp('Starting job for ' + credentials.name);
-
   return srcFile.findByUserStamp(credentials.name)
     .then(function(stamps) {
       utils.logStamp('Starting:Dedup for ' + credentials.name);

@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 // Acculumalte delta history per user, over <data>/byUserStamp
 // remove null change files (<data>/dedup/byUserStamp)
@@ -77,7 +77,7 @@ function dedupTask(credentials) {
                 // fileHasChanges === redux.length>0
                 if (!fileHasChanges) {
                   dedupFileCount++;
-                  dedup(file);
+                  moveToDedup(file);
                   // console.log('---dedup: file %d/%d  part %d/%d', dedupFileCount, fileCount, dedupPartCount, partCount);
                 }
                 // else: fileHasHasganges===true or redux.length>0
@@ -113,58 +113,9 @@ function dedupTask(credentials) {
     });
 }
 
-// construct path rooted at dataDirName, poosibly with a base path extension:
-// base==null -> data/byUserStamp/<file>
-// base=='dedup' -> data/dedup/byUserStamp/<file>
-// base=='noredux' -> data/noredux/byUserStamp/<file>
-function filenameAtBase(file, basePartialPath) {
-    var dataDirname = sinkFile.dataDirname;
-    if (!basePartialPath) {
-      return path.join(dataDirname, file);
-    } else {
-      return path.join(dataDirname, basePartialPath, file);
-    }
-  }
-
-  // move file from one basepath to another:
-  // e.g.:  data/<fromPath>/<file> -> data/<toPath>/<file>
-  // from and to: should be one of: null,'dedup','noredux'
-function move(file, fromPath, toPath) {
-
-    var oldFilename = filenameAtBase(file, fromPath);
-    var oldDir = path.dirname(oldFilename);
-
-    var nuFilename = filenameAtBase(file, toPath);
-    var nuDir = path.dirname(nuFilename)
-
-    // refuse to clober an existing file
-    if (fs.existsSync(nuFilename)) {
-      console.log('Dedup:move %s -> %s', oldFilename, nuFilename);
-      console.log('Dedup:move refusing to clobber %s', nuFilename);
-    }
-    mkdirp.sync(nuDir);
-    fs.renameSync(oldFilename, nuFilename);
-    console.log('-exec fs.renameSync(%s, %s)', oldFilename, nuFilename);
-
-    // now prune oldDir (and parent) - if empty
-    try {
-      fs.rmdirSync(oldDir);
-      // only prints if emtpy - no error
-      console.log('-exec fs.rmdirSync(%s)', oldDir);
-      // and parent - unless oldDir already not empty...
-      fs.rmdirSync(path.dirname(oldDir));
-      // only prints if emtpy - no error
-      console.log('-exec fs.rmdirSync(%s)', path.dirname(oldDir));
-    } catch (e) {
-      // code: 'ENOTEMPTY'
-      // console.log('rmdir error:',e);
-    } finally {
-      // console.log('+exec fs.rmdirSync(%s) (and parent)',oldDir);
-    }
-  }
-  // mv the file to dedup folder
-  // should be async
-function dedup(file) {
+// mv the file to dedup folder
+// should be async
+function moveToDedup(file) {
   move(file, null, 'dedup');
 }
 
@@ -186,6 +137,56 @@ function replaceRedux(file, origItems, reduxItems) {
     // move the redux version back to original
     move(file, 'redux', null);
 
+  }
+}
+
+// move file from one basepath to another:
+// e.g.:  data/<fromPath>/<file> -> data/<toPath>/<file>
+// from and to: should be one of: null,'dedup','noredux'
+function move(file, fromPath, toPath) {
+
+  var oldFilename = filenameAtBase(file, fromPath);
+  var oldDir = path.dirname(oldFilename);
+
+  var nuFilename = filenameAtBase(file, toPath);
+  var nuDir = path.dirname(nuFilename);
+
+    // refuse to clober an existing file
+  if (fs.existsSync(nuFilename)) {
+    console.log('Dedup:move %s -> %s', oldFilename, nuFilename);
+    console.log('Dedup:move refusing to clobber %s', nuFilename);
+  }
+  mkdirp.sync(nuDir);
+  fs.renameSync(oldFilename, nuFilename);
+  console.log('-exec fs.renameSync(%s, %s)', oldFilename, nuFilename);
+
+    // now prune oldDir (and parent) - if empty
+  try {
+    fs.rmdirSync(oldDir);
+      // only prints if emtpy - no error
+    console.log('-exec fs.rmdirSync(%s)', oldDir);
+    // and parent - unless oldDir already not empty...
+    fs.rmdirSync(path.dirname(oldDir));
+    // only prints if emtpy - no error
+    console.log('-exec fs.rmdirSync(%s)', path.dirname(oldDir));
+  } catch (e) {
+      // code: 'ENOTEMPTY'
+      // console.log('rmdir error:',e);
+  } finally {
+    // console.log('+exec fs.rmdirSync(%s) (and parent)',oldDir);
+  }
+}
+
+// construct path rooted at dataDirName, poosibly with a base path extension:
+// base==null -> data/byUserStamp/<file>
+// base=='dedup' -> data/dedup/byUserStamp/<file>
+// base=='noredux' -> data/noredux/byUserStamp/<file>
+function filenameAtBase(file, basePartialPath) {
+  var dataDirname = sinkFile.dataDirname;
+  if (!basePartialPath) {
+    return path.join(dataDirname, file);
+  } else {
+    return path.join(dataDirname, basePartialPath, file);
   }
 }
 

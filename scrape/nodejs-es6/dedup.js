@@ -116,7 +116,7 @@ utils.serialPromiseChainMap(allCredentials, function(credentials) {
 
       // should have a version without aggregation
       return utils.serialPromiseChainMap(stamps, function(stamp) {
-          console.log('--iteration stamp:', credentials.name, stamp);
+          // console.log('--iteration stamp:', credentials.name, stamp);
           return srcFile.find(path.join('byUserStamp', credentials.name, stamp, '**/*.json'))
             .then(function(files) {
 

@@ -10,13 +10,13 @@ var path = require('path');
 var mkdirp = require('mkdirp');
 var crypto = require('crypto');
 var _ = require('lodash');
-var utils = require('./lib/utils');
-var srcFile = require('./lib/source/file');
-var sinkFile = require('./lib/sink/file');
-var delta = require('./lib/delta');
+var utils = require('./utils');
+var srcFile = require('./source/file');
+var sinkFile = require('./sink/file');
+var delta = require('./delta');
 
 // globals
-var allCredentials = require('./credentials.json');
+var allCredentials = require('../credentials.json');
 
 // construct path rooted at dataDirName, poosibly with a base path extension:
 // base==null -> data/byUserStamp/<file>
@@ -118,7 +118,7 @@ utils.serialPromiseChainMap(allCredentials, function(credentials) {
 
       // should have a version without aggregation
       return utils.serialPromiseChainMap(stamps, function(stamp) {
-          console.log('--iteration stamp:', credentials.name, stamp);
+          // console.log('--iteration stamp:', credentials.name, stamp);
           return srcFile.find(path.join('byUserStamp', credentials.name, stamp, '**/*.json'))
             .then(function(files) {
 

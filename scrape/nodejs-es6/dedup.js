@@ -103,7 +103,7 @@ utils.serialPromiseChainMap(allCredentials, function(credentials) {
   return srcFile.findByUserStamp(credentials.name)
     .then(function(stamps) {
       utils.logStamp('Starting:Dedup for ' + credentials.name);
-      console.log('-|stamps|', stamps.length);
+      // console.log('-|stamps|', stamps.length);
 
       var uuidProperty = 'uuid'; // common to all: podcasts/episodes
       var podcastHistory = new delta.AccumulatorByUuid();
@@ -171,7 +171,7 @@ utils.serialPromiseChainMap(allCredentials, function(credentials) {
         })
         .then(function(dontCare) {
           function sortAndSave(outfile, history) {
-            console.log('|' + outfile + '|=', _.size(history.accumulators));
+            // console.log('|' + outfile + '|=', _.size(history.accumulators));
             // just write out the accumulators dictionary, it is the only attribute!
             var sorted = _.sortBy(history.accumulators, 'lastUpdated').reverse();
             var json = JSON.stringify(sorted, null, 2);
@@ -181,7 +181,7 @@ utils.serialPromiseChainMap(allCredentials, function(credentials) {
           sortAndSave('podcast-history-' + credentials.name + '.json', podcastHistory);
           sortAndSave('episode-history-' + credentials.name + '.json', episodeHistory);
 
-          console.log('Done:dedup[%s] |f|: %d/%d  |p|: %d/%d', credentials.name, dedupFileCount, fileCount, dedupPartCount, partCount);
+          // console.log('Done:dedup[%s] |f|: %d/%d  |p|: %d/%d', credentials.name, dedupFileCount, fileCount, dedupPartCount, partCount);
           utils.logStamp('Done:Dedup[' + credentials.name + '] |f|:' + fileCount + ' |p|:' + partCount);
           return stamps;
         });

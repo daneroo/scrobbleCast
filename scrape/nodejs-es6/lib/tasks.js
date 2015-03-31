@@ -13,6 +13,7 @@ var _ = require('lodash');
 var PocketAPI = require('./pocketAPI');
 var utils = require('./utils');
 var sinkFile = require('./sink/file');
+var dedupTask = require('./dedup').dedupTask;
 
 // Exported API
 exports = module.exports = {
@@ -57,12 +58,19 @@ function quickWithSession(apiSession) {
       .then(function() {
         lifecycle('quick', 'done', apiSession.user);
       })
+      .then(function() { // TODO: this might be better split into further (seperate function)
+        var credentials = {name:apiSession.user};
+        lifecycle('dedup', 'start', apiSession.user);
+        return dedupTask(credentials);
+      })
+      .then(function() {
+        lifecycle('dedup', 'done', apiSession.user);
+      })
       .catch(function(error) {
         console.log('tasks.quick:', error);
         throw error;
       });
   };
-
 }
 
 // get podcasts then foreach: podcastPages->file

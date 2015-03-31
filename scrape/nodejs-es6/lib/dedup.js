@@ -20,18 +20,18 @@ exports = module.exports = {
   dedupTask: dedupTask
 };
 
-if (require.main === module) {
-  console.log('called directly');
-  var allCredentials = require('../credentials.json');
-  utils.serialPromiseChainMap(allCredentials, dedupTask);
-} else {
-  console.log('required as a module');
-}
+// if (require.main === module) {
+//   console.log('called directly');
+//   var allCredentials = require('../credentials.json');
+//   utils.serialPromiseChainMap(allCredentials, dedupTask);
+// } else {
+//   console.log('required as a module');
+// }
 
 function dedupTask(credentials) {
   return srcFile.findByUserStamp(credentials.name)
     .then(function(stamps) {
-      utils.logStamp('Starting:Dedup for ' + credentials.name);
+      // utils.logStamp('Starting:Dedup for ' + credentials.name);
       // console.log('-|stamps|', stamps.length);
 
       var podcastHistory = new delta.AccumulatorByUuid();
@@ -103,20 +103,21 @@ function dedupTask(credentials) {
             var sorted = _.sortBy(history.accumulators, 'lastUpdated').reverse();
             var json = JSON.stringify(sorted, null, 2);
             fs.writeFileSync(outfile, json);
-            utils.logStamp('Wrote:Dedup[' + outfile + '] md5:' + md5(json));
+            utils.logStamp('md5(' + outfile + '):' + md5(json));
           }
           sortAndSave('podcast-history-' + credentials.name + '.json', podcastHistory);
           sortAndSave('episode-history-' + credentials.name + '.json', episodeHistory);
 
           // console.log('Done:dedup[%s] |f|: %d/%d  |p|: %d/%d', credentials.name, dedupFileCount, fileCount, dedupPartCount, partCount);
-          utils.logStamp('Done:Dedup[' + credentials.name + '] |f|:' + fileCount + ' |p|:' + partCount);
+          // utils.logStamp('Done:Dedup[' + credentials.name + '] |f|:' + fileCount + ' |p|:' + partCount);
           return stamps;
         });
 
     })
-    .catch(function(error) {
+    .catch(function(error) { // TODO: might remove this altogether
       console.error('Error:Dedup', error);
       utils.logStamp('Error:Dedup ' + error);
+      throw error;
     });
 }
 
@@ -132,7 +133,7 @@ function moveToDedup(file) {
 // -write the redux file to the
 function replaceRedux(file, origItems, reduxItems) {
   if (!_.isEqual(origItems, reduxItems)) {
-    console.log('Dedup:redux %s', file);
+    console.log('  replace:redux %s', file);
 
     // write the redux file
     var basepath = path.join(sinkFile.dataDirname, 'redux');
@@ -165,17 +166,17 @@ function move(file, fromPath, toPath) {
   }
   mkdirp.sync(nuDir);
   fs.renameSync(oldFilename, nuFilename);
-  console.log('-exec fs.renameSync(%s, %s)', oldFilename, nuFilename);
+  // console.log('-exec fs.renameSync(%s, %s)', oldFilename, nuFilename);
 
     // now prune oldDir (and parent) - if empty
   try {
     fs.rmdirSync(oldDir);
-      // only prints if emtpy - no error
-    console.log('-exec fs.rmdirSync(%s)', oldDir);
+    // only prints if emtpy - no error
+    // console.log('-exec fs.rmdirSync(%s)', oldDir);
     // and parent - unless oldDir already not empty...
     fs.rmdirSync(path.dirname(oldDir));
     // only prints if emtpy - no error
-    console.log('-exec fs.rmdirSync(%s)', path.dirname(oldDir));
+    // console.log('-exec fs.rmdirSync(%s)', path.dirname(oldDir));
   } catch (e) {
       // code: 'ENOTEMPTY'
       // console.log('rmdir error:',e);

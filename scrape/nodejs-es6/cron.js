@@ -37,7 +37,7 @@ var recurrence = {
 function forEachUser(task){
   return function(){
     return utils.serialPromiseChainMap(allCredentials, function(credentials) {
-      utils.logStamp('Starting job for '+credentials.name);
+      utils.logStamp('Starting job for ' + credentials.name);
       return task(credentials);
     });
   };

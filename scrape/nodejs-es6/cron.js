@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 // dependencies - core-public-internal
 var cron = require('cron');
@@ -8,7 +8,6 @@ var utils = require('./lib/utils');
 
 // globals
 var allCredentials = require('./credentials.json');
-
 
 // TODO: this should become cronRunner, move to lib, receive/inject config
 // e.g. fomr index.js:
@@ -32,13 +31,14 @@ var recurrence = {
   everyMinute: '10 * * * * *'
 };
 
-// serial executionof <task> for each credentialed user
+// serial execution of <task> for each credentialed user
+// perform dedup task on all users, after main tasks are completed
 // return a function
 function forEachUser(task){
   return function(){
-    return utils.serialPromiseChainMap(allCredentials, function(credentials) {
-      utils.logStamp('Starting job for ' + credentials.name);
-      return task(credentials);
+    return utils.serialPromiseChainMap(allCredentials, task)
+    .then(function(){
+      return utils.serialPromiseChainMap(allCredentials, tasks.dedup);
     });
   };
 }

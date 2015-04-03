@@ -1,0 +1,12 @@
+{
+  // This if for HTML-CSS-JS Prettify (doesn't respect editorconfig)
+
+  // The plugin looks for a .jsbeautifyrc file in the same directory as the
+  // source file you're prettifying (or any directory above if it doesn't exist,
+  // or in your home folder if everything else fails) and uses those options
+  // along the default ones.
+
+  "js": {
+    "indent_size": 2 // Indentation size
+  }
+}

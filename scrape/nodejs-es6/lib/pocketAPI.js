@@ -6,7 +6,7 @@ var Promise = require('bluebird');
 var rp = require('request-promise');
 var _ = require('lodash');
 var RateLimiter = require('limiter').RateLimiter;
-var Session = require('./Session');
+var Session = require('./session');
 var utils = require('./utils');
 
 // globals limiter might be configured, injected, credentials as well...

@@ -1,0 +1,10 @@
+.git
+node_modules/
+coverage/
+credentials.json
+data/
+data.201[45]-*.tgz
+pouchdb/
+podcast-history-*.json
+episode-history-*.json
+episode-play-history-*.json

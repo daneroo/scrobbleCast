@@ -1,10 +1,16 @@
 # implement the feed fetch in node.js
 
+* Docker
 * Auth
 * Wrap JSON Rest API in module
 * LevelDB Storage
 * Try using promises
 * Try using ES6
+
+## Docker
+
+  docker build -t daneroo/pocketscrape .
+  docker run -it --rm -v $(pwd)/credentials.json:/usr/src/app/credentials.json daneroo/pocketscrape bash
 
 ## Universal streams
 

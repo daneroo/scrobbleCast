@@ -11,7 +11,17 @@
 
   docker build -t daneroo/pocketscrape .
   docker run -it --rm -v $(pwd)/credentials.json:/usr/src/app/credentials.json -v $(pwd)/data:/usr/src/app/data daneroo/pocketscrape node cron.js
+  docker run -itd -v $(pwd)/credentials.json:/usr/src/app/credentials.json -v $(pwd)/data:/usr/src/app/data daneroo/pocketscrape node cron.js
   docker exec -it <container id> bash
+
+### Docker file permissions
+On cantor, the container creates it's files as root, so when I sync, ignore owner
+
+  sudo rsync -av --no-owner --progress daniel@dirac.imetrical.com:Code/iMetrical/scrobbleCast/scrape/nodejs-es6/data/ data/
+  # check
+  find data -not -user root -ls
+  # fix if necessary
+  sudo chown -R root:root data/
 
 ## Universal streams
 

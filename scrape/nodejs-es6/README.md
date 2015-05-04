@@ -10,7 +10,7 @@
 ## Docker
 
   docker build -t daneroo/pocketscrape .
-  docker run -it --rm -v $(pwd)/credentials.json:/usr/src/app/credentials.json -v $(pwd)/data:/usr/src/app/data daneroo/pocketscrape node cron.js
+  # if you want it interactive: docker run -it --rm ...
   docker run -itd -v $(pwd)/credentials.json:/usr/src/app/credentials.json -v $(pwd)/data:/usr/src/app/data daneroo/pocketscrape node cron.js
   docker exec -it <container id> bash
 

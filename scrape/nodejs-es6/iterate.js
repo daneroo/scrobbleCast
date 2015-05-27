@@ -15,7 +15,7 @@ function doOneItem(credentials, stamp, file, item) {
 }
 
 function iterator(extrapath, allCredentials, cb) {
-  var basepath = path.join(srcFile.dataDirname, '');
+  var basepath = path.join(srcFile.dataDirname, extrapath);
   var counts = {};
   return utils.serialPromiseChainMap(allCredentials, function(credentials) {
     counts[credentials.name] = counts[credentials.name] || {

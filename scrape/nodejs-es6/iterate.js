@@ -55,5 +55,5 @@ function iterator(extrapath, allCredentials, cb) {
 
 }
 
-iterator('noredux', allCredentials, doOneItem);
-// iterator('', allCredentials, doOneItem);
+// iterator('noredux', allCredentials, doOneItem);
+iterator('', allCredentials, doOneItem);

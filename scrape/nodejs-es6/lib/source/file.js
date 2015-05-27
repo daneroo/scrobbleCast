@@ -113,12 +113,7 @@ function iterator(extrapath, allCredentials, callback) {
 
                 });
               });
-          })
-          .then(function(dontCare) {
-            var c = counts[credentials.name];
-            console.log('*--' + extrapath + '-- ' + credentials.name + '|stamps|:' + c.stamp + ' |f|:' + c.file + ' |p|:' + c.part);
           });
-
       })
       .catch(function(error) {
         console.error('Error:Dedup', error);
@@ -126,7 +121,7 @@ function iterator(extrapath, allCredentials, callback) {
       });
   })
   .then(function(){
-    return counts
+    return counts;
   });
 
 }

@@ -10,6 +10,7 @@ var fs = Promise.promisifyAll(require('fs'), {
 var path = require('path');
 // a-la suffix: 'Promise'
 var globPromise = Promise.promisify(require('glob'));
+var utils = require('../utils');
 
 // globals - candidate for config
 var dataDirname = 'data';
@@ -86,11 +87,56 @@ function findByDate() {
   return fs.readdirPromise(path.join(dataDirname, 'byDate'));
 }
 
+function iterator(extrapath, allCredentials, callback) {
+  var basepath = path.join(dataDirname, extrapath);
+  var counts = {};
+  return utils.serialPromiseChainMap(allCredentials, function(credentials) {
+    counts[credentials.name] = counts[credentials.name] || {
+      part: 0,
+      file: 0,
+      stamp: 0
+    };
+    var c = counts[credentials.name];
+    return findByUserStamp(credentials.name, basepath)
+      .then(function(stamps) {
+        return utils.serialPromiseChainMap(stamps, function(stamp) {
+            return find(path.join(extrapath, 'byUserStamp', credentials.name, stamp, '**/*.json'))
+              .then(function(files) {
+                c.stamp++;
+                files.forEach(function(file) {
+                  var items = loadJSON(file);
+                  c.file++;
+                  items.forEach(function(item) {
+                    c.part++;
+                    callback(credentials, stamp, file, item, counts);
+                  });
+
+                });
+              });
+          })
+          .then(function(dontCare) {
+            var c = counts[credentials.name];
+            console.log('*--' + extrapath + '-- ' + credentials.name + '|stamps|:' + c.stamp + ' |f|:' + c.file + ' |p|:' + c.part);
+          });
+
+      })
+      .catch(function(error) {
+        console.error('Error:Dedup', error);
+        utils.logStamp('Error:Dedup ' + error);
+      });
+  })
+  .then(function(){
+    return counts
+  });
+
+}
+
 // TODO: change API to .read
 exports = module.exports = {
   dataDirname: dataDirname,
   loadJSON: loadJSON,
   find: find,
   findByDate: findByDate,
-  findByUserStamp: findByUserStamp
+  findByUserStamp: findByUserStamp,
+  iterator:iterator
 };

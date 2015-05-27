@@ -55,5 +55,16 @@ function iterator(extrapath, allCredentials, cb) {
 
 }
 
+var extra = 'noredux';
+// var extra = '';
 // iterator('noredux', allCredentials, doOneItem);
-iterator('', allCredentials, doOneItem);
+iterator(extra, allCredentials, doOneItem)
+  .then(function() {
+    srcFile.iterator(extra, allCredentials, doOneItem)
+      .then(function(counts) {
+        Object.keys(counts).forEach(function(name) {
+          var c = counts[name];
+          console.log('!--' + extra + '-- ' + name + '|stamps|:' + c.stamp + ' |f|:' + c.file + ' |p|:' + c.part);
+        });
+      });
+  });

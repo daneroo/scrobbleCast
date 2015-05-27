@@ -3,10 +3,8 @@
 // Pump redux to pouchdb
 
 // dependencies - core-public-internal
-var fs = require('fs');
 var path = require('path');
 var utils = require('./lib/utils');
-var _ = require('lodash');
 var Promise = require('bluebird');
 var PouchDB = require('pouchdb');
 var srcFile = require('./lib/source/file');
@@ -19,38 +17,32 @@ function showAll(msg) {
         include_docs: true
       })
       .then(function(response) {
-        // console.log(msg, JSON.stringify(response, null, 2));
-        // response.rows.forEach(function(item) {
-        //   console.log(msg, JSON.stringify(item.doc));
-        // });
+        response.rows.forEach(function(item) {
+          var d = item.doc;
+          console.log(JSON.stringify({id:d._id,r:d._rev,t:d.item.title}));
+        });
         console.log(msg,'total_rows',response.total_rows);
         return response;
-      // })
-      // .then(function(){
-      //   return db.compact();
-      // })
-      // .then(function(response) {
-      //   console.log('compacted',response);
       });
-  }
+  };
 }
 
 function create(item) {
-  var key = [item.__user, item.__stamp, item.__type, item.uuid].join('/');
+  // with - or without stamp
+  // var key = [item.__user, item.__stamp, item.__type, item.uuid].join('/');
+  var key = [item.__user, item.__type, item.uuid].join('/');
   item = {item:item};
   item._id = key;
   return db.get(key)
     .catch(function(error) {
-      // console.log('--expected error');
       return item;
-    })
+    });
 }
 
 function save(doc) {
   console.log('--saving', doc._id);
   return db.put(doc)
   .then(function(doc){
-    console.log('doc',doc);
     return doc;
   })
   .catch(function(error){
@@ -95,9 +87,9 @@ utils.serialPromiseChainMap(allCredentials, function(credentials) {
                 return Promise.map(items, function(item) {
                   partCount++;
                   return createAndUpdate(item);
-                });
+                },{concurrency: 1});
 
-              });
+              },{concurrency: 1});
             });
         })
         .then(function(dontCare) {

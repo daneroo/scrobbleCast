@@ -23,6 +23,7 @@ function verboseErrorHandler(error) {
   throw (error);
 }
 
+// -write out each doc to stdout (deleteing _rev key which is not repeatable)
 function showAll() {
   return function() {
     return db.allDocs({
@@ -32,7 +33,7 @@ function showAll() {
         response.rows.forEach(function(item) {
           var d = item.doc;
           delete d._rev;
-          console.log('-doc', JSON.stringify(d));
+          console.log('-doc:', JSON.stringify(d));
         });
         verbose('total_rows', response.total_rows);
         return response;
@@ -40,13 +41,19 @@ function showAll() {
   };
 }
 
+// returns a fetched item, or passes the item, augmented with a key.
 function create(item) {
   // with - or without stamp
   // var key = [item.__user, item.__stamp, item.__type, item.uuid].join('/');
   var key = [item.__user, item.__type, item.uuid].join('/');
-  item = {
-    item: item
-  };
+
+  // re-uasble obect transformation; (immutable ==> clone)
+  // bury the meta keys in meta attribute, so as not to clash with couch restrictions on top-level keys ( ._anything)
+  item.meta = {};
+  ['__type', '__sourceType', '__user', '__stamp'].forEach(function(key) {
+    item.meta[key] = item[key];
+    delete item[key];
+  });
   item._id = key;
   return db.get(key)
     .catch(function(error) {
@@ -54,6 +61,7 @@ function create(item) {
     });
 }
 
+//  create or update
 function save(doc) {
   // verbose('--saving', doc._id);
   return db.put(doc)

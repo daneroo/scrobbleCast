@@ -14,6 +14,13 @@
   docker run -itd -v $(pwd)/credentials.json:/usr/src/app/credentials.json -v $(pwd)/data:/usr/src/app/data daneroo/pocketscrape node cron.js
   docker exec -it <container id> bash
 
+### CouchDB for persistence
+Note: try CouchDB 2.0
+
+  docker run -d -p 5984:5984 -e COUCHDB_PASS="supersecret" -v $(pwd)/data/couchdb:/var/lib/couchdb tutum/couchdb 
+
+  # then open  http://admin:supersecret@cantor:5984/_utils/
+
 ### Docker file permissions
 On cantor, the container creates it's files as root, so when I sync, ignore owner
 

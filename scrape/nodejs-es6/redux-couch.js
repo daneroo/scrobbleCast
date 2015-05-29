@@ -46,18 +46,28 @@ function save(doc) {
     .then(function(doc) {
       return doc;
     })
+    .catch(function(error){
+      verbose('error:doc', doc.__id);
+      throw (error);
+    })
     .catch(verboseErrorHandler);
 }
 
 var lastStamp = null;
 
 function createAndUpdate(credentials, stamp, file, item) {
-  if (item.__stamp !== lastStamp) {
-    verbose('--stamp', stamp);
+  var logit = (item.__stamp !== lastStamp);
+  if (logit) {
+    verbose('--iteration stamp:', [credentials.name, stamp]);
     lastStamp = stamp;
   }
   return create(item)
-    .then(save);
+    .then(save)
+    .then(function(){
+      if (logit) {
+        verbose('-+iteration stamp:', [credentials.name, stamp]);
+      }
+    });
 }
 
 // var extra = 'noredux';
@@ -67,6 +77,6 @@ srcFile.iterator(extra, allCredentials, createAndUpdate)
   .then(function(counts) {
     Object.keys(counts).forEach(function(name) {
       var c = counts[name];
-      console.log('--' + extra + '-- ' + name + '|stamps|:' + c.stamp + ' |f|:' + c.file + ' |p|:' + c.part);
+      console.log('--' + extra + '-- ' + name + ' |stamps|:' + c.stamp + ' |f|:' + c.file + ' |p|:' + c.part);
     });
   });

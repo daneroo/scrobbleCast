@@ -76,7 +76,7 @@ function createAndUpdate(item) {
     .then(save);
 }
 
-utils.serialPromiseChainMap(allCredentials, function(credentials) {
+Promise.each(allCredentials, function(credentials) {
     verbose('Starting job: ', credentials.name);
 
     // var basepath = path.join(srcFile.dataDirname, 'redux');
@@ -90,7 +90,7 @@ utils.serialPromiseChainMap(allCredentials, function(credentials) {
         var fileCount = 0;
 
         // should have a version without aggregation
-        return utils.serialPromiseChainMap(stamps, function(stamp) {
+        return Promise.each(stamps, function(stamp) {
             verbose('--iteration stamp:', [credentials.name, stamp]);
             return srcFile.find(path.join('byUserStamp', credentials.name, stamp, '**/*.json'))
               .then(function(files) {
@@ -101,15 +101,10 @@ utils.serialPromiseChainMap(allCredentials, function(credentials) {
                   var items = srcFile.loadJSON(file);
 
                   fileCount++;
-                  return Promise.map(items, function(item) {
+                  return Promise.each(items, function(item) {
                     partCount++;
                     return createAndUpdate(item);
-                  }, {
-                    concurrency: 1
                   });
-
-                }, {
-                  concurrency: 1
                 });
               });
           })

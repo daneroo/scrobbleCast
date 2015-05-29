@@ -34,31 +34,8 @@ function stampFromFile(file) {
   return stamp;
 }
 
-//  similar to Promise.map but implies concurrrency=1, preserves order of result array
-//  *AND* calls reducer(item) in order
-// TODO: move to own file/module...
-function serialPromiseChainMap(arr, reducer) {
-  var resultArray = [];
-  return arr.reduce(function(promise, item) {
-    return promise.then(function() {
-      return Promise.resolve(reducer(item))
-        .then(function(result) {
-          resultArray.push(result);
-          return resultArray;
-        });
-    });
-  }, Promise.resolve('start'));
-  // .then(function(what){
-  //   console.log('serialPromiseMap what:',what.length);
-  //   console.log('serialPromiseMap |resultArray|:',resultArray.length);
-  //   return resultArray;
-  // });
-  // return Promise.resolve(resultArray);
-}
-
 exports = module.exports = {
   stamp: stamp,
   logStamp: logStamp,
-  stampFromFile:stampFromFile,
-  serialPromiseChainMap: serialPromiseChainMap
+  stampFromFile:stampFromFile
 };

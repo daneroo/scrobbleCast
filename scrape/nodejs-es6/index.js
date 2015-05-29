@@ -1,18 +1,13 @@
 "use strict";
 
 // dependencies - core-public-internal
-var tasks = require('./lib/tasks');
-var _ = require('lodash');
+var Promise = require('bluebird');
 var PocketAPI = require('./lib/pocketAPI');
 var utils = require('./lib/utils');
-var sinkFile = require('./lib/sink/file');
-
 
 // tasks.deep();
 // tasks.shallow();
 // tasks.quick();
-
-
 
 function show(msg, response) {
   console.log('\n |%s|:%d', msg, response.length);
@@ -40,12 +35,12 @@ function tryemall(credentials) {
     .then(apiSession.podcastPages({
       // maxPage:10,
       // page: 1,
-      // Spark from CBC Radio  05ccf3c0-1b97-012e-00b7-00163e1b201c    
+      // Spark from CBC Radio  05ccf3c0-1b97-012e-00b7-00163e1b201c
       uuid: '05ccf3c0-1b97-012e-00b7-00163e1b201c'
-      // TNT
-      // uuid: '77170eb0-0257-012e-f994-00163e1b201c'
-      // Wachtel on the Arts from CBC Radio's Ideas
-      // uuid:'89beea90-5edf-012e-25b7-00163e1b201c'
+        // TNT
+        // uuid: '77170eb0-0257-012e-f994-00163e1b201c'
+        // Wachtel on the Arts from CBC Radio's Ideas
+        // uuid:'89beea90-5edf-012e-25b7-00163e1b201c'
     }))
     .then(function(response) {
       // console.log('02-podcasts', response);
@@ -72,10 +67,10 @@ function tryemall(credentials) {
 }
 
 var allCredentials = require('./credentials.json');
-utils.serialPromiseChainMap(allCredentials, function(credentials) {
-  utils.logStamp('Starting job for '+credentials.name);
+Promise.each(allCredentials, function(credentials) {
+  utils.logStamp('Starting job for ' + credentials.name);
   return tryemall(credentials);
   // return tasks.quick(credentials);
   // return tasks.shallow(credentials);
   // return tasks.deep(credentials);
-})
+});

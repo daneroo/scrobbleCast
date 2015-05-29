@@ -13,7 +13,7 @@ var delta = require('./lib/delta');
 // globals
 var allCredentials = require('./credentials.json');
 
-utils.serialPromiseChainMap(allCredentials, function(credentials) {
+Promise.each(allCredentials, function(credentials) {
   utils.logStamp('Starting job for ' + credentials.name);
 
   // var basepath = path.join(srcFile.dataDirname, 'redux');
@@ -24,7 +24,6 @@ utils.serialPromiseChainMap(allCredentials, function(credentials) {
       utils.logStamp('Starting:Dedup for ' + credentials.name);
       console.log('-|stamps|', stamps.length);
 
-      var uuidProperty = 'uuid'; // common to all: podcasts/episodes
       var podcastHistory = new delta.AccumulatorByUuid();
       var episodeHistory = new delta.AccumulatorByUuid();
 
@@ -32,19 +31,19 @@ utils.serialPromiseChainMap(allCredentials, function(credentials) {
       var fileCount = 0;
 
       // should have a version without aggregation
-      return utils.serialPromiseChainMap(stamps, function(stamp) {
+      return Promise.each(stamps, function(stamp) {
           console.log('--iteration stamp:', credentials.name, stamp);
           return srcFile.find(path.join('byUserStamp', credentials.name, stamp, '**/*.json'))
             .then(function(files) {
 
-              files.forEach(function(file) {
+              return Promise.each(files, function(file) {
 
                 console.log('---file:', file);
                 var items = srcFile.loadJSON(file);
 
                 fileCount++;
                 var fileHasChanges = false;
-                items.forEach(function(item) {
+                return Promise.each(items, function(item) {
                   partCount++;
 
                   // passed item is cloned, and normalized in accumulator
@@ -84,28 +83,28 @@ utils.serialPromiseChainMap(allCredentials, function(credentials) {
               episode - _.cloneDeep(episode);
               // some kind of epoch value for : 'Never Played'
               // episode.lastPlayed='2009-01-03T18:15:05.000Z'; // Bitcoin Genesis
-              episode.lastPlayed='1970-01-01T00:00:00Z';
+              episode.lastPlayed = '1970-01-01T00:00:00Z';
               var history = episode.history;
               var plays = [];
               history.forEach(function(h) {
                 var pertinent = false;
                 var playHistory = {
                   __stamp: h.__stamp,
-                  __sourceType : h.__sourceType
+                  __sourceType: h.__sourceType
                 };
                 h.changes.forEach(function(chg) {
-                  if (chg.key==='playing_status'){
-                    pertinent=true;
+                  if (chg.key === 'playing_status') {
+                    pertinent = true;
                     playHistory.playing_status = chg.to;
-                    if (chg.to > 0){
-                      episode.lastPlayed=playHistory.__stamp;
+                    if (chg.to > 0) {
+                      episode.lastPlayed = playHistory.__stamp;
                     }
                   }
-                  if (chg.key==='played_up_to'){
-                    pertinent=true;
+                  if (chg.key === 'played_up_to') {
+                    pertinent = true;
                     playHistory.played_up_to = chg.to;
-                    if (chg.to > 0){
-                      episode.lastPlayed=playHistory.__stamp;
+                    if (chg.to > 0) {
+                      episode.lastPlayed = playHistory.__stamp;
                     }
                   }
                 });
@@ -118,7 +117,7 @@ utils.serialPromiseChainMap(allCredentials, function(credentials) {
               return episode;
             });
 
-            var sorted = _.sortBy(filtered, ['lastPlayed','lastUpdated']).reverse();
+            var sorted = _.sortBy(filtered, ['lastPlayed', 'lastUpdated']).reverse();
 
             fs.writeFileSync(outfile, JSON.stringify(sorted, null, 2));
           }

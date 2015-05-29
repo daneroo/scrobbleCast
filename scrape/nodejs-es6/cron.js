@@ -36,9 +36,9 @@ var recurrence = {
 // return a function
 function forEachUser(task){
   return function(){
-    return utils.serialPromiseChainMap(allCredentials, task)
+    return Promise.each(allCredentials, task)
     .then(function(){
-      return utils.serialPromiseChainMap(allCredentials, tasks.dedup);
+      return Promise.each(allCredentials, tasks.dedup);
     });
   };
 }

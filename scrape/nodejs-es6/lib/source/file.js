@@ -87,10 +87,10 @@ function findByDate() {
   return fs.readdirPromise(path.join(dataDirname, 'byDate'));
 }
 
-function iterator(extrapath, allCredentials, callback) {
+function iterator(extrapath, allCredentials, callbackReturningPromise) {
   var basepath = path.join(dataDirname, extrapath);
   var counts = {};
-  return utils.serialPromiseChainMap(allCredentials, function(credentials) {
+  return Promise.each(allCredentials, function(credentials) {
     counts[credentials.name] = counts[credentials.name] || {
       part: 0,
       file: 0,
@@ -99,16 +99,16 @@ function iterator(extrapath, allCredentials, callback) {
     var c = counts[credentials.name];
     return findByUserStamp(credentials.name, basepath)
       .then(function(stamps) {
-        return utils.serialPromiseChainMap(stamps, function(stamp) {
+        return Promise.each(stamps, function(stamp) {
             return find(path.join(extrapath, 'byUserStamp', credentials.name, stamp, '**/*.json'))
               .then(function(files) {
                 c.stamp++;
-                files.forEach(function(file) {
+                return Promise.each(files,function(file) {
                   var items = loadJSON(file);
                   c.file++;
-                  items.forEach(function(item) {
+                  return Promise.each(items,function(item) {
                     c.part++;
-                    callback(credentials, stamp, file, item, counts);
+                    return callbackReturningPromise(credentials, stamp, file, item, counts);
                   });
 
                 });

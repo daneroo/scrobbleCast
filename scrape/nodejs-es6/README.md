@@ -20,7 +20,9 @@ Don;t put the data volume in `./data` because we often rsync!
 
   docker run -d -p 5984:5984 -e COUCHDB_PASS="supersecret" -v $(pwd)/couchdb:/var/lib/couchdb tutum/couchdb 
 
-Then open  [Futon](http://admin:supersecret@cantor:5984/_utils/)
+Then open Futon 
+ on [docker](http://admin:supersecret@192.168.59.103:5984/_utils/)
+ or [cantor](http://admin:supersecret@cantor:5984/_utils/)
 
 ### Docker file permissions
 On cantor, the container creates it's files as root, so when I sync, ignore owner

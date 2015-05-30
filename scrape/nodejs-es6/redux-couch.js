@@ -5,7 +5,6 @@
 // dependencies - core-public-internal
 var Promise = require('bluebird');
 var PouchDB = require('pouchdb');
-var nano = require('nano');
 var srcFile = require('./lib/source/file');
 
 // globals

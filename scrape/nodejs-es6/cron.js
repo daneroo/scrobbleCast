@@ -1,10 +1,10 @@
 'use strict';
 
 // dependencies - core-public-internal
+var Promise = require('bluebird');
 var cron = require('cron');
 var CronJob = cron.CronJob;
 var tasks = require('./lib/tasks');
-var utils = require('./lib/utils');
 
 // globals
 var allCredentials = require('./credentials.json');
@@ -33,7 +33,7 @@ var recurrence = {
 
 // serial execution of <task> for each credentialed user
 // perform dedup task on all users, after main tasks are completed
-// return a function
+// returns a function
 function forEachUser(task){
   return function(){
     return Promise.each(allCredentials, task)

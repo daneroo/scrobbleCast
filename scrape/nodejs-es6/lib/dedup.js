@@ -8,6 +8,7 @@
 var fs = require('fs');
 var path = require('path');
 var mkdirp = require('mkdirp');
+var Promise = require('bluebird');
 var crypto = require('crypto');
 var _ = require('lodash');
 var utils = require('./utils');
@@ -43,12 +44,12 @@ function dedupTask(credentials) {
       var dedupFileCount = 0;
 
       // should have a version without aggregation
-      return utils.serialPromiseChainMap(stamps, function(stamp) {
+      return Promise.each(stamps, function(stamp) {
           // console.log('--iteration stamp:', credentials.name, stamp);
           return srcFile.find(path.join('byUserStamp', credentials.name, stamp, '**/*.json'))
             .then(function(files) {
 
-              files.forEach(function(file) {
+              return Promise.each(files, function(file) {
 
                 // console.log('---file:', file);
                 var items = srcFile.loadJSON(file);
@@ -56,42 +57,44 @@ function dedupTask(credentials) {
 
                 fileCount++;
                 var fileHasChanges = false;
-                items.forEach(function(item) {
-                  partCount++;
+                return Promise.each(items, function(item) {
+                    partCount++;
 
-                  // passed item is cloned, and normalized in accumulator
+                    // passed item is cloned, and normalized in accumulator
 
-                  var changeCount = 0;
-                  if (item.__type === 'episode') {
-                    // console.log('|episode|', thingsToMerge.length,file);
-                    changeCount += episodeHistory.merge(item);
-                  } else {
-                    // console.log('|podcasts|', thingsToMerge.length,file);
-                    changeCount += podcastHistory.merge(item);
-                  }
+                    var changeCount = 0;
+                    if (item.__type === 'episode') {
+                      // console.log('|episode|', thingsToMerge.length,file);
+                      changeCount += episodeHistory.merge(item);
+                    } else {
+                      // console.log('|podcasts|', thingsToMerge.length,file);
+                      changeCount += podcastHistory.merge(item);
+                    }
 
-                  if (changeCount > 0) {
-                    fileHasChanges = true;
-                    redux.push(item);
-                    // console.log('---|Δ|', changeCount, item.title);
-                    // TODO append to redux
-                  } else {
-                    dedupPartCount++;
-                  }
+                    if (changeCount > 0) {
+                      fileHasChanges = true;
+                      redux.push(item);
+                      // console.log('---|Δ|', changeCount, item.title);
+                      // TODO append to redux
+                    } else {
+                      dedupPartCount++;
+                    }
 
-                });
+                  })
+                  .then(function() {
+                    // fileHasChanges === redux.length>0
+                    if (!fileHasChanges) {
+                      dedupFileCount++;
+                      moveToDedup(file);
+                      // console.log('---dedup: file %d/%d  part %d/%d', dedupFileCount, fileCount, dedupPartCount, partCount);
+                    }
+                    // else: fileHasHasganges===true or redux.length>0
+                    if (redux.length > 0) {
+                      // console.log('---redux: |parts|: %d file: %s', redux.length, file);
+                      replaceRedux(file, items, redux);
+                    }
 
-                // fileHasChanges === redux.length>0
-                if (!fileHasChanges) {
-                  dedupFileCount++;
-                  moveToDedup(file);
-                  // console.log('---dedup: file %d/%d  part %d/%d', dedupFileCount, fileCount, dedupPartCount, partCount);
-                }
-                // else: fileHasHasganges===true or redux.length>0
-                if (redux.length > 0) {
-                  // console.log('---redux: |parts|: %d file: %s', redux.length, file);
-                  replaceRedux(file,items,redux);
-                }
+                  });
 
               });
             });
@@ -159,7 +162,7 @@ function move(file, fromPath, toPath) {
   var nuFilename = filenameAtBase(file, toPath);
   var nuDir = path.dirname(nuFilename);
 
-    // refuse to clober an existing file
+  // refuse to clober an existing file
   if (fs.existsSync(nuFilename)) {
     console.log('Dedup:move %s -> %s', oldFilename, nuFilename);
     console.log('Dedup:move refusing to clobber %s', nuFilename);
@@ -168,7 +171,7 @@ function move(file, fromPath, toPath) {
   fs.renameSync(oldFilename, nuFilename);
   // console.log('-exec fs.renameSync(%s, %s)', oldFilename, nuFilename);
 
-    // now prune oldDir (and parent) - if empty
+  // now prune oldDir (and parent) - if empty
   try {
     fs.rmdirSync(oldDir);
     // only prints if emtpy - no error
@@ -178,8 +181,8 @@ function move(file, fromPath, toPath) {
     // only prints if emtpy - no error
     // console.log('-exec fs.rmdirSync(%s)', path.dirname(oldDir));
   } catch (e) {
-      // code: 'ENOTEMPTY'
-      // console.log('rmdir error:',e);
+    // code: 'ENOTEMPTY'
+    // console.log('rmdir error:',e);
   } finally {
     // console.log('+exec fs.rmdirSync(%s) (and parent)',oldDir);
   }

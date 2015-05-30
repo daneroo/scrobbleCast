@@ -5,7 +5,6 @@
 // dependencies - core-public-internal
 var path = require('path');
 var util = require('util');
-var utils = require('./lib/utils');
 var Promise = require('bluebird');
 var PouchDB = require('pouchdb');
 var srcFile = require('./lib/source/file');
@@ -95,7 +94,7 @@ Promise.each(allCredentials, function(credentials) {
             return srcFile.find(path.join('byUserStamp', credentials.name, stamp, '**/*.json'))
               .then(function(files) {
 
-                return Promise.map(files, function(file) {
+                return Promise.each(files, function(file) {
 
                   // verbose('---file:', file);
                   var items = srcFile.loadJSON(file);

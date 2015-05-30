@@ -15,9 +15,10 @@
   docker exec -it <container id> bash
 
 ### CouchDB for persistence
-Note: try CouchDB 2.0
+Note: try CouchDB 2.0 
+Don;t put the data volume in `./data` because we often rsync!
 
-  docker run -d -p 5984:5984 -e COUCHDB_PASS="supersecret" -v $(pwd)/data/couchdb:/var/lib/couchdb tutum/couchdb 
+  docker run -d -p 5984:5984 -e COUCHDB_PASS="supersecret" -v $(pwd)/couchdb:/var/lib/couchdb tutum/couchdb 
 
 Then open  [Futon](http://admin:supersecret@cantor:5984/_utils/)
 

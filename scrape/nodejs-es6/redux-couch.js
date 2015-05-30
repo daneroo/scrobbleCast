@@ -4,31 +4,27 @@
 
 // dependencies - core-public-internal
 var Promise = require('bluebird');
-var PouchDB = require('pouchdb');
+var couch = require('couch-db');
 var srcFile = require('./lib/source/file');
 
 // globals
 var allCredentials = require('./credentials.json');
 var db;
-
-function setupPouch() {
-  db = new PouchDB('pouchdb');
-  // return Promise.resolve(db);
-  return db;
-}
+var _db;
 
 function setupCouch() {
   // var nano = require('nano')('http://localhost:5984');
   return new Promise(function(resolve, reject) {
-    var couch = require('couch-db');
     var server = couch('http://admin:supersecret@192.168.59.103:5984');
     server.auth('admin', 'supersecret');
 
-    var _db = server.database('scrobblecast');
+    /*var*/
+    _db = server.database('scrobblecast');
     _db.destroy(function(err) {
       // create a new database
       if (err) {
-        return reject(err);
+        // that's fine; no need to abort
+        // return reject(err);
       }
       _db.create(function(err) {
         if (err) {
@@ -65,11 +61,15 @@ function showAll() {
         include_docs: true
       })
       .then(function(response) {
-        response.rows.forEach(function(item) {
-          var d = item.doc;
-          delete d._rev;
-          console.log('-doc:', JSON.stringify(d));
-        });
+        if (response && response.rows) {
+          response.rows.forEach(function(item) {
+            var d = item.doc;
+            delete d._rev;
+            console.log('-doc:', JSON.stringify(d));
+          });
+        } else {
+          console.log('empty?', response);
+        }
         verbose('total_rows', response.total_rows);
         return response;
       });
@@ -107,6 +107,7 @@ function save(doc) {
   verbose('--saving', doc._id);
   return db.put(doc)
     .then(function(doc) {
+      verbose('saved:doc', doc.__id);
       return doc;
     })
     .catch(function(error) {
@@ -116,6 +117,7 @@ function save(doc) {
     .catch(verboseErrorHandler);
 }
 
+// for context logging
 var lastStamp = null;
 
 function createAndUpdate(credentials, stamp, file, item) {
@@ -124,13 +126,31 @@ function createAndUpdate(credentials, stamp, file, item) {
     verbose('--iteration stamp:', [credentials.name, stamp]);
     lastStamp = stamp;
   }
+
   return create(item)
-    .then(save);
+    // .then(function(item) {
+    //   console.log('create:item:', item);
+    //   return item;
+    // })
+    .then(function(item) {
+      return new Promise(function(resolve, reject) {
+        // _db.save(item._id, item, {batch:'ok'},function(err, result) {
+        _db.bulkSave([item],function(err, result) {
+          if (err) {
+            reject(err);
+          }
+          console.log('create:bulk:', result);
+          resolve(result);
+        });
+      });
+    });
+  // return create(item)
+  //   .then(save);
 }
 
 setupCouch()
   .then(function() {
-    throw ('Abort before you start');
+    // throw ('Abort before you start');
   })
   .then(function() {
     // var extra = 'noredux';

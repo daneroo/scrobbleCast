@@ -4,6 +4,7 @@
 var Promise = require('bluebird');
 var cron = require('cron');
 var CronJob = cron.CronJob;
+var utils = require('./lib/utils');
 var tasks = require('./lib/tasks');
 
 // globals
@@ -34,29 +35,38 @@ var recurrence = {
 // serial execution of <task> for each credentialed user
 // perform dedup task on all users, after main tasks are completed
 // returns a function
-function forEachUser(task){
-  return function(){
-    return Promise.each(allCredentials, task)
-    .then(function(){
-      return Promise.each(allCredentials, tasks.dedup);
-    });
-  };
-}
-// auto-starts
+function forEachUser(task) {
+    return function() {
+      return Promise.each(allCredentials, task)
+        .then(function() {
+          return Promise.each(allCredentials, tasks.dedup);
+        });
+    };
+  }
+  // auto-starts
 function runJob(task, when) {
+  var message = 'Starting CronJob:';
+  if (task.name) { // depends on the finction having been defined non-anonymously
+    message += ' ' + task.name;
+  }
+  message += ' ' + when;
+
+  utils.logStamp(message);
+
   var job = new CronJob({
     cronTime: when,
     onTick: forEachUser(task),
     start: true // default is true, else, if start:false, use job.start()
-    // timeZone: "America/Montreal" // npm install time, if you want to use TZ
+      // timeZone: "America/Montreal" // npm install time, if you want to use TZ
   });
   return job; // if you ever want to stop it.
 }
 
+utils.logStamp('Starting Cron');
 // auto-start all three
-runJob(tasks.deep,    recurrence.everyDayAtMidnight); // var deep = ...
+runJob(tasks.deep, recurrence.everyDayAtMidnight); // var deep = ...
 runJob(tasks.shallow, recurrence.everyHourExceptMidnight); // var shallow =
-runJob(tasks.quick,   recurrence.everyTenExceptOnTheHour); // var quick =
+runJob(tasks.quick, recurrence.everyTenExceptOnTheHour); // var quick =
 // runJob(tasks.quick,   recurrence.everyMinute); // var quick =
 
 // make this process hang around

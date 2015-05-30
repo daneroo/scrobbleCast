@@ -3,15 +3,18 @@
 // Pump redux to pouchdb
 
 // dependencies - core-public-internal
-var path = require('path');
-var util = require('util');
-var Promise = require('bluebird');
 var PouchDB = require('pouchdb');
 var srcFile = require('./lib/source/file');
 
 // globals
 var allCredentials = require('./credentials.json');
-var db = new PouchDB('pouchdb');
+var db;
+
+function setupPouch() {
+  db = new PouchDB('pouchdb');
+  // return Promise.resolve(db);
+  return db;
+}
 
 function verbose(msg, thing) {
   console.error(msg, thing);
@@ -54,8 +57,14 @@ function create(item) {
     delete item[key];
   });
   item._id = key;
+  // verbose('--fetching', item._id);
   return db.get(key)
+    .then(function(doc) {
+      // verbose('--found:', doc);
+      return doc;
+    })
     .catch(function(error) {
+      // verbose('--new!', item._id);
       return item;
     });
 }
@@ -67,52 +76,36 @@ function save(doc) {
     .then(function(doc) {
       return doc;
     })
+    .catch(function(error) {
+      verbose('error:doc', doc.__id);
+      throw (error);
+    })
     .catch(verboseErrorHandler);
 }
 
-function createAndUpdate(item) {
+var lastStamp = null;
+
+function createAndUpdate(credentials, stamp, file, item) {
+  var logit = (item.__stamp !== lastStamp);
+  if (logit) {
+    verbose('--iteration stamp:', [credentials.name, stamp]);
+    lastStamp = stamp;
+  }
   return create(item)
     .then(save);
 }
 
-Promise.each(allCredentials, function(credentials) {
-    verbose('Starting job: ', credentials.name);
-
-    // var basepath = path.join(srcFile.dataDirname, 'redux');
-    var basepath = srcFile.dataDirname;
-
-    return srcFile.findByUserStamp(credentials.name, basepath)
-      .then(function(stamps) {
-        verbose('-|stamps|', stamps.length);
-
-        var partCount = 0;
-        var fileCount = 0;
-
-        // should have a version without aggregation
-        return Promise.each(stamps, function(stamp) {
-            verbose('--iteration stamp:', [credentials.name, stamp]);
-            return srcFile.find(path.join('byUserStamp', credentials.name, stamp, '**/*.json'))
-              .then(function(files) {
-
-                return Promise.each(files, function(file) {
-
-                  // verbose('---file:', file);
-                  var items = srcFile.loadJSON(file);
-
-                  fileCount++;
-                  return Promise.each(items, function(item) {
-                    partCount++;
-                    return createAndUpdate(item);
-                  });
-                });
-              });
-          })
-          .then(function(dontCare) {
-            verbose('Done job:', util.format('%s |f|: %d  |p|: %d', credentials.name, fileCount, partCount));
-            return stamps;
-          });
-
+setupPouch()
+  .then(function() {
+    // var extra = 'noredux';
+    var extra = '';
+    srcFile.iterator(extra, allCredentials, createAndUpdate)
+      .then(function(counts) {
+        Object.keys(counts).forEach(function(name) {
+          var c = counts[name];
+          verbose('--' + extra + '-- ' + name, ' |stamps|:' + c.stamp + ' |f|:' + c.file + ' |p|:' + c.part);
+        });
       })
-      .catch(verboseErrorHandler);
+      .then(showAll());
   })
-  .then(showAll());
+  .catch(verboseErrorHandler);

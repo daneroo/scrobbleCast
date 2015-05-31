@@ -114,10 +114,6 @@ function iterator(extrapath, allCredentials, callbackReturningPromise) {
                 });
               });
           });
-      })
-      .catch(function(error) {
-        console.error('Error:Dedup', error);
-        utils.logStamp('Error:Dedup ' + error);
       });
   })
   .then(function(){

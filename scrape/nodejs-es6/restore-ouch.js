@@ -4,103 +4,103 @@
 
 // dependencies - core-public-internal
 var _ = require('lodash');
+var PouchDB = require('pouchdb');
 var srcFile = require('./lib/source/file');
 var ouch = require('./lib/ouch');
 
-// var db = new ouch.pouch('pouchdb');
-var db = new ouch.pouch('http://admin:supersecret@192.168.59.103:5984/scrobblecast');
-var ouchdb = new ouch.Ouch(new ouch.pouch('pouchdb'));
-
 // globals
 var allCredentials = require('./credentials.json');
+var db = new PouchDB('pouchdb');
+// var db = new PouchDB('http://admin:supersecret@192.168.59.103:5984/scrobblecast');
+// var db = new PouchDB('http://admin:supersecret@cantor:5984/scrobblecast');
 
-var rr = 0;
+//  move to logging module (?loggly)
+function verbose(msg, thing) {
+  console.error(msg, thing);
+}
 
-function mergaAndSave(credentials, stamp, file, item) {
-  if (rr > 1) {
-    // throw new Error('Early termination');
-    return;
+//  move to logging module (as Factory?)
+function verboseErrorHandler(shouldRethrow) {
+  return function errorHandler(error) {
+    verbose('error', error);
+    if (shouldRethrow) {
+      throw (error);
+    }
+  };
+}
+
+// TODO reset DB? db.destry.then db.create
+function resetDB(dropAndCreate) {
+  if (!dropAndCreate) {
+    return db.info()
+      .then(function(info) {
+        verbose('-=-= NOT DROPPING Database', info);
+      });
   }
-  item = nu(rr++);
+  // else drop and create : maybe not on couchDB (bulk delete all instead)
+  return db.destroy().then(function() {
+      // success
+    })
+    .then(function() {
+      // recreate the database ?? how will that affect replication ? recreate as admin, delegate to normal user..
+    })
+    .catch(verboseErrorHandler(true));
+}
 
-  logStamp(item);
+// -write out each doc to stdout (deleteing _rev key which is not repeatable)
+function showAll() {
+  return function() {
+    return db.allDocs({
+        include_docs: true
+      })
+      .then(function(response) {
+        response.rows.forEach(function(item) {
+          var d = item.doc;
+          delete d._rev;
+          console.log('-doc:', JSON.stringify(d));
+        });
+        verbose('total_rows', response.total_rows);
+        return response;
+      });
+  };
+}
 
-  item = ouch.normalize(item);
-  verbose('save:item', [item._id, item.played_up_to]);
+// returns a fetched item, or passes the item, augmented with a key.
+function create(item) {
+  ouch.normalize(item); // _id and meta
+
+  // verbose('--fetching', item._id);
   return db.get(item._id)
+    .then(function(doc) {
+      verbose('--found:', doc);
+      var merged = _.merge({}, doc, item);
+      return merged;
+    })
     .catch(function(error) {
-      console.log('error', error);
+      verbose('--new!', item._id);
+      return item;
+    });
+}
+
+//  create or update
+function save(item) {
+  verbose('--saving', item._id);
+  return db.put(item)
+    .then(function(doc) {
+      verbose('--saved', doc);
+      item._rv = doc._rev;
       return item;
     })
-    .then(function(doc) {
-      console.log('got', doc._id, doc._rev);
-      return _.merge({}, doc, item);
+    .catch(function(error) {
+      verbose('error:doc', [item._id,item._rev]);
+      throw (error);
     })
-    .then(function(mergedItem) {
-      delete mergedItem.is_deleted;
-      return db.put(mergedItem);
-    })
-    .then(function(response) {
-      console.log('saved', response);
-    });
-}
-
-function nu(idx) {
-  return [{
-    "__type": "episode",
-    "__sourceType": "02-podcasts",
-    "__user": "stephane",
-    "__stamp": "2015-01-30T23:00:00Z",
-    "podcast_uuid": "05ccf3c0-...",
-    "uuid": "5a03cdd0-...",
-    "url": "http://blablabla",
-    "title": "274: Twitter ...",
-    "played_up_to": 0,
-    "is_deleted": 0,
-    "starred": 0,
-    "is_video": false
-  }, {
-    "__type": "episode",
-    "__sourceType": "02-podcasts",
-    "__user": "stephane",
-    "__stamp": "2015-01-30T23:00:00Z",
-    "podcast_uuid": "05ccf3c0-...",
-    "uuid": "5a03cdd0-...",
-    "url": "http://blablabla",
-    "title": "274: Twitter ...",
-    "played_up_to": 1234,
-    // "is_deleted": 0,
-    "starred": 0,
-    "is_video": false
-  }][idx];
-}
-
-function showAll() {
-  return db.allDocs({
-      include_docs: true
-    })
-    .then(function(response) {
-      response.rows.forEach(function(item) {
-        var d = item.doc;
-        delete d._rev;
-        // console.log('-doc:', JSON.stringify(d));
-        console.log('-doc:', d);
-      });
-      verbose('total_rows', response.total_rows);
-      return response;
-    });
-}
-
-function showCounts(counts) {
-  Object.keys(counts).forEach(function(name) {
-    var c = counts[name];
-    verbose('---- ' + name, ' |stamps|:' + c.stamp + ' |f|:' + c.file + ' |p|:' + c.part);
-  });
+    .catch(verboseErrorHandler(true));
 }
 
 var lastStamp = null;
 
-function logStamp(item) {
+function progress(item) {
   var logit = (item.__stamp !== lastStamp);
   if (logit) {
     verbose('--iteration stamp:', [item.__user, item.__stamp]);
@@ -108,14 +108,53 @@ function logStamp(item) {
   }
 }
 
-function verbose(msg, thing) {
-  console.error(msg, thing);
+function bulkSave(batchSize) {
+  // save | bulk save[1] or bulk
+  if (!batchSize) {
+    return save;
+  }
+  if (batchSize === 1) {
+    return function(item) {
+      db.bulkDocs([item]);
+    };
+  }
+  // else
+  var batch = [];
+  return function(item) {
+    if (batch.length < batchSize) {
+      batch.push(item);
+      return 'batched';
+    }
+    return db.bulkDocs(batch)
+      .then(function(result) {
+        console.log('create:bulk:', result);
+        batch = [];
+      });
+  };
 }
 
-var extra = '';
-srcFile.iterator(extra, allCredentials, mergaAndSave)
-  .then(showCounts)
-  .then(showAll)
-  .catch(function(error) {
-    console.log('error', error);
-  });
+function createAndUpdate(credentials, stamp, file, item) {
+  progress(item);
+  return create(item)
+    .then(save);
+    // .then(bulkSave(0));
+    // .then(bulkSave(0));
+
+}
+
+function restoreFileToCouch() {
+  var extra = '';
+  // var extra = 'noredux'; // to switch to noredux..
+  return srcFile.iterator(extra, allCredentials, createAndUpdate)
+    .then(function(counts) {
+      Object.keys(counts).forEach(function(name) {
+        var c = counts[name];
+        verbose('--' + extra + '-- ' + name, ' |stamps|:' + c.stamp + ' |f|:' + c.file + ' |p|:' + c.part);
+      });
+    });
+}
+
+resetDB()
+  .then(restoreFileToCouch)
+  .then(showAll())
+  .catch(verboseErrorHandler(false));

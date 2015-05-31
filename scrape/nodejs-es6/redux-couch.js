@@ -90,14 +90,14 @@ function create(item) {
     delete item[key];
   });
   item._id = key;
-  verbose('--fetching', item._id);
+  // verbose('--fetching', item._id);
   return db.get(key)
     .then(function(doc) {
-      verbose('--found:', doc);
+      // verbose('--found:', doc);
       return doc;
     })
     .catch(function(error) {
-      verbose('--new!', item._id);
+      // verbose('--new!', item._id);
       return item;
     });
 }
@@ -119,6 +119,7 @@ function save(doc) {
 
 // for context logging
 var lastStamp = null;
+var batch = [];
 
 function createAndUpdate(credentials, stamp, file, item) {
   var logit = (item.__stamp !== lastStamp);
@@ -137,11 +138,26 @@ function createAndUpdate(credentials, stamp, file, item) {
         // _db.save(item._id, item, {batch:'ok'},function(err, result) {
         _db.bulkSave([item],function(err, result) {
           if (err) {
-            reject(err);
+            return reject(err);
           }
           console.log('create:bulk:', result);
-          resolve(result);
+          return resolve(result);
         });
+
+        // if (batch.length < 1000) {
+        //   batch.push(item);
+        //   return resolve('batched');
+        // }
+
+        // _db.bulkSave(batch, function(err, result) {
+        //   batch = [];
+        //   if (err) {
+        //     reject(err);
+        //   }
+        //   console.log('create:bulk:', result);
+        //   resolve(result);
+        // });
+
       });
     });
   // return create(item)

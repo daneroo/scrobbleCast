@@ -5,13 +5,15 @@
 // dependencies - core-public-internal
 var PouchDB = require('pouchdb');
 var srcFile = require('./lib/source/file');
+var ouch = require('./lib/ouch');
 
 // globals
 var allCredentials = require('./credentials.json');
 var db;
 
 function setupPouch() {
-  db = new PouchDB('pouchdb');
+  // db = new PouchDB('pouchdb');
+  db = new PouchDB('http://admin:supersecret@192.168.59.103:5984/scrobblecast');
   // return Promise.resolve(db);
   return db;
 }
@@ -45,20 +47,10 @@ function showAll() {
 
 // returns a fetched item, or passes the item, augmented with a key.
 function create(item) {
-  // with - or without stamp
-  // var key = [item.__user, item.__stamp, item.__type, item.uuid].join('/');
-  var key = [item.__user, item.__type, item.uuid].join('/');
+  ouch.normalize(item); // _id and meta
 
-  // re-uasble obect transformation; (immutable ==> clone)
-  // bury the meta keys in meta attribute, so as not to clash with couch restrictions on top-level keys ( ._anything)
-  item.meta = {};
-  ['__type', '__sourceType', '__user', '__stamp'].forEach(function(key) {
-    item.meta[key] = item[key];
-    delete item[key];
-  });
-  item._id = key;
   // verbose('--fetching', item._id);
-  return db.get(key)
+  return db.get(item._id)
     .then(function(doc) {
       // verbose('--found:', doc);
       return doc;

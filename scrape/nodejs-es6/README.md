@@ -24,9 +24,14 @@ Then open Futon
  on [docker](http://admin:supersecret@192.168.59.103:5984/_utils/)
  or [cantor](http://admin:supersecret@cantor:5984/_utils/)
 
+To compact database:
+
+  curl -H "Content-Type: application/json" -X POST http://admin:supersecret@cantor:5984/scrobblecast/_compact
+
 ### Docker file permissions
 On cantor, the container creates it's files as root, so when I sync, ignore owner
 
+  # maybe add --delete
   sudo rsync -av --no-owner --progress daniel@dirac.imetrical.com:Code/iMetrical/scrobbleCast/scrape/nodejs-es6/data/ data/
   # check
   find data -not -user root -ls

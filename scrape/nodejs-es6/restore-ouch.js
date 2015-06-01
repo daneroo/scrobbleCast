@@ -72,23 +72,24 @@ function create(item) {
   // verbose('--fetching', item._id);
   return db.get(item._id)
     .then(function(doc) {
-      verbose('--found:', doc);
+      // verbose('--found:', [doc._id,doc._rev]);
       var merged = _.merge({}, doc, item);
+      // verbose('--merged', [merged._id,merged._rev]);
       return merged;
     })
     .catch(function(error) {
-      verbose('--new!', item._id);
+      // verbose('--new!', item._id);
       return item;
     });
 }
 
 //  create or update
 function save(item) {
-  verbose('--saving', item._id);
+  // verbose('--saving', item._id);
   return db.put(item)
     .then(function(doc) {
-      verbose('--saved', doc);
-      item._rv = doc._rev;
+      item._rev = doc.rev;
+      // verbose('--saved', [item._id,item._rev]);
       return item;
     })
     .catch(function(error) {
@@ -138,7 +139,7 @@ function createAndUpdate(credentials, stamp, file, item) {
   return create(item)
     .then(save);
     // .then(bulkSave(0));
-    // .then(bulkSave(0));
+    // .then(bulkSave(1));
 
 }
 

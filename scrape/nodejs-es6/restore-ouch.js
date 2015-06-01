@@ -109,37 +109,47 @@ function progress(item) {
   }
 }
 
+// batch's scope is dependant on how it is called
+// var batch = [];
 function bulkSave(batchSize) {
+  // verbose('--bulkSave',batchSize)
   // save | bulk save[1] or bulk
   if (!batchSize) {
     return save;
   }
-  if (batchSize === 1) {
-    return function(item) {
-      db.bulkDocs([item]);
-    };
-  }
+  // if (batchSize === 1) {
+  //   return function(item) {
+  //     db.bulkDocs([item]);
+  //   };
+  // }
   // else
   var batch = [];
   return function(item) {
+      // verbose('-bulkSave:', [batchSize,batch.length,item._id]);
     if (batch.length < batchSize) {
+      // verbose('-create:bulk:', [item._id,item._rev]);
       batch.push(item);
+      // verbose('+bulkSave:', [batchSize,batch.length,item._id]);
       return 'batched';
     }
     return db.bulkDocs(batch)
       .then(function(result) {
-        console.log('create:bulk:', result);
+        verbose('create:bulk:', result);
         batch = [];
       });
   };
 }
 
+// just to create one only - preserves batch scope...
+var bulkSaver = bulkSave(100);
 function createAndUpdate(credentials, stamp, file, item) {
   progress(item);
   return create(item)
-    .then(save);
+    // .then(save);
     // .then(bulkSave(0));
     // .then(bulkSave(1));
+    // .then(bulkSave(10));
+    .then(bulkSaver);
 
 }
 

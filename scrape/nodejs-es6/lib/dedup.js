@@ -29,6 +29,7 @@ exports = module.exports = {
 //   console.log('required as a module');
 // }
 
+// TODO: use srcFile.iterator, but Accumulators are in the wrong scope (per user)
 function dedupTask(credentials) {
   return srcFile.findByUserStamp(credentials.name)
     .then(function(stamps) {

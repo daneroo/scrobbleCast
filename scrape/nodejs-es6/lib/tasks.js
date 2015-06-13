@@ -39,10 +39,11 @@ function quick(credentials) {
   return apiSession.sign_in(credentials)
     .then(quickWithSession(apiSession))
     .then(function() {
-      lifecycle('quick', 'done', apiSession.user);
+      lifecycle('quick', 'done', credentials.name);
     })
     .catch(function(error) {
-      lifecycle('quick', 'done: with error', error);
+      console.log('tasks.quick:error:', error);
+      lifecycle('quick', 'done with error', credentials.name);
       return false;
       // throw error;
     });
@@ -77,7 +78,7 @@ function quickWithSession(apiSession) {
         lifecycle('.quick', 'done', apiSession.user);
       })
       .catch(function(error) {
-        console.log('tasks.quick:', error);
+        console.log('tasks.quick:error', error);
         lifecycle('.quick', 'done: with error', apiSession.user);
         return false;
         // throw error;
@@ -92,7 +93,7 @@ function scrape(credentials, isDeep) {
     stamp: utils.stamp('minute')
   });
   var mode = isDeep ? 'deep' : 'shallow';
-  lifecycle(mode, 'start', apiSession.user); // ? apiSession.stamp
+  lifecycle(mode, 'start', credentials.name); // ? apiSession.stamp
 
   return apiSession.sign_in(credentials)
     .then(apiSession.podcasts())
@@ -131,8 +132,8 @@ function scrape(credentials, isDeep) {
     // Now call quick
     .then(quickWithSession(apiSession))
     .catch(function(error) {
-      console.log('tasks.scrape:', mode, error);
-      lifecycle(mode, 'done: with error', apiSession.user);
+      console.log('tasks.'+mode+':error:', error);
+      lifecycle(mode, 'done with error', credentials.name);
       return false;
       // throw error;
     });

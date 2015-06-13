@@ -40,6 +40,11 @@ function quick(credentials) {
     .then(quickWithSession(apiSession))
     .then(function() {
       lifecycle('quick', 'done', apiSession.user);
+    })
+    .catch(function(error) {
+      lifecycle('quick', 'done: with error', error);
+      return false;
+      // throw error;
     });
 }
 

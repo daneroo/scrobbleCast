@@ -68,7 +68,9 @@ function quickWithSession(apiSession) {
       })
       .catch(function(error) {
         console.log('tasks.quick:', error);
-        throw error;
+        lifecycle('quick', 'done: with error', apiSession.user);
+        return false;
+        // throw error;
       });
   };
 }
@@ -120,7 +122,9 @@ function scrape(credentials, isDeep) {
     .then(quickWithSession(apiSession))
     .catch(function(error) {
       console.log('tasks.scrape:', mode, error);
-      throw error;
+      lifecycle(mode, 'done: with error', apiSession.user);
+      return false;
+      // throw error;
     });
 }
 

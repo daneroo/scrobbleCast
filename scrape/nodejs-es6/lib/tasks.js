@@ -17,7 +17,7 @@ var dedupTask = require('./dedup').dedupTask;
 
 // Exported API
 exports = module.exports = {
-  dedup:dedup,
+  dedup: dedup,
   quick: quick,
   shallow: shallow,
   deep: deep
@@ -26,16 +26,27 @@ exports = module.exports = {
 function dedup(credentials) {
   lifecycle('dedup', 'start', credentials.name);
   return dedupTask(credentials)
-  .then(function(){
-    lifecycle('dedup', 'done', credentials.name);
-  });
+    .then(function() {
+      lifecycle('dedup', 'done', credentials.name);
+    });
 }
+
 function quick(credentials) {
+  lifecycle('quick', 'start', credentials.name);
   var apiSession = new PocketAPI({
     stamp: utils.stamp('minute')
   });
   return apiSession.sign_in(credentials)
-    .then(quickWithSession(apiSession));
+    .then(quickWithSession(apiSession))
+    .then(function() {
+      lifecycle('quick', 'done', credentials.name);
+    })
+    .catch(function(error) {
+      console.log('tasks.quick:error:', error);
+      lifecycle('quick', 'done with error', credentials.name);
+      return false;
+      // throw error;
+    });
 }
 
 function shallow(credentials) {
@@ -51,7 +62,7 @@ function deep(credentials) {
 // -- Implementation functions
 function quickWithSession(apiSession) {
   return function() {
-    lifecycle('quick', 'start', apiSession.user);
+    lifecycle('.quick', 'start', apiSession.user);
     return Promise.resolve(42)
       .then(apiSession.new_releases())
       .then(function(response) {
@@ -64,11 +75,13 @@ function quickWithSession(apiSession) {
         sinkFile.writeByUserStamp(response);
       })
       .then(function() {
-        lifecycle('quick', 'done', apiSession.user);
+        lifecycle('.quick', 'done', apiSession.user);
       })
       .catch(function(error) {
-        console.log('tasks.quick:', error);
-        throw error;
+        console.log('tasks.quick:error', error);
+        lifecycle('.quick', 'done: with error', apiSession.user);
+        return false;
+        // throw error;
       });
   };
 }
@@ -80,7 +93,7 @@ function scrape(credentials, isDeep) {
     stamp: utils.stamp('minute')
   });
   var mode = isDeep ? 'deep' : 'shallow';
-  lifecycle(mode, 'start', apiSession.user); // ? apiSession.stamp
+  lifecycle(mode, 'start', credentials.name); // ? apiSession.stamp
 
   return apiSession.sign_in(credentials)
     .then(apiSession.podcasts())
@@ -119,8 +132,10 @@ function scrape(credentials, isDeep) {
     // Now call quick
     .then(quickWithSession(apiSession))
     .catch(function(error) {
-      console.log('tasks.scrape:', mode, error);
-      throw error;
+      console.log('tasks.'+mode+':error:', error);
+      lifecycle(mode, 'done with error', credentials.name);
+      return false;
+      // throw error;
     });
 }
 

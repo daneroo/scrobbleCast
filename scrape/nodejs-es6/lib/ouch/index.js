@@ -1,7 +1,7 @@
 'use strict';
 
 // dependencies - core-public-internal
-var _ = require('lodash');
+// var _ = require('lodash');
 
 // usage new ouch(db)
 exports = module.exports = {
@@ -17,12 +17,11 @@ function Ouch(db) {
 
 Ouch.prototype.get = function(item) {
   item = normalize(item);
-}
+};
 
 // get the item from database (if it exists), then merge in new values, then put it back in the db
 Ouch.prototype.save = function(item) {
   item = normalize(item);
-
 
   return this.db.get(item._id)
     // .then(function(old_item))
@@ -32,16 +31,16 @@ Ouch.prototype.save = function(item) {
 };
 
 // get the item from database (in case it already exists, and we need _rev)
-function save(item) {
-  return get(item)
-    .then(put);
-}
+// function save(item) {
+//   return get(item)
+//     .then(put);
+// }
 
-function fetch(item) {
-  if (!item._id) {
-    throw new Error('item without ._id');
-  }
-}
+// function fetch(item) {
+//   if (!item._id) {
+//     throw new Error('item without ._id');
+//   }
+// }
 
 // TODO make this idempotent.
 // TODO add some tests

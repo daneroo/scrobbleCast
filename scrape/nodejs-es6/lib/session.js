@@ -38,7 +38,7 @@ Session.prototype.reqGenXSRF = function(path, options) {
 
 // Generate a new option base for request invocation (rp)
 // dependency on lodash's `_.merge` deep copy.
-var connectionTimeout=5000;
+var connectionTimeout = 5000;
 Session.prototype.reqGen = function(path, options) {
   return _.merge({
     jar: this.jar,

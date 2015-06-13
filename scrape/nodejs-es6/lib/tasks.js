@@ -132,7 +132,7 @@ function scrape(credentials, isDeep) {
     // Now call quick
     .then(quickWithSession(apiSession))
     .catch(function(error) {
-      console.log('tasks.'+mode+':error:', error);
+      console.log('tasks.' + mode + ':error:', error);
       lifecycle(mode, 'done with error', credentials.name);
       return false;
       // throw error;

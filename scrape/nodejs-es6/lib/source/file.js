@@ -10,7 +10,6 @@ var fs = Promise.promisifyAll(require('fs'), {
 var path = require('path');
 // a-la suffix: 'Promise'
 var globPromise = Promise.promisify(require('glob'));
-var utils = require('../utils');
 
 // globals - candidate for config
 var dataDirname = 'data';

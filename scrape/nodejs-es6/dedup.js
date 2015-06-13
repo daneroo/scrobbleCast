@@ -1,5 +1,6 @@
 'use strict';
 
+var Promise = require('bluebird');
 var tasks = require('./lib/tasks');
 
 // globals

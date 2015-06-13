@@ -100,7 +100,7 @@ function Accumulator() {
   // this.options = _.merge({},defaultOptions,options);
   this.firstSeen = false; // set to stamp on first run
   this.lastUpdated = false; // set to stamp when changes detected
-  this.merged = {};
+  this.merged = {meta:{}};
   this.history = []; // array of changesets
 }
 
@@ -111,12 +111,21 @@ Accumulator.prototype.merge = function(item) {
   // -clone item,
   // -normalize attributes,
   // -delete __stamp,__sourceType property for compare
+  var meta = {
+    __type: item.__type,
+    __sourceType: item.__sourceType,
+    __user: item.__user,
+    __stamp: item.__stamp,
+  }
 
   var stamp = item.__stamp;
   var from = this.merged;
   var to = normalize(_.clone(item));
-  delete to.__stamp;
+  // no need to delete __user, and __type, but will make compare faster.
+  delete to.__type;
   delete to.__sourceType;
+  delete to.__user;
+  delete to.__stamp;
 
   if (item.__type === 'episode' && !to.podcast_uuid) {
     console.log('Accumulator.merge: no podcast_uuid for episode:', item);

@@ -103,7 +103,10 @@ function dedupTask(credentials) {
           function sortAndSave(outfile, history) {
             // console.log('|' + outfile + '|=', _.size(history.accumulators));
             // just write out the accumulators dictionary, it is the only attribute!
-            var sorted = _.sortBy(history.accumulators, 'lastUpdated').reverse();
+            var sorted = _.sortBy(history.accumulators, function(item) {
+              // sort by lastUpdated,uuid (for uniqueness)
+              return [item.lastUpdated, item.uuid];
+            }).reverse();
             var json = JSON.stringify(sorted, null, 2);
             fs.writeFileSync(outfile, json);
             utils.logStamp('md5(' + outfile + '):' + md5(json));

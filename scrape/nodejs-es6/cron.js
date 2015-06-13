@@ -40,8 +40,11 @@ function forEachUser(task) {
       return Promise.each(allCredentials, task)
         .then(function() {
           return Promise.each(allCredentials, tasks.dedup);
+        })
+        .catch(function(error) {
+          // TODO, might want to catch before tasks.dedup is called, to make sure dedup always runs...
+          console.error('cron:error', error);
         });
-        // TODO: should probably catch here...
     };
   }
   // auto-starts

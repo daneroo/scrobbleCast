@@ -105,8 +105,16 @@ function dedupTask(credentials) {
             // console.log('|' + outfile + '|=', _.size(history.accumulators));
             // just write out the accumulators dictionary, it is the only attribute!
             var sorted = _.sortBy(history.accumulators, function(item) {
+              // should this use sortByAll ? not in 2.4.2
+              // careful sorting by [__changeCount], compare by string when returning an array
+              // this sorts by a numerically
+              // _.sortBy([{a:1},{a:2},{a:3},{a:11},{a:12}],function(item){return item.a;});
+              // this sorts a lexicographically
+              // _.sortBy([{a:1,b:'a'},{a:2,b:'a'},{a:3,b:'a'},{a:11,b:'a'},{a:12,b:'a'}],function(item){return [item.a,item.b];})
+              // return [item.meta.__changeCount,item.meta.__lastUpdated, item.uuid];
+
               // sort by lastUpdated,uuid (for uniqueness)
-              return [item.lastUpdated, item.uuid];
+              return [item.meta.__lastUpdated, item.uuid];
             }).reverse();
             var json = JSON.stringify(sorted, null, 2);
             fs.writeFileSync(outfile, json);

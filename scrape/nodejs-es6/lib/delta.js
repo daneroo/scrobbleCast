@@ -98,11 +98,42 @@ function compare(from, to) {
 // Constructor
 function Accumulator() {
   // this.options = _.merge({},defaultOptions,options);
-  this.firstSeen = false; // set to stamp on first run
-  this.lastUpdated = false; // set to stamp when changes detected
-  this.merged = {meta:{}};
-  this.history = []; // array of changesets
+  this.meta = {
+    __firstSeen: false,
+    __lastUpdated: false
+  };
+  this.history = {}; // array of changesets
 }
+
+Accumulator.prototype.appendHistory = function(changes, __stamp, __sourceType) {
+  if (!changes || !changes.length) {
+    return;
+  }
+  var self = this;
+  var h = this.history;
+  // var ignoredChangeKeys = ['url']; // for sure: too much dns noise
+  //  other noisy fields
+  // var ignoredChangeKeys = ['url', 'uuid', 'title', 'published_at', 'size', 'duration', 'file_type', 'podcast_id', 'id', 'podcast_uuid'];
+  // could also include thumbnail_url for __type:podcast
+  var ignoredChangeKeys = ['url', 'uuid', 'title', 'published_at', 'size', 'duration', 'file_type', 'podcast_id', 'id', 'podcast_uuid','thumbnail_url'];
+
+  changes.forEach(function(change) { // op,key,from,to
+    if (_.contains(ignoredChangeKeys, change.key)) {
+      return;
+    }
+    // this is here because we only record __lastUpdated if we record the history
+    self.meta.__lastUpdated = __stamp; // unless some keys are excluded... like url!
+
+    // log the sourceType for the change
+    h.__sourceType = h.__sourceType || {};
+    h.__sourceType[__stamp] = __sourceType;
+
+    // log the actual change for key.
+    h[change.key] = h[change.key] || {};
+    h[change.key][__stamp] = change.to;
+  });
+  this.meta.__changeCount = _.keys(h.__sourceType).length;
+};
 
 // class methods
 // Accumulates (merges) and returns changes
@@ -111,15 +142,8 @@ Accumulator.prototype.merge = function(item) {
   // -clone item,
   // -normalize attributes,
   // -delete __stamp,__sourceType property for compare
-  var meta = {
-    __type: item.__type,
-    __sourceType: item.__sourceType,
-    __user: item.__user,
-    __stamp: item.__stamp,
-  }
 
-  var stamp = item.__stamp;
-  var from = this.merged;
+  var from = this;
   var to = normalize(_.clone(item));
   // no need to delete __user, and __type, but will make compare faster.
   delete to.__type;
@@ -127,34 +151,35 @@ Accumulator.prototype.merge = function(item) {
   delete to.__user;
   delete to.__stamp;
 
+  // old sanity check, from a previous format.
   if (item.__type === 'episode' && !to.podcast_uuid) {
     console.log('Accumulator.merge: no podcast_uuid for episode:', item);
     throw (new Error('Accumulator.merge: no podcast_uuid for episode:' + JSON.stringify(item)));
   }
   // end of special fix check
 
-  if (stamp && !this.firstSeen) {
-    this.firstSeen = stamp;
-    // could compare to epoch (start of import), and set to published date - if stamp == epoch
-    this.lastUpdated = stamp; // initial value
+  // update meta on first sight
+  if (!this.meta.__firstSeen) {
+    _.merge(this.meta, {
+      __type: item.__type,
+      __user: item.__user,
+      __firstSeen: item.__stamp,
+      __lastUpdated: item.__stamp
+    });
   }
 
   var changes = compare(from, to);
-  if (changes.length) {
-    // console.log('|Δ|', changes.length, keyedThing.key);
-    var record = _.merge({}, {
-      __stamp: stamp,
-      __sourceType: item.__sourceType,
-      changes:changes
-    });
-    this.history.push(record);
+  // rewrite compare to make this smoother
+  this.appendHistory(changes, item.__stamp, item.__sourceType);
 
-    if (stamp) {
-      this.lastUpdated = stamp;
-    }
-  }
-  // don't modify the from, make a copy.
-  this.merged = _.merge({}, from, to);
+  // accumulate new values
+  _.merge(this, to);
+
+  // delete and re-attach the history attribute: makes it appear at the end of the object (usualy)
+  var h = this.history;
+  delete this.history;
+  this.history = h;
+
   return changes;
 };
 

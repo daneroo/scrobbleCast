@@ -41,6 +41,7 @@ function forEachUser(task) {
         .then(function() {
           return Promise.each(allCredentials, tasks.dedup);
         });
+        // TODO: should probably catch here...
     };
   }
   // auto-starts

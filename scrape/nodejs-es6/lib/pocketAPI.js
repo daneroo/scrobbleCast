@@ -3,9 +3,13 @@
 // dependencies - core-public-internal
 
 var Promise = require('bluebird');
-var rp = require('request-promise');
 var _ = require('lodash');
 var RateLimiter = require('limiter').RateLimiter;
+
+// We wrapped rp (request-promise)
+// - in order to encapsulate logging, error handling and eventually retry behavior
+// var rp = require('request-promise');
+var retry = require('./retry');
 var Session = require('./session');
 var utils = require('./utils');
 
@@ -39,7 +43,7 @@ PocketAPI.prototype._fetch = function(path, params) {
   }
   return speedLimit()
     .then(function() {
-      return rp(self.session.reqJSON(path, params))
+      return retry(self.session.reqJSON(path, params))
         .then(function(response) {
           if (verbose) {
             console.log('* path', path);
@@ -237,7 +241,7 @@ PocketAPI.prototype.sign_in = function(credentials) {
   //  whereas a faled login returns the login page content again (200)
   //  the 302 response also has a new XSRF-TOKEN cookie
   var self = this;
-  return rp(self.session.reqGen(paths.sign_in, {
+  return retry(self.session.reqGen(paths.sign_in, {
       resolveWithFullResponse: true
     }))
     .then(function(response) {
@@ -248,7 +252,7 @@ PocketAPI.prototype.sign_in = function(credentials) {
       // now do a form post for login, expect a 302, which is not followed for POST.
       // unless followAllRedirects: true, but that only follows back to / and causes an extra fetch
       return new Promise(function(resolve, reject) {
-        rp(self.session.reqGenXSRF(paths.sign_in, {
+        retry(self.session.reqGenXSRF(paths.sign_in, {
           form: form
         })).then(function(response) {
           console.log('response OK, expecting 302, reject.', response);

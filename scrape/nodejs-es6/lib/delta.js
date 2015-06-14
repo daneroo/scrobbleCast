@@ -66,29 +66,36 @@ function compare(from, to) {
     allKeys.forEach(function(key) {
       var f = from[key];
       var t = to[key];
-      var op;
+      var change = {
+        key: key
+      };
       if (_.isUndefined(f)) { // new key
-        op = 'new';
+        _.merge(change, {
+          op: 'new',
+          to: t
+        });
         // console.log('--new key', key);
       } else if (_.isUndefined(t)) { // deleted key
-        op = 'del';
+        _.merge(change, {
+          op: 'del',
+          from: f
+        });
         // console.log('--del key', key);
       } else if (!_.isEqual(f, t)) {
-        op = 'chg';
+        _.merge(change, {
+          op: 'chg',
+          from: f,
+          to: t
+        });
         // console.log('--chg:', key, f, t)
       }
 
       // ignore deletions...
       // or maybe specific ones? (podcast_id)
-      // if (op) {
-      // if (op && 'chg' === op) { // only op:chg
-      if (op && 'del' !== op) { // op in {new,chg}
-        changes.push({
-          op: op,
-          key: key,
-          from: f,
-          to: t
-        });
+      // if (change.op) {
+      // if (change.op && 'chg' === change.op) { // only op:chg
+      if (change.op && 'del' !== change.op) { // op in {new,chg}
+        changes.push(change);
       }
     });
   }
@@ -115,14 +122,19 @@ Accumulator.prototype.appendHistory = function(changes, __stamp, __sourceType) {
   //  other noisy fields
   // var ignoredChangeKeys = ['url', 'uuid', 'title', 'published_at', 'size', 'duration', 'file_type', 'podcast_id', 'id', 'podcast_uuid'];
   // could also include thumbnail_url for __type:podcast
-  var ignoredChangeKeys = ['url', 'uuid', 'title', 'published_at', 'size', 'duration', 'file_type', 'podcast_id', 'id', 'podcast_uuid','thumbnail_url'];
+  var ignoredChangeKeys = ['url', 'uuid', 'title', 'published_at', 'size', 'duration', 'file_type', 'podcast_id', 'id', 'podcast_uuid', 'thumbnail_url'];
 
   changes.forEach(function(change) { // op,key,from,to
     if (_.contains(ignoredChangeKeys, change.key)) {
       return;
     }
-    // this is here because we only record __lastUpdated if we record the history
-    self.meta.__lastUpdated = __stamp; // unless some keys are excluded... like url!
+
+    // we only record __lastUpdated if:
+    // we are considering a pertinent field (not ignored)
+    // and consider insertion order (last==max)
+    if (!self.meta.__lastUpdated || __stamp > self.meta.__lastUpdated) {
+      self.meta.__lastUpdated = __stamp;
+    }
 
     // log the sourceType for the change
     h.__sourceType = h.__sourceType || {};
@@ -158,13 +170,15 @@ Accumulator.prototype.merge = function(item) {
   }
   // end of special fix check
 
-  // update meta on first sight
-  if (!this.meta.__firstSeen) {
+  // always merge __type, and __user
+  _.merge(this.meta, {
+    __type: item.__type,
+    __user: item.__user,
+  });
+  // update meta.__firstSeen
+  if (!this.meta.__firstSeen || item.__stamp < this.meta.__firstSeen) {
     _.merge(this.meta, {
-      __type: item.__type,
-      __user: item.__user,
       __firstSeen: item.__stamp,
-      __lastUpdated: item.__stamp
     });
   }
 
@@ -173,6 +187,7 @@ Accumulator.prototype.merge = function(item) {
   this.appendHistory(changes, item.__stamp, item.__sourceType);
 
   // accumulate new values
+  // TODO what if stamp < __lastUpdated ??
   _.merge(this, to);
 
   // delete and re-attach the history attribute: makes it appear at the end of the object (usualy)

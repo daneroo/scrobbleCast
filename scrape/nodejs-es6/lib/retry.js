@@ -20,7 +20,7 @@ function retry(arg) {
   // log('*****************', JSON.stringify(arg));
   var M = arg.method || 'GET';
   var U = arg.uri.replace('https://play.pocketcasts.com', '');
-  var X = arg.headers ? arg.headers['X-XSRF-TOKEN'] : 'NO-TOKEN'
+  var X = arg.headers ? arg.headers['X-XSRF-TOKEN'] : 'NO-TOKEN';
   var start = +new Date();
   // log('----------', M, U, X);
   return rp(arg)
@@ -30,7 +30,7 @@ function retry(arg) {
     .catch(function(error) { // error: {error:,options,response,statusCode}
       // look for specific errors: 302,TIMEOUT, Authentication Failure
       // log('--------+E', M, U, X,error);
-      throw error
+      throw error;
     })
     .finally(function() {
       var ms = +new Date() - start;

@@ -176,7 +176,7 @@ PocketAPI.prototype.podcastPages = function(params) {
       });
   }
 
-  function cleanup(items){
+  function cleanup(items) {
     // remove the __page and __totalPages attributes, now that we are done
     items.forEach(function(item) {
       delete item.__page;

@@ -122,7 +122,9 @@ Accumulator.prototype.appendHistory = function(changes, __stamp, __sourceType) {
   //  other noisy fields
   // var ignoredChangeKeys = ['url', 'uuid', 'title', 'published_at', 'size', 'duration', 'file_type', 'podcast_id', 'id', 'podcast_uuid'];
   // could also include thumbnail_url for __type:podcast
-  var ignoredChangeKeys = ['url', 'uuid', 'title', 'published_at', 'size', 'duration', 'file_type', 'podcast_id', 'id', 'podcast_uuid', 'thumbnail_url'];
+  // var ignoredChangeKeys = ['url', 'uuid', 'title', 'published_at', 'size', 'duration', 'file_type', 'podcast_id', 'id', 'podcast_uuid', 'thumbnail_url'];
+  // keep uuid!
+  var ignoredChangeKeys = ['url', 'title', 'published_at', 'size', 'duration', 'file_type', 'podcast_id', 'id', 'podcast_uuid', 'thumbnail_url'];
 
   changes.forEach(function(change) { // op,key,from,to
     if (_.contains(ignoredChangeKeys, change.key)) {

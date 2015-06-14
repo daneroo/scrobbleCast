@@ -1,13 +1,20 @@
 'use strict';
 
+// This is a wrapper meant to abstract the persistence tou CouchDB/PouchDB
+// For now: we will only be using the pouchdb API. nano is another option..
+// intended uses: store the delta representation fo podcasts/episode entities
+// -setup
+// given an item (Accumulator)
+// -merge: load merge save
+// further investigation and design must be done for bulk operations
+
 // dependencies - core-public-internal
 // var _ = require('lodash');
 
 // usage new ouch(db)
 exports = module.exports = {
-  couch: require('./couch'),
-  pouch: require('./pouch'),
   Ouch: Ouch,
+  bulk: require('./bulk'),
   normalize: normalize
 };
 
@@ -29,18 +36,6 @@ Ouch.prototype.save = function(item) {
       this.db.put(item);
     });
 };
-
-// get the item from database (in case it already exists, and we need _rev)
-// function save(item) {
-//   return get(item)
-//     .then(put);
-// }
-
-// function fetch(item) {
-//   if (!item._id) {
-//     throw new Error('item without ._id');
-//   }
-// }
 
 // TODO make this idempotent.
 // TODO add some tests

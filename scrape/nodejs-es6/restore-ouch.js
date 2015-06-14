@@ -11,9 +11,9 @@ var ouch = require('./lib/ouch');
 
 // globals
 var allCredentials = require('./credentials.json');
-var db = new PouchDB('pouchdb');
+// var db = new PouchDB('pouchdb');
 // var db = new PouchDB('http://admin:supersecret@192.168.59.103:5984/scrobblecast');
-// var db = new PouchDB('http://admin:supersecret@cantor:5984/scrobblecast');
+var db = new PouchDB('http://admin:supersecret@cantor:5984/scrobblecast');
 
 //  move to logging module (?loggly)
 var log = console.error;
@@ -64,36 +64,43 @@ function showAll() {
   };
 }
 
-// returns a fetched item, or passes the item, augmented with a key.
+function addKey(item) {
+    var key = [item.meta.__user, item.meta.__type, item.uuid].join('/');
+    item._id = key;
+  }
+  // returns a fetched item, or passes the item, augmented with a key.
 function create(item) {
-  ouch.normalize(item); // _id and meta
+  // ouch.normalize(item); // _id and meta
+  addKey(item);
+
+  log('create', item._id);
 
   // log('--fetching', item._id);
   return db.get(item._id)
     .then(function(doc) {
-      // log('--found:', [doc._id,doc._rev]);
+      log('--found:', [doc._id, doc._rev]);
       var merged = _.merge({}, doc, item);
-      // log('--merged', [merged._id,merged._rev]);
+      log('--merged', [merged._id, merged._rev]);
       return merged;
     })
     .catch(function(error) {
-      // log('--new!', item._id);
+      log('--new!', item._id);
       return item;
     });
 }
 
 //  create or update
 function save(item) {
-  // log('--saving', item._id);
+  log('--saving', [item._id, item._rev]);
   return db.put(item)
     .then(function(doc) {
       item._rev = doc.rev;
-      // log('--saved', [item._id,item._rev]);
+      log('--saved', [item._id, item._rev]);
       return item;
     })
     .catch(function(error) {
       log('error:doc', [item._id, item._rev]);
-      throw (error);
+      // throw (error);
     })
     .catch(verboseErrorHandler(true));
 }
@@ -108,8 +115,8 @@ function progress(item) {
   }
 }
 
-function createAndUpdate(credentials, stamp, file, item) {
-  log(item);
+function createAndUpdate(item) {
+  // log('createAndUpdate',item);
   return create(item)
     .then(save);
 }
@@ -156,7 +163,8 @@ function restoreFileToCouch() {
           log(' -accs', __user, __type, _.keys(accByUUID.accumulators).length);
           _.forEach(accByUUID.accumulators, function(acc, uuid) {
             log('  -acc', __user, __type, uuid, acc.meta);
-
+            // Promise iterator!
+            createAndUpdate(acc);
           });
         });
       });
@@ -165,5 +173,5 @@ function restoreFileToCouch() {
 
 resetDB()
   .then(restoreFileToCouch)
-  // .then(showAll())
+  .then(showAll())
   .catch(verboseErrorHandler(false));

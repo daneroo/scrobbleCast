@@ -11,7 +11,7 @@
 // var Promise = require('bluebird');
 var rp = require('request-promise');
 
-// goog place to figure out logging: config,category,level, args
+// goog place to figure out logging: config,category,level (fatal..debug), args
 var log = console.log;
 
 // We are only using request promise with a single argument
@@ -24,11 +24,18 @@ function retry(arg) {
   // log('----------', M, U, X);
   return rp(arg)
     .then(function(response) {
-      var ms = +new Date()-start;
-      log('--------++', M, U, X, ms,'ms');
       return response;
+    })
+    .catch(function(error) { // error: {error:,options,response,statusCode}
+      // look for specific errors: 302,TIMEOUT, Authentication Failure
+      log('--------+E', M, U, X);
+      throw error
+    })
+    .finally(function(){
+      var ms = +new Date() - start;
+      log('--------++', M, U, X, ms,'ms');
     });
-    // could hadle errors here (log,handle(302),rethrow,retry)
+  // could hadle errors here (log,handle(302),rethrow,retry)
 }
 
 // Exported API

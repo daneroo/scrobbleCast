@@ -16,7 +16,7 @@
 
 ### CouchDB for persistence
 Note: try CouchDB 2.0 
-Don;t put the data volume in `./data` because we often rsync!
+Don't put the data volume in `./data` because we often rsync!
 
   docker run -d -p 5984:5984 -e COUCHDB_PASS="supersecret" -v $(pwd)/couchdb:/var/lib/couchdb tutum/couchdb 
 

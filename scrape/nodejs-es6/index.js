@@ -1,36 +1,26 @@
 "use strict";
 
+// This is meant to exercise the fetch API
+// Can use it to test under request error conditions
+
 // dependencies - core-public-internal
 var Promise = require('bluebird');
 var PocketAPI = require('./lib/pocketAPI');
 var utils = require('./lib/utils');
 
-// tasks.deep();
-// tasks.shallow();
-// tasks.quick();
+var allCredentials = require('./credentials.json');
+var log = console.log;
 
-function show(msg, response) {
-  console.log('\n |%s|:%d', msg, response.length);
-  // console.log(_.pluck(response.slice(0, 2), 'title'));
-  // console.log(_.pluck(response.slice(0, 2), '__stamp'));
-  // console.log('totalPages',_.pluck(response, '__totalPages'));
-  // console.log(_.pluck(rr.slice(0, 2), '__type'));
-  // console.log(_.pluck(rr.slice(0, 2), '__sourceType'));
-  // console.log(_.pluck(rr.slice(0, 2), '__user'));
-  // console.log('[0]=>', response[0]);
-  // console.log('[..4]=>', JSON.stringify(response.slice(0, 4),null,2));
-}
 
 function tryemall(credentials) {
-  utils.logStamp('Start Try-em-all');
+  log('-Start', credentials.name);
   var apiSession = new PocketAPI({
     stamp: utils.stamp('minute')
   });
   return apiSession.sign_in(credentials)
     .then(apiSession.podcasts())
     .then(function(response) {
-      show('01-podcasts', response);
-      // sinkFile.writeByUserStamp(response);
+      log('  -01-podcasts', response.length);
     })
     .then(apiSession.podcastPages({
       // maxPage:10,
@@ -43,34 +33,39 @@ function tryemall(credentials) {
         // uuid:'89beea90-5edf-012e-25b7-00163e1b201c'
     }))
     .then(function(response) {
-      // console.log('02-podcasts', response);
-      show('02-podcasts', response);
-      // sinkFile.writeByUserStamp(response);
+      log('  -02-podcasts', response.length);
     })
     .then(apiSession.new_releases())
     .then(function(response) {
-      show('03-new_releases', response);
-      // sinkFile.writeByUserStamp(response);
+      log('  -03-new_releases', response.length);
     })
     .then(apiSession.in_progress())
     .then(function(response) {
-      show('04-in_progress', response);
-      // sinkFile.writeByUserStamp(response);
+      log('  -04-in_progress', response.length);
     })
     .then(function(response) {
-      utils.logStamp('Done Try-em-all');
+      log('-Done', credentials.name);
+      return credentials.name;
     })
     .catch(function(error) {
-      console.log('Try-em-all:', error);
-      throw error;
+      log('-Error', error);
+      // throw error;
+      return credentials.name;
     });
 }
 
-var allCredentials = require('./credentials.json');
-Promise.each(allCredentials, function(credentials) {
-  utils.logStamp('Starting job for ' + credentials.name);
-  return tryemall(credentials);
-  // return tasks.quick(credentials);
-  // return tasks.shallow(credentials);
-  // return tasks.deep(credentials);
-});
+
+function iteration() {
+  Promise.each(allCredentials, function(credentials) {
+    return tryemall(credentials);
+    // return tasks.quick(credentials);
+    // return tasks.shallow(credentials);
+    // return tasks.deep(credentials);
+  }).then(function() {
+    log('Done all');
+  });
+
+}
+
+iteration();
+setInterval(iteration, 10000);

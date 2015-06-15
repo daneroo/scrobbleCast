@@ -3,6 +3,7 @@
 // Pump redux to pouchdb
 
 // dependencies - core-public-internal
+var Promise = require('bluebird');
 var _ = require('lodash');
 var PouchDB = require('pouchdb');
 var srcFile = require('./lib/source/file');
@@ -56,7 +57,7 @@ function showAll() {
         response.rows.forEach(function(item) {
           var d = item.doc;
           delete d._rev;
-          console.log('-doc:', JSON.stringify(d));
+          // console.log('-doc:', JSON.stringify(d));
         });
         log('total_rows', response.total_rows);
         return response;
@@ -73,33 +74,33 @@ function create(item) {
   // ouch.normalize(item); // _id and meta
   addKey(item);
 
-  log('create', item._id);
+  // log('--create', item._id);
 
   // log('--fetching', item._id);
   return db.get(item._id)
     .then(function(doc) {
-      log('--found:', [doc._id, doc._rev]);
+      // log('  --found:', [doc._id, doc._rev]);
       var merged = _.merge({}, doc, item);
-      log('--merged', [merged._id, merged._rev]);
+      // log('  --merged', [merged._id, merged._rev]);
       return merged;
     })
     .catch(function(error) {
-      log('--new!', item._id);
+      log('  --new!', item._id);
       return item;
     });
 }
 
 //  create or update
 function save(item) {
-  log('--saving', [item._id, item._rev]);
+  // log('--saving', [item._id, item._rev]);
   return db.put(item)
     .then(function(doc) {
       item._rev = doc.rev;
-      log('--saved', [item._id, item._rev]);
+      log('  --saved', [item._id, item._rev]);
       return item;
     })
     .catch(function(error) {
-      log('error:doc', [item._id, item._rev]);
+      log('error:doc', [item._id, item._rev],error);
       // throw (error);
     })
     .catch(verboseErrorHandler(true));
@@ -108,15 +109,16 @@ function save(item) {
 var lastStamp = null;
 
 function progress(item) {
-  var logit = (item.__stamp !== lastStamp);
+  var day = item.__stamp.substr(0,10);
+  var logit = (day !== lastStamp);
   if (logit) {
     log('--iteration stamp:', [item.__user, item.__stamp]);
-    lastStamp = item.__stamp;
+    lastStamp = day;
   }
 }
 
 function createAndUpdate(item) {
-  // log('createAndUpdate',item);
+  log('createAndUpdate',item.uuid,item.meta.__changeCount);
   return create(item)
     .then(save);
 }
@@ -137,14 +139,18 @@ function getAccumulator(item) {
 }
 
 function itemHandler(credentials, stamp, file, item) {
-  // progress(item);
-  var JoeRogan = '873e7420-042d-012e-f9a4-00163e1b201c';
-  if (item.podcast_uuid !== JoeRogan) {
-    return;
+  progress(item);
+  // var JoeRogan = '873e7420-042d-012e-f9a4-00163e1b201c';
+  // if (item.podcast_uuid !== JoeRogan) {
+  //   return;
+  // }
+  var accByUUID = getAccumulator(item);
+  var changeCount = accByUUID.merge(item);
+  if (!changeCount) {
+    return false;
   }
-  var acc = getAccumulator(item);
-  acc.merge(item);
-  // createAndUpdate(credentials,stamp,file,item);
+  var acc = accByUUID.getAccumulator(item.uuid);
+  return createAndUpdate(acc);
 }
 
 function restoreFileToCouch() {
@@ -158,13 +164,14 @@ function restoreFileToCouch() {
       });
     })
     .then(function() {
-      _.forEach(accsByUserByType, function(types, __user) {
-        _.forEach(types, function(accByUUID, __type) {
-          log(' -accs', __user, __type, _.keys(accByUUID.accumulators).length);
-          _.forEach(accByUUID.accumulators, function(acc, uuid) {
-            log('  -acc', __user, __type, uuid, acc.meta);
+      return Promise.each(_.values(accsByUserByType), function(types) { // _users
+        return Promise.each(_.values(types), function(accByUUID) {  // _type
+          // log(' -accs', __user, __type, _.keys(accByUUID.accumulators).length);
+          return Promise.each(_.values(accByUUID.accumulators), function(acc) { // uuid
+            // log('  -acc', __user, __type, uuid, acc.meta);
+            log('  -acc',acc.meta.__user,acc.meta.__type,acc.uuid);
             // Promise iterator!
-            createAndUpdate(acc);
+            return createAndUpdate(acc);
           });
         });
       });

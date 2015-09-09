@@ -29,6 +29,15 @@ To compact database:
   curl -H "Content-Type: application/json" -X POST http://admin:supersecret@cantor:5984/scrobblecast/_compact
 
 ### Docker file permissions
+*note* we now set uid/gid to daniel.daniel (1000), to match cantor numeric ids
+
+  rsync --delete -avz --progress daniel@dirac.imetrical.com:Code/iMetrical/scrobbleCast/scrape/nodejs-es6/data/ data/
+  # check
+  find data -not -user daniel -ls
+  # fix if necessary
+  sudo chown -R daniel.daniel data/
+
+#### Deprecated
 On cantor, the container creates it's files as root, so when I sync, ignore owner
 
   # maybe add --delete

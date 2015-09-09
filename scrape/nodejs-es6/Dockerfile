@@ -5,5 +5,9 @@ FROM node:0.10-onbuild
 # should be /usr/share/zoneinfo/Canada/Eastern not /usr/share/zoneinfo/EST
 RUN ln -sf /usr/share/zoneinfo/Canada/Eastern /etc/localtime
 
+# Run as daniel.daniel (1000.1000) to match cantors ids
+RUN groupadd -r -g 1000 daniel && useradd -r -g daniel -u 1000 daniel
+USER daniel
+
 # replace this with your application's default port
 #EXPOSE 8888

@@ -28,6 +28,7 @@ function PocketAPI(options) {
 // the actual endpoints
 var paths = {
   sign_in: '/users/sign_in',
+  web: '/web',
   podcasts_all: '/web/podcasts/all.json',
   new_releases_episodes: '/web/episodes/new_releases_episodes.json',
   in_progress_episodes: '/web/episodes/in_progress_episodes.json',
@@ -269,6 +270,11 @@ PocketAPI.prototype.sign_in = function(credentials) {
           }
         });
       });
+    })
+    .then(function(){
+        return retry(self.session.reqGen(paths.web, {
+          resolveWithFullResponse: true
+        }));
     });
 };
 

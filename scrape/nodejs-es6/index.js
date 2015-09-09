@@ -48,7 +48,7 @@ function tryemall(credentials) {
       return credentials.name;
     })
     .catch(function(error) {
-      log('-Error', error);
+      log('-Error', JSON.stringify(error,null,2));
       // throw error;
       return credentials.name;
     });

@@ -11,3 +11,6 @@ USER daniel
 
 # replace this with your application's default port
 #EXPOSE 8888
+
+# Repeat thi to assign USER properly
+CMD [ "npm", "start" ]

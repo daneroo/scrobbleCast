@@ -102,6 +102,7 @@ function dedupTask(credentials) {
         })
         .then(function(dontCare) {
           function sortAndSave(outfile, history) {
+
             // console.log('|' + outfile + '|=', _.size(history.accumulators));
             // just write out the accumulators dictionary, it is the only attribute!
             var sorted = _.sortBy(history.accumulators, function(item) {
@@ -117,7 +118,8 @@ function dedupTask(credentials) {
               return [item.meta.__lastUpdated, item.uuid];
             }).reverse();
             var json = JSON.stringify(sorted, null, 2);
-            fs.writeFileSync(outfile, json);
+
+            fs.writeFileSync(path.join(sinkFile.dataDirname, outfile), json);
             utils.logStamp('md5(' + outfile + '):' + md5(json));
           }
           sortAndSave('podcast-history-' + credentials.name + '.json', podcastHistory);

@@ -151,9 +151,9 @@ function saveRollupsLines(_user,_type){
 }
 
 function rollup() {
-  // var extra = '';
+  var extra = '';
   // var extra = 'noredux'; // to switch to noredux..
-  var extra = 'rollup'; // to switch to noredux..
+  // var extra = 'rollup'; // to switch to noredux..
   return srcFile.iterator(extra, allCredentials, itemHandler, '**/*.jsonl')
     .then(function(counts) {
       Object.keys(counts).forEach(function(name) {

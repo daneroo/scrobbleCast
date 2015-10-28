@@ -20,7 +20,18 @@ function resolveData(file) {
 }
 
 // TODO: make these Async/Promised
+function loadJSONLines(file) {
+  var lines = fs.readFileSync(resolveData(file), 'utf8').toString().split("\n");
+  for ( var i in lines) {
+    lines[i] = JSON.parse(lines[i]);
+  }
+  return lines;
+}
 function loadJSON(file) {
+  if (file.match(/\.jsonl/)){
+    return loadJSONLines(file);
+    // return [];
+  }
   // var result = require(resolveData(file)); // BAD
   var result = JSON.parse(fs.readFileSync(resolveData(file)));
   return result.episodes || result.podcasts || result;
@@ -86,7 +97,8 @@ function findByDate() {
   return fs.readdirPromise(path.join(dataDirname, 'byDate'));
 }
 
-function iterator(extrapath, allCredentials, callbackReturningPromise) {
+function iterator(extrapath, allCredentials, callbackReturningPromise, pattern) {
+  pattern = pattern || '**/*.json';
   var basepath = path.join(dataDirname, extrapath);
   var counts = {};
   return Promise.each(allCredentials, function(credentials) {
@@ -99,7 +111,7 @@ function iterator(extrapath, allCredentials, callbackReturningPromise) {
     return findByUserStamp(credentials.name, basepath)
       .then(function(stamps) {
         return Promise.each(stamps, function(stamp) {
-            return find(path.join(extrapath, 'byUserStamp', credentials.name, stamp, '**/*.json'))
+            return find(path.join(extrapath, 'byUserStamp', credentials.name, stamp, pattern))
               .then(function(files) {
                 c.stamp++;
                 return Promise.each(files,function(file) {

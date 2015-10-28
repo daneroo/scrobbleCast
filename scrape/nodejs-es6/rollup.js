@@ -33,7 +33,7 @@ function verboseErrorHandler(shouldRethrow) {
 var lastStamp = null;
 
 function progress(item) {
-  var day = item.__stamp.substr(0, 7);
+  var day = item.__stamp.substr(0, 10);
   var logit = (day !== lastStamp);
   if (logit) {
     log('--iteration stamp:', [item.__user, item.__stamp]);
@@ -107,7 +107,21 @@ function sortAndSave(_user, _type, history) {
 function save(thing, outfile) {
   var json = JSON.stringify(thing, null, 2);
   fs.writeFileSync(outfile, json);
-  log('md5(%s):%s', outfile, md5(json));
+  log('md5(%s):%s %sMB', path.basename(outfile), md5(json), (json.length / 1024 / 1024).toFixed(2));
+}
+function saveLines(thing, outfile) {
+  if (!Array.isArray(thing)) {
+    console.log('saveLines:thing is not an array')
+    process.exit(-1)
+  }
+  // var json = JSON.stringify(thing);
+  var lines=[];
+  thing.forEach(function(el){
+    lines.push(JSON.stringify(el))
+  });
+  var json = lines.join('\n')
+  fs.writeFileSync(outfile, json);
+  log('md5(%s):%s %sMB', path.basename(outfile), md5(json), (json.length / 1024 / 1024).toFixed(2));
 }
 
 function md5(str) {
@@ -115,11 +129,32 @@ function md5(str) {
   return hash;
 }
 
+var batchStamp = utils.stamp().substr(0,10);
+function saveRollups(_user,_type){
+  // var _stamp = utils.stamp('second');
+  var _stamp = batchStamp;
+  var outfile = util.format('data/rollup/byUserStamp/%s/%s/rollup-%s-%s.json', _user, _stamp, _user, _type);
+  var dir = path.dirname(outfile);
+  mkdirp.sync(dir);
+  save(itemsByUserByType[_user][_type], outfile);
+  // delete itemsByUserByType[_user][_type];
+}
+
+function saveRollupsLines(_user,_type){
+  // var _stamp = utils.stamp('second');
+  var _stamp = batchStamp;
+  var outfile = util.format('data/rollup/byUserStamp/%s/%s/rollup-%s-%s.jsonl', _user, _stamp, _user, _type);
+  var dir = path.dirname(outfile);
+  mkdirp.sync(dir);
+  saveLines(itemsByUserByType[_user][_type], outfile);
+  // delete itemsByUserByType[_user][_type];
+}
+
 function rollup() {
   // var extra = '';
   // var extra = 'noredux'; // to switch to noredux..
   var extra = 'rollup'; // to switch to noredux..
-  return srcFile.iterator(extra, allCredentials, itemHandler)
+  return srcFile.iterator(extra, allCredentials, itemHandler, '**/*.jsonl')
     .then(function(counts) {
       Object.keys(counts).forEach(function(name) {
         var c = counts[name];
@@ -132,18 +167,12 @@ function rollup() {
         var typesForUser = accsByUserByType[_user];
         return Promise.each(_.keys(typesForUser), function(_type) { // _type
           var accByUUID = typesForUser[_type];
-          log(' -accs|%s.%s|=%d', _user, _type, _.keys(accByUUID.accumulators).length);
+          // log(' -accs|%s.%s|=%d', _user, _type, _.keys(accByUUID.accumulators).length);
           sortAndSave(_user, _type, accByUUID);
 
-          var _stamp = utils.stamp('second');
-          var outfile = util.format('data/rollup/byUserStamp/%s/%s/rollup-%s-%s.json', _user, _stamp, _user, _type);
-          var dir = path.dirname(outfile);
-          mkdirp.sync(dir);
-          save(itemsByUserByType[_user][_type], outfile);
+          saveRollups(_user,_type);
+          saveRollupsLines(_user,_type);
 
-          // return Promise.each(_.values(accByUUID.accumulators), function(acc) { // uuid
-          //   return Promise.resolve(true);
-          // });
           return Promise.resolve(true);
         });
       });
@@ -152,4 +181,7 @@ function rollup() {
 
 Promise.resolve(true)
   .then(rollup)
+  .then(function(){
+    console.log('RSS Mem: %sMB', (process.memoryUsage().rss / 1024 / 1024).toFixed(2));
+  })
   .catch(verboseErrorHandler(false));

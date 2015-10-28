@@ -154,7 +154,7 @@ function rollup() {
   var extra = '';
   // var extra = 'noredux'; // to switch to noredux..
   // var extra = 'rollup'; // to switch to noredux..
-  return srcFile.iterator(extra, allCredentials, itemHandler, '**/*.jsonl')
+  return srcFile.iterator(extra, allCredentials, itemHandler, '**/*.json')
     .then(function(counts) {
       Object.keys(counts).forEach(function(name) {
         var c = counts[name];

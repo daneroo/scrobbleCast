@@ -4,7 +4,7 @@ Just to get at some data, and because fortuitously PocketCasts just released a w
 
 We started with casper to mimick the native browser mechanism, but implementation will be easire in node.js once the mechanism is identified.
 
-  cd casper; npm start
+  cd ../deprecated/casper; npm start
 
 This is what we found:
 

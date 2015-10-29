@@ -64,6 +64,9 @@ describe('delta', function() {
             'played_up_to': {
               '2015-01-01T01:23:45Z': 10,
               '2015-01-02T02:34:56Z': 20,
+            },
+            'uuid': {
+              '2015-01-01T01:23:45Z': 'a'
             }
           },
           'meta': {
@@ -83,6 +86,9 @@ describe('delta', function() {
             },
             'played_up_to': {
               '2015-01-01T01:23:45Z': 10
+            },
+            'uuid': {
+              '2015-01-01T01:23:45Z': 'b'
             }
           },
           'meta': {

@@ -271,10 +271,10 @@ PocketAPI.prototype.sign_in = function(credentials) {
         });
       });
     })
-    .then(function(){
-        return retry(self.session.reqGen(paths.web, {
-          resolveWithFullResponse: true
-        }));
+    .then(function() {
+      return retry(self.session.reqGen(paths.web, {
+        resolveWithFullResponse: true
+      }));
     });
 };
 

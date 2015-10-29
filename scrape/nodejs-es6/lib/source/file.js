@@ -21,14 +21,15 @@ function resolveData(file) {
 
 // TODO: make these Async/Promised
 function loadJSONLines(file) {
-  var lines = fs.readFileSync(resolveData(file), 'utf8').toString().split("\n");
-  for ( var i in lines) {
+  var lines = fs.readFileSync(resolveData(file), 'utf8').toString().split('\n');
+  for (var i in lines) {
     lines[i] = JSON.parse(lines[i]);
   }
   return lines;
 }
+
 function loadJSON(file) {
-  if (file.match(/\.jsonl/)){
+  if (file.match(/\.jsonl/)) {
     return loadJSONLines(file);
     // return [];
   }
@@ -102,22 +103,22 @@ function iterator(extrapath, allCredentials, callbackReturningPromise, pattern) 
   var basepath = path.join(dataDirname, extrapath);
   var counts = {};
   return Promise.each(allCredentials, function(credentials) {
-    counts[credentials.name] = counts[credentials.name] || {
-      part: 0,
-      file: 0,
-      stamp: 0
-    };
-    var c = counts[credentials.name];
-    return findByUserStamp(credentials.name, basepath)
-      .then(function(stamps) {
-        return Promise.each(stamps, function(stamp) {
+      counts[credentials.name] = counts[credentials.name] || {
+        part: 0,
+        file: 0,
+        stamp: 0
+      };
+      var c = counts[credentials.name];
+      return findByUserStamp(credentials.name, basepath)
+        .then(function(stamps) {
+          return Promise.each(stamps, function(stamp) {
             return find(path.join(extrapath, 'byUserStamp', credentials.name, stamp, pattern))
               .then(function(files) {
                 c.stamp++;
-                return Promise.each(files,function(file) {
+                return Promise.each(files, function(file) {
                   var items = loadJSON(file);
                   c.file++;
-                  return Promise.each(items,function(item) {
+                  return Promise.each(items, function(item) {
                     c.part++;
                     return callbackReturningPromise(credentials, stamp, file, item, counts);
                   });
@@ -125,11 +126,11 @@ function iterator(extrapath, allCredentials, callbackReturningPromise, pattern) 
                 });
               });
           });
-      });
-  })
-  .then(function(){
-    return counts;
-  });
+        });
+    })
+    .then(function() {
+      return counts;
+    });
 
 }
 
@@ -140,5 +141,5 @@ exports = module.exports = {
   find: find,
   findByDate: findByDate,
   findByUserStamp: findByUserStamp,
-  iterator:iterator
+  iterator: iterator
 };

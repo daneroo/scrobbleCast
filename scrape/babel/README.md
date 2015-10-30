@@ -30,7 +30,7 @@
 
 ## Global Sublime setup
 
-  - npm install -g eslint
+  - npm install -g eslint eslint-plugin-babel
   - added "eslintrc to "js": { "allowed_file_extensions": ["js", "json", "eslintrc", ....],
   - Also set .eslintrc as JSON Syntax
   - install package SublimeLinter-contrib-eslint

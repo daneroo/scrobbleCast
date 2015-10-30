@@ -57,6 +57,7 @@ gulp.task('mocha', function() {
 //     });
 // });
 
+// e.g.: gulp bump --type minor
 gulp.task('bump', ['test'], function() {
   var bumpType = plugins.util.env.type || 'patch'; // major.minor.patch
 

@@ -109,14 +109,15 @@ function save(thing, outfile) {
   fs.writeFileSync(outfile, json);
   log('md5(%s):%s %sMB', path.basename(outfile), md5(json), (json.length / 1024 / 1024).toFixed(2));
 }
+
 function saveLines(thing, outfile) {
   if (!Array.isArray(thing)) {
     console.log('saveLines:thing is not an array')
     process.exit(-1)
   }
   // var json = JSON.stringify(thing);
-  var lines=[];
-  thing.forEach(function(el){
+  var lines = [];
+  thing.forEach(function(el) {
     lines.push(JSON.stringify(el))
   });
   var json = lines.join('\n')
@@ -129,8 +130,9 @@ function md5(str) {
   return hash;
 }
 
-var batchStamp = utils.stamp().substr(0,10);
-function saveRollups(_user,_type){
+var batchStamp = utils.stamp().substr(0, 10);
+
+function saveRollups(_user, _type) {
   // var _stamp = utils.stamp('second');
   var _stamp = batchStamp;
   var outfile = util.format('data/rollup/byUserStamp/%s/%s/rollup-%s-%s.json', _user, _stamp, _user, _type);
@@ -140,7 +142,7 @@ function saveRollups(_user,_type){
   // delete itemsByUserByType[_user][_type];
 }
 
-function saveRollupsLines(_user,_type){
+function saveRollupsLines(_user, _type) {
   // var _stamp = utils.stamp('second');
   var _stamp = batchStamp;
   var outfile = util.format('data/rollup/byUserStamp/%s/%s/rollup-%s-%s.jsonl', _user, _stamp, _user, _type);
@@ -170,8 +172,8 @@ function rollup() {
           // log(' -accs|%s.%s|=%d', _user, _type, _.keys(accByUUID.accumulators).length);
           sortAndSave(_user, _type, accByUUID);
 
-          saveRollups(_user,_type);
-          saveRollupsLines(_user,_type);
+          saveRollups(_user, _type);
+          saveRollupsLines(_user, _type);
 
           return Promise.resolve(true);
         });
@@ -181,7 +183,7 @@ function rollup() {
 
 Promise.resolve(true)
   .then(rollup)
-  .then(function(){
+  .then(function() {
     console.log('RSS Mem: %sMB', (process.memoryUsage().rss / 1024 / 1024).toFixed(2));
   })
   .catch(verboseErrorHandler(false));

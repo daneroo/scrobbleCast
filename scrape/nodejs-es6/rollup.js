@@ -48,7 +48,6 @@ function main() {
 function rollup(credentials, extra) {
   // blank out accumulators
   return loadItems(credentials, extra)
-    .then(saveItems(credentials))
     .then(validateDedupAndSaveHistory(credentials));
 }
 
@@ -85,21 +84,6 @@ function validateDedupAndSaveHistory(credentials) {
         });
         sortAndSave(_user, _type, accululatorForType);
         return Promise.resolve(true);
-      })
-      .then(function() {
-        return itemsByType;
-      });
-  };
-}
-
-//  Deprecated
-// return a function to save Items rollup, bound to credentials (user)
-function saveItems(credentials) {
-  var _user = credentials.name;
-  return function saveItems(itemsByType) {
-    return Promise.each(['podcast', 'episode'], function(_type) {
-        saveRollupsLines(_user, _type, itemsByType, 'json');
-        saveRollupsLines(_user, _type, itemsByType, 'jsonl');
       })
       .then(function() {
         return itemsByType;
@@ -190,16 +174,7 @@ function loader(itemsByType) {
   };
 }
 
-var batchStamp = utils.stamp().substr(0, 10);
-
-function saveRollupsLines(_user, _type, itemsByType, suffix) {
-  suffix = suffix || 'jsonl';
-  // var _stamp = utils.stamp('second');
-  var _stamp = batchStamp;
-  var outfile = util.format('data/rollup/byUserStamp/%s/%s/rollup-%s-%s.%s', _user, _stamp, _user, _type, suffix);
-  saveLines(itemsByType[_type], outfile);
-}
-
+// TODO: move to lib
 function sortAndSave(_user, _type, history) {
   // console.log('|' + outfile + '|=', _.size(history.accumulators));
   // just write out the accumulators dictionary, it is the only attribute!
@@ -220,6 +195,7 @@ function sortAndSave(_user, _type, history) {
 }
 
 // outputs as JSON: either .json, or .jsonl
+// TODO move to lib
 // TODO, options: pretty=true, gzip=true, sign=true, log
 function saveLines(thing, outfile) {
   if (!Array.isArray(thing)) {

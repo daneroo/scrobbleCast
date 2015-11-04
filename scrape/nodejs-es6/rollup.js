@@ -92,13 +92,14 @@ function validateDedupAndSaveHistory(credentials) {
   };
 }
 
+//  Deprecated
 // return a function to save Items rollup, bound to credentials (user)
 function saveItems(credentials) {
   var _user = credentials.name;
   return function saveItems(itemsByType) {
     return Promise.each(['podcast', 'episode'], function(_type) {
-        saveRollups(_user, _type, itemsByType);
-        saveRollupsLines(_user, _type, itemsByType);
+        saveRollupsLines(_user, _type, itemsByType, 'json');
+        saveRollupsLines(_user, _type, itemsByType, 'jsonl');
       })
       .then(function() {
         return itemsByType;
@@ -147,25 +148,29 @@ function loader(itemsByType) {
   // since we are not writing the last month, it is not a problem,
   // that the last accumulated month will never be written out
   var previousMonth = null; // stamp for current month
-  var itemsByTypeForMonth = {
-    'episode': [],
-    'podcast': []
-  };
+  var itemsForMonth = [];
 
   function writeByMonth(item) {
     var __stamp = new Date(Date.parse(item.__stamp));
     // find begining of month (UTC)
     var month = new Date(Date.UTC(__stamp.getUTCFullYear(), __stamp.getUTCMonth())).toJSON();
+    // iso8601, remove millis
+    month = month.replace(/\.\d{3}Z$/, 'Z');
+
     var shouldWrite = previousMonth !== null && month !== previousMonth;
     if (shouldWrite) {
-      log('+writing month:', [item.__user, previousMonth]);
+      // log('+writing month:', [item.__user, previousMonth, itemsForMonth.length]);
+
       // actually write out the month: all types;
+      var _user = item.__user;
+      var suffix = 'jsonl';
+      var outfile = util.format('data/rollup/byUserStamp/%s/%s/monthly-%s.%s', _user, previousMonth, previousMonth, suffix);
+      saveLines(itemsForMonth, outfile);
+
+      // empty output buffer
+      itemsForMonth = [];
     }
-    // log progress - unless write progress is sufficient
-    if (month !== previousMonth) {
-      log('-accumulate month:', [item.__user, month]);
-      // actuall write out the month
-    }
+    itemsForMonth.push(item);
     previousMonth = month;
   }
 
@@ -185,6 +190,16 @@ function loader(itemsByType) {
   };
 }
 
+var batchStamp = utils.stamp().substr(0, 10);
+
+function saveRollupsLines(_user, _type, itemsByType, suffix) {
+  suffix = suffix || 'jsonl';
+  // var _stamp = utils.stamp('second');
+  var _stamp = batchStamp;
+  var outfile = util.format('data/rollup/byUserStamp/%s/%s/rollup-%s-%s.%s', _user, _stamp, _user, _type, suffix);
+  saveLines(itemsByType[_type], outfile);
+}
+
 function sortAndSave(_user, _type, history) {
   // console.log('|' + outfile + '|=', _.size(history.accumulators));
   // just write out the accumulators dictionary, it is the only attribute!
@@ -201,53 +216,35 @@ function sortAndSave(_user, _type, history) {
     return [item.meta.__lastUpdated, item.uuid];
   }).reverse();
   var outfile = util.format('history-%s-%s.json', _user, _type);
-  save(sorted, outfile);
+  saveLines(sorted, outfile);
 }
 
-function save(thing, outfile) {
-  var json = JSON.stringify(thing, null, 2);
-  fs.writeFileSync(outfile, json);
-  log('md5(%s):%s %sMB', path.basename(outfile), md5(json), (json.length / 1024 / 1024).toFixed(2));
-}
-
+// outputs as JSON: either .json, or .jsonl
+// TODO, options: pretty=true, gzip=true, sign=true, log
 function saveLines(thing, outfile) {
   if (!Array.isArray(thing)) {
     console.log('saveLines:thing is not an array');
     process.exit(-1);
   }
-  // var json = JSON.stringify(thing);
-  var lines = [];
-  thing.forEach(function(el) {
-    lines.push(JSON.stringify(el));
-  });
-  var json = lines.join('\n');
+  var json;
+  if (outfile.match(/\.jsonl$/)) {
+    var lines = [];
+    thing.forEach(function(el) {
+      lines.push(JSON.stringify(el));
+    });
+    json = lines.join('\n');
+  } else {
+    json = JSON.stringify(thing, null, 2);
+  }
+  var dir = path.dirname(outfile);
+  mkdirp.sync(dir);
   fs.writeFileSync(outfile, json);
-  log('md5(%s):%s %sMB', path.basename(outfile), md5(json), (json.length / 1024 / 1024).toFixed(2));
+  log('md5(%s):%s %si %sMB', path.basename(outfile), md5(json), thing.length, (json.length / 1024 / 1024).toFixed(2));
 }
 
 function md5(str) {
   var hash = crypto.createHash('md5').update(str).digest('hex');
   return hash;
-}
-
-var batchStamp = utils.stamp().substr(0, 10);
-
-function saveRollups(_user, _type, itemsByType) {
-  // var _stamp = utils.stamp('second');
-  var _stamp = batchStamp;
-  var outfile = util.format('data/rollup/byUserStamp/%s/%s/rollup-%s-%s.json', _user, _stamp, _user, _type);
-  var dir = path.dirname(outfile);
-  mkdirp.sync(dir);
-  save(itemsByType[_type], outfile);
-}
-
-function saveRollupsLines(_user, _type, itemsByType) {
-  // var _stamp = utils.stamp('second');
-  var _stamp = batchStamp;
-  var outfile = util.format('data/rollup/byUserStamp/%s/%s/rollup-%s-%s.jsonl', _user, _stamp, _user, _type);
-  var dir = path.dirname(outfile);
-  mkdirp.sync(dir);
-  saveLines(itemsByType[_type], outfile);
 }
 
 // Unused For now

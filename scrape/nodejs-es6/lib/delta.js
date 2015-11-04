@@ -216,9 +216,28 @@ AccumulatorByUuid.prototype.getAccumulator = function(uuid) {
 };
 
 AccumulatorByUuid.prototype.merge = function(item) {
-
   var acc = this.getAccumulator(item.uuid);
   var changes = acc.merge(item);
+  var changeCount = changes.length;
+  return changeCount;
+};
+
+// need a new name:
+// Convienience to get AccByUuid per type (podcast/episode)
+function AccumulatorByTypeByUuid( /*options*/ ) {
+  this.accumulatorsByType = {}; // by uuid
+}
+
+AccumulatorByTypeByUuid.prototype.getAccumulatorByUuidForType = function(type) {
+  if (!this.accumulatorsByType[type]) {
+    this.accumulatorsByType[type] = new AccumulatorByUuid();
+  }
+  return this.accumulatorsByType[type];
+};
+
+AccumulatorByTypeByUuid.prototype.merge = function(item) {
+  var accByUuid = this.getAccumulatorByUuidForType(item.__type);
+  var changes = accByUuid.merge(item);
   var changeCount = changes.length;
   return changeCount;
 };
@@ -227,5 +246,6 @@ exports = module.exports = {
   normalize: normalize,
   compare: compare,
   Accumulator: Accumulator,
-  AccumulatorByUuid: AccumulatorByUuid
+  AccumulatorByUuid: AccumulatorByUuid,
+  AccumulatorByTypeByUuid: AccumulatorByTypeByUuid
 };

@@ -1,6 +1,14 @@
 "use strict";
 
-// Pump redux to pouchdb
+// This utility will read all source files: extra=''
+// and 'rollup' into Month files: with stamps up to (strict <) begining of month
+//  -optional jsonl
+//  -optional gzipping
+//  -optional partial signature? in content
+//  -optional content addressable filename (include md5 sig)
+//  -verify sorted (stamp)
+//  -verify deduped
+// verify or write new required rollups
 
 // dependencies - core-public-internal
 var fs = require('fs');
@@ -33,7 +41,7 @@ function verboseErrorHandler(shouldRethrow) {
 var lastStamp = null;
 
 function progress(item) {
-  var day = item.__stamp.substr(0, 10);
+  var day = item.__stamp.substr(0, 7);
   var logit = (day !== lastStamp);
   if (logit) {
     log('--iteration stamp:', [item.__user, item.__stamp]);
@@ -77,11 +85,14 @@ function itemHandler(credentials, stamp, file, item) {
   // append
   getItems(item).push(item);
 
-  var accByUUID = getAccumulator(item);
-  var changeCount = accByUUID.merge(item);
-  if (!changeCount) {
-    return Promise.resolve(false);
-  }
+  // var accByUUID = getAccumulator(item);
+  // var changeCount = accByUUID.merge(item);
+  // if (changeCount === 0) {
+  //   console.log('Not deduped: %j', item);
+  // }
+  // if (!changeCount) {
+  //   return Promise.resolve(false);
+  // }
   return Promise.resolve(true);
 }
 
@@ -152,16 +163,65 @@ function saveRollupsLines(_user, _type) {
   // delete itemsByUserByType[_user][_type];
 }
 
-function rollup() {
-  var extra = '';
-  // var extra = 'noredux'; // to switch to noredux..
-  // var extra = 'rollup'; // to switch to noredux..
-  return srcFile.iterator(extra, allCredentials, itemHandler, '**/*.json')
+//  compose - filter generator : before, or after a date
+function dateFilterHandler(itemHandler, dateFilter) {
+  return function newItemHandler(credentials, stamp, file, item) {
+    if (dateFilter(item)) {
+      itemHandler(credentials, stamp, file, item);
+    }
+  }
+}
+
+function beforeOrOnFilter(compareStamp) {
+  return function(item) {
+    var stamp = item.__stamp;
+    return stamp <= compareStamp;
+  }
+}
+
+function afterFilter(compareStamp) {
+  return function(item) {
+    var stamp = item.__stamp;
+    return stamp > compareStamp;
+  }
+}
+
+function saveAccs() {
+
+}
+
+function rollup(credentials, extra) {
+  // blank out accumulators
+  accsByUserByType = {}
+  itemsByUserByType = {};
+  return srcFile.iterator(extra, [credentials], itemHandler, '**/*.json')
     .then(function(counts) {
       Object.keys(counts).forEach(function(name) {
         var c = counts[name];
         log('--' + extra + '-- ' + name, ' |stamps|:' + c.stamp + ' |f|:' + c.file + ' |p|:' + c.part);
       });
+    })
+    .then(function() {
+      var _user = credentials.name
+      return Promise.each(['podcast', 'episode'], function(_type) {
+        saveRollups(_user, _type);
+        saveRollupsLines(_user, _type);
+      })
+    })
+    .then(function() {
+      // rerun accum to verify dedeuped'ness
+      var _user = credentials.name
+      return Promise.each(['podcast', 'episode'], function(_type) {
+        var items = itemsByUserByType[_user][_type];
+        items.forEach(function(item) {
+          var accByUUID = getAccumulator(item);
+          var changeCount = accByUUID.merge(item);
+          if (changeCount === 0) {
+            console.log('***** Not deduped: %s %j',changeCount,item);
+          }
+        })
+        return Promise.resolve(true);
+      })
     })
     .then(function() {
       // return Promise.each(_.values(accsByUserByType), function(types) { // _user
@@ -171,19 +231,45 @@ function rollup() {
           var accByUUID = typesForUser[_type];
           // log(' -accs|%s.%s|=%d', _user, _type, _.keys(accByUUID.accumulators).length);
           sortAndSave(_user, _type, accByUUID);
-
-          saveRollups(_user, _type);
-          saveRollupsLines(_user, _type);
-
           return Promise.resolve(true);
         });
       });
     });
 }
 
-Promise.resolve(true)
-  .then(rollup)
-  .then(function() {
-    console.log('RSS Mem: %sMB', (process.memoryUsage().rss / 1024 / 1024).toFixed(2));
+function main() {
+  var extra = '';
+  // var extra = 'noredux'; // to switch to noredux..
+  // var extra = 'rollup'; // to switch to rollup..
+  return Promise.each(allCredentials, function(credentials) {
+    logMemAfterGC();
+    console.log('***** Rolling up %s', credentials.name);
+    return rollup(credentials, extra);
+    // return Promise.resolve(true);
   })
+}
+
+function logMemAfterGC() {
+  function showMem(pfx) {
+    console.log('%sMem RSS: %sMB, Heap(t): %sMB, Heap(u): %sMB',
+      pfx, (process.memoryUsage().rss / 1024 / 1024).toFixed(2), (process.memoryUsage().heapTotal / 1024 / 1024).toFixed(2), (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)
+    );
+  }
+  showMem('-');
+  if (global.gc) {
+    global.gc();
+    global.gc();
+    global.gc();
+    global.gc();
+
+    showMem('+');
+  } else {
+    console.log('  Garbage collection unavailable.  Pass --expose-gc when launching node to enable forced garbage collection.');
+  }
+  return Promise.resolve(true);
+}
+
+Promise.resolve(true)
+  .then(main)
+  .then(logMemAfterGC)
   .catch(verboseErrorHandler(false));

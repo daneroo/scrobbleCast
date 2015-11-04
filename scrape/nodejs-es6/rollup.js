@@ -28,72 +28,138 @@ var allCredentials = require('./credentials.json');
 //  move to logging module (?loggly)
 var log = console.error;
 
-//  move to logging module (as Factory?)
-function verboseErrorHandler(shouldRethrow) {
-  return function errorHandler(error) {
-    log('error', error);
-    if (shouldRethrow) {
-      throw (error);
+Promise.resolve(true)
+  .then(main)
+  .then(logMemAfterGC)
+  .catch(verboseErrorHandler(false));
+
+function main() {
+  var extra = '';
+  // var extra = 'noredux'; // to switch to noredux..
+  // var extra = 'rollup'; // to switch to rollup..
+  return Promise.each(allCredentials, function(credentials) {
+    logMemAfterGC();
+    console.log('***** Rolling up %s', credentials.name);
+    return rollup(credentials, extra);
+    // return Promise.resolve(true);
+  })
+}
+
+function rollup(credentials, extra) {
+  // blank out accumulators
+  return loadItems(credentials, extra)
+    .then(saveItems(credentials))
+    .then(validateDedupAndSaveHistory(credentials));
+}
+
+// returns all items from extra, in an array
+function loadItems(credentials, extra) {
+  var itemsByType = {};
+  return srcFile.iterator(extra, [credentials], loader(itemsByType), '**/*.json')
+    .then(function(counts) {
+      Object.keys(counts).forEach(function(name) {
+        var c = counts[name];
+        log('--' + extra + '-- ' + name, ' |stamps|:' + c.stamp + ' |f|:' + c.file + ' |p|:' + c.part);
+      });
+    })
+    .then(function() {
+      return itemsByType;
+    });
+}
+
+// return a function to validate deduplication, bound to credentials (user)
+function validateDedupAndSaveHistory(credentials) {
+  return function(itemsByType) {
+    // rerun accum to verify dedeuped'ness
+    var _user = credentials.name
+    return Promise.each(['podcast', 'episode'], function(_type) {
+        var accululatorForType = new delta.AccumulatorByUuid();
+        var items = itemsByType[_type];
+        items.forEach(function(item) {
+          // var accByUUIDForItem = getAccumulator(item);
+          // var changeCount = accByUUIDForItem.merge(item);
+          var changeCount = accululatorForType.merge(item);
+          if (changeCount === 0) {
+            console.log('***** Not deduped: %s %j', changeCount, item);
+          }
+        });
+        sortAndSave(_user, _type, accululatorForType);
+        return Promise.resolve(true);
+      })
+      .then(function() {
+        return itemsByType
+      })
+  }
+}
+
+// return a function to save Items rollup, bound to credentials (user)
+function saveItems(credentials) {
+  var _user = credentials.name
+  return function saveItems(itemsByType) {
+    return Promise.each(['podcast', 'episode'], function(_type) {
+        saveRollups(_user, _type, itemsByType);
+        saveRollupsLines(_user, _type, itemsByType);
+      })
+      .then(function() {
+        return itemsByType
+      })
+  }
+}
+
+// return an item handler for srcFile.iterator which:
+// - reports item progress
+// - validates increasing stamp order
+// - acccumulates items in an {type:[items]} which is passed in.
+function loader(itemsByType) {
+
+  var lastStamp = null;
+
+  function progress(item) {
+    var day = item.__stamp.substr(0, 7);
+    var logit = (day !== lastStamp);
+    if (logit) {
+      log('--iteration stamp:', [item.__user, item.__stamp]);
+      lastStamp = day;
     }
-  };
-}
-
-var lastStamp = null;
-
-function progress(item) {
-  var day = item.__stamp.substr(0, 7);
-  var logit = (day !== lastStamp);
-  if (logit) {
-    log('--iteration stamp:', [item.__user, item.__stamp]);
-    lastStamp = day;
   }
-}
 
-var accsByUserByType = {};
+  var increasingStamp = null;
 
-function getAccumulator(item) {
-  var __user = item.__user;
-  var __type = item.__type;
-  // log('getAccumulator', __user, __type);
-  if (!accsByUserByType[__user]) {
-    accsByUserByType[__user] = {};
+  function checkStampOrdering(item) {
+    var stamp = item.__stamp
+    if (stamp < increasingStamp) {
+      throw new Error('Item stamp not increasing');
+    }
+    increasingStamp = stamp;
   }
-  if (!accsByUserByType[__user][__type]) {
-    accsByUserByType[__user][__type] = new delta.AccumulatorByUuid();
+
+  var __user; // used to validate that all items have same user
+  function getItems(item) {
+    // validate that all items are for same user
+    if (!__user) {
+      __user = item.__user;
+    } else if (__user !== item.__user) {
+      log('Mixing users in loader: %s != %s', __user, item.__user);
+      throw new Error('Mixing users in loader');
+    }
+
+    var __type = item.__type;
+    if (!itemsByType[__type]) {
+      itemsByType[__type] = [];
+    }
+    return itemsByType[__type];
   }
-  return accsByUserByType[__user][__type];
-}
 
-var itemsByUserByType = {};
+  return function itemHandler(credentials, stamp, file, item) {
+    // report on progress
+    progress(item);
 
-function getItems(item) {
-  var __user = item.__user;
-  var __type = item.__type;
-  // log('getAccumulator', __user, __type);
-  if (!itemsByUserByType[__user]) {
-    itemsByUserByType[__user] = {};
+    checkStampOrdering(item);
+
+    // append
+    getItems(item).push(item);
+    return Promise.resolve(true);
   }
-  if (!itemsByUserByType[__user][__type]) {
-    itemsByUserByType[__user][__type] = [];
-  }
-  return itemsByUserByType[__user][__type];
-}
-
-function itemHandler(credentials, stamp, file, item) {
-  progress(item);
-
-  // append
-  getItems(item).push(item);
-
-  // var accByUUID = getAccumulator(item);
-  // var changeCount = accByUUID.merge(item);
-  // if (changeCount === 0) {
-  //   console.log('Not deduped: %j', item);
-  // }
-  // if (!changeCount) {
-  //   return Promise.resolve(false);
-  // }
-  return Promise.resolve(true);
 }
 
 function sortAndSave(_user, _type, history) {
@@ -143,24 +209,22 @@ function md5(str) {
 
 var batchStamp = utils.stamp().substr(0, 10);
 
-function saveRollups(_user, _type) {
+function saveRollups(_user, _type, itemsByType) {
   // var _stamp = utils.stamp('second');
   var _stamp = batchStamp;
   var outfile = util.format('data/rollup/byUserStamp/%s/%s/rollup-%s-%s.json', _user, _stamp, _user, _type);
   var dir = path.dirname(outfile);
   mkdirp.sync(dir);
-  save(itemsByUserByType[_user][_type], outfile);
-  // delete itemsByUserByType[_user][_type];
+  save(itemsByType[_type], outfile);
 }
 
-function saveRollupsLines(_user, _type) {
+function saveRollupsLines(_user, _type, itemsByType) {
   // var _stamp = utils.stamp('second');
   var _stamp = batchStamp;
   var outfile = util.format('data/rollup/byUserStamp/%s/%s/rollup-%s-%s.jsonl', _user, _stamp, _user, _type);
   var dir = path.dirname(outfile);
   mkdirp.sync(dir);
-  saveLines(itemsByUserByType[_user][_type], outfile);
-  // delete itemsByUserByType[_user][_type];
+  saveLines(itemsByType[_type], outfile);
 }
 
 //  compose - filter generator : before, or after a date
@@ -186,67 +250,16 @@ function afterFilter(compareStamp) {
   }
 }
 
-function saveAccs() {
+// ************ Utilities
 
-}
-
-function rollup(credentials, extra) {
-  // blank out accumulators
-  accsByUserByType = {}
-  itemsByUserByType = {};
-  return srcFile.iterator(extra, [credentials], itemHandler, '**/*.json')
-    .then(function(counts) {
-      Object.keys(counts).forEach(function(name) {
-        var c = counts[name];
-        log('--' + extra + '-- ' + name, ' |stamps|:' + c.stamp + ' |f|:' + c.file + ' |p|:' + c.part);
-      });
-    })
-    .then(function() {
-      var _user = credentials.name
-      return Promise.each(['podcast', 'episode'], function(_type) {
-        saveRollups(_user, _type);
-        saveRollupsLines(_user, _type);
-      })
-    })
-    .then(function() {
-      // rerun accum to verify dedeuped'ness
-      var _user = credentials.name
-      return Promise.each(['podcast', 'episode'], function(_type) {
-        var items = itemsByUserByType[_user][_type];
-        items.forEach(function(item) {
-          var accByUUID = getAccumulator(item);
-          var changeCount = accByUUID.merge(item);
-          if (changeCount === 0) {
-            console.log('***** Not deduped: %s %j',changeCount,item);
-          }
-        })
-        return Promise.resolve(true);
-      })
-    })
-    .then(function() {
-      // return Promise.each(_.values(accsByUserByType), function(types) { // _user
-      return Promise.each(_.keys(accsByUserByType), function(_user) { // _users
-        var typesForUser = accsByUserByType[_user];
-        return Promise.each(_.keys(typesForUser), function(_type) { // _type
-          var accByUUID = typesForUser[_type];
-          // log(' -accs|%s.%s|=%d', _user, _type, _.keys(accByUUID.accumulators).length);
-          sortAndSave(_user, _type, accByUUID);
-          return Promise.resolve(true);
-        });
-      });
-    });
-}
-
-function main() {
-  var extra = '';
-  // var extra = 'noredux'; // to switch to noredux..
-  // var extra = 'rollup'; // to switch to rollup..
-  return Promise.each(allCredentials, function(credentials) {
-    logMemAfterGC();
-    console.log('***** Rolling up %s', credentials.name);
-    return rollup(credentials, extra);
-    // return Promise.resolve(true);
-  })
+//  move to logging module (as Factory?)
+function verboseErrorHandler(shouldRethrow) {
+  return function errorHandler(error) {
+    log('error', error);
+    if (shouldRethrow) {
+      throw (error);
+    }
+  };
 }
 
 function logMemAfterGC() {
@@ -268,8 +281,3 @@ function logMemAfterGC() {
   }
   return Promise.resolve(true);
 }
-
-Promise.resolve(true)
-  .then(main)
-  .then(logMemAfterGC)
-  .catch(verboseErrorHandler(false));

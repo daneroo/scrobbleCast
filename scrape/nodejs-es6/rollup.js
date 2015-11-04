@@ -33,9 +33,12 @@ Promise.resolve(true)
   .then(logMemAfterGC)
   .catch(verboseErrorHandler(false));
 
+// TODO: The eventual flow should be
+// -loadItems from extra=''
+//  perform dedup checking as we go, removing the need for accumulating all Items, only currentMonth
+// at the end validate that history with/without rollup is identical
 function main() {
   var extra = '';
-  // var extra = 'noredux'; // to switch to noredux..
   // var extra = 'rollup'; // to switch to rollup..
   return Promise.each(allCredentials, function(credentials) {
     logMemAfterGC();
@@ -54,12 +57,46 @@ function rollup(credentials, extra) {
 // returns all items from extra, in an array
 function loadItems(credentials, extra) {
   var itemsByType = {};
-  return srcFile.iterator(extra, [credentials], loader(itemsByType), '**/*.json')
-    .then(function(counts) {
-      Object.keys(counts).forEach(function(name) {
-        var c = counts[name];
-        log('--' + extra + '-- ' + name, ' |stamps|:' + c.stamp + ' |f|:' + c.file + ' |p|:' + c.part);
-      });
+  // utility func to get maxStamp from types
+  function maxStampForType(_type) {
+    var entries = itemsByType[_type];
+    return entries[entries.length - 1].__stamp;
+  }
+  // shared handler for both extras
+  var sharedHandler = loader(itemsByType);
+  var maxStamp; // maxStamp from firstStage
+  function reportCounts(counts) {
+    Object.keys(counts).forEach(function(name) {
+      var c = counts[name];
+      var pmax = maxStampForType('podcast');
+      var emax = maxStampForType('episode');
+      maxStamp = (pmax > emax) ? pmax : emax;
+      log('--%s-- %s |stamps|:%s |f|:%s |p|:%s max(stamp):%s', extra, name, c.stamp, c.file, c.part, maxStamp);
+    });
+    return Promise.resolve(true);
+  }
+  return srcFile.iterator(extra, [credentials], sharedHandler, '**/*.json?(l)')
+    .then(reportCounts)
+    .then(function() {
+      if (extra == 'rollup') {
+        log('Reading rest of entries from default');
+      } else {
+        log('NOT Reading rest of entries from default');
+        return Promise.resolve(true);
+      }
+
+      function skippingHandler(credentials, stamp, file, item) {
+        if (stamp <= maxStamp) {
+          // log('skipping %s %s', stamp, item.__stamp);
+          return Promise.resolve(true);
+        }
+
+        // log('doing    %s %s', stamp, item.__stamp);
+        return sharedHandler(credentials, stamp, file, item);
+      }
+      // now call with extra=''
+      return srcFile.iterator('', [credentials], skippingHandler, '**/*.json?(l)')
+        .then(reportCounts);
     })
     .then(function() {
       return itemsByType;
@@ -103,6 +140,7 @@ function loader(itemsByType) {
   function checkStampOrdering(item) {
     var stamp = item.__stamp;
     if (stamp < increasingStamp) {
+      log('Item stamp not increasing: %s > %j', increasingStamp, item);
       throw new Error('Item stamp not increasing');
     }
     increasingStamp = stamp;

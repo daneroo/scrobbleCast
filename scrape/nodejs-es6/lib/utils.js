@@ -1,6 +1,8 @@
 'use strict';
 
 // dependencies - core-public-internal
+var crypto = require('crypto');
+var _ = require('lodash');
 
 // expect to be called with 'minute','second' or no param (millis)
 // return an iso-8601 string
@@ -33,8 +35,25 @@ function stampFromFile(file) {
   return stamp;
 }
 
+function isEqualWithoutPrototypes(a, b) {
+  if (_.isEqual(a, b)) {
+    return true;
+  }
+  // removes prototype stuff
+  a = JSON.parse(JSON.stringify(a));
+  b = JSON.parse(JSON.stringify(b));
+  return _.isEqual(a, b);
+}
+
+function md5(str) {
+  var hash = crypto.createHash('md5').update(str).digest('hex');
+  return hash;
+}
+
 exports = module.exports = {
   stamp: stamp,
   logStamp: logStamp,
-  stampFromFile:stampFromFile
+  stampFromFile: stampFromFile,
+  isEqualWithoutPrototypes: isEqualWithoutPrototypes,
+  md5: md5
 };

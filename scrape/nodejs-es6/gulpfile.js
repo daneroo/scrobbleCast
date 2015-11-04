@@ -26,6 +26,17 @@ gulp.task('lint', function() {
     .pipe(plugins.jshint.reporter('jshint-stylish'));
 });
 
+gulp.task('mocha', function() {
+  gulp.src(paths.tests)
+    .pipe(plugins.plumber(plumberConf))
+    .pipe(plugins.mocha({
+      // compilers: {
+      //   js: babel
+      // }
+    }));
+});
+
+// includes mocha's definitions
 gulp.task('istanbul', function(cb) {
   gulp.src(paths.source)
     .pipe(plugins.istanbul()) // Covering files
@@ -55,7 +66,8 @@ gulp.task('watch', ['test'], function() {
   gulp.watch(paths.watch, ['test']);
 });
 
-gulp.task('test', ['lint', 'istanbul']);
+// gulp.task('test', ['lint', 'istanbul']);
+gulp.task('test', ['lint', 'mocha']);
 
 gulp.task('release', ['bump']);
 

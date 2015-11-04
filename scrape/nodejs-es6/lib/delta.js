@@ -6,7 +6,13 @@
 // for (i in inputs) a.merge(i);
 // --> a.merged, a.changes,
 
+// dependencies - core-public-internal
+var fs = require('fs'); // for sortAndSave
+var path = require('path');
+var util = require('util');
 var _ = require('lodash');
+var sinkFile = require('./sink/file');
+var utils = require('./utils');
 
 // This is to remove noise from comparison
 //  -destructive if not cloned...(param?)
@@ -222,6 +228,31 @@ AccumulatorByUuid.prototype.merge = function(item) {
   return changeCount;
 };
 
+AccumulatorByUuid.prototype.sortAndSave = function(_user, _type) {
+
+  // console.log('|' + outfile + '|=', _.size(history.accumulators));
+  // just write out the accumulators dictionary, it is the only attribute!
+  var sorted = _.sortBy(this.accumulators, function(item) {
+    // should this use sortByAll ? not in 2.4.2
+    // careful sorting by [__changeCount], compare by string when returning an array
+    // this sorts by a numerically
+    // _.sortBy([{a:1},{a:2},{a:3},{a:11},{a:12}],function(item){return item.a;});
+    // this sorts a lexicographically
+    // _.sortBy([{a:1,b:'a'},{a:2,b:'a'},{a:3,b:'a'},{a:11,b:'a'},{a:12,b:'a'}],function(item){return [item.a,item.b];})
+    // return [item.meta.__changeCount,item.meta.__lastUpdated, item.uuid];
+
+    // sort by lastUpdated,uuid (for uniqueness)
+    return [item.meta.__lastUpdated, item.uuid];
+  }).reverse();
+
+  var outfile = path.join(sinkFile.dataDirname, util.format('history-%s-%s.json', _user, _type));
+
+  sinkFile.write(outfile, sorted, {
+    overwrite: true,
+    log: true
+  });
+};
+
 // need a new name:
 // Convienience to get AccByUuid per type (podcast/episode)
 function AccumulatorByTypeByUuid( /*options*/ ) {
@@ -237,10 +268,16 @@ AccumulatorByTypeByUuid.prototype.getAccumulatorByUuidForType = function(type) {
 
 AccumulatorByTypeByUuid.prototype.merge = function(item) {
   var accByUuid = this.getAccumulatorByUuidForType(item.__type);
-  var changes = accByUuid.merge(item);
-  var changeCount = changes.length;
+  var changeCount = accByUuid.merge(item); // already returns changeCount
   return changeCount;
 };
+
+AccumulatorByTypeByUuid.prototype.sortAndSave = function(_user) {
+  var self=this;
+  Object.keys(this.accumulatorsByType).forEach(function(_type) {
+    self.getAccumulatorByUuidForType(_type).sortAndSave(_user, _type);
+  });
+}
 
 exports = module.exports = {
   normalize: normalize,

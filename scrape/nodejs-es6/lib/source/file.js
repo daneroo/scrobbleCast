@@ -20,6 +20,8 @@ function resolveData(file) {
 }
 
 // TODO: make these Async/Promised
+// TODO: make this read gzipped extensions
+// TODO: validate if filename has md5 signature
 function loadJSONLines(file) {
   var lines = fs.readFileSync(resolveData(file), 'utf8').toString().split('\n');
   for (var i in lines) {

@@ -33,7 +33,7 @@ function bulkSave(batchSize) {
   // else
   var batch = [];
   return function(item) {
-      // verbose('-bulkSave:', [batchSize,batch.length,item._id]);
+    // verbose('-bulkSave:', [batchSize,batch.length,item._id]);
     if (batch.length < batchSize) {
       // verbose('-create:bulk:', [item._id,item._rev]);
       batch.push(item);

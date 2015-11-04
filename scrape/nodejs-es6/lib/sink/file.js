@@ -8,6 +8,7 @@ var fs = Promise.promisifyAll(require('fs'), {
   suffix: 'Promise'
 });
 var path = require('path');
+var util = require('util');
 var mkdirp = require('mkdirp');
 var _ = require('lodash');
 var utils = require('../utils');
@@ -61,23 +62,57 @@ function pathForItems(items) {
 // -Attempts to write <items> to <path> (as json)
 // -Verifies file does not exist or content is same as original
 // -Validates by default (overwrite protection)
-// TODO: turnoff validation/overwrite protection.
+// TODO, options: pretty=true, gzip=true, sign=true, log
 
-function write(filename, items) {
-  if (fs.existsSync(filename)) {
-    // console.log('---- checking %s', filename);
+function write(filename, items, opts) {
+  opts = _.merge({
+    overwrite: false,
+    log: false
+  }, opts);
+
+  // utility function to write json, or jsonl
+  function makeJSON() {
+    var json;
+    if (filename.match(/\.jsonl$/)) {
+      if (!Array.isArray(items)) {
+        throw new Error('sink.file.write.makeJSON:items is not an array')
+      }
+      var lines = [];
+      items.forEach(function(el) {
+        lines.push(JSON.stringify(el));
+      });
+      json = lines.join('\n');
+    } else {
+      json = JSON.stringify(items, null, 2);
+    }
+    return json;
+  }
+
+  // skip verification if opts.overwrite:true
+  if (!opts.overwrite && fs.existsSync(filename)) {
     var olditems = JSON.parse(fs.readFileSync(filename));
-    if (!_.isEqual(olditems, items)) {
+    if (!utils.isEqualWithoutPrototypes(olditems, items)) {
       fs.writeFileSync('bad-olditems.json', JSON.stringify(olditems, null, 2));
       fs.writeFileSync('bad-newitems.json', JSON.stringify(items, null, 2));
-      throw new Error('sink.file.write: verify identical: overwrite prevented');
+      throw new Error('sink.file.write: verify identical: overwrite prevented: ' + filename + ' ' + JSON.stringify(opts));
     } else {
-      // console.log('----sink.file.write [skipped because verified] %s', filename);
+      if (opts.log) {
+        var json = makeJSON();
+        var numItems = (items.length) ? items.length : 1;
+        var msg = util.format('md5(%s):%s %si %sMB checked', path.basename(filename), utils.md5(json), numItems, (json.length / 1024 / 1024).toFixed(2));
+        utils.logStamp(msg)
+      }
     }
   } else {
-    var content = JSON.stringify(items, null, 2);
-    fs.writeFileSync(filename, content);
-    // console.log('----sink.file.write %s', filename);
+    var json = makeJSON();
+    var dir = path.dirname(filename);
+    mkdirp.sync(dir);
+    fs.writeFileSync(filename, json);
+    if (opts.log) {
+      var numItems = (items.length) ? items.length : 1;
+      var msg = util.format('md5(%s):%s %si %sMB', path.basename(filename), utils.md5(json), numItems, (json.length / 1024 / 1024).toFixed(2));
+      utils.logStamp(msg)
+    }
   }
 }
 
@@ -98,37 +133,14 @@ function writeByUserStamp(items, basepath) {
 
   var filename = path.join(basepath, 'byUserStamp', [basename, 'json'].join('.'));
 
-  var dir = path.dirname(filename);
-  mkdirp.sync(dir);
-
   // could turnoff verification
   write(filename, items);
 
 }
 
-// deprecated - used by cron through tasks
-function writeByDate(base, response, optionalStamp) {
-
-  // announce what we are doing io.file
-  utils.logStamp(base);
-
-  var stampForFile = optionalStamp || utils.stamp('minute');
-  // Note: base may include a path like: 'podcasts/f54c667'
-  // e.g. ./data/byDate/2014-...Z/pocdasts/f54c667.json
-  var filename = path.join(dataDirname, 'byDate', stampForFile, [base, 'json'].join('.'));
-
-  var dir = path.dirname(filename);
-  mkdirp.sync(dir);
-
-  var content = JSON.stringify(response, null, 2);
-  fs.writeFileSync(filename, content);
-
-  utils.logStamp('+ ' + filename);
-}
-
 // TODO: change API to .read/.write
 exports = module.exports = {
   dataDirname: dataDirname,
-  writeByUserStamp: writeByUserStamp,
-  writeByDate: writeByDate
+  write: write,
+  writeByUserStamp: writeByUserStamp
 };

@@ -179,7 +179,7 @@ function loader(itemsByType) {
     getItems(item).push(item);
 
     // buffered - write
-    // writeByMonth(item);
+    writeByMonth(item);
 
     return Promise.resolve(true);
   };

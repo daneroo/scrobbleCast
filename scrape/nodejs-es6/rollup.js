@@ -107,21 +107,11 @@ function saveItems(credentials) {
 }
 
 // return an item handler for srcFile.iterator which:
-// - reports item progress
+// - reports item progress (moved to write logging)
 // - validates increasing stamp order
 // - acccumulates items in an {type:[items]} which is passed in.
+// - writes out any completed months
 function loader(itemsByType) {
-
-  var lastStamp = null;
-
-  function progress(item) {
-    var day = item.__stamp.substr(0, 7);
-    var logit = (day !== lastStamp);
-    if (logit) {
-      log('--iteration stamp:', [item.__user, item.__stamp]);
-      lastStamp = day;
-    }
-  }
 
   // throw error if item.__stamp's are non-increasing
   var increasingStamp = null; // to track increasing'ness
@@ -153,16 +143,44 @@ function loader(itemsByType) {
     return itemsByType[__type];
   }
 
+  // accumulate items by month, and write out
+  // since we are not writing the last month, it is not a problem,
+  // that the last accumulated month will never be written out
+  var previousMonth = null; // stamp for current month
+  var itemsByTypeForMonth = {
+    'episode': [],
+    'podcast': []
+  };
+
+  function writeByMonth(item) {
+    var __stamp = new Date(Date.parse(item.__stamp));
+    // find begining of month (UTC)
+    var month = new Date(Date.UTC(__stamp.getUTCFullYear(), __stamp.getUTCMonth())).toJSON();
+    var shouldWrite = previousMonth !== null && month !== previousMonth;
+    if (shouldWrite) {
+      log('+writing month:', [item.__user, previousMonth]);
+      // actually write out the month: all types;
+    }
+    // log progress - unless write progress is sufficient
+    if (month !== previousMonth) {
+      log('-accumulate month:', [item.__user, month]);
+      // actuall write out the month
+    }
+    previousMonth = month;
+  }
+
   // the actual itemHandler being returned
   return function itemHandler(credentials, stamp, file, item) {
-    // report on progress
-    progress(item);
 
     // throw error if item.__stamp's are non-increasing
     checkStampOrdering(item);
 
-    // append
+    // append to returned list
     getItems(item).push(item);
+
+    // buffered - write
+    // writeByMonth(item);
+
     return Promise.resolve(true);
   };
 }

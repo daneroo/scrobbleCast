@@ -123,7 +123,8 @@ function loader(itemsByType) {
     }
   }
 
-  var increasingStamp = null;
+  // throw error if item.__stamp's are non-increasing
+  var increasingStamp = null; // to track increasing'ness
   function checkStampOrdering(item) {
     var stamp = item.__stamp;
     if (stamp < increasingStamp) {

@@ -42,7 +42,7 @@ function main() {
     console.log('***** Rolling up %s', credentials.name);
     return rollup(credentials, extra);
     // return Promise.resolve(true);
-  })
+  });
 }
 
 function rollup(credentials, extra) {
@@ -71,7 +71,7 @@ function loadItems(credentials, extra) {
 function validateDedupAndSaveHistory(credentials) {
   return function(itemsByType) {
     // rerun accum to verify dedeuped'ness
-    var _user = credentials.name
+    var _user = credentials.name;
     return Promise.each(['podcast', 'episode'], function(_type) {
         var accululatorForType = new delta.AccumulatorByUuid();
         var items = itemsByType[_type];
@@ -87,23 +87,23 @@ function validateDedupAndSaveHistory(credentials) {
         return Promise.resolve(true);
       })
       .then(function() {
-        return itemsByType
-      })
-  }
+        return itemsByType;
+      });
+  };
 }
 
 // return a function to save Items rollup, bound to credentials (user)
 function saveItems(credentials) {
-  var _user = credentials.name
+  var _user = credentials.name;
   return function saveItems(itemsByType) {
     return Promise.each(['podcast', 'episode'], function(_type) {
         saveRollups(_user, _type, itemsByType);
         saveRollupsLines(_user, _type, itemsByType);
       })
       .then(function() {
-        return itemsByType
-      })
-  }
+        return itemsByType;
+      });
+  };
 }
 
 // return an item handler for srcFile.iterator which:
@@ -124,25 +124,27 @@ function loader(itemsByType) {
   }
 
   var increasingStamp = null;
-
   function checkStampOrdering(item) {
-    var stamp = item.__stamp
+    var stamp = item.__stamp;
     if (stamp < increasingStamp) {
       throw new Error('Item stamp not increasing');
     }
     increasingStamp = stamp;
   }
 
-  var __user; // used to validate that all items have same user
+  // Lookup (and init) of injected itemsByType array
+  // also validates that we are always called with a single user
+  var singleUser; // used to validate that all items have same user
   function getItems(item) {
     // validate that all items are for same user
-    if (!__user) {
-      __user = item.__user;
-    } else if (__user !== item.__user) {
-      log('Mixing users in loader: %s != %s', __user, item.__user);
+    if (!singleUser) {
+      singleUser = item.__user;
+    } else if (singleUser !== item.__user) {
+      log('Mixing users in loader: %s != %s', singleUser, item.__user);
       throw new Error('Mixing users in loader');
     }
 
+    // intialize and/or return the array
     var __type = item.__type;
     if (!itemsByType[__type]) {
       itemsByType[__type] = [];
@@ -150,16 +152,18 @@ function loader(itemsByType) {
     return itemsByType[__type];
   }
 
+  // the actual itemHandler being returned
   return function itemHandler(credentials, stamp, file, item) {
     // report on progress
     progress(item);
 
+    // throw error if item.__stamp's are non-increasing
     checkStampOrdering(item);
 
     // append
     getItems(item).push(item);
     return Promise.resolve(true);
-  }
+  };
 }
 
 function sortAndSave(_user, _type, history) {
@@ -189,15 +193,15 @@ function save(thing, outfile) {
 
 function saveLines(thing, outfile) {
   if (!Array.isArray(thing)) {
-    console.log('saveLines:thing is not an array')
-    process.exit(-1)
+    console.log('saveLines:thing is not an array');
+    process.exit(-1);
   }
   // var json = JSON.stringify(thing);
   var lines = [];
   thing.forEach(function(el) {
-    lines.push(JSON.stringify(el))
+    lines.push(JSON.stringify(el));
   });
-  var json = lines.join('\n')
+  var json = lines.join('\n');
   fs.writeFileSync(outfile, json);
   log('md5(%s):%s %sMB', path.basename(outfile), md5(json), (json.length / 1024 / 1024).toFixed(2));
 }
@@ -227,28 +231,29 @@ function saveRollupsLines(_user, _type, itemsByType) {
   saveLines(itemsByType[_type], outfile);
 }
 
-//  compose - filter generator : before, or after a date
-function dateFilterHandler(itemHandler, dateFilter) {
-  return function newItemHandler(credentials, stamp, file, item) {
-    if (dateFilter(item)) {
-      itemHandler(credentials, stamp, file, item);
-    }
-  }
-}
+// Unused For now
+// //  compose - filter generator : before, or after a date
+// function dateFilterHandler(itemHandler, dateFilter) {
+//   return function newItemHandler(credentials, stamp, file, item) {
+//     if (dateFilter(item)) {
+//       itemHandler(credentials, stamp, file, item);
+//     }
+//   }
+// }
 
-function beforeOrOnFilter(compareStamp) {
-  return function(item) {
-    var stamp = item.__stamp;
-    return stamp <= compareStamp;
-  }
-}
+// function beforeOrOnFilter(compareStamp) {
+//   return function(item) {
+//     var stamp = item.__stamp;
+//     return stamp <= compareStamp;
+//   }
+// }
 
-function afterFilter(compareStamp) {
-  return function(item) {
-    var stamp = item.__stamp;
-    return stamp > compareStamp;
-  }
-}
+// function afterFilter(compareStamp) {
+//   return function(item) {
+//     var stamp = item.__stamp;
+//     return stamp > compareStamp;
+//   }
+// }
 
 // ************ Utilities
 

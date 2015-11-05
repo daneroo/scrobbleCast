@@ -120,7 +120,7 @@ function iterator(extrapath, allCredentials, callbackReturningPromise, pattern, 
               .then(function(files) {
                 c.stamp++;
                 return Promise.each(files, function(file) {
-                  if (fileFilter && !fileFilter(credentials,stamp,file)){
+                  if (fileFilter && !fileFilter(credentials, stamp, file)) {
                     c.ignoredFiles++;
                     return Promise.resolve(true);
                   }
@@ -139,7 +139,41 @@ function iterator(extrapath, allCredentials, callbackReturningPromise, pattern, 
     .then(function() {
       return counts;
     });
+}
 
+// call the iterator with extrapath='rollup'
+// then call the iterator with passed extrapath for subsequent items (by date)
+function iteratorWithRollup(extrapath, allCredentials, callbackReturningPromise, pattern, fileFilter) {
+  var maxStamp = '1970-01-01T00:00:00Z';
+
+  // For the first invocation ('rollup')
+  function wrapCallbackAndGrabDateHandler(credentials, stamp, file, item, counts) {
+    maxStamp = item.__stamp;
+    if (callbackReturningPromise) {
+      return callbackReturningPromise(credentials, stamp, file, item, counts);
+    }
+    return Promise.resolve(true);
+  }
+
+  // For the second part:
+  // compose a dateSkippFilter with any passed in fileFilter (if present)
+  // our date filter takes precedence
+  function skippingWrappedFilter(credentials, stamp, file, item) {
+    var shouldProceed = (stamp > maxStamp);
+    if (!shouldProceed) {
+      return shouldProceed;
+    }
+    if (fileFilter) {
+      return fileFilter(credentials, stamp, file);
+    }
+  }
+
+  return iterator('rollup', allCredentials, wrapCallbackAndGrabDateHandler, pattern, fileFilter)
+    .then(function(counts) {
+      // TODO correct return counts...
+      console.log('Now call iterator with extrapath: %s after: %s', extrapath, maxStamp);
+      return iterator(extrapath, allCredentials, callbackReturningPromise, pattern, skippingWrappedFilter)
+    });
 }
 
 // TODO: change API to .read

@@ -39,8 +39,8 @@ Promise.resolve(true)
 //  perform dedup checking as we go, removing the need for accumulating all Items, only currentMonth
 // at the end validate that history with/without rollup is identical
 function main() {
-  // var extra = '';
-  var extra = 'rollup'; // to switch to rollup..
+  var extra = '';
+  // var extra = 'rollup'; // to switch to rollup..
   return Promise.each(allCredentials, function(credentials) {
     logMemAfterGC();
     console.log('***** Rolling up %s', credentials.name);

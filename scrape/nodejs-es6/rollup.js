@@ -39,8 +39,8 @@ Promise.resolve(true)
 //  perform dedup checking as we go, removing the need for accumulating all Items, only currentMonth
 // at the end validate that history with/without rollup is identical
 function main() {
-  var extra = '';
-  // var extra = 'rollup'; // to switch to rollup..
+  // var extra = '';
+  var extra = 'rollup'; // to switch to rollup..
   return Promise.each(allCredentials, function(credentials) {
     logMemAfterGC();
     console.log('***** Rolling up %s', credentials.name);
@@ -51,81 +51,53 @@ function main() {
 
 function rollup(credentials, extra) {
   // blank out accumulators
-  return loadItems(credentials, extra)
-    .then(validateDedupAndSaveHistory(credentials));
+  return loadItems(credentials, extra);
 }
 
 // returns all items from extra, in an array
 function loadItems(credentials, extra) {
-  var itemsByType = {};
-  // utility func to get maxStamp from types
-  function maxStampForType(_type) {
-    var entries = itemsByType[_type];
-    return entries[entries.length - 1].__stamp;
-  }
+
   // shared handler for both extras
-  var sharedHandler = loader(itemsByType);
-  var maxStamp; // maxStamp from firstStage
+  var l = loader();
+  var sharedHandler = l.handler;
+  var historyByType = l.historyByType;
+
   function reportCounts(counts) {
     Object.keys(counts).forEach(function(name) {
       var c = counts[name];
-      var pmax = maxStampForType('podcast');
-      var emax = maxStampForType('episode');
-      maxStamp = (pmax > emax) ? pmax : emax;
-      log('--%s-- %s |stamps|:%s |f|:%s |p|:%s max(stamp):%s', extra, name, c.stamp, c.file, c.part, maxStamp);
+      var maxStamp = l.getMaxStamp();
+      log('--%s-- %s |stamps|:%s |f|:%s |p|:%s |ignored|:%s max(stamp):%s', extra, name, c.stamp, c.file, c.part, c.ignoredFiles, maxStamp);
     });
     return Promise.resolve(true);
   }
+
+  // this is the double iteration loader
   return srcFile.iterator(extra, [credentials], sharedHandler, '**/*.json?(l)')
     .then(reportCounts)
     .then(function() {
+      // get and fix the stamp lowerbound
+      var maxStamp = l.getMaxStamp();
+
       if (extra == 'rollup') {
-        log('Reading rest of entries from default');
+        log('Reading rest of entries from default after:', maxStamp);
       } else {
         log('NOT Reading rest of entries from default');
         return Promise.resolve(true);
       }
 
-      function skippingHandler(credentials, stamp, file, item) {
-        if (stamp <= maxStamp) {
-          // log('skipping %s %s', stamp, item.__stamp);
-          return Promise.resolve(true);
-        }
-
-        // log('doing    %s %s', stamp, item.__stamp);
-        return sharedHandler(credentials, stamp, file, item);
+      function skippingFilter(credentials, stamp, file, item) {
+        return (stamp > maxStamp)
       }
+
       // now call with extra=''
-      return srcFile.iterator('', [credentials], skippingHandler, '**/*.json?(l)')
+      return srcFile.iterator('', [credentials], sharedHandler, '**/*.json?(l)', skippingFilter)
         .then(reportCounts);
     })
     .then(function() {
-      return itemsByType;
+      var _user = credentials.name;
+      historyByType.sortAndSave(_user);
+      return Promise.resolve(true);
     });
-}
-
-// return a function to validate deduplication, bound to credentials (user)
-function validateDedupAndSaveHistory(credentials) {
-  return function(itemsByType) {
-    // rerun accum to verify dedeuped'ness
-    var _user = credentials.name;
-    var historyByType = new delta.AccumulatorByTypeByUuid();
-    return Promise.each(['podcast', 'episode'], function(_type) {
-        var items = itemsByType[_type];
-        items.forEach(function(item) {
-          var changeCount = historyByType.merge(item);
-          if (changeCount === 0) {
-            console.log('***** Not deduped: %s %j', changeCount, item);
-          }
-        });
-      })
-      .then(function() {
-        historyByType.sortAndSave(_user);
-      })
-      .then(function() {
-        return itemsByType;
-      });
-  };
 }
 
 // return an item handler for srcFile.iterator which:
@@ -133,22 +105,25 @@ function validateDedupAndSaveHistory(credentials) {
 // - validates increasing stamp order
 // - acccumulates items in an {type:[items]} which is passed in.
 // - writes out any completed months
-function loader(itemsByType) {
+function loader() {
+
   // throw error if item.__stamp's are non-increasing
-  var increasingStamp = null; // to track increasing'ness
+  var maxStamp = '1970-01-01T00:00:00Z'; // to track increasing'ness
+  function getMaxStamp(){
+    return maxStamp;
+  }
   function checkStampOrdering(item) {
     var stamp = item.__stamp;
-    if (stamp < increasingStamp) {
-      log('Item stamp not increasing: %s > %j', increasingStamp, item);
+    if (stamp < maxStamp) {
+      log('Item stamp not increasing: %s > %j', maxStamp, item);
       throw new Error('Item stamp not increasing');
     }
-    increasingStamp = stamp;
+    maxStamp = stamp;
   }
 
-  // Lookup (and init) of injected itemsByType array
-  // also validates that we are always called with a single user
   var singleUser; // used to validate that all items have same user
-  function getItems(item) {
+  // validates that we are always called with a single user, throws on violation
+  function checkUser(item) {
     // validate that all items are for same user
     if (!singleUser) {
       singleUser = item.__user;
@@ -156,13 +131,18 @@ function loader(itemsByType) {
       log('Mixing users in loader: %s != %s', singleUser, item.__user);
       throw new Error('Mixing users in loader');
     }
+  }
 
-    // intialize and/or return the array
-    var __type = item.__type;
-    if (!itemsByType[__type]) {
-      itemsByType[__type] = [];
+  var historyByType = new delta.AccumulatorByTypeByUuid();
+  // Validate that source was properly deduped, and enable history checksum
+  function checkForDedup(item) {
+    var changeCount = historyByType.merge(item);
+    if (changeCount === 0) {
+      log('Mixing users in loader: %s != %s', singleUser, item.__user);
+      throw new Error('Mixing users in loader');
+      console.log('***** Not deduped: %s %j', changeCount, item);
     }
-    return itemsByType[__type];
+
   }
 
   // accumulate items by month, and write out
@@ -185,13 +165,14 @@ function loader(itemsByType) {
       // actually write out the month: all types;
       var _user = item.__user;
       var suffix = 'jsonl';
+
+      //TODO replace data/ with sink.dataDirName
       var outfile = util.format('data/rollup/byUserStamp/%s/%s/monthly-%s.%s', _user, previousMonth, previousMonth, suffix);
       sinkFile.write(outfile, itemsForMonth, {
+        // TODO overwrite should be false, causing errors!
         overwrite: true,
         log: true
       });
-
-      // empty output buffer
       itemsForMonth = [];
     }
     itemsForMonth.push(item);
@@ -199,43 +180,29 @@ function loader(itemsByType) {
   }
 
   // the actual itemHandler being returned
-  return function itemHandler(credentials, stamp, file, item) {
+  var handler = function itemHandler(credentials, stamp, file, item) {
     // throw error if item.__stamp's are non-increasing
     checkStampOrdering(item);
+    // check that we are always called with same user
+    checkUser(item);
+
+    checkForDedup(item);
 
     // append to returned list
-    getItems(item).push(item);
+    // items.push(item);
 
     // buffered - write
     writeByMonth(item);
 
     return Promise.resolve(true);
   };
+
+  return {
+    handler: handler,
+    getMaxStamp: getMaxStamp,
+    historyByType: historyByType
+  }
 }
-
-// Unused For now
-// //  compose - filter generator : before, or after a date
-// function dateFilterHandler(itemHandler, dateFilter) {
-//   return function newItemHandler(credentials, stamp, file, item) {
-//     if (dateFilter(item)) {
-//       itemHandler(credentials, stamp, file, item);
-//     }
-//   }
-// }
-
-// function beforeOrOnFilter(compareStamp) {
-//   return function(item) {
-//     var stamp = item.__stamp;
-//     return stamp <= compareStamp;
-//   }
-// }
-
-// function afterFilter(compareStamp) {
-//   return function(item) {
-//     var stamp = item.__stamp;
-//     return stamp > compareStamp;
-//   }
-// }
 
 // ************ Utilities
 

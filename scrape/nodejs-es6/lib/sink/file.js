@@ -58,12 +58,13 @@ function pathForItems(items) {
 }
 
 // This was originally called: verifyIdenticalOrWrite
-// This was useful for toUserStamp.js verification
-// -Attempts to write <items> to <path> (as json)
 // -Verifies file does not exist or content is same as original
 // -Validates by default (overwrite protection)
-// TODO, options: pretty=true, gzip=true, sign=true, log
-
+// options:
+//  overwrite:bool allow overwriting of file with different content default:false
+//  log:bool print the md5,size and line count default:false
+// TODO options: pretty=true, gzip=true, sign=true
+// TODO split into testable components
 function write(filename, items, opts) {
   opts = _.merge({
     overwrite: false,

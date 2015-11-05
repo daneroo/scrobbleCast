@@ -20,6 +20,7 @@ var Promise = require('bluebird');
 var _ = require('lodash');
 var utils = require('./lib/utils');
 var srcFile = require('./lib/source/file');
+var sinkFile = require('./lib/sink/file');
 var delta = require('./lib/delta');
 
 // globals
@@ -108,19 +109,18 @@ function validateDedupAndSaveHistory(credentials) {
   return function(itemsByType) {
     // rerun accum to verify dedeuped'ness
     var _user = credentials.name;
+    var historyByType = new delta.AccumulatorByTypeByUuid();
     return Promise.each(['podcast', 'episode'], function(_type) {
-        var accululatorForType = new delta.AccumulatorByUuid();
         var items = itemsByType[_type];
         items.forEach(function(item) {
-          // var accByUUIDForItem = getAccumulator(item);
-          // var changeCount = accByUUIDForItem.merge(item);
-          var changeCount = accululatorForType.merge(item);
+          var changeCount = historyByType.merge(item);
           if (changeCount === 0) {
             console.log('***** Not deduped: %s %j', changeCount, item);
           }
         });
-        sortAndSave(_user, _type, accululatorForType);
-        return Promise.resolve(true);
+      })
+      .then(function() {
+        historyByType.sortAndSave(_user);
       })
       .then(function() {
         return itemsByType;
@@ -134,7 +134,6 @@ function validateDedupAndSaveHistory(credentials) {
 // - acccumulates items in an {type:[items]} which is passed in.
 // - writes out any completed months
 function loader(itemsByType) {
-
   // throw error if item.__stamp's are non-increasing
   var increasingStamp = null; // to track increasing'ness
   function checkStampOrdering(item) {
@@ -187,7 +186,10 @@ function loader(itemsByType) {
       var _user = item.__user;
       var suffix = 'jsonl';
       var outfile = util.format('data/rollup/byUserStamp/%s/%s/monthly-%s.%s', _user, previousMonth, previousMonth, suffix);
-      saveLines(itemsForMonth, outfile);
+      sinkFile.write(outfile, itemsForMonth, {
+        overwrite: true,
+        log: true
+      });
 
       // empty output buffer
       itemsForMonth = [];
@@ -198,7 +200,6 @@ function loader(itemsByType) {
 
   // the actual itemHandler being returned
   return function itemHandler(credentials, stamp, file, item) {
-
     // throw error if item.__stamp's are non-increasing
     checkStampOrdering(item);
 
@@ -210,55 +211,6 @@ function loader(itemsByType) {
 
     return Promise.resolve(true);
   };
-}
-
-// TODO: move to lib
-function sortAndSave(_user, _type, history) {
-  // console.log('|' + outfile + '|=', _.size(history.accumulators));
-  // just write out the accumulators dictionary, it is the only attribute!
-  var sorted = _.sortBy(history.accumulators, function(item) {
-    // should this use sortByAll ? not in 2.4.2
-    // careful sorting by [__changeCount], compare by string when returning an array
-    // this sorts by a numerically
-    // _.sortBy([{a:1},{a:2},{a:3},{a:11},{a:12}],function(item){return item.a;});
-    // this sorts a lexicographically
-    // _.sortBy([{a:1,b:'a'},{a:2,b:'a'},{a:3,b:'a'},{a:11,b:'a'},{a:12,b:'a'}],function(item){return [item.a,item.b];})
-    // return [item.meta.__changeCount,item.meta.__lastUpdated, item.uuid];
-
-    // sort by lastUpdated,uuid (for uniqueness)
-    return [item.meta.__lastUpdated, item.uuid];
-  }).reverse();
-  var outfile = util.format('history-%s-%s.json', _user, _type);
-  saveLines(sorted, outfile);
-}
-
-// outputs as JSON: either .json, or .jsonl
-// TODO move to lib
-// TODO, options: pretty=true, gzip=true, sign=true, log
-function saveLines(thing, outfile) {
-  if (!Array.isArray(thing)) {
-    console.log('saveLines:thing is not an array');
-    process.exit(-1);
-  }
-  var json;
-  if (outfile.match(/\.jsonl$/)) {
-    var lines = [];
-    thing.forEach(function(el) {
-      lines.push(JSON.stringify(el));
-    });
-    json = lines.join('\n');
-  } else {
-    json = JSON.stringify(thing, null, 2);
-  }
-  var dir = path.dirname(outfile);
-  mkdirp.sync(dir);
-  fs.writeFileSync(outfile, json);
-  log('md5(%s):%s %si %sMB', path.basename(outfile), md5(json), thing.length, (json.length / 1024 / 1024).toFixed(2));
-}
-
-function md5(str) {
-  var hash = crypto.createHash('md5').update(str).digest('hex');
-  return hash;
 }
 
 // Unused For now

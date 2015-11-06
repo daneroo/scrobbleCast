@@ -30,72 +30,92 @@ exports = module.exports = {
 // }
 
 // TODO: use srcFile.iterator, but Accumulators are in the wrong scope (per user)
+// TODO if using iterator, what hooks do I neeed for inviking deduplication
 function dedupTask(credentials) {
-  return srcFile.findByUserStamp(credentials.name)
-    .then(function(stamps) {
-      // utils.logStamp('Starting:Dedup for ' + credentials.name);
-      // console.log('-|stamps|', stamps.length);
+  var historyByType = new delta.AccumulatorByTypeByUuid();
+  var maxStamp = '1970-01-01T00:00:00Z'; // to track increasing'ness
 
-      var historyByType = new delta.AccumulatorByTypeByUuid();
+  return Promise.resolve(true)
+    .then(function() {
 
-      var partCount = 0;
-      var fileCount = 0;
-      var dedupPartCount = 0;
-      var dedupFileCount = 0;
+      // TODO use datadir
+      if (!fs.existsSync('data/rollup/byUserStamp')) {
+        return Promise.resolve(true);
+      }
+      // Read and accumulate items from 'rollup'
+      function itemHandler(credentials, stamp, file, item) {
+        maxStamp = item.__stamp
+        var changeCount = historyByType.merge(item);
+        // if I want to check for dedupedness, need to account for first view of items
+        // if (changeCount > 0) {
+        //   console.log('undeduped item %j',item);
+        //   throw new Error('Undeduped item in rollup file: ' + file);
+        // }
+        return Promise.resolve(true);
+      }
+      return srcFile.iterator('rollup', [credentials], itemHandler, '**/*.json?(l)');
+    })
+    .then(function() {
+      console.log('Reading default path after:', maxStamp);
+      return srcFile.findByUserStamp(credentials.name)
+        .then(function(stamps) {
+          // console.log('-|stamps|', stamps.length);
+          var partCount = 0;
+          var fileCount = 0;
+          var dedupPartCount = 0;
+          var dedupFileCount = 0;
 
-      // should have a version without aggregation
-      return Promise.each(stamps, function(stamp) {
-          // console.log('--iteration stamp:', credentials.name, stamp);
-          return srcFile.find(path.join('byUserStamp', credentials.name, stamp, '**/*.json'))
-            .then(function(files) {
+          // should have a version without aggregation
+          return Promise.each(stamps, function(stamp) {
+            // console.log('--iteration stamp:', credentials.name, stamp);
+            if (stamp <= maxStamp) {
+              // console.log('-- skipped iteration stamp:', credentials.name, stamp);
+              return Promise.resolve(true);
+            }
+            return srcFile.find(path.join('byUserStamp', credentials.name, stamp, '**/*.json'))
+              .then(function(files) {
+                return Promise.each(files, function(file) {
+                  // console.log('---file:', file);
+                  var items = srcFile.loadJSON(file);
+                  var redux = [];
 
-              return Promise.each(files, function(file) {
+                  fileCount++;
+                  var fileHasChanges = false;
+                  return Promise.each(items, function(item) {
+                      partCount++;
 
-                // console.log('---file:', file);
-                var items = srcFile.loadJSON(file);
-                var redux = [];
+                      var changeCount = historyByType.merge(item);
+                      if (changeCount > 0) {
+                        fileHasChanges = true;
+                        redux.push(item);
+                        // console.log('---|Δ|', changeCount, item.title);
+                      } else {
+                        dedupPartCount++;
+                      }
+                    })
+                    .then(function() {
+                      // fileHasChanges === redux.length>0
+                      if (!fileHasChanges) {
+                        dedupFileCount++;
+                        moveToDedup(file);
+                        // console.log('---dedup: file %d/%d  part %d/%d', dedupFileCount, fileCount, dedupPartCount, partCount);
+                      }
+                      // else: fileHasHasganges===true or redux.length>0
+                      if (redux.length > 0) {
+                        // console.log('---redux: |parts|: %d file: %s', redux.length, file);
+                        replaceRedux(file, items, redux);
+                      }
 
-                fileCount++;
-                var fileHasChanges = false;
-                return Promise.each(items, function(item) {
-                    partCount++;
+                    });
 
-                    // passed item is cloned, and normalized in accumulator
-
-                    var changeCount = historyByType.merge(item);
-
-                    if (changeCount > 0) {
-                      fileHasChanges = true;
-                      redux.push(item);
-                      // console.log('---|Δ|', changeCount, item.title);
-                    } else {
-                      dedupPartCount++;
-                    }
-
-                  })
-                  .then(function() {
-                    // fileHasChanges === redux.length>0
-                    if (!fileHasChanges) {
-                      dedupFileCount++;
-                      moveToDedup(file);
-                      // console.log('---dedup: file %d/%d  part %d/%d', dedupFileCount, fileCount, dedupPartCount, partCount);
-                    }
-                    // else: fileHasHasganges===true or redux.length>0
-                    if (redux.length > 0) {
-                      // console.log('---redux: |parts|: %d file: %s', redux.length, file);
-                      replaceRedux(file, items, redux);
-                    }
-
-                  });
-
+                });
               });
-            });
-        })
-        .then(function(dontCare) {
-          historyByType.sortAndSave(credentials.name);
-          return stamps;
+          })
         });
-
+    })
+    .then(function(dontCare) {
+      historyByType.sortAndSave(credentials.name);
+      return true;
     })
     .catch(function(error) { // TODO: might remove this altogether
       console.error('Error:Dedup', error);

@@ -24,10 +24,12 @@ exports = module.exports = {
 };
 
 function dedup(credentials) {
+  var start = +new Date()
   lifecycle('dedup', 'start', credentials.name);
   return dedupTask(credentials)
     .then(function() {
-      lifecycle('dedup', 'done', credentials.name);
+      var elapsed = ((+new Date()-start)/1000).toFixed(1);
+      lifecycle('dedup', 'done in '+elapsed+'s', credentials.name);
     });
 }
 

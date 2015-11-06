@@ -40,6 +40,7 @@ function dedupTask(credentials) {
 
       // TODO use datadir
       if (!fs.existsSync('data/rollup/byUserStamp')) {
+        utils.logStamp('Rollup: not accelerated');
         return Promise.resolve(true);
       }
       // Read and accumulate items from 'rollup'
@@ -53,10 +54,13 @@ function dedupTask(credentials) {
         // }
         return Promise.resolve(true);
       }
-      return srcFile.iterator('rollup', [credentials], itemHandler, '**/*.json?(l)');
+      return srcFile.iterator('rollup', [credentials], itemHandler, '**/*.json?(l)')
+        .then(function(counts) {
+          utils.logStamp('Rollup: accelerated up to: ' + maxStamp);
+          return counts; // although we aren using it here yet...
+        });
     })
     .then(function() {
-      console.log('Reading default path after:', maxStamp);
       return srcFile.findByUserStamp(credentials.name)
         .then(function(stamps) {
           // console.log('-|stamps|', stamps.length);

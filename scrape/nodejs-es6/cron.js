@@ -36,18 +36,18 @@ var recurrence = {
 // perform dedup task on all users, after main tasks are completed
 // returns a function
 function forEachUser(task) {
-    return function() {
-      return Promise.each(allCredentials, task)
-        .then(function() {
-          return Promise.each(allCredentials, tasks.dedup);
-        })
-        .catch(function(error) {
-          // TODO, might want to catch before tasks.dedup is called, to make sure dedup always runs...
-          console.error('cron:error', error);
-        });
-    };
-  }
-  // auto-starts
+  return function() {
+    return Promise.each(allCredentials, task)
+      .then(function() {
+        return Promise.each(allCredentials, tasks.dedup);
+      })
+      .catch(function(error) {
+        // TODO, might want to catch before tasks.dedup is called, to make sure dedup always runs...
+        console.error('cron:error', error);
+      });
+  };
+}
+// auto-starts
 function runJob(task, when) {
   var message = 'Starting CronJob:';
   if (task.name) { // depends on the finction having been defined non-anonymously
@@ -58,10 +58,10 @@ function runJob(task, when) {
   utils.logStamp(message);
 
   var job = new CronJob({
+    // timeZone: "America/Montreal" // npm install time, if you want to use TZ
     cronTime: when,
     onTick: forEachUser(task),
     start: true // default is true, else, if start:false, use job.start()
-      // timeZone: "America/Montreal" // npm install time, if you want to use TZ
   });
   return job; // if you ever want to stop it.
 }

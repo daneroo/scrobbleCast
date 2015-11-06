@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 // This utility will read all source files: extra=''
 // and 'rollup' into Month files: with stamps up to (strict <) begining of month

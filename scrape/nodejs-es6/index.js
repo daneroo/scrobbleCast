@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 // This is meant to exercise the fetch API
 // Can use it to test under request error conditions
@@ -10,7 +10,6 @@ var utils = require('./lib/utils');
 
 var allCredentials = require('./credentials.json');
 var log = console.log;
-
 
 function tryemall(credentials) {
   log('-Start', credentials.name);
@@ -27,10 +26,10 @@ function tryemall(credentials) {
       // page: 1,
       // Spark from CBC Radio  05ccf3c0-1b97-012e-00b7-00163e1b201c
       uuid: '05ccf3c0-1b97-012e-00b7-00163e1b201c'
-        // TNT
-        // uuid: '77170eb0-0257-012e-f994-00163e1b201c'
-        // Wachtel on the Arts from CBC Radio's Ideas
-        // uuid:'89beea90-5edf-012e-25b7-00163e1b201c'
+      // TNT
+      // uuid: '77170eb0-0257-012e-f994-00163e1b201c'
+      // Wachtel on the Arts from CBC Radio's Ideas
+      // uuid:'89beea90-5edf-012e-25b7-00163e1b201c'
     }))
     .then(function(response) {
       log('  -02-podcasts', response.length);
@@ -53,7 +52,6 @@ function tryemall(credentials) {
       return credentials.name;
     });
 }
-
 
 function iteration() {
   Promise.each(allCredentials, function(credentials) {

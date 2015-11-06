@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 // Pump redux to pouchdb
 
@@ -66,10 +66,10 @@ function showAll() {
 }
 
 function addKey(item) {
-    var key = [item.meta.__user, item.meta.__type, item.uuid].join('/');
-    item._id = key;
-  }
-  // returns a fetched item, or passes the item, augmented with a key.
+  var key = [item.meta.__user, item.meta.__type, item.uuid].join('/');
+  item._id = key;
+}
+// returns a fetched item, or passes the item, augmented with a key.
 function create(item) {
   // ouch.normalize(item); // _id and meta
   addKey(item);

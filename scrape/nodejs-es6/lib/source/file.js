@@ -141,6 +141,7 @@ function iterator(extrapath, allCredentials, callbackReturningPromise, pattern, 
     });
 }
 
+// 2015-11-06 Not yet used, first candidate is dedup.js
 // call the iterator with extrapath='rollup'
 // then call the iterator with passed extrapath for subsequent items (by date)
 function iteratorWithRollup(extrapath, allCredentials, callbackReturningPromise, pattern, fileFilter) {
@@ -183,5 +184,6 @@ exports = module.exports = {
   find: find,
   findByDate: findByDate,
   findByUserStamp: findByUserStamp,
-  iterator: iterator
+  iterator: iterator,
+  iteratorWithRollup:iteratorWithRollup
 };

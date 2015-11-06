@@ -71,6 +71,7 @@ function loadItems(credentials, extra) {
     return Promise.resolve(true);
   }
 
+  // TODO: clean this up for final logic, with opts
   // this is the double iteration loader
   return srcFile.iterator(extra, [credentials], sharedHandler, '**/*.json?(l)')
     .then(reportCounts)
@@ -93,6 +94,7 @@ function loadItems(credentials, extra) {
       return srcFile.iterator('', [credentials], sharedHandler, '**/*.json?(l)', skippingFilter)
         .then(reportCounts);
     })
+    // return srcFile.iteratorWithRollup(extra, [credentials], sharedHandler, '**/*.json?(l)')
     .then(function() {
       var _user = credentials.name;
       historyByType.sortAndSave(_user);
@@ -109,9 +111,10 @@ function loader() {
 
   // throw error if item.__stamp's are non-increasing
   var maxStamp = '1970-01-01T00:00:00Z'; // to track increasing'ness
-  function getMaxStamp(){
+  function getMaxStamp() {
     return maxStamp;
   }
+
   function checkStampOrdering(item) {
     var stamp = item.__stamp;
     if (stamp < maxStamp) {
@@ -170,6 +173,7 @@ function loader() {
       var outfile = util.format('data/rollup/byUserStamp/%s/%s/monthly-%s.%s', _user, previousMonth, previousMonth, suffix);
       sinkFile.write(outfile, itemsForMonth, {
         // TODO overwrite should be false, causing errors!
+        // TODO Write verification needs to account for .jsonl
         overwrite: true,
         log: true
       });

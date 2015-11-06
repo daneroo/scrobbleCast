@@ -63,6 +63,7 @@ function pathForItems(items) {
 // options:
 //  overwrite:bool allow overwriting of file with different content default:false
 //  log:bool print the md5,size and line count default:false
+// TODO Write verification needs to account for .jsonl
 // TODO options: pretty=true, gzip=true, sign=true
 // TODO split into testable components
 function write(filename, items, opts) {

@@ -77,7 +77,7 @@ function write(filename, items, opts) {
     var json;
     if (filename.match(/\.jsonl$/)) {
       if (!Array.isArray(items)) {
-        throw new Error('sink.file.write.makeJSON:items is not an array')
+        throw new Error('sink.file.write.makeJSON:items is not an array');
       }
       var lines = [];
       items.forEach(function(el) {
@@ -99,10 +99,13 @@ function write(filename, items, opts) {
       throw new Error('sink.file.write: verify identical: overwrite prevented: ' + filename + ' ' + JSON.stringify(opts));
     } else {
       if (opts.log) {
-        var json = makeJSON();
-        var numItems = (items.length) ? items.length : 1;
-        var msg = util.format('md5(%s):%s %si %sMB checked', path.basename(filename), utils.md5(json), numItems, (json.length / 1024 / 1024).toFixed(2));
-        utils.logStamp(msg)
+        (function() {
+          // IIFE to scope duplicate variables, remove when we can use let
+          var json = makeJSON();
+          var numItems = (items.length) ? items.length : 1;
+          var msg = util.format('md5(%s):%s %si %sMB checked', path.basename(filename), utils.md5(json), numItems, (json.length / 1024 / 1024).toFixed(2));
+          utils.logStamp(msg);
+        })();
       }
     }
   } else {
@@ -113,7 +116,7 @@ function write(filename, items, opts) {
     if (opts.log) {
       var numItems = (items.length) ? items.length : 1;
       var msg = util.format('md5(%s):%s %si %sMB', path.basename(filename), utils.md5(json), numItems, (json.length / 1024 / 1024).toFixed(2));
-      utils.logStamp(msg)
+      utils.logStamp(msg);
     }
   }
 }

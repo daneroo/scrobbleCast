@@ -173,7 +173,7 @@ function iteratorWithRollup(extrapath, allCredentials, callbackReturningPromise,
     .then(function(counts) {
       // TODO correct return counts...
       console.log('Now call iterator with extrapath: %s after: %s', extrapath, maxStamp);
-      return iterator(extrapath, allCredentials, callbackReturningPromise, pattern, skippingWrappedFilter)
+      return iterator(extrapath, allCredentials, callbackReturningPromise, pattern, skippingWrappedFilter);
     });
 }
 

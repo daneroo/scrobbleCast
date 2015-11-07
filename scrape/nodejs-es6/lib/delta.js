@@ -7,12 +7,10 @@
 // --> a.merged, a.changes,
 
 // dependencies - core-public-internal
-var fs = require('fs'); // for sortAndSave
 var path = require('path');
 var util = require('util');
 var _ = require('lodash');
 var sinkFile = require('./sink/file');
-var utils = require('./utils');
 
 // This is to remove noise from comparison
 //  -destructive if not cloned...(param?)
@@ -273,11 +271,11 @@ AccumulatorByTypeByUuid.prototype.merge = function(item) {
 };
 
 AccumulatorByTypeByUuid.prototype.sortAndSave = function(_user) {
-  var self=this;
+  var self = this;
   Object.keys(this.accumulatorsByType).forEach(function(_type) {
     self.getAccumulatorByUuidForType(_type).sortAndSave(_user, _type);
   });
-}
+};
 
 exports = module.exports = {
   normalize: normalize,

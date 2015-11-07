@@ -8,6 +8,7 @@
 // dependencies - core-public-internal
 var fs = require('fs');
 var path = require('path');
+var util = require('util');
 var mkdirp = require('mkdirp');
 var Promise = require('bluebird');
 var _ = require('lodash');
@@ -20,14 +21,6 @@ var delta = require('./delta');
 exports = module.exports = {
   dedupTask: dedupTask
 };
-
-// if (require.main === module) {
-//   console.log('called directly');
-//   var allCredentials = require('../credentials.json');
-//   utils.serialPromiseChainMap(allCredentials, dedupTask);
-// } else {
-//   console.log('required as a module');
-// }
 
 // TODO: use srcFile.iterator, but Accumulators are in the wrong scope (per user)
 // TODO if using iterator, what hooks do I neeed for inviking deduplication
@@ -44,14 +37,15 @@ function dedupTask(credentials) {
         return Promise.resolve(true);
       }
       // Read and accumulate items from 'rollup'
+      // also validate no items need to be deduped
       function itemHandler(credentials, stamp, file, item) {
         maxStamp = item.__stamp;
         var changeCount = historyByType.merge(item);
         // if I want to check for dedupedness, need to account for first view of items
-        // if (changeCount > 0) {
-        //   console.log('undeduped item %j',item);
-        //   throw new Error('Undeduped item in rollup file: ' + file);
-        // }
+        if (changeCount === 0) {
+          var msg = util.format('Undeduped item in rollup file: %s item:%j',file,item);
+          throw new Error(msg);
+        }
         return Promise.resolve(true);
       }
       return srcFile.iterator('rollup', [credentials], itemHandler, '**/*.json?(l)')
@@ -114,7 +108,7 @@ function dedupTask(credentials) {
 
                 });
               });
-          })
+          });
         });
     })
     .then(function(dontCare) {

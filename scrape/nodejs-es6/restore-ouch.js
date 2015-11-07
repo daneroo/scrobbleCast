@@ -8,7 +8,7 @@ var _ = require('lodash');
 var PouchDB = require('pouchdb');
 var srcFile = require('./lib/source/file');
 var delta = require('./lib/delta');
-var ouch = require('./lib/ouch');
+// var ouch = require('./lib/ouch');
 
 // globals
 var allCredentials = require('./credentials.json');

@@ -45,7 +45,7 @@ function dedupTask(credentials) {
       }
       // Read and accumulate items from 'rollup'
       function itemHandler(credentials, stamp, file, item) {
-        maxStamp = item.__stamp
+        maxStamp = item.__stamp;
         var changeCount = historyByType.merge(item);
         // if I want to check for dedupedness, need to account for first view of items
         // if (changeCount > 0) {

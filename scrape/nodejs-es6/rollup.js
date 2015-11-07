@@ -11,13 +11,8 @@
 // verify or write new required rollups
 
 // dependencies - core-public-internal
-var fs = require('fs');
 var util = require('util');
-var path = require('path');
-var crypto = require('crypto');
-var mkdirp = require('mkdirp');
 var Promise = require('bluebird');
-var _ = require('lodash');
 var utils = require('./lib/utils');
 var srcFile = require('./lib/source/file');
 var sinkFile = require('./lib/sink/file');
@@ -43,9 +38,8 @@ function main() {
   // var extra = 'rollup'; // to switch to rollup..
   return Promise.each(allCredentials, function(credentials) {
     logMemAfterGC();
-    console.log('***** Rolling up %s', credentials.name);
+    utils.logStamp('Rollup started for ' + credentials.name);
     return rollup(credentials, extra);
-    // return Promise.resolve(true);
   });
 }
 
@@ -66,7 +60,8 @@ function loadItems(credentials, extra) {
     Object.keys(counts).forEach(function(name) {
       var c = counts[name];
       var maxStamp = l.getMaxStamp();
-      log('--%s-- %s |stamps|:%s |f|:%s |p|:%s |ignored|:%s max(stamp):%s', extra, name, c.stamp, c.file, c.part, c.ignoredFiles, maxStamp);
+      var msg = util.format('base:%s user:%s |stamps|:%s |f|:%s |p|:%s |ignored|:%s max(stamp):%s', extra, name, c.stamp, c.file, c.part, c.ignoredFiles, maxStamp);
+      utils.logStamp(msg);
     });
     return Promise.resolve(true);
   }
@@ -79,15 +74,15 @@ function loadItems(credentials, extra) {
       // get and fix the stamp lowerbound
       var maxStamp = l.getMaxStamp();
 
-      if (extra == 'rollup') {
-        log('Reading rest of entries from default after:', maxStamp);
+      if (extra === 'rollup') {
+        utils.logStamp('Reading rest of entries from default after: ' + maxStamp);
       } else {
-        log('NOT Reading rest of entries from default');
+        utils.logStamp('NOT Reading rest of entries from default');
         return Promise.resolve(true);
       }
 
       function skippingFilter(credentials, stamp, file, item) {
-        return (stamp > maxStamp)
+        return (stamp > maxStamp);
       }
 
       // now call with extra=''
@@ -141,9 +136,9 @@ function loader() {
   function checkForDedup(item) {
     var changeCount = historyByType.merge(item);
     if (changeCount === 0) {
-      log('Mixing users in loader: %s != %s', singleUser, item.__user);
-      throw new Error('Mixing users in loader');
-      console.log('***** Not deduped: %s %j', changeCount, item);
+      var msg = util.format('* Item Not deduped: %s %j', changeCount, item);
+      utils.logStamp(msg);
+      throw new Error(msg);
     }
 
   }
@@ -205,7 +200,7 @@ function loader() {
     handler: handler,
     getMaxStamp: getMaxStamp,
     historyByType: historyByType
-  }
+  };
 }
 
 // ************ Utilities
@@ -222,9 +217,10 @@ function verboseErrorHandler(shouldRethrow) {
 
 function logMemAfterGC() {
   function showMem(pfx) {
-    console.log('%sMem RSS: %sMB, Heap(t): %sMB, Heap(u): %sMB',
+    var msg = util.format('%sMem RSS: %sMB, Heap(t): %sMB, Heap(u): %sMB',
       pfx, (process.memoryUsage().rss / 1024 / 1024).toFixed(2), (process.memoryUsage().heapTotal / 1024 / 1024).toFixed(2), (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)
     );
+    utils.logStamp(msg);
   }
   showMem('-');
   if (global.gc) {
@@ -235,7 +231,7 @@ function logMemAfterGC() {
 
     showMem('+');
   } else {
-    console.log('  Garbage collection unavailable.  Pass --expose-gc when launching node to enable forced garbage collection.');
+    utils.logStamp('  Garbage collection unavailable.  Pass --expose-gc when launching node to enable forced garbage collection.');
   }
   return Promise.resolve(true);
 }

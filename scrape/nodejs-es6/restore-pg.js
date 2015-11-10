@@ -109,7 +109,6 @@ function main() {
 
 // returns all items from extra, in an array
 function restore(credentials, extra) {
-  return Promise.resolve(true);
   // shared handler for both extras
   var l = loader();
   var sharedHandler = l.handler;

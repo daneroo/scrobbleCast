@@ -9,7 +9,7 @@ var util = require('util');
 var Promise = require('bluebird');
 var utils = require('./lib/utils');
 var srcFile = require('./lib/source/file');
-// var delta = require('./lib/delta');
+var delta = require('./lib/delta');
 
 var redis = require('redis');
 Promise.promisifyAll(redis.RedisClient.prototype);
@@ -29,16 +29,12 @@ Promise.resolve(true)
   .then(logMemAfterGC)
   .catch(verboseErrorHandler(false));
 
-// TODO: The eventual flow should be
-// -loadItems from extra=''
-//  perform dedup checking as we go, removing the need for accumulating all Items, only currentMonth
-// at the end validate that history with/without rollup is identical
 function main() {
   var extra = '';
   // var extra = 'rollup'; // to switch to rollup..
   return Promise.each(allCredentials, function(credentials) {
       logMemAfterGC();
-      utils.logStamp('Rollup started for ' + credentials.name);
+      utils.logStamp('Restore started for ' + credentials.name);
       return restore(credentials, extra)
         .then(function() {
           return accumulateItems(credentials);
@@ -134,6 +130,8 @@ function accumulateItems(credentials) {
   var cursor = '0';
   var count = 0;
 
+  var itemKeys = [];
+
   function scan(resolve, reject) {
     client.scan(
       cursor,
@@ -150,7 +148,7 @@ function accumulateItems(credentials) {
         // 'An iteration starts when the cursor is set to 0,
         // and terminates when the cursor returned by the server is 0.'
         if (cursor === '0') {
-          resolve(true);
+          resolve(itemKeys);
           return console.log('Iteration for %s complete: %s', credentials.name, count);
         }
         // Remember: more or less than COUNT or no keys may be returned
@@ -161,6 +159,7 @@ function accumulateItems(credentials) {
         if (res[1].length > 0) {
           res[1].forEach(function(key) {
             count++;
+            itemKeys.push(key);
             // console.log('-would fetch', key);
           });
         }
@@ -170,9 +169,37 @@ function accumulateItems(credentials) {
     );
   }
   return new Promise(function(resolve, reject) {
-    scan(resolve, reject);
-  });
-  // return Promise.resolve(true);
+      scan(resolve, reject);
+    })
+    .then(function(itemKeys) {
+      console.log('sorting %s keys', itemKeys.length);
+      itemKeys.sort();
+      var historyByType = new delta.AccumulatorByTypeByUuid();
+
+      return Promise.each(itemKeys, function(key) {
+          if (key.indexOf('ede41160-9eeb-012f-3e7d-525400c11844') !== -1) {
+            console.log('fetching %s', key);
+          }
+          return client.getAsync(key)
+            .then(function(res) {
+              var item = JSON.parse(res);
+              if (item.uuid === 'ede41160-9eeb-012f-3e7d-525400c11844') {
+                console.log('got %j', item);
+              }
+              var changeCount = historyByType.merge(item);
+              if (changeCount === 0) {
+                var msg = util.format('* Item Not deduped: %s %j', changeCount, item);
+                utils.logStamp(msg);
+                // throw new Error(msg);
+              }
+            });
+        })
+        .then(function() {
+          console.log('|key|= %s', itemKeys.length);
+          var _user = credentials.name;
+          historyByType.sortAndSave(_user);
+        });
+    });
 }
 //
 // Save each item : problem, how do we traverse keys in an ordered way?
@@ -183,6 +210,9 @@ function saveItem(item) {
   }
 
   var key = getKey(item);
+  if (item.uuid === 'ede41160-9eeb-012f-3e7d-525400c11844') {
+    console.log('-save', key);
+  }
   // console.log('-save', key);
   return client.getsetAsync(key, JSON.stringify(item))
     .then(function(res) {
@@ -191,9 +221,9 @@ function saveItem(item) {
         var olditem = JSON.parse(res);
         ok = utils.isEqualWithoutPrototypes(olditem, item);
         if (!ok) {
-          console.log('+save %s ok: %j', key, ok);
+          // console.log('+save %s ok: %j', key, ok);
         } else {
-          console.log('+save %s DUPLICATE ok: %j', key, ok);
+          // console.log('+save %s DUPLICATE ok: %j', key, ok);
         }
       }
       // console.log('+save %s ok: %j', key, ok);

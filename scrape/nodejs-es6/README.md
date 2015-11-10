@@ -14,6 +14,17 @@
   docker run -itd -v $(pwd)/credentials.json:/usr/src/app/credentials.json -v $(pwd)/data:/usr/src/app/data daneroo/pocketscrape node cron.js
   docker exec -it <container id> bash
 
+### PostgreSQL
+Start a container and connect to it
+
+  docker run -it --rm -p 5432:5432 --name postgres postgres
+  docker exec -it postgres createdb -U postgres scrobblecast
+  docker exec -it postgres psql -U postgres scrobblecast
+
+  scrobblecast=#
+  select __user,__type,count(distinct uuid),max(__stamp) from items group by __user,__type;
+  select distinct uuid, item->>'title' as title from items where __user='daniel' and __type='podcast'
+
 ### CouchDB for persistence
 Note: try CouchDB 2.0 
 Don't put the data volume in `./data` because we often rsync!

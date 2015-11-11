@@ -15,6 +15,8 @@
   docker exec -it <container id> bash
 
 ### PostgreSQL
+[Quick intro to PostgreSQL JSON.](http://clarkdave.net/2013/06/what-can-you-do-with-postgresql-and-json/)
+
 Start a container and connect to it
 
   docker run -it --rm -p 5432:5432 --name postgres postgres

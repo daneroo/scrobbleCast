@@ -4,7 +4,7 @@
 var Promise = require('bluebird');
 var cron = require('cron');
 var CronJob = cron.CronJob;
-var utils = require('./lib/utils');
+var log = require('./lib/log');
 var tasks = require('./lib/tasks');
 
 // globals
@@ -55,7 +55,7 @@ function runJob(task, when) {
   }
   message += ' ' + when;
 
-  utils.logStamp(message);
+  log.info(message);
 
   var job = new CronJob({
     // timeZone: "America/Montreal" // npm install time, if you want to use TZ
@@ -66,7 +66,7 @@ function runJob(task, when) {
   return job; // if you ever want to stop it.
 }
 
-utils.logStamp('Starting Cron');
+log.info('Starting Cron');
 // auto-start all three
 runJob(tasks.deep, recurrence.everyDayAtMidnight); // var deep = ...
 runJob(tasks.shallow, recurrence.everyHourExceptMidnight); // var shallow =

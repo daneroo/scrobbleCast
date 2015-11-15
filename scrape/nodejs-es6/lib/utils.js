@@ -3,6 +3,7 @@
 // dependencies - core-public-internal
 var crypto = require('crypto');
 var _ = require('lodash');
+var log = require('./log');
 
 // expect to be called with 'minute','second' or no param (millis)
 // return an iso-8601 string
@@ -21,7 +22,8 @@ function stamp(grain) {
 
 // TODO: pubsub would be good
 function logStamp(message) {
-  console.log(stamp(), message);
+  // console.log('deprecated: use log.info(\'info\',...)');
+  log.info(message);
 }
 
 // parse a stamp from a file/path

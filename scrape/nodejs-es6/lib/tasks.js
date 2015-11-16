@@ -28,7 +28,7 @@ function dedup(credentials) {
   lifecycle('dedup', 'start', credentials.name);
   return dedupTask(credentials)
     .then(function() {
-      var elapsed = ((+new Date() - start) / 1000).toFixed(1) + 's';
+      var elapsed = Number(((+new Date() - start) / 1000).toFixed(1));
       lifecycle('dedup', 'done', credentials.name, elapsed);
     });
 }

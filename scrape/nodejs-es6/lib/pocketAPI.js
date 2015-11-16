@@ -41,7 +41,7 @@ PocketAPI.prototype._fetch = function(path, params) {
   var self = this;
   var verbose = false;
   if (verbose && params && params.page) {
-    console.log('fetching page', params.page);
+    log.debug('fetching', {page:params.page});
   }
   return speedLimit()
     .then(function() {
@@ -213,7 +213,7 @@ PocketAPI.prototype.podcastPages = function(params) {
       if (params.maxPage) {
         totalPages = Math.min(totalPages, params.maxPage);
       }
-      log.verbose('Fetching',{pages:[2,totalPages]});
+      log.debug('Fetching',{pages:[2,totalPages]});
 
       // otherwise append the other pages
       // [2..totalPages]

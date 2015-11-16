@@ -6,11 +6,11 @@
 // -deep : implies shallow, and threfore quick
 
 // dependencies - core-public-internal
-var util = require('util');
 var Promise = require('bluebird');
 var _ = require('lodash');
 // mine
 var PocketAPI = require('./pocketAPI');
+var log = require('./log');
 var utils = require('./utils');
 var sinkFile = require('./sink/file');
 var dedupTask = require('./dedup').dedupTask;
@@ -28,8 +28,8 @@ function dedup(credentials) {
   lifecycle('dedup', 'start', credentials.name);
   return dedupTask(credentials)
     .then(function() {
-      var elapsed = ((+new Date() - start) / 1000).toFixed(1);
-      lifecycle('dedup', 'done in ' + elapsed + 's', credentials.name);
+      var elapsed = ((+new Date() - start) / 1000).toFixed(1) + 's';
+      lifecycle('dedup', 'done', credentials.name, elapsed);
     });
 }
 
@@ -64,7 +64,7 @@ function deep(credentials) {
 // -- Implementation functions
 function quickWithSession(apiSession) {
   return function() {
-    lifecycle('.quick', 'start', apiSession.user);
+    // lifecycle('.quick', 'start', apiSession.user);
     return Promise.resolve(42)
       .then(apiSession.new_releases())
       .then(function(response) {
@@ -76,9 +76,9 @@ function quickWithSession(apiSession) {
         progress('04-in_progress', response);
         sinkFile.writeByUserStamp(response);
       })
-      .then(function() {
-        lifecycle('.quick', 'done', apiSession.user);
-      })
+      // .then(function() {
+      //   lifecycle('.quick', 'done', apiSession.user);
+      // })
       .catch(function(error) {
         console.log('tasks.quick:error', error);
         lifecycle('.quick', 'done: with error', apiSession.user);
@@ -105,15 +105,10 @@ function scrape(credentials, isDeep) {
       return response;
     })
     .then(function(podcasts) {
-      utils.logStamp('Found ' + podcasts.length + ' podcasts');
-
       // just for lookupFun
       var podcastByUuid = _.groupBy(podcasts, 'uuid');
-      // assert unique uuids -
 
       return Promise.map(_.pluck(podcasts, 'uuid'), function(uuid) {
-        utils.logStamp('Fetching: ' + podcastByUuid[uuid][0].title);
-
         return Promise.resolve(42)
           .then(apiSession.podcastPages({
             uuid: uuid,
@@ -121,7 +116,9 @@ function scrape(credentials, isDeep) {
           }))
           .then(function(response) {
             sinkFile.writeByUserStamp(response);
-            progress('02-podcasts', response);
+            progress('02-podcasts', response, {
+              title: podcastByUuid[uuid][0].title
+            });
             return response;
           });
       }, {
@@ -143,12 +140,17 @@ function scrape(credentials, isDeep) {
 
 //--- Utility functions
 // Task quick: start for daniel
-function lifecycle(task, verb, user) {
-  var out = util.format('Task %s: %s for %s', task, verb, user);
-  utils.logStamp(out);
+function lifecycle(task, verb, user, elapsed) {
+  var meta = {
+    task: task,
+    user: user,
+  };
+  if (elapsed){
+    meta.elapsed = elapsed;
+  }
+  log.info('Task %s', verb, meta);
 }
 
-function progress(msg, response) {
-  var out = util.format('|%s|: %d', msg, response.length);
-  utils.logStamp(out);
+function progress(msg, response, meta) {
+  log.verbose('|%s|: %d', msg, response.length, meta);
 }

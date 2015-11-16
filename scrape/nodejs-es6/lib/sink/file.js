@@ -103,7 +103,7 @@ function write(filename, items, opts) {
 // - <basepath>/byUserStamp/<__user>/<__stamp>/__sourceType[-<podast_uuid>].json
 function writeByUserStamp(items, basepath) {
   if (!items || !items.length) {
-    utils.logStamp('writeByUserStamp: nothing to write');
+    log.verbose('writeByUserStamp: nothing to write');
     return;
   }
   basepath = basepath || dataDirname;

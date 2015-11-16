@@ -13,16 +13,14 @@
 // dependencies - core-public-internal
 var util = require('util');
 var Promise = require('bluebird');
-var utils = require('./lib/utils');
+var log = require('./lib/log');
+
 var srcFile = require('./lib/source/file');
 var sinkFile = require('./lib/sink/file');
 var delta = require('./lib/delta');
 
 // globals
 var allCredentials = require('./credentials.json');
-
-//  move to logging module (?loggly)
-var log = console.error;
 
 Promise.resolve(true)
   .then(main)
@@ -38,7 +36,9 @@ function main() {
   // var extra = 'rollup'; // to switch to rollup..
   return Promise.each(allCredentials, function(credentials) {
     logMemAfterGC();
-    utils.logStamp('Rollup started for ' + credentials.name);
+    log.info('Rollup started', {
+      user: credentials.name
+    });
     return rollup(credentials, extra);
   });
 }
@@ -58,10 +58,14 @@ function loadItems(credentials, extra) {
 
   function reportCounts(counts) {
     Object.keys(counts).forEach(function(name) {
-      var c = counts[name];
       var maxStamp = l.getMaxStamp();
-      var msg = util.format('base:%s user:%s |stamps|:%s |f|:%s |p|:%s |ignored|:%s max(stamp):%s', extra, name, c.stamp, c.file, c.part, c.ignoredFiles, maxStamp);
-      utils.logStamp(msg);
+      // var msg = util.format('base:%s user:%s |stamps|:%s |f|:%s |p|:%s |ignored|:%s max(stamp):%s', extra, name, c.stamp, c.file, c.part, c.ignoredFiles, maxStamp);
+      log.verbose('Rollup:counts', {
+        base: extra,
+        user: name,
+        counts: counts,
+        maxStamp: maxStamp
+      });
     });
     return Promise.resolve(true);
   }
@@ -75,9 +79,11 @@ function loadItems(credentials, extra) {
       var maxStamp = l.getMaxStamp();
 
       if (extra === 'rollup') {
-        utils.logStamp('Reading rest of entries from default after: ' + maxStamp);
+        log.verbose('Reading rest of entries from default', {
+          after: maxStamp
+        });
       } else {
-        utils.logStamp('NOT Reading rest of entries from default');
+        log.debug('NOT Reading rest of entries from default');
         return Promise.resolve(true);
       }
 
@@ -113,7 +119,10 @@ function loader() {
   function checkStampOrdering(item) {
     var stamp = item.__stamp;
     if (stamp < maxStamp) {
-      log('Item stamp not increasing: %s > %j', maxStamp, item);
+      log.verbose('Item stamp not increasing', {
+        maxStamp: maxStamp,
+        item: item
+      });
       throw new Error('Item stamp not increasing');
     }
     maxStamp = stamp;
@@ -126,8 +135,12 @@ function loader() {
     if (!singleUser) {
       singleUser = item.__user;
     } else if (singleUser !== item.__user) {
-      log('Mixing users in loader: %s != %s', singleUser, item.__user);
-      throw new Error('Mixing users in loader');
+      var msg = 'Mixing users in loader';
+      log.error(msg, {
+        expected: singleUser,
+        found: item.__user
+      });
+      throw new Error(msg);
     }
   }
 
@@ -136,8 +149,11 @@ function loader() {
   function checkForDedup(item) {
     var changeCount = historyByType.merge(item);
     if (changeCount === 0) {
+      log.verbose('Item not deduped', {
+        changeCount: changeCount,
+        item: item
+      });
       var msg = util.format('* Item Not deduped: %s %j', changeCount, item);
-      utils.logStamp(msg);
       throw new Error(msg);
     }
 
@@ -158,8 +174,6 @@ function loader() {
 
     var shouldWrite = previousMonth !== null && month !== previousMonth;
     if (shouldWrite) {
-      // log('+writing month:', [item.__user, previousMonth, itemsForMonth.length]);
-
       // actually write out the month: all types;
       var _user = item.__user;
       var suffix = 'jsonl';
@@ -169,7 +183,7 @@ function loader() {
       sinkFile.write(outfile, itemsForMonth, {
         // TODO overwrite should be false, causing errors!
         // TODO Write verification needs to account for .jsonl
-        overwrite: true,
+        overwrite: false,
         log: true
       });
       itemsForMonth = [];
@@ -208,7 +222,10 @@ function loader() {
 //  move to logging module (as Factory?)
 function verboseErrorHandler(shouldRethrow) {
   return function errorHandler(error) {
-    log('error', error);
+    console.log(error);
+    log.error('Rollup:error', {
+      error: error
+    });
     if (shouldRethrow) {
       throw (error);
     }
@@ -217,10 +234,14 @@ function verboseErrorHandler(shouldRethrow) {
 
 function logMemAfterGC() {
   function showMem(pfx) {
-    var msg = util.format('%sMem RSS: %sMB, Heap(t): %sMB, Heap(u): %sMB',
-      pfx, (process.memoryUsage().rss / 1024 / 1024).toFixed(2), (process.memoryUsage().heapTotal / 1024 / 1024).toFixed(2), (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)
-    );
-    utils.logStamp(msg);
+    var msg = util.format('%sMem after GC (MB)', pfx);
+    log.verbose(msg, {
+      mem: {
+        rss: (process.memoryUsage().rss / 1024 / 1024).toFixed(2),
+        heapTotal: (process.memoryUsage().heapTotal / 1024 / 1024).toFixed(2),
+        heapUsed: (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)
+      }
+    });
   }
   showMem('-');
   if (global.gc) {
@@ -231,7 +252,7 @@ function logMemAfterGC() {
 
     showMem('+');
   } else {
-    utils.logStamp('  Garbage collection unavailable.  Pass --expose-gc when launching node to enable forced garbage collection.');
+    log.debug('Garbage collection unavailable.  Pass --expose-gc when launching node to enable forced garbage collection.');
   }
   return Promise.resolve(true);
 }

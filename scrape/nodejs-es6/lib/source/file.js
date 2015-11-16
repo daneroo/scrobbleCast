@@ -8,6 +8,9 @@ var fs = Promise.promisifyAll(require('fs'), {
   suffix: 'Promise'
 });
 var path = require('path');
+var log = require('../log');
+var jsonl = require('../jsonl');
+
 // a-la suffix: 'Promise'
 var globPromise = Promise.promisify(require('glob'));
 
@@ -19,25 +22,9 @@ function resolveData(file) {
   return path.resolve(dataDirname, file);
 }
 
-// TODO: make these Async/Promised
-// TODO: make this read gzipped extensions
-// TODO: validate if filename has md5 signature
-function loadJSONLines(file) {
-  var lines = fs.readFileSync(resolveData(file), 'utf8').toString().split('\n');
-  for (var i in lines) {
-    lines[i] = JSON.parse(lines[i]);
-  }
-  return lines;
-}
-
+// this version is relative to dataDirname
 function loadJSON(file) {
-  if (file.match(/\.jsonl/)) {
-    return loadJSONLines(file);
-    // return [];
-  }
-  // var result = require(resolveData(file)); // BAD
-  var result = JSON.parse(fs.readFileSync(resolveData(file)));
-  return result.episodes || result.podcasts || result;
+  return jsonl.read(resolveData(file));
 }
 
 // internal (for checking find's results)
@@ -46,16 +33,18 @@ function confirmSorted(files) {
   var lastFile;
   files.forEach(function(file) {
     if (lastFile) {
-      var ok = file > lastFile;
+      var ok = file >= lastFile;
       if (!ok) {
-        console.log('***********', lastFile, file);
+        log.verbose('confirSorted unexpected %s < %s', file, lastFile);
         sorted = false;
       }
     }
     lastFile = file;
   });
   if (!sorted) {
-    throw (new Error('files are not sorted'));
+    var msg = 'files are not sorted';
+    log.error(msg);
+    throw (new Error(msg));
   }
   return files;
 }
@@ -185,5 +174,5 @@ exports = module.exports = {
   findByDate: findByDate,
   findByUserStamp: findByUserStamp,
   iterator: iterator,
-  iteratorWithRollup:iteratorWithRollup
+  iteratorWithRollup: iteratorWithRollup
 };

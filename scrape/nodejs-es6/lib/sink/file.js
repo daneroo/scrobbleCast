@@ -8,10 +8,11 @@ var fs = Promise.promisifyAll(require('fs'), {
   suffix: 'Promise'
 });
 var path = require('path');
-var util = require('util');
-var mkdirp = require('mkdirp');
 var _ = require('lodash');
+var log = require('../log');
 var utils = require('../utils');
+// unfortunate but nee loadJSON for parsing .jsonl, for overwrite verification
+var jsonl = require('../jsonl');
 
 // globals - candidate for config
 var dataDirname = 'data';
@@ -63,61 +64,36 @@ function pathForItems(items) {
 // options:
 //  overwrite:bool allow overwriting of file with different content default:false
 //  log:bool print the md5,size and line count default:false
-// TODO Write verification needs to account for .jsonl
-// TODO options: pretty=true, gzip=true, sign=true
-// TODO split into testable components
+// TODO(daneroo) options: pretty=true, gzip=true, sign=true
 function write(filename, items, opts) {
   opts = _.merge({
     overwrite: false,
     log: false
   }, opts);
 
-  // utility function to write json, or jsonl
-  function makeJSON() {
-    var json;
-    if (filename.match(/\.jsonl$/)) {
-      if (!Array.isArray(items)) {
-        throw new Error('sink.file.write.makeJSON:items is not an array');
-      }
-      var lines = [];
-      items.forEach(function(el) {
-        lines.push(JSON.stringify(el));
-      });
-      json = lines.join('\n');
-    } else {
-      json = JSON.stringify(items, null, 2);
-    }
-    return json;
-  }
-
+  var msg;
   // skip verification if opts.overwrite:true
   if (!opts.overwrite && fs.existsSync(filename)) {
-    var olditems = JSON.parse(fs.readFileSync(filename));
+    var olditems = jsonl.read(filename);
     if (!utils.isEqualWithoutPrototypes(olditems, items)) {
-      fs.writeFileSync('bad-olditems.json', JSON.stringify(olditems, null, 2));
-      fs.writeFileSync('bad-newitems.json', JSON.stringify(items, null, 2));
-      throw new Error('sink.file.write: verify identical: overwrite prevented: ' + filename + ' ' + JSON.stringify(opts));
+      jsonl.write('bad-olditems.json', olditems);
+      jsonl.write('bad-newitems.json', items);
+      msg = 'sink.file.write: verify identical: overwrite prevented';
+      log.error(msg, {
+        file: filename,
+        opt: opts
+      });
+      throw new Error(msg);
     } else {
       if (opts.log) {
-        (function() {
-          // IIFE to scope duplicate variables, remove when we can use let
-          var json = makeJSON();
-          var numItems = (items.length) ? items.length : 1;
-          var msg = util.format('md5(%s):%s %si %sMB checked', path.basename(filename), utils.md5(json), numItems, (json.length / 1024 / 1024).toFixed(2));
-          utils.logStamp(msg);
-        })();
+        msg = 'sink.file.write: overwrite verified identical';
+        log.verbose(msg, {
+          file: path.basename(filename)
+        });
       }
     }
   } else {
-    var json = makeJSON();
-    var dir = path.dirname(filename);
-    mkdirp.sync(dir);
-    fs.writeFileSync(filename, json);
-    if (opts.log) {
-      var numItems = (items.length) ? items.length : 1;
-      var msg = util.format('md5(%s):%s %si %sMB', path.basename(filename), utils.md5(json), numItems, (json.length / 1024 / 1024).toFixed(2));
-      utils.logStamp(msg);
-    }
+    jsonl.write(filename, items, opts.log);
   }
 }
 
@@ -133,8 +109,6 @@ function writeByUserStamp(items, basepath) {
   basepath = basepath || dataDirname;
 
   var basename = pathForItems(items);
-  // announce what we are doing io.file
-  // utils.logStamp('Writing '+basename);
 
   var filename = path.join(basepath, 'byUserStamp', [basename, 'json'].join('.'));
 

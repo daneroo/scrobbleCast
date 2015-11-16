@@ -8,7 +8,6 @@
 // dependencies - core-public-internal
 var fs = require('fs');
 var path = require('path');
-var util = require('util');
 var mkdirp = require('mkdirp');
 var Promise = require('bluebird');
 var _ = require('lodash');

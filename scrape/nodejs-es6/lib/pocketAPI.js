@@ -11,6 +11,7 @@ var RateLimiter = require('limiter').RateLimiter;
 // var rp = require('request-promise');
 var retry = require('./retry');
 var Session = require('./session');
+var log = require('./log');
 var utils = require('./utils');
 
 // globals limiter might be configured, injected, credentials as well...
@@ -212,7 +213,7 @@ PocketAPI.prototype.podcastPages = function(params) {
       if (params.maxPage) {
         totalPages = Math.min(totalPages, params.maxPage);
       }
-      utils.logStamp('Fetching pages: 2..' + totalPages);
+      log.verbose('Fetching',{pages:[2,totalPages]});
 
       // otherwise append the other pages
       // [2..totalPages]

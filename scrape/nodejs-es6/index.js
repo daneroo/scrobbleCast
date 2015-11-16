@@ -7,22 +7,22 @@
 var Promise = require('bluebird');
 var PocketAPI = require('./lib/pocketAPI');
 var utils = require('./lib/utils');
+var log = require('./lib/log');
 
 var allCredentials = require('./credentials.json');
-var log = console.log;
 
 function tryemall(credentials) {
-  log('-Start', credentials.name);
+  log.info('Start', credentials.name);
   var apiSession = new PocketAPI({
     stamp: utils.stamp('minute')
   });
   return apiSession.sign_in(credentials)
     .then(apiSession.podcasts())
     .then(function(response) {
-      log('  -01-podcasts', response.length);
+      log.info('  01-podcasts', response.length);
     })
     .then(apiSession.podcastPages({
-      // maxPage:10,
+      // maxPage:3,
       // page: 1,
       // Spark from CBC Radio  05ccf3c0-1b97-012e-00b7-00163e1b201c
       uuid: '05ccf3c0-1b97-012e-00b7-00163e1b201c'
@@ -32,22 +32,22 @@ function tryemall(credentials) {
       // uuid:'89beea90-5edf-012e-25b7-00163e1b201c'
     }))
     .then(function(response) {
-      log('  -02-podcasts', response.length);
+      log.info('  02-podcasts', response.length);
     })
     .then(apiSession.new_releases())
     .then(function(response) {
-      log('  -03-new_releases', response.length);
+      log.info('  03-new_releases', response.length);
     })
     .then(apiSession.in_progress())
     .then(function(response) {
-      log('  -04-in_progress', response.length);
+      log.info('  04-in_progress', response.length);
     })
     .then(function(response) {
-      log('-Done', credentials.name);
+      log.info('Done', credentials.name);
       return credentials.name;
     })
     .catch(function(error) {
-      log('-Error', JSON.stringify(error,null,2));
+      log.info('Error', JSON.stringify(error,null,2));
       // throw error;
       return credentials.name;
     });
@@ -60,10 +60,14 @@ function iteration() {
     // return tasks.shallow(credentials);
     // return tasks.deep(credentials);
   }).then(function() {
-    log('Done all');
+    log.info('Done all');
   });
 
 }
 
 iteration();
-setInterval(iteration, 10000);
+var itvl = setInterval(iteration, 10000);
+// run thrice
+setTimeout(function(){
+  clearInterval(itvl);
+},30000);

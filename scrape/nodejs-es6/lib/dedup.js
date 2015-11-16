@@ -12,7 +12,7 @@ var util = require('util');
 var mkdirp = require('mkdirp');
 var Promise = require('bluebird');
 var _ = require('lodash');
-var utils = require('./utils');
+var log = require('./log');
 var srcFile = require('./source/file');
 var sinkFile = require('./sink/file');
 var delta = require('./delta');
@@ -33,7 +33,7 @@ function dedupTask(credentials) {
 
       // TODO use datadir
       if (!fs.existsSync('data/rollup/byUserStamp')) {
-        utils.logStamp('Rollup: not accelerated');
+        log.verbose('Rollup: not accelerated');
         return Promise.resolve(true);
       }
       // Read and accumulate items from 'rollup'
@@ -43,14 +43,15 @@ function dedupTask(credentials) {
         var changeCount = historyByType.merge(item);
         // if I want to check for dedupedness, need to account for first view of items
         if (changeCount === 0) {
-          var msg = util.format('Undeduped item in rollup file: %s item:%j',file,item);
+          var msg = 'Undeduped item in rollup file';
+          log.error(msg, {file:file, item:item});
           throw new Error(msg);
         }
         return Promise.resolve(true);
       }
       return srcFile.iterator('rollup', [credentials], itemHandler, '**/*.json?(l)')
         .then(function(counts) {
-          utils.logStamp('Rollup: accelerated up to: ' + maxStamp);
+          log.info('Rollup: accelerated ',{maxStamp:maxStamp});
           return counts; // although we aren using it here yet...
         });
     })
@@ -116,8 +117,9 @@ function dedupTask(credentials) {
       return true;
     })
     .catch(function(error) { // TODO: might remove this altogether
-      console.error('Error:Dedup', error);
-      utils.logStamp('Error:Dedup ' + error);
+      log.error('Dedup ', {
+        error: error
+      });
       throw error;
     });
 }

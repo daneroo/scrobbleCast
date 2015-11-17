@@ -12,10 +12,11 @@ log.verbose('Starting LogCheck');
 // Find items logged between today and yesterday.
 //
 logcheck.getMD5Records()
+  // .then(showRecords) // show raw data
+  .then(aggRecords)
   .then(function(records) {
-    showRecords(records);
-    aggRecords(records);
     log.verbose('records:%s', records.length);
+    return records;
   })
   .catch(function(error) {
     log.error('logcheck: %s', error);
@@ -23,38 +24,73 @@ logcheck.getMD5Records()
 
 function aggRecords(records) {
   // return;
-  var types = distinct(records, 'type').reverse();
-  var users = distinct(records, 'user');
-  var hosts = distinct(records, 'host');
+  var types = distinct(records, 'type'); //.reverse();
+  var users = distinct(records, 'user'); // these are sorted
+  var hosts = distinct(records, 'host'); // these are sorted
 
-  function emptyHostMap() {
+  function emptyHostMap() { // function bound to hosts, which is an array
     return _.reduce(hosts, function(result, value, key) {
-      result[value] = '';
+      result[value] = '-no value-';
       return result;
     }, {});
   }
 
+  // map [{stamp, host, user, type, md5}] - array of obj
+  // to [[ stamp, host1-md5,.. hostn-md5]] - array of arrays
+  // first filtering for a specific user and type
+  function makeTableStampByHost(u, t) { // function is bound to records
+    var md5byStampByHost = {};
+    _(records).filter({
+      user: u,
+      type: t
+    }).each(function(r) {
+      md5byStampByHost[r.stamp] = md5byStampByHost[r.stamp] || emptyHostMap();
+      md5byStampByHost[r.stamp][r.host] = r.md5;
+    });
+
+    var rows = [];
+    _.keys(md5byStampByHost).sort().forEach(function(stamp) {
+      var row = [stamp];
+      _.keys(md5byStampByHost[stamp]).sort().forEach(function(host) {
+        var md5 = md5byStampByHost[stamp][host];
+        row.push(md5);
+      });
+      rows.push(row);
+    });
+    return rows;
+  }
+
   types.forEach(function(t) {
     users.forEach(function(u) {
-      var md5byStampByHost = {};
-      _(records).filter({
-        user: u,
-        type: t
-      }).each(function(r) {
-        md5byStampByHost[r.stamp] = md5byStampByHost[r.stamp] || emptyHostMap();
-        md5byStampByHost[r.stamp][r.host] = r.md5;
-      });
-      var table = newTable([u + '-' + t].concat(hosts));
-      _.forEach(md5byStampByHost, function(dummy, stamp) {
-        var row = [stamp];
-        _.forEach(md5byStampByHost[stamp], function(md5) {
-          row.push(md5);
+      var rows = makeTableStampByHost(u, t);
+
+
+      // reformat
+      rows = rows.map(row => {
+        // adjust the output each row in stamp, md5,md5
+        return  row.map((v, idx) => {
+          if (idx === 0) {
+            // return v.substr(11,5); // too short
+            return v;
+          }
+          return v.substr(0,7); // a la github
         });
+      });
+
+      // now the ouput
+      var shortHosts = hosts.map(host => {
+        return host.split('.')[0];
+      });
+      var header = [u + '-' + t].concat(shortHosts);
+      var table = newTable(header);
+      rows.forEach(row => {
         table.push(row);
       });
       console.log(table.toString());
     });
   });
+
+  return records;
 }
 
 function distinct(records, field) {
@@ -63,28 +99,42 @@ function distinct(records, field) {
     var value = r[field];
     values[value] = true;
   });
-  return Object.keys(values);
+  return Object.keys(values).sort();
 }
 
+// Just print th records in a table, possible elipse to remove middle rows...
 function showRecords(records) {
-  // records = records.slice(0, 2).concat(records.slice(-2));
-  var dotdotdot = {
-    stamp: '.',
-    host: '.',
-    user: '.',
-    type: '.',
-    md5: ','
-  };
-  records = records.slice(0, 2).concat(dotdotdot, records.slice(-2));
+  var origRecords = records; // needs to be returned to the promise chain
+  if (!records || !records.length) {
+    return origRecords;
+  }
+
+  var ellipsis = false;
+  var howMany = 3;
+  if (ellipsis && records.length > (howMany * 2)) {
+    var dotdotdot = blankedObject(records[0], '.');
+    records = records.slice(0, howMany).concat(dotdotdot, records.slice(-howMany));
+  }
+
   var table = newTable(['stamp', 'host', 'user', 'type', 'md5']);
   records.forEach(function(r) {
     var record = [r.stamp, r.host, r.user, r.type, r.md5];
     table.push(record);
   });
   console.log(table.toString());
-
+  return origRecords;
 }
 
+// Utility to create an object with same keys, but default values
+function blankedObject(obj, defaultValue) {
+  defaultValue = defaultValue === undefined ? '' : defaultValue;
+  return _.reduce(obj, function(result, value, key) {
+    result[key] = defaultValue;
+    return result;
+  }, {});
+}
+
+// Utility to create our formatted table
 function newTable(head) {
   // var table = new Table();
   var table = new Table({
@@ -97,8 +147,4 @@ function newTable(head) {
     }
   });
   return table;
-}
-
-function prettylog(o) {
-  console.log(JSON.stringify(o, null, 2));
 }

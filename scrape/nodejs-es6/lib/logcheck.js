@@ -30,7 +30,7 @@ function getMD5Records() {
     until: 'now',
     // max size is about 1728=12*24*6, entiresPerRun*24h(retention) * 6runs/hour
     // at 12 entries per task run: 2 type * 2 users * 3 hosts, so this is 36 runs, or 6 hours.
-    size: 60 //432
+    size: 432
   };
 
   return queryLoggly(md5SearchOptions)
@@ -67,9 +67,9 @@ function parseMD5Entries(entries) {
 
   // entries.reverse();
   entries.forEach(function(entry) {
+    // stamp is rounded to 10min so we can match entries.
     var stamp = new Date(entry.timestamp).toJSON();
-    // stamp = stamp.substr(11); // just the time +Z
-    stamp = stamp.replace(/[0-9]:[0-9][0-9](\.[0-9]*)?Z$/, '0'); // round down to 10:00, remove seconds
+    stamp = stamp.replace(/[0-9]:[0-9][0-9](\.[0-9]*)?Z$/, '0:00Z'); // round down to 10:00
 
     // get user,type e.g.: file=history-daniel-podcast.json
     var file = entry.event.json.file;
@@ -86,7 +86,6 @@ function parseMD5Entries(entries) {
 
     // host from tags: [ 'pocketscrape', 'host-darwin.imetrical.com' ]
     var host = _.filter(entry.tags, tag => tag.match(/^host-/))[0].replace(/^host-/, '');
-    host = host.split('.')[0]; // basename: remove .imetrical.com
 
     var record = {
       stamp: stamp,

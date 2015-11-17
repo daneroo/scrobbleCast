@@ -1,54 +1,17 @@
 'use strict';
 
 // dependencies - core-public-internal
-// var Promise = require('bluebird');
-var log = require('./lib/log');
-var winston = require('winston');
 var _ = require('lodash');
+var Table = require('cli-table');
+var log = require('./lib/log');
+var logcheck = require('./lib/logcheck');
+
 log.verbose('Starting LogCheck');
-
-// defaults
-// context.from  = context.from  || '-1d';
-// context.until = context.until || 'now';
-// context.size  = context.size  || 50;
-
-var maxPage = 0;
-
-function getPage(page, callback, events) {
-  events = events || [];
-  var options = {
-    from: new Date() - 1 * 60 * 60 * 1000,
-    until: new Date(),
-    limit: 50,
-    start: page,
-    order: 'desc',
-    query: 'tag:pocketscrape AND json.md5 json.file:history-*',
-    fields: ['message']
-  };
-  winston.query(options, function(err, results) {
-    if (err) {
-      throw err;
-    }
-    prettylog({
-      totalSoFar: events.length,
-      added: results.loggly.events.length,
-      page: results.loggly.page,
-      total_events: results.loggly.total_events
-    });
-    events = events.concat(results.loggly.events);
-    if (page >= maxPage) {
-      callback(events);
-    } else {
-      getPage(page + 1, callback, events);
-    }
-  });
-
-}
 
 //
 // Find items logged between today and yesterday.
 //
-getPage(0, function(events) {
+logcheck.query(function(events) {
   var records = [];
   // var events = results.loggly.events;
 
@@ -66,10 +29,10 @@ getPage(0, function(events) {
     }
 
     var stamp = new Date(entry.timestamp).toJSON();
-    stamp = stamp.substr(11, 8); // just the time
-    stamp = stamp.replace(/[0-9]:[0-9][0-9]$/, '0:00'); // round down to 10:00
+    // stamp = stamp.substr(11); // just the time +Z
+    stamp = stamp.replace(/[0-9]:[0-9][0-9](\.[0-9]*)?Z$/, '0'); // round down to 10:00, remove seconds
     var host = _.filter(entry.tags, tag => tag.match(/^host-/))[0].replace(/^host-/, '');
-    // host = host.split('.')[0]; // basename
+    host = host.split('.')[0]; // basename
     var record = {
       stamp: stamp,
       host: host,
@@ -135,9 +98,16 @@ function distinct(records, field) {
 }
 
 function showRecords(records) {
-  records = records.slice(0, 2).concat(records.slice(-2));
-
-  var table = newTable();
+  // records = records.slice(0, 2).concat(records.slice(-2));
+  var dotdotdot = {
+    stamp: '.',
+    host: '.',
+    user: '.',
+    type: '.',
+    md5: ','
+  };
+  records = records.slice(0, 2).concat(dotdotdot,records.slice(-2));
+  var table = newTable(['stamp', 'host', 'user', 'type', 'md5']);
   records.forEach(function(r) {
     var record = [r.stamp, r.host, r.user, r.type, r.md5];
     table.push(record);
@@ -147,7 +117,6 @@ function showRecords(records) {
 }
 
 function newTable(head) {
-  var Table = require('cli-table');
   // var table = new Table();
   var table = new Table({
     head: head || [],

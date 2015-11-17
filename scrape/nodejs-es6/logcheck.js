@@ -11,46 +11,15 @@ log.verbose('Starting LogCheck');
 //
 // Find items logged between today and yesterday.
 //
-logcheck.query(function(events) {
-  var records = [];
-  // var events = results.loggly.events;
-
-  // delete results.loggly.events;
-  // prettylog(results);
-
-  // events.reverse();
-  events.forEach(function(entry) {
-    entry = _.pick(entry, ['timestamp', 'tags', 'event']);
-    entry.event = _.pick(entry.event, ['json']);
-    var parts = entry.event.json.file.replace(/\.json$/, '').split('-');
-    if (parts.length === 3) {
-      entry.event.json.user = parts[1];
-      entry.event.json.type = parts[2];
-    }
-
-    var stamp = new Date(entry.timestamp).toJSON();
-    // stamp = stamp.substr(11); // just the time +Z
-    stamp = stamp.replace(/[0-9]:[0-9][0-9](\.[0-9]*)?Z$/, '0'); // round down to 10:00, remove seconds
-    var host = _.filter(entry.tags, tag => tag.match(/^host-/))[0].replace(/^host-/, '');
-    host = host.split('.')[0]; // basename
-    var record = {
-      stamp: stamp,
-      host: host,
-      user: entry.event.json.user,
-      type: entry.event.json.type,
-      md5: entry.event.json.md5.substr(0, 7),
-    };
-
-    records.push(record);
-    // prettylog(entry);
-    // console.log(JSON.stringify(record));
+logcheck.getMD5Records()
+  .then(function(records) {
+    showRecords(records);
+    aggRecords(records);
+    log.verbose('records:%s', records.length);
+  })
+  .catch(function(error) {
+    log.error('logcheck: %s', error);
   });
-
-  showRecords(records);
-  aggRecords(records);
-  log.verbose('results:%s', events.length);
-
-});
 
 function aggRecords(records) {
   // return;
@@ -106,7 +75,7 @@ function showRecords(records) {
     type: '.',
     md5: ','
   };
-  records = records.slice(0, 2).concat(dotdotdot,records.slice(-2));
+  records = records.slice(0, 2).concat(dotdotdot, records.slice(-2));
   var table = newTable(['stamp', 'host', 'user', 'type', 'md5']);
   records.forEach(function(r) {
     var record = [r.stamp, r.host, r.user, r.type, r.md5];

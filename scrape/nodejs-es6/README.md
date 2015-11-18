@@ -8,10 +8,11 @@
 * Try using ES6
 
 ## Docker
+This needs a compose file!
 
   docker build -t daneroo/pocketscrape .
   # if you want it interactive: docker run -it --rm ...
-  docker run -itd -v $(pwd)/credentials.json:/usr/src/app/credentials.json -v $(pwd)/data:/usr/src/app/data daneroo/pocketscrape node cron.js
+  docker run -itd -v $(pwd)/credentials.json:/usr/src/app/credentials.json -v $(pwd)/credentials.loggly.json:/usr/src/app/credentials.loggly.json -v $(pwd)/data:/usr/src/app/data daneroo/pocketscrape node cron.js
   docker exec -it <container id> bash
 
 ### PostgreSQL

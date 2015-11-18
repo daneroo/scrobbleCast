@@ -58,7 +58,7 @@ function aggRecords(records) {
     }).each(function(r) {
       var stamp = r.stamp;
       // stamp is rounded to 10min so we can match entries.
-      stamp = stamp.replace(/[0-9]:[0-9][0-9](\.[0-9]*)?Z$/, '0:00Z'); // round down to 10:00
+      stamp = stamp.replace(/[0-9]:[0-9]{2}(\.[0-9]*)?Z$/, '0:00Z'); // round down to 10:00
 
       md5byStampByHost[stamp] = md5byStampByHost[stamp] || emptyHostMap();
       //TODO(daneroo) prevent overwrite - if we assume descending order.

@@ -62,6 +62,7 @@ function detectMismatch(records) {
     });
     var host = record.host;
     result[userType] = result[userType] || {};
+    // don't overwrite, since we want the latest, and assume descending stamp ordering
     if (!result[userType][host]) {
       result[userType][host] = record.md5;
     }
@@ -69,14 +70,23 @@ function detectMismatch(records) {
   }, {});
   // console.log(latestForUserTypeThenHost);
 
+  var anyFailures = false;
   _.forEach(latestForUserTypeThenHost, (byHost, userType) => {
     // byHost is the map of md5 for each host (for the current userType)
     var allMatch = _.uniq(_.values(byHost)).length === 1;
     if (!allMatch) {
+      anyFailures = true;
       var describe = _.merge(JSON.parse(userType), byHost);
       log.warn('logcheck signature mismatch', describe);
     }
   });
+  if (!anyFailures) {
+    var hostCount = _.size(_.countBy(records, r => r.host))
+    log.info('logcheck signature matches confirmed', {
+      hostCount: hostCount,
+      logRecords:records.length
+    });
+  }
   // return for the promise chain
   return records;
 }

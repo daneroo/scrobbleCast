@@ -16,7 +16,9 @@ var log = require('./log');
 
 exports = module.exports = {
   // query: queryLoggly, // need to parametrized before being exposed
-  getMD5Records: getMD5Records
+  detectMismatchTask: detectMismatchTask,
+  getMD5Records: getMD5Records,
+  detectMismatch: detectMismatch
 };
 
 var config = JSON.parse(fs.readFileSync('credentials.loggly.json').toString());
@@ -37,6 +39,46 @@ function getMD5Records() {
   return queryLoggly(md5SearchOptions)
     .then(parseMD5Entries);
 
+}
+
+// TODO(daneroo) include latest stamp information
+// convenience to be run from task.
+// run the query, detection and log it!
+function detectMismatchTask() {
+  return getMD5Records()
+    .then(detectMismatch);
+}
+
+// Simply logs as error, which sends it back to loggly
+// This detects if hash signatures match across reporting hosts, for each user/type
+//  ignore stamps for now, just compare latests
+function detectMismatch(records) {
+  // find the latest entry (first if we assume desc stamp order)
+  // for each user/type combination
+  var latestForUserTypeThenHost = records.reduce((result, record) => {
+    var userType = JSON.stringify({
+      user: record.user,
+      type: record.type
+    });
+    var host = record.host;
+    result[userType] = result[userType] || {};
+    if (!result[userType][host]) {
+      result[userType][host] = record.md5;
+    }
+    return result;
+  }, {});
+  // console.log(latestForUserTypeThenHost);
+
+  _.forEach(latestForUserTypeThenHost, (byHost, userType) => {
+    // byHost is the map of md5 for each host (for the current userType)
+    var allMatch = _.uniq(_.values(byHost)).length === 1;
+    if (!allMatch) {
+      var describe = _.merge(JSON.parse(userType), byHost);
+      log.warn('logcheck signature mismatch', describe);
+    }
+  });
+  // return for the promise chain
+  return records;
 }
 
 // This function uses the node-loggly module directly, instead of winston-loggly

@@ -14,14 +14,24 @@ var log = require('./log');
 var utils = require('./utils');
 var sinkFile = require('./sink/file');
 var dedupTask = require('./dedup').dedupTask;
+var detectMismatchTask = require('./logcheck').detectMismatchTask;
 
 // Exported API
 exports = module.exports = {
+  logcheck: logcheck,
   dedup: dedup,
   quick: quick,
   shallow: shallow,
   deep: deep
 };
+
+function logcheck() {
+  lifecycle('logcheck', 'start', 'admin');
+  return detectMismatchTask()
+    .then(function() {
+      lifecycle('logcheck', 'done', 'admin');
+    });
+}
 
 function dedup(credentials) {
   var start = +new Date();

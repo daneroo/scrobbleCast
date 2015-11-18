@@ -28,8 +28,8 @@ var recurrence = {
   everyTenExceptOnTheHour: '10 10-59/10 * * * *',
   // everyHourOnTheHour: '10 0 * * * *',
   // everyTenMinutesOffsetByThree: '10 3-59/10 * * * *',
-  // everyTenMinutesOffsetByFour: '10 4-59/10 * * * *',
-  everyMinute: '10 * * * * *'
+  everyTenMinutesOffsetByFour: '10 4-59/10 * * * *',
+  // everyMinute: '10 * * * * *'
 };
 
 // serial execution of <task> for each credentialed user
@@ -48,10 +48,14 @@ function forEachUser(task) {
   };
 }
 // auto-starts
-function runJob(task, when) {
+function runJob(task, when, perUser) {
   var message = 'Starting CronJob:';
   if (task.name) { // depends on the finction having been defined non-anonymously
     message += ' ' + task.name;
+  }
+  if (perUser) { // depends on the finction having been defined non-anonymously
+    message += ' ' + '(user)';
+    task = forEachUser(task);
   }
   message += ' ' + when;
 
@@ -60,7 +64,7 @@ function runJob(task, when) {
   var job = new CronJob({
     // timeZone: "America/Montreal" // npm install time, if you want to use TZ
     cronTime: when,
-    onTick: forEachUser(task),
+    onTick: task,
     start: true // default is true, else, if start:false, use job.start()
   });
   return job; // if you ever want to stop it.
@@ -68,10 +72,10 @@ function runJob(task, when) {
 
 log.info('Starting Cron');
 // auto-start all three
-runJob(tasks.deep, recurrence.everyDayAtMidnight); // var deep = ...
-runJob(tasks.shallow, recurrence.everyHourExceptMidnight); // var shallow =
-runJob(tasks.quick, recurrence.everyTenExceptOnTheHour); // var quick =
-// runJob(tasks.quick,   recurrence.everyMinute); // var quick =
+runJob(tasks.deep, recurrence.everyDayAtMidnight, true); // var deep = ...
+runJob(tasks.shallow, recurrence.everyHourExceptMidnight, true); // var shallow =
+runJob(tasks.quick, recurrence.everyTenExceptOnTheHour, true); // var quick =
+runJob(tasks.logcheck, recurrence.everyTenMinutesOffsetByFour, false); // var logcheck =
 
 // make this process hang around
 // closing stdin (^D/EOF) will exit.

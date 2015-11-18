@@ -15,6 +15,7 @@ log.verbose('Starting LogCheck');
 logcheck.getMD5Records()
   // .then(showRecords) // show raw data
   .then(aggRecords)
+  .then(logcheck.detectMismatch)
   .then(function(records) {
     log.verbose('records:%s', records.length);
     return records;

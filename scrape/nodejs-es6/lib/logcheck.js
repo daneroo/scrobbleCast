@@ -28,6 +28,7 @@ function getMD5Records() {
     query: 'tag:pocketscrape AND json.md5 AND json.file:history-*',
     from: '-24h',
     until: 'now',
+    order: 'desc', // which is the default
     // max size is about 1728=12*24*6, entiresPerRun*24h(retention) * 6runs/hour
     // at 12 entries per task run: 2 type * 2 users * 3 hosts, so this is 36 runs, or 6 hours.
     size: 432
@@ -65,11 +66,9 @@ function queryLoggly(searchOptions) {
 function parseMD5Entries(entries) {
   var records = [];
 
-  // entries.reverse();
   entries.forEach(function(entry) {
-    // stamp is rounded to 10min so we can match entries.
+    // stamp is no longer rounded here: moved to aggregator function
     var stamp = new Date(entry.timestamp).toJSON();
-    stamp = stamp.replace(/[0-9]:[0-9][0-9](\.[0-9]*)?Z$/, '0:00Z'); // round down to 10:00
 
     // get user,type e.g.: file=history-daniel-podcast.json
     var file = entry.event.json.file;

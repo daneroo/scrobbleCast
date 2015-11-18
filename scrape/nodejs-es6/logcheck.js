@@ -3,6 +3,7 @@
 // dependencies - core-public-internal
 var _ = require('lodash');
 var Table = require('cli-table');
+var colors = require('colors/safe'); // don't touch String prototype
 var log = require('./lib/log');
 var logcheck = require('./lib/logcheck');
 
@@ -22,8 +23,18 @@ logcheck.getMD5Records()
     log.error('logcheck: %s', error);
   });
 
+// TODO(daneroo) refactor some more
+// put the aggregation and data production into lib, but not the table stuff
+// TODO(daneroo) in the unlikely event that more than one value is present for the same stamp,
+//   we might want to ensure we have the latest value... (assume or ensure sort order)
+//   e.g. break one, and resubmit with manual dedup.
+// TODO(daneroo) what if we have -no value- in comparison
+
+// group by stamp rounded to 10min
+// deduplicate, or find first match
+// this function assumes that incoming records are descending
 function aggRecords(records) {
-  // return;
+  // records.reverse();
   var types = distinct(records, 'type'); //.reverse();
   var users = distinct(records, 'user'); // these are sorted
   var hosts = distinct(records, 'host'); // these are sorted
@@ -44,12 +55,18 @@ function aggRecords(records) {
       user: u,
       type: t
     }).each(function(r) {
-      md5byStampByHost[r.stamp] = md5byStampByHost[r.stamp] || emptyHostMap();
-      md5byStampByHost[r.stamp][r.host] = r.md5;
+      var stamp = r.stamp;
+      // stamp is rounded to 10min so we can match entries.
+      stamp = stamp.replace(/[0-9]:[0-9][0-9](\.[0-9]*)?Z$/, '0:00Z'); // round down to 10:00
+
+      md5byStampByHost[stamp] = md5byStampByHost[stamp] || emptyHostMap();
+      //TODO(daneroo) prevent overwrite - if we assume descending order.
+      md5byStampByHost[stamp][r.host] = r.md5;
     });
 
     var rows = [];
-    _.keys(md5byStampByHost).sort().forEach(function(stamp) {
+    // keep the table in reverse chronological order
+    _.keys(md5byStampByHost).sort().reverse().forEach(function(stamp) {
       var row = [stamp];
       _.keys(md5byStampByHost[stamp]).sort().forEach(function(host) {
         var md5 = md5byStampByHost[stamp][host];
@@ -64,20 +81,31 @@ function aggRecords(records) {
     users.forEach(function(u) {
       var rows = makeTableStampByHost(u, t);
 
-
       // reformat
       rows = rows.map(row => {
-        // adjust the output each row in stamp, md5,md5
-        return  row.map((v, idx) => {
+        // adjust the output each row in stamp, md5,md5,..
+        return row.map((v, idx) => {
           if (idx === 0) {
             // return v.substr(11,5); // too short
             return v;
           }
-          return v.substr(0,7); // a la github
+          return v.substr(0, 7); // a la github
         });
       });
 
-      // now the ouput
+      // keep only until first match
+      var foundIdentical = false;
+      rows = rows.filter((row) => {
+        // is all md5's are equal (1 distinct vale)
+        if (!foundIdentical && _.uniq(row.slice(1)).length === 1) {
+          foundIdentical = true;
+          row[0] = colors.green(row[0]);
+          return true;
+        }
+        return !foundIdentical;
+      });
+
+      // now the ouput - as table
       var shortHosts = hosts.map(host => {
         return host.split('.')[0];
       });

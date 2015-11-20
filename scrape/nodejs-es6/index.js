@@ -14,11 +14,16 @@ var allCredentials = require('./credentials.json');
 function tryemall(credentials) {
   log.info('Start', credentials.name);
   var apiSession = new PocketAPI({
-    stamp: utils.stamp('minute')
+    stamp: utils.stamp('10minutes')
   });
   return apiSession.sign_in(credentials)
     .then(apiSession.podcasts())
     .then(function(response) {
+      if (response && response.length > 0) {
+        log.verbose('Observed stamp', {
+          stamp: response[0].__stamp
+        });
+      }
       log.info('  01-podcasts', response.length);
     })
     .then(apiSession.podcastPages({
@@ -26,10 +31,10 @@ function tryemall(credentials) {
       // page: 1,
       // Spark from CBC Radio  05ccf3c0-1b97-012e-00b7-00163e1b201c
       uuid: '05ccf3c0-1b97-012e-00b7-00163e1b201c'
-      // TNT
-      // uuid: '77170eb0-0257-012e-f994-00163e1b201c'
-      // Wachtel on the Arts from CBC Radio's Ideas
-      // uuid:'89beea90-5edf-012e-25b7-00163e1b201c'
+        // TNT
+        // uuid: '77170eb0-0257-012e-f994-00163e1b201c'
+        // Wachtel on the Arts from CBC Radio's Ideas
+        // uuid:'89beea90-5edf-012e-25b7-00163e1b201c'
     }))
     .then(function(response) {
       log.info('  02-podcasts', response.length);
@@ -47,7 +52,7 @@ function tryemall(credentials) {
       return credentials.name;
     })
     .catch(function(error) {
-      log.info('Error', JSON.stringify(error,null,2));
+      log.info('Error', JSON.stringify(error, null, 2));
       // throw error;
       return credentials.name;
     });
@@ -68,6 +73,6 @@ function iteration() {
 iteration();
 var itvl = setInterval(iteration, 10000);
 // run thrice
-setTimeout(function(){
+setTimeout(function() {
   clearInterval(itvl);
-},30000);
+}, 30000);

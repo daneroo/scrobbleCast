@@ -5,12 +5,16 @@ var crypto = require('crypto');
 var _ = require('lodash');
 var log = require('./log');
 
-// expect to be called with 'minute','second' or no param (millis)
+// expect to be called with '10minutes','minute','second' or no param (millis)
 // return an iso-8601 string
 function stamp(grain) {
   var now = new Date();
   if (grain === 'minute') {
     now.setSeconds(0);
+  }
+  if (grain === '10minutes') {
+    now.setSeconds(0);
+    now.setMinutes(Math.floor(now.getMinutes() / 10) * 10);
   }
   if (!grain) {
     // iso8601, keep millis

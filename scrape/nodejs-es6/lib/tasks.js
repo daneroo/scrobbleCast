@@ -46,7 +46,7 @@ function dedup(credentials) {
 function quick(credentials) {
   lifecycle('quick', 'start', credentials.name);
   var apiSession = new PocketAPI({
-    stamp: utils.stamp('minute')
+    stamp: utils.stamp('10minutes')
   });
   return apiSession.sign_in(credentials)
     .then(quickWithSession(apiSession))
@@ -102,7 +102,7 @@ function quickWithSession(apiSession) {
 function scrape(credentials, isDeep) {
   // this shoulbe isolated/shared in Session: return by sign_in.
   var apiSession = new PocketAPI({
-    stamp: utils.stamp('minute')
+    stamp: utils.stamp('10minutes')
   });
   var mode = isDeep ? 'deep' : 'shallow';
   lifecycle(mode, 'start', credentials.name); // ? apiSession.stamp

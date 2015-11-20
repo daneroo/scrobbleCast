@@ -24,6 +24,10 @@ function PocketAPI(options) {
   this.user = null; // set by sign_in
   // maybe default stamp should be time of fetch not time of session init...
   this.stamp = (options && options.stamp) ? options.stamp : utils.stamp('minute');
+  log.verbose('PocketAPI:Injecting stamp', {
+    stamp: this.stamp
+  });
+
 }
 
 // the actual endpoints
@@ -41,7 +45,9 @@ PocketAPI.prototype._fetch = function(path, params) {
   var self = this;
   var verbose = false;
   if (verbose && params && params.page) {
-    log.debug('fetching', {page:params.page});
+    log.debug('fetching', {
+      page: params.page
+    });
   }
   return speedLimit()
     .then(function() {
@@ -213,7 +219,9 @@ PocketAPI.prototype.podcastPages = function(params) {
       if (params.maxPage) {
         totalPages = Math.min(totalPages, params.maxPage);
       }
-      log.debug('Fetching',{pages:[2,totalPages]});
+      log.debug('Fetching', {
+        pages: [2, totalPages]
+      });
 
       // otherwise append the other pages
       // [2..totalPages]

@@ -4,6 +4,7 @@
 // Can use it to test under request error conditions
 
 // dependencies - core-public-internal
+var os = require('os');
 var Promise = require('bluebird');
 var PocketAPI = require('./lib/pocketAPI');
 var utils = require('./lib/utils');
@@ -12,6 +13,9 @@ var log = require('./lib/log');
 var allCredentials = require('./credentials.json');
 
 function tryemall(credentials) {
+  log.info('Scrape Smoke Test', {
+    host: os.hostname()
+  });
   log.info('Start', credentials.name);
   var apiSession = new PocketAPI({
     stamp: utils.stamp('10minutes')
@@ -31,10 +35,10 @@ function tryemall(credentials) {
       // page: 1,
       // Spark from CBC Radio  05ccf3c0-1b97-012e-00b7-00163e1b201c
       uuid: '05ccf3c0-1b97-012e-00b7-00163e1b201c'
-        // TNT
-        // uuid: '77170eb0-0257-012e-f994-00163e1b201c'
-        // Wachtel on the Arts from CBC Radio's Ideas
-        // uuid:'89beea90-5edf-012e-25b7-00163e1b201c'
+      // TNT
+      // uuid: '77170eb0-0257-012e-f994-00163e1b201c'
+      // Wachtel on the Arts from CBC Radio's Ideas
+      // uuid:'89beea90-5edf-012e-25b7-00163e1b201c'
     }))
     .then(function(response) {
       log.info('  02-podcasts', response.length);

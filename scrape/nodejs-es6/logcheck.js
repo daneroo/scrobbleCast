@@ -86,9 +86,8 @@ function aggRecords(records) {
       rows = rows.map(row => {
         // adjust the output each row in stamp, md5,md5,..
         return row.map((v, idx) => {
-          if (idx === 0) {
-            // return v.substr(11,5); // too short
-            return v;
+          if (idx === 0) { // this is the stamp
+            return shortDate(v);
           }
           return v.substr(0, 7); // a la github
         });
@@ -120,6 +119,23 @@ function aggRecords(records) {
   });
 
   return records;
+}
+
+// General way of formatting dates, for timezone and proper formating,
+// For now since I'm still using GMT, substr on the stamp is OK.
+function shortDate(stampStr) {
+  return stampStr.substr(11, 9);
+  // Weekday+ shortTime in local timezone
+  // var stamp = new Date(stampStr);
+  // var opts = {
+  //   timeZone: 'America/Montreal', // 'UTC'
+  //   timeZoneName: 'short',
+  //   weekday: 'short',
+  //   hour: 'numeric',
+  //   hour12: false,
+  //   minute: 'numeric'
+  // };
+  // return stamp.toLocaleString('en-US', opts);
 }
 
 function distinct(records, field) {

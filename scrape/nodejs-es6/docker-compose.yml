@@ -4,10 +4,15 @@
 scrape:
   # container_name: scrape
   build: .
+
   environment:
     # no value inherits from host (but not docker-machine host...)
     - HOSTNAME
     # - KEY=value
+
+  command: node cron.js
+  # command: node logcheck.js
+
   volumes:
     - ./credentials.json:/usr/src/app/credentials.json:ro
     - ./credentials.loggly.json:/usr/src/app/credentials.loggly.json:ro

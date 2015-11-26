@@ -7,6 +7,7 @@
 // dependencies - core-public-internal
 var util = require('util');
 var Promise = require('bluebird');
+var _ = require('lodash');
 var utils = require('./lib/utils');
 var srcFile = require('./lib/source/file');
 var delta = require('./lib/delta');
@@ -23,7 +24,7 @@ Promise.promisifyAll(pg);
 // @todo promosify pools
 
 // globals
-var allCredentials = require('./credentials.json');
+var allCredentials = require('./credentials.json').slice(0, 1);
 
 // var connectionString = 'postgres://docker:5432@localhost/postgres';
 var connectionString = 'postgres://postgres@docker/scrobblecast';
@@ -80,14 +81,32 @@ function initDB() {
       log('%j', result);
     })
     .then(function() {
-      var ddl = 'CREATE TABLE items ( __user varchar(255), __stamp timestamp with time zone, __type varchar(255), uuid  varchar(255), __sourceType varchar(255), item json )';
+      var ddl = [
+        'CREATE TABLE items ( ',
+        '__user varchar(255), ',
+        '__stamp timestamp with time zone, ',
+        '__type varchar(255), ',
+        'uuid  varchar(255), ',
+        '__sourceType varchar(255), ',
+        'item json, ',
+        'CONSTRAINT primary_idx PRIMARY KEY(__user, __stamp, __type, uuid, __sourceType) ',
+        ')'
+      ].join('');
       return ddlSilent(ddl);
     })
-    .then(function() {
-      // var ddl = 'ALTER TABLE items ADD CONSTRAINT noduplicates UNIQUE (__user, __stamp, __type, uuid, __sourceType)';
-      var ddl = 'ALTER TABLE items ADD UNIQUE (__user, __stamp, __type, uuid, __sourceType)';
-      return ddlSilent(ddl);
-    })
+    // .then(function(){
+    //   var ddl = 'CREATE UNIQUE INDEX master_unique_idx ON items (__user, __stamp, __type, uuid, __sourceType)';
+    //   return ddlSilent(ddl);
+    // })
+    // .then(function(){
+    //   var ddl = 'CREATE UNIQUE INDEX master_unique_idx ON items (__user, __stamp, __type, uuid, __sourceType)';
+    //   return ddlSilent(ddl);
+    // })
+    // .then(function() {
+    //   // var ddl = 'ALTER TABLE items ADD CONSTRAINT noduplicates UNIQUE (__user, __stamp, __type, uuid, __sourceType)';
+    //   var ddl = 'ALTER TABLE items ADD UNIQUE (__user, __stamp, __type, uuid, __sourceType)';
+    //   return ddlSilent(ddl);
+    // })
     .then(function(rows) {
       // throw new Error('Early exit');
     });
@@ -151,6 +170,19 @@ function loader() {
     maxStamp = stamp;
   }
 
+  var soFar = 0;
+  var start = +new Date();
+
+  function progress(item) {
+    soFar++;
+    if (soFar % 1000 === 0) {
+      var elapsed = (+new Date() - start) / 1000;
+      var rate = (soFar / elapsed).toFixed(0) + 'r/s';
+      // log('Progress %s: %s', soFar, elapsed, rate);
+      log('Progress: %s', rate);
+    }
+  }
+
   var singleUser; // used to validate that all items have same user
   // validates that we are always called with a single user, throws on violation
   function checkUser(item) {
@@ -167,11 +199,14 @@ function loader() {
   var handler = function itemHandler(credentials, stamp, file, item) {
     // throw error if item.__stamp's are non-increasing
     checkStampOrdering(item);
+    // log progress
+    progress(item);
     // check that we are always called with same user
     checkUser(item);
 
     // save to database
-    return saveItem(item);
+    return checkThenSaveItem(item);
+    // return saveItem(item);
   };
 
   return {
@@ -196,8 +231,15 @@ function accumulateItems(credentials) {
           throw new Error(msg);
         }
       });
-      log('Merged',rows.length);
+      log('Merged', rows.length);
       historyByType.sortAndSave(_user);
+    });
+}
+
+function checkThenSaveItem(item) {
+  return confirmIdentical(item)
+    .then(isIdentical => {
+      return isIdentical || saveItem(item);
     });
 }
 //
@@ -219,11 +261,36 @@ function saveItem(item) {
     })
     .catch(function(err) {
       // todo check that values are equal...
-      if (!err.message.startsWith('duplicate key')) {
+      if (err.message.startsWith('duplicate key')) {
+        return confirmIdentical(item);
+      } else {
         throw err;
       }
     });
+}
 
+function confirmIdentical(item) {
+  var keys = [item.__user, item.__stamp, item.__type, item.uuid, item.__sourceType];
+  // (__user, __stamp, __type, uuid, __sourceType)
+  var sql = 'select item from items where __user=$1 AND __stamp=$2 AND __type=$3 AND uuid=$4 AND __sourceType=$5';
+  return query(sql, keys)
+    .then(result => {
+      if (result.length === 0 || !result[0].item) {
+        return false;
+      }
+      var dbitem = result[0].item;
+      var isIdentical = _.isEqual(item, dbitem);
+      if (!isIdentical) {
+        log('Failed duplicate check', keys.join('/'));
+        log('-', item);
+        log('+', dbitem);
+
+      } else {
+        // log('Checked that duplicate is identical', keys.join('/'));
+      }
+      return isIdentical;
+    });
+  // return true;
 }
 
 // ************ Utilities

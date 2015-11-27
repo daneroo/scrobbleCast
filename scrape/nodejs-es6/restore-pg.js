@@ -89,7 +89,8 @@ function initDB() {
         'uuid  varchar(255), ',
         '__sourceType varchar(255), ',
         'item json, ',
-        'CONSTRAINT primary_idx PRIMARY KEY(__user, __stamp, __type, uuid, __sourceType) ',
+        // 'CONSTRAINT primary_idx PRIMARY KEY(__user, __stamp, __type, uuid, __sourceType) ',
+        'CONSTRAINT primary_idx PRIMARY KEY(__user, __type, uuid, __sourceType, __stamp) ',
         ')'
       ].join('');
       return ddlSilent(ddl);
@@ -205,8 +206,8 @@ function loader() {
     checkUser(item);
 
     // save to database
-    return checkThenSaveItem(item);
-    // return saveItem(item);
+    // return checkThenSaveItem(item);
+    return saveItem(item);
   };
 
   return {

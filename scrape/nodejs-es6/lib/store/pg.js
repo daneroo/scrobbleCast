@@ -21,17 +21,32 @@ exports = module.exports = {
 };
 
 // opts: {check:first?} => Promise(status)
+// cases - insert ok, insert failed but duplicate is verified,
 function save(item, opts) {
   // log.debug('pg:save saving item', item.__stamp);
-  return checkThenSaveItem(item);
-  // return saveItem(item);
+  // return checkThenSaveItem(item);
+  return saveButVerifyIfDuplicate(item);
 }
 
-// implementation
+//TODO(daneroo) Right now, if confirmIdentical is false, but key is present, return false, but should throw!
+
+// implementations
 function checkThenSaveItem(item) {
   return confirmIdentical(item)
     .then(isIdentical => {
       return isIdentical || saveItem(item);
+    });
+}
+
+function saveButVerifyIfDuplicate(item) {
+  return saveItem(item)
+    .catch(function(err) {
+      // todo check that values are equal...
+      if (err.message.startsWith('duplicate key')) {
+        return confirmIdentical(item);
+      } else {
+        throw err;
+      }
     });
 }
 
@@ -49,14 +64,6 @@ function saveItem(item) {
     .then(function(rowCount) {
       if (rowCount !== 1) {
         console.log('insert rowCount', rowCount);
-      }
-    })
-    .catch(function(err) {
-      // todo check that values are equal...
-      if (err.message.startsWith('duplicate key')) {
-        return confirmIdentical(item);
-      } else {
-        throw err;
       }
     });
 }

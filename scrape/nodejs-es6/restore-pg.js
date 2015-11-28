@@ -11,6 +11,7 @@ var _ = require('lodash');
 var utils = require('./lib/utils');
 var srcFile = require('./lib/source/file');
 var delta = require('./lib/delta');
+var store = require('./lib/store');
 
 // from postgress-bluebird
 var pg = require('pg');
@@ -33,7 +34,29 @@ var client;
 //  move to logging module (?loggly)
 var log = console.error;
 
+Promise.reject(new Error('Skipping Store test!'))
+// Promise.resolve(log('Test the store!'))
+  .then(() => {
+    return store.impl.file.load({
+      prefix: '',
+      filter: {
+        __user: 'stephane'
+      }
+    }, null);
+  })
+  .then(() => {
+    log('Done testing the store');
+  })
+  .catch(err => {
+    log('ERR:zzzz', err);
+    // })
+    // .finally((_) => {
+    //   process.exit(0);
+  });
+
+
 Promise.resolve(true)
+// Promise.reject(new Error('Abort now!'))
   .then(initDB)
   .then(main)
   .then(logMemAfterGC)
@@ -171,18 +194,25 @@ function loader() {
     maxStamp = stamp;
   }
 
-  var soFar = 0;
-  var start = +new Date();
+  // function with bound local isolated scope
+  var progress = (function() {
+    var soFar = 0;
+    var start = +new Date();
 
-  function progress(item) {
-    soFar++;
-    if (soFar % 1000 === 0) {
-      var elapsed = (+new Date() - start) / 1000;
-      var rate = (soFar / elapsed).toFixed(0) + 'r/s';
-      // log('Progress %s: %s', soFar, elapsed, rate);
-      log('Progress: %s', rate);
-    }
-  }
+    // the function we are returning, bound to local variables
+    return (item) => {
+      soFar++;
+      // if (elapsed > 2 ) {
+      if (soFar % 2000 === 0) {
+        var elapsed = (+new Date() - start) / 1000;
+        var rate = (soFar / elapsed).toFixed(0) + 'r/s';
+        // log('Progress %s: %s', soFar, elapsed, rate);
+        log('Progress: %s', rate);
+        // soFar = 0;
+        // start = +new Date();
+      }
+    };
+  })();
 
   var singleUser; // used to validate that all items have same user
   // validates that we are always called with a single user, throws on violation
@@ -197,21 +227,24 @@ function loader() {
   }
 
   // the actual itemHandler being returned
-  var handler = function itemHandler(credentials, stamp, file, item) {
+  function itemHandler(credentials, stamp, file, item) {
+
     // throw error if item.__stamp's are non-increasing
     checkStampOrdering(item);
+
     // log progress
     progress(item);
+
     // check that we are always called with same user
     checkUser(item);
 
     // save to database
-    // return checkThenSaveItem(item);
-    return saveItem(item);
-  };
+    return checkThenSaveItem(item);
+    // return saveItem(item);
+  }
 
   return {
-    handler: handler,
+    handler: itemHandler,
     getMaxStamp: getMaxStamp
   };
 }

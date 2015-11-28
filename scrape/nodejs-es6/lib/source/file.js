@@ -35,7 +35,7 @@ function confirmSorted(files) {
     if (lastFile) {
       var ok = file >= lastFile;
       if (!ok) {
-        log.verbose('confirSorted unexpected %s < %s', file, lastFile);
+        log.verbose('confirmSorted unexpected %s < %s', file, lastFile);
         sorted = false;
       }
     }

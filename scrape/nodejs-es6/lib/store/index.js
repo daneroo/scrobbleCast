@@ -27,7 +27,7 @@ exports = module.exports = {
       save: (item, opts) => {}, // returns (Promise)(status in insert,duplicate,error)
       load: (opts, cb) => {} // foreach item, cb(item);
     },
-    // pg: require('./pg'),
+    pg: require('./pg'),
     // ouch: require('./ouch'),
     file: require('./file') // load only for now
   }

@@ -13,23 +13,8 @@ var srcFile = require('./lib/source/file');
 var delta = require('./lib/delta');
 var store = require('./lib/store');
 
-// from postgress-bluebird
-var pg = require('pg');
-Promise.promisifyAll(pg.Client.prototype);
-Promise.promisifyAll(pg.Client);
-Promise.promisifyAll(pg.Connection.prototype);
-Promise.promisifyAll(pg.Connection);
-Promise.promisifyAll(pg.Query.prototype);
-Promise.promisifyAll(pg.Query);
-Promise.promisifyAll(pg);
-// @todo promosify pools
-
 // globals
 var allCredentials = require('./credentials.json').slice(0, 1);
-
-// var connectionString = 'postgres://docker:5432@localhost/postgres';
-var connectionString = 'postgres://postgres@docker/scrobblecast';
-var client;
 
 //  move to logging module (?loggly)
 var log = console.error;
@@ -54,87 +39,24 @@ Promise.reject(new Error('Skipping Store test!'))
     //   process.exit(0);
   });
 
-
 Promise.resolve(true)
 // Promise.reject(new Error('Abort now!'))
-  .then(initDB)
+  .then(store.impl.pg.init)
   .then(main)
   .then(logMemAfterGC)
   .catch(verboseErrorHandler(false))
   .finally(function() {
     log('Done, done, releasing PG connection');
-    pg.end(); // drain the pool!
+    store.impl.pg.end();
   });
 
 // just return result.rows, untils we need otherwise
 function query(sql, values) {
-  return pg.connectAsync(connectionString).spread(function(connection, release) {
-    client = connection;
-    return client.queryAsync(sql, values)
-      .then(function(result) {
-        // console.log('result', result);
-        return result.rows;
-      })
-      .finally(release);
-  });
+  return store.impl.pg.pgu.query(sql,values);
 }
 
 function insert(sql, values) {
-  return pg.connectAsync(connectionString).spread(function(connection, release) {
-    client = connection;
-    return client.queryAsync(sql, values)
-      .then(function(result) {
-        // console.log('result', result);
-        return result.rowCount;
-      })
-      .finally(release);
-  });
-}
-
-function ddlSilent(ddl) {
-  return query(ddl)
-    .catch(function(error) {
-      log('silently caught %s', error.message);
-    });
-}
-
-function initDB() {
-  return query('select 42 as answer')
-    .then(function(result) {
-      log('%j', result);
-    })
-    .then(function() {
-      var ddl = [
-        'CREATE TABLE items ( ',
-        '__user varchar(255), ',
-        '__stamp timestamp with time zone, ',
-        '__type varchar(255), ',
-        'uuid  varchar(255), ',
-        '__sourceType varchar(255), ',
-        'item json, ',
-        // 'CONSTRAINT primary_idx PRIMARY KEY(__user, __stamp, __type, uuid, __sourceType) ',
-        'CONSTRAINT primary_idx PRIMARY KEY(__user, __type, uuid, __sourceType, __stamp) ',
-        ')'
-      ].join('');
-      return ddlSilent(ddl);
-    })
-    // .then(function(){
-    //   var ddl = 'CREATE UNIQUE INDEX master_unique_idx ON items (__user, __stamp, __type, uuid, __sourceType)';
-    //   return ddlSilent(ddl);
-    // })
-    // .then(function(){
-    //   var ddl = 'CREATE UNIQUE INDEX master_unique_idx ON items (__user, __stamp, __type, uuid, __sourceType)';
-    //   return ddlSilent(ddl);
-    // })
-    // .then(function() {
-    //   // var ddl = 'ALTER TABLE items ADD CONSTRAINT noduplicates UNIQUE (__user, __stamp, __type, uuid, __sourceType)';
-    //   var ddl = 'ALTER TABLE items ADD UNIQUE (__user, __stamp, __type, uuid, __sourceType)';
-    //   return ddlSilent(ddl);
-    // })
-    .then(function(rows) {
-      // throw new Error('Early exit');
-    });
-
+  return store.impl.pg.pgu.insert(sql,values);
 }
 
 function main() {

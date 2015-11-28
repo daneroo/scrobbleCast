@@ -24,8 +24,8 @@ exports = module.exports = {
 // cases - insert ok, insert failed but duplicate is verified,
 function save(item, opts) {
   // log.debug('pg:save saving item', item.__stamp);
-  // return checkThenSaveItem(item);
-  return saveButVerifyIfDuplicate(item);
+  return checkThenSaveItem(item);
+  // return saveButVerifyIfDuplicate(item);
 }
 
 //TODO(daneroo) Right now, if confirmIdentical is false, but key is present, return false, but should throw!

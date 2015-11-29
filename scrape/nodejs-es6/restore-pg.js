@@ -7,7 +7,6 @@
 // dependencies - core-public-internal
 var util = require('util');
 var Promise = require('bluebird');
-var _ = require('lodash');
 var utils = require('./lib/utils');
 var srcFile = require('./lib/source/file');
 var delta = require('./lib/delta');
@@ -20,7 +19,7 @@ var allCredentials = require('./credentials.json').slice(0, 1);
 var log = console.error;
 
 Promise.reject(new Error('Skipping Store test!'))
-// Promise.resolve(log('Test the store!'))
+  // Promise.resolve(log('Test the store!'))
   .then(() => {
     return store.impl.file.load({
       prefix: '',
@@ -40,7 +39,7 @@ Promise.reject(new Error('Skipping Store test!'))
   });
 
 Promise.resolve(true)
-// Promise.reject(new Error('Abort now!'))
+  // Promise.reject(new Error('Abort now!'))
   .then(store.impl.pg.init)
   .then(main)
   .then(logMemAfterGC)
@@ -49,18 +48,6 @@ Promise.resolve(true)
     log('Done, done, releasing PG connection');
     store.impl.pg.end();
   });
-
-// aliases
-var query = store.impl.pg.pgu.query;
-var insert = store.impl.pg.pgu.insert;
-// just return result.rows, untils we need otherwise
-// function query(sql, values) {
-//   return store.impl.pg.pgu.query(sql,values);
-// }
-
-// function insert(sql, values) {
-//   return store.impl.pg.pgu.insert(sql,values);
-// }
 
 function main() {
   var extra = '';
@@ -174,24 +161,29 @@ function loader() {
 }
 
 function accumulateItems(credentials) {
-  console.log('accumulateitems for %s', credentials.name);
-  return query('select item from items where __user=$1 order by __user,__stamp,__type,uuid,__sourceType', [credentials.name])
-    .then(function(rows) {
-      console.log('|rows|= %s', rows.length);
-      var _user = credentials.name;
-      var historyByType = new delta.AccumulatorByTypeByUuid();
-      rows.forEach(function(row) {
-        var item = row.item;
-        var changeCount = historyByType.merge(item);
-        if (changeCount === 0) {
-          var msg = util.format('* Item Not deduped: %s %j', changeCount, item);
-          utils.logStamp(msg);
-          throw new Error(msg);
-        }
-      });
-      log('Merged', rows.length);
-      historyByType.sortAndSave(_user);
+  const __user = credentials.name;
+  const historyByType = new delta.AccumulatorByTypeByUuid();
+  log('accumulateitems for %s', __user);
+  const opts = {
+    filter: {
+      __user: __user
+    }
+  };
+
+  function itemHandler(item) {
+    var changeCount = historyByType.merge(item);
+    if (changeCount === 0) {
+      throw new Error(`Item Not deduped: |Δ|:${changeCount} ${JSON.stringify(item)}`);
+    }
+    return Promise.resolve(true);
+  }
+
+  return store.impl.pg.load(opts, itemHandler)
+    .then((results) => {
+      log('Merged', results.length);
+      historyByType.sortAndSave(__user);
     });
+
 }
 
 // ************ Utilities

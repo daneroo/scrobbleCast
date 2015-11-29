@@ -3,6 +3,7 @@
 // pg implementation (save only)
 
 // dependencies - core-public-internal
+var Promise = require('bluebird');
 var _ = require('lodash');
 var log = require('../log');
 // these might be moved or exposed
@@ -12,13 +13,40 @@ var pgu = require('./pg-utils');
 
 // Exported API
 exports = module.exports = {
+  // load: (opts, handler) => {} // foreach item, cb(item);
+  load: load,
   // save: (item, opts) => {}, // returns (Promise)(status in insert,duplicate,error)
-  // load: (opts, cb) => {} // foreach item, cb(item);
   save: save,
   pgu: pgu, // temporary
   init: pgu.init, // setup the database pool, ddl...
   end: pgu.end
 };
+
+// return Promise.each(rows), but might better return map[Series]
+function load(opts, itemHandler) {
+  opts = opts || {};
+  itemHandler = itemHandler || noop; //noop
+  opts.prefix = opts.prefix || '';
+  if (!opts.filter.__user) {
+    return Promise.reject(new Error('file:load missing required opt filter.__user'));
+  }
+  return pgu.query('select item from items where __user=$1 order by __user,__stamp,__type,uuid,__sourceType', [opts.filter.__user])
+    .then(function(rows) {
+      log.verbose('pg:load ', {
+        rows: rows.length
+      });
+
+      // mapSeries?
+      return Promise.each(rows,function(row) {
+        var item = row.item;
+        return itemHandler(item);
+      });
+    });
+
+  function noop(item) {
+    return Promise.resolve(true);
+  }
+}
 
 // opts: {check:first?} => Promise(status)
 // cases - insert ok, insert failed but duplicate is verified,

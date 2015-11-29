@@ -50,14 +50,17 @@ Promise.resolve(true)
     store.impl.pg.end();
   });
 
+// aliases
+var query = store.impl.pg.pgu.query;
+var insert = store.impl.pg.pgu.insert;
 // just return result.rows, untils we need otherwise
-function query(sql, values) {
-  return store.impl.pg.pgu.query(sql,values);
-}
+// function query(sql, values) {
+//   return store.impl.pg.pgu.query(sql,values);
+// }
 
-function insert(sql, values) {
-  return store.impl.pg.pgu.insert(sql,values);
-}
+// function insert(sql, values) {
+//   return store.impl.pg.pgu.insert(sql,values);
+// }
 
 function main() {
   var extra = '';

@@ -5,16 +5,18 @@
 
 // dependencies - core-public-internal
 var os = require('os');
+var fs = require('fs');
 var winston = require('winston');
 require('winston-loggly');
 var packageJson = require('../package.json');
+var config = JSON.parse(fs.readFileSync('credentials.loggly.json').toString());
 
 var hostname = os.hostname();
 
 // default levels: { error: 0, warn: 1, info: 2, verbose: 3, debug: 4, silly: 5 }
 winston.add(winston.transports.Loggly, {
-  token: '4b3f4f6a-7074-4d98-ac09-546fab0f07a7',
-  subdomain: 'imetrical',
+  token: config.token,
+  subdomain: config.subdomain,
   tags: [packageJson.name, 'host-' + hostname],
   json: true
 });

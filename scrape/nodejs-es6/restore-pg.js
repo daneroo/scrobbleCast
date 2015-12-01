@@ -8,21 +8,25 @@
 var util = require('util');
 var Promise = require('bluebird');
 var utils = require('./lib/utils');
-var srcFile = require('./lib/source/file');
 var delta = require('./lib/delta');
 var store = require('./lib/store');
 
 // globals
-var allCredentials = require('./credentials.json').slice(0, 1);
+var allCredentials = require('./credentials.json'); //.slice(0, 1);
 
 //  move to logging module (?loggly)
 var log = console.error;
 
 Promise.reject(new Error('Skipping Store test!'))
-  // Promise.resolve(log('Test the store!'))
+// Promise.resolve(log('Test the store!'))
   .then(() => {
     return store.impl.file.load({
       prefix: '',
+      assert: {
+        // stampOrder: true,
+        // singleUser: true,
+        progress: true, // should not be an assertion.
+      },
       filter: {
         __user: 'stephane'
       }
@@ -39,7 +43,7 @@ Promise.reject(new Error('Skipping Store test!'))
   });
 
 Promise.resolve(true)
-  // Promise.reject(new Error('Abort now!'))
+// Promise.reject(new Error('Abort now!'))
   .then(store.impl.pg.init)
   .then(main)
   .then(logMemAfterGC)
@@ -80,8 +84,21 @@ function restore(credentials, extra) {
   // TODO: clean this up for final logic, with opts
   // this is the double iteration loader
   // return srcFile.iteratorWithRollup(extra, [credentials], sharedHandler, '**/*.json?(l)')
-  return srcFile.iterator(extra, [credentials], sharedHandler, '**/*.json?(l)')
+  // return srcFile.iterator(extra, [credentials], sharedHandler, '**/*.json?(l)')
+  //   .then(reportCounts);
+  return store.impl.file.load({
+      prefix: extra,
+      assert: {
+        // stampOrder: true,
+        // singleUser: true,
+        progress: true, // should not be an assertion.
+      },
+      filter: {
+        __user: credentials.name
+      }
+    }, sharedHandler)
     .then(reportCounts);
+
 }
 
 // return an item handler for srcFile.iterator which:
@@ -119,7 +136,7 @@ function loader() {
         var elapsed = (+new Date() - start) / 1000;
         var rate = (soFar / elapsed).toFixed(0) + 'r/s';
         // log('Progress %s: %s', soFar, elapsed, rate);
-        log('Progress: %s', rate);
+        log('Progress: %s %s %s', rate, item.__user, item.__stamp);
         // soFar = 0;
         // start = +new Date();
       }
@@ -139,7 +156,9 @@ function loader() {
   }
 
   // the actual itemHandler being returned
-  function itemHandler(credentials, stamp, file, item) {
+  // function itemHandler(credentials, stamp, file, item) {
+  function itemHandler(item) {
+    // log('+Called  handler with item.stamp:%s', item.__stamp);
 
     // throw error if item.__stamp's are non-increasing
     checkStampOrdering(item);

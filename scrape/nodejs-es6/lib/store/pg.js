@@ -39,6 +39,7 @@ function load(opts, itemHandler) {
       // mapSeries?
       return Promise.each(rows,function(row) {
         var item = row.item;
+        // log.debug('-pg:load Calling handler with item.stamp:%s',item.__stamp);
         return itemHandler(item);
       });
     });

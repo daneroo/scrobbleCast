@@ -22,9 +22,10 @@ Promise.resolve(true)
   .then(store.impl.pouch.init)
   .then(() => {
     const item = {
-      _id: 'question',
+      _id: 'question' + (Math.floor(Math.random() * 2) + 1),
       answer: Math.floor(Math.random() * 2) * 4 + 42
     };
+    // get first (pessimistic)
     return store.impl.pouch.pchu.get(item)
       .then((doc) => {
         log.debug('got doc', JSON.stringify(doc));
@@ -50,6 +51,13 @@ Promise.resolve(true)
         }
         log.debug('-%s doc', (doc) ? 'update' : 'new', JSON.stringify(item));
         return store.impl.pouch.pchu.put(item);
+      });
+  })
+  .then(() => {
+    log.debug('AllDocs!');
+    return store.impl.pouch.pchu.allDocs('question')
+      .then((rsp) => {
+        log.debug(JSON.stringify(rsp));
       });
   })
   .then(() => {

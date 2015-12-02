@@ -33,11 +33,19 @@ function end() {
   return Promise.resolve(true);
 }
 
-function allDocs() {
-  log.debug('pchu:allDocs');
-  return db.allDocs({
-    include_docs: true
+function allDocs(pfx) {
+  log.debug('pchu:allDocs', {
+    pfx: pfx
   });
+  let opts = {
+    include_docs: true
+  };
+  // allDocs({startkey: 'artist_', endkey: 'artist_\uffff'});
+  if (pfx) {
+    opts.startkey = pfx;
+    opts.endkey = pfx + '\uffff';
+  }
+  return db.allDocs(opts);
   // return Promise.resolve(true);
 }
 
@@ -47,12 +55,12 @@ function get(item) {
     // conflicts:true,
     // revs:true
   };
-  return db.get(item._id,opts).then((doc) => {
+  return db.get(item._id, opts).then((doc) => {
     log.debug('pchu:get rsp', JSON.stringify(doc));
     return doc;
   }).catch(function(err) {
     log.debug('pchu:get err', err);
-    if (err.status ===404){
+    if (err.status === 404) {
       return; // undefined, but not an exception
     } else {
       throw err;

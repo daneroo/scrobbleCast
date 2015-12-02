@@ -29,7 +29,9 @@ function load(opts, itemHandler) {
   if (!opts.filter.__user) {
     return Promise.reject(new Error('file:load missing required opt filter.__user'));
   }
-  return pchu.allDocs('select item from items where __user=$1 order by __user,__stamp,__type,uuid,__sourceType', [opts.filter.__user])
+  // trasnform opts.filter.user into start/end keys
+  // allDocs({startkey: 'artist_', endkey: 'artist_\uffff'});
+  return pchu.allDocs()
     .then(function(rows) {
       log.verbose('pg:load ', {
         rows: rows.length

@@ -100,7 +100,7 @@ function verboseErrorHandler(shouldRethrow) {
 function logMemAfterGC() {
   function showMem(pfx) {
     const mu = process.memoryUsage();
-    const inMB = (numBytes) => (numBytes/1024/1024).toFixed(2) + 'MB';
+    const inMB = (numBytes) => (numBytes / 1024 / 1024).toFixed(2) + 'MB';
     log.debug(pfx + 'Mem', {
       rss: inMB(mu.rss)
       // heapTotal: inMB(mu.heapTotal),

@@ -31,7 +31,7 @@ function load(opts, itemHandler) {
   return srcFile.iterator(opts.prefix, [{
       name: opts.filter.__user
     }], wrappedHandler(opts, itemHandler), '**/*.json?(l)')
-    .then(reportCounts);
+    .then(reportCounts(opts));
 
 }
 
@@ -48,7 +48,7 @@ function wrappedHandler(opts, itemHandler) {
   const assert = combineAssertions(opts);
   return function(credentials, stamp, file, item) {
     // log.debug('-file:load Calling handler with item.stamp:%s', item.__stamp);
-    assert(item)
+    assert(item);
     return itemHandler(item);
   };
 }
@@ -80,6 +80,7 @@ function combineAssertions(opts) {
 
 // by time, or count,...
 function progress() {
+  const logEvery=3000;
   // boud scope variables
   var soFar = 0;
   var start = +new Date();
@@ -88,7 +89,7 @@ function progress() {
   return (item) => {
     soFar++;
     // if (elapsed > 2 ) {
-    if (soFar % 2000 === 0) {
+    if (soFar % logEvery === 0) {
       var elapsed = (+new Date() - start) / 1000;
       var rate = (soFar / elapsed).toFixed(0) + 'r/s';
       // log('Progress %s: %s', soFar, elapsed, rate);
@@ -103,7 +104,7 @@ function checkStampOrdering() {
   var maxStamp = '1970-01-01T00:00:00Z'; // to track increasing'ness
   return (item) => {
     var stamp = item.__stamp;
-    log.debug('Checking stamp ordering: %s >=? %s', item.__stamp,maxStamp);
+    log.debug('Checking stamp ordering: %s >=? %s', item.__stamp, maxStamp);
     if (stamp < maxStamp) {
       log.error('Item stamp not increasing: %s > %j', maxStamp, item);
       throw new Error('Item stamp not increasing');
@@ -128,11 +129,18 @@ function singleUser() {
   };
 }
 
-function reportCounts(counts) {
-  Object.keys(counts).forEach(function(name) {
-    var c = counts[name];
-    // log.debug('base:%s user:%s |stamps|:%s |f|:%s |p|:%s |ignored|:%s', extra, name, c.stamp, c.file, c.part, c.ignoredFiles);
-    log.debug('|stamps|:%s |f|:%s |p|:%s |ignored|:%s', c.stamp, c.file, c.part, c.ignoredFiles);
-  });
-  return Promise.resolve(true);
+// opts.prefix = opts.prefix || '';
+// if (!opts.filter.__user) {
+
+function reportCounts(opts) {
+  const prefix = opts.prefix;
+  const user = opts.filter.__user;
+
+  return (counts) => {
+    Object.keys(counts).forEach(function(name) {
+      var c = counts[name];
+      log.debug('prefix:%s user:%s |stamps|:%s |f|:%s |p|:%s |ignored|:%s', prefix, user, c.stamp, c.file, c.part, c.ignoredFiles);
+    });
+    return Promise.resolve(counts);
+  };
 }

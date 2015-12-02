@@ -81,7 +81,7 @@ function detectMismatch(records) {
     }
   });
   if (!anyFailures) {
-    var hostCount = _.size(_.countBy(records, r => r.host))
+    var hostCount = _.size(_.countBy(records, r => r.host));
     log.info('logcheck signature matches confirmed', {
       hostCount: hostCount,
       logRecords:records.length

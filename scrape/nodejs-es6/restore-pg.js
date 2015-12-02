@@ -5,51 +5,22 @@
 // Object keys: user/type/uuid/stamp/
 
 // dependencies - core-public-internal
-var util = require('util');
 var Promise = require('bluebird');
-var utils = require('./lib/utils');
+var log = require('./lib/log');
 var delta = require('./lib/delta');
 var store = require('./lib/store');
 
 // globals
-var allCredentials = require('./credentials.json'); //.slice(0, 1);
-
-//  move to logging module (?loggly)
-var log = console.error;
-
-Promise.reject(new Error('Skipping Store test!'))
-// Promise.resolve(log('Test the store!'))
-  .then(() => {
-    return store.impl.file.load({
-      prefix: '',
-      assert: {
-        // stampOrder: true,
-        // singleUser: true,
-        progress: true, // should not be an assertion.
-      },
-      filter: {
-        __user: 'stephane'
-      }
-    }, null);
-  })
-  .then(() => {
-    log('Done testing the store');
-  })
-  .catch(err => {
-    log('ERR:zzzz', err);
-    // })
-    // .finally((_) => {
-    //   process.exit(0);
-  });
+var allCredentials = require('./credentials.json').slice(0, 1);
 
 Promise.resolve(true)
-// Promise.reject(new Error('Abort now!'))
+  // Promise.reject(new Error('Abort now!'))
   .then(store.impl.pg.init)
   .then(main)
   .then(logMemAfterGC)
   .catch(verboseErrorHandler(false))
   .finally(function() {
-    log('Done, done, releasing PG connection');
+    log.debug('Done, done, releasing PG connection');
     store.impl.pg.end();
   });
 
@@ -58,9 +29,12 @@ function main() {
   // var extra = 'rollup'; // to switch to rollup..
   return Promise.each(allCredentials, function(credentials) {
     logMemAfterGC();
-    utils.logStamp('Restore started for ' + credentials.name);
+    log.verbose('Restore started', {
+      user: credentials.name
+    });
     return restore(credentials, extra)
       .then(function() {
+        logMemAfterGC();
         return accumulateItems(credentials);
       });
   });
@@ -68,121 +42,27 @@ function main() {
 
 // returns all items from extra, in an array
 function restore(credentials, extra) {
-  // shared handler for both extras
-  var l = loader();
-  var sharedHandler = l.handler;
 
-  function reportCounts(counts) {
-    Object.keys(counts).forEach(function(name) {
-      var c = counts[name];
-      var msg = util.format('base:%s user:%s |stamps|:%s |f|:%s |p|:%s |ignored|:%s', extra, name, c.stamp, c.file, c.part, c.ignoredFiles);
-      utils.logStamp(msg);
-    });
-    return Promise.resolve(true);
-  }
-
-  // TODO: clean this up for final logic, with opts
-  // this is the double iteration loader
-  // return srcFile.iteratorWithRollup(extra, [credentials], sharedHandler, '**/*.json?(l)')
-  // return srcFile.iterator(extra, [credentials], sharedHandler, '**/*.json?(l)')
-  //   .then(reportCounts);
   return store.impl.file.load({
-      prefix: extra,
-      assert: {
-        // stampOrder: true,
-        // singleUser: true,
-        progress: true, // should not be an assertion.
-      },
-      filter: {
-        __user: credentials.name
-      }
-    }, sharedHandler)
-    .then(reportCounts);
-
-}
-
-// return an item handler for srcFile.iterator which:
-// - reports item progress (moved to write logging)
-// - validates increasing stamp order
-// - acccumulates items in an {type:[items]} which is passed in.
-// - writes out any completed months
-function loader() {
-
-  // throw error if item.__stamp's are non-increasing
-  var maxStamp = '1970-01-01T00:00:00Z'; // to track increasing'ness
-  function getMaxStamp() {
-    return maxStamp;
-  }
-
-  function checkStampOrdering(item) {
-    var stamp = item.__stamp;
-    if (stamp < maxStamp) {
-      log('Item stamp not increasing: %s > %j', maxStamp, item);
-      throw new Error('Item stamp not increasing');
+    prefix: extra,
+    assert: {
+      // stampOrder: true,
+      // singleUser: true,
+      progress: true, // should not be an assertion.
+    },
+    filter: {
+      __user: credentials.name
     }
-    maxStamp = stamp;
-  }
+  }, store.impl.pg.save);
 
-  // function with bound local isolated scope
-  var progress = (function() {
-    var soFar = 0;
-    var start = +new Date();
-
-    // the function we are returning, bound to local variables
-    return (item) => {
-      soFar++;
-      // if (elapsed > 2 ) {
-      if (soFar % 2000 === 0) {
-        var elapsed = (+new Date() - start) / 1000;
-        var rate = (soFar / elapsed).toFixed(0) + 'r/s';
-        // log('Progress %s: %s', soFar, elapsed, rate);
-        log('Progress: %s %s %s', rate, item.__user, item.__stamp);
-        // soFar = 0;
-        // start = +new Date();
-      }
-    };
-  })();
-
-  var singleUser; // used to validate that all items have same user
-  // validates that we are always called with a single user, throws on violation
-  function checkUser(item) {
-    // validate that all items are for same user
-    if (!singleUser) {
-      singleUser = item.__user;
-    } else if (singleUser !== item.__user) {
-      log('Mixing users in loader: %s != %s', singleUser, item.__user);
-      throw new Error('Mixing users in loader');
-    }
-  }
-
-  // the actual itemHandler being returned
-  // function itemHandler(credentials, stamp, file, item) {
-  function itemHandler(item) {
-    // log('+Called  handler with item.stamp:%s', item.__stamp);
-
-    // throw error if item.__stamp's are non-increasing
-    checkStampOrdering(item);
-
-    // log progress
-    progress(item);
-
-    // check that we are always called with same user
-    checkUser(item);
-
-    // save to database
-    return store.impl.pg.save(item);
-  }
-
-  return {
-    handler: itemHandler,
-    getMaxStamp: getMaxStamp
-  };
 }
 
 function accumulateItems(credentials) {
   const __user = credentials.name;
   const historyByType = new delta.AccumulatorByTypeByUuid();
-  log('accumulateitems for %s', __user);
+  log.debug('accumulateItems', {
+    user: __user
+  });
   const opts = {
     filter: {
       __user: __user
@@ -199,7 +79,7 @@ function accumulateItems(credentials) {
 
   return store.impl.pg.load(opts, itemHandler)
     .then((results) => {
-      log('Merged', results.length);
+      log.debug('Merged', results.length);
       historyByType.sortAndSave(__user);
     });
 
@@ -207,10 +87,10 @@ function accumulateItems(credentials) {
 
 // ************ Utilities
 
-//  move to logging module (as Factory?)
+//  move to log.debugging module (as Factory?)
 function verboseErrorHandler(shouldRethrow) {
   return function errorHandler(error) {
-    log('error', error);
+    log.debug('error', error);
     if (shouldRethrow) {
       throw (error);
     }
@@ -219,10 +99,13 @@ function verboseErrorHandler(shouldRethrow) {
 
 function logMemAfterGC() {
   function showMem(pfx) {
-    var msg = util.format('%sMem RSS: %sMB, Heap(t): %sMB, Heap(u): %sMB',
-      pfx, (process.memoryUsage().rss / 1024 / 1024).toFixed(2), (process.memoryUsage().heapTotal / 1024 / 1024).toFixed(2), (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)
-    );
-    utils.logStamp(msg);
+    const mu = process.memoryUsage();
+    const inMB = (numBytes) => (numBytes/1024/1024).toFixed(2) + 'MB';
+    log.debug(pfx + 'Mem', {
+      rss: inMB(mu.rss)
+      // heapTotal: inMB(mu.heapTotal),
+      // heapUsed: inMB(mu.heapUsed)
+    });
   }
   showMem('-');
   if (global.gc) {
@@ -233,7 +116,7 @@ function logMemAfterGC() {
 
     showMem('+');
   } else {
-    utils.logStamp('  Garbage collection unavailable.  Pass --expose-gc when launching node to enable forced garbage collection.');
+    log.debug('  Garbage collection unavailable.  Pass --expose-gc when launching node to enable forced garbage collection.');
   }
   return Promise.resolve(true);
 }

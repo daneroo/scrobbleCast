@@ -19,6 +19,10 @@ Promise.resolve(true)
   .then(() => {
     log.debug('Start testing pouch!');
   })
+  .then(() => {
+    store.impl.pouch.test();
+    return Promise.reject('Done');
+  })
   .then(store.impl.pouch.init)
   .then(() => {
     const item = {

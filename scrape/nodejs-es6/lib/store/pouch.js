@@ -16,7 +16,8 @@ exports = module.exports = {
   load: load,
   // save: (item, opts) => {}, // returns (Promise)(status in insert,duplicate,error)
   save: save,
-  pchu:pchu, // temporary
+  pchu: pchu, // temporary
+  test: test,
   init: pchu.init, // setup the database pool, ddl...
   end: pchu.end
 };
@@ -30,7 +31,6 @@ function load(opts, itemHandler) {
     return Promise.reject(new Error('file:load missing required opt filter.__user'));
   }
   // trasnform opts.filter.user into start/end keys
-  // allDocs({startkey: 'artist_', endkey: 'artist_\uffff'});
   return pchu.allDocs()
     .then(function(rows) {
       log.verbose('pg:load ', {
@@ -38,7 +38,7 @@ function load(opts, itemHandler) {
       });
 
       // mapSeries?
-      return Promise.each(rows,function(row) {
+      return Promise.each(rows, function(row) {
         var item = row.item;
         // log.debug('-pg:load Calling handler with item.stamp:%s',item.__stamp);
         return itemHandler(item);
@@ -82,13 +82,6 @@ function saveButVerifyIfDuplicate(item) {
 
 // Save each item : problem, how do we traverse keys in an ordered way?
 function saveItem(item) {
-  function getFields(item) {
-    return [item.__user, item.__stamp, item.__type, item.uuid, item.__sourceType, item];
-  }
-
-  var fields = getFields(item);
-  // var key = fields.slice(0, -1).join('/');
-  // console.log('-save', key);
 
   return pgu.insert('INSERT into items(__user,__stamp,__type,uuid,__sourceType,item) VALUES($1,$2,$3,$4,$5,$6)', fields)
     .then(function(rowCount) {
@@ -119,4 +112,80 @@ function confirmIdentical(item) {
       }
       return isIdentical;
     });
+}
+
+// prepare object for persistence in pouch
+// this function transforms __tags into one meta attribute, and calculates the computed key (__id)
+// returns a new object - leaves the original intact
+function normalize(item) {
+  // move meta fields
+  var nitem = normalizeMeta(item);
+  // add key
+  // TODO(daneroo) mv _id to top, and move normalizeMeta here.
+  nitem._id = getKey(item);
+  return nitem;
+}
+
+// restores an item from pouch ito its original form
+// move any keys in meta to top level, remove _id, (_.rev)
+function denormalize(nitem) {
+  var meta = nitem.meta ||{};
+  var item = _.merge(meta,_.omit(nitem,'meta'));
+  delete item._id;
+  delete item._rev;
+  return item;
+}
+const keyFields = ['__user', '__stamp', '__type', 'uuid', '__sourceType'];
+const metaFields = keyFields.filter((k) => k.startsWith('__'));
+
+function getKey(item) {
+  const keyParts = keyFields.map((k) => item[k]);
+  return keyParts.join('/');
+}
+
+// make this safer to apply twice
+// non destructive, returns a new object
+function normalizeMeta(item) {
+  var meta = _.pick(item, metaFields);
+  // merge over any pre-existing meta, for idempotence...
+  var meta = _.merge({}, item.meta, meta);
+
+  var rest = _.omit(item, metaFields);
+  //preserve the order by inserting meta first, which also create a new object
+  return _.merge({
+    meta: meta
+  }, rest);
+}
+
+function test() {
+  var item = {
+    "__type": "episode",
+    "__sourceType": "03-new_releases",
+    "__user": "daniel",
+    "__stamp": "2015-12-02T20:10:00Z",
+    "id": null,
+    "uuid": "c2ebe410-77af-0133-2cee-6dc413d6d41d",
+    "url": "http://fdlyr.co/d/changelog/cdn.5by5.tv/audio/broadcasts/changelog/2015/changelog-184.mp3",
+    "published_at": "2015-11-28 03:00:00",
+    "duration": "4918",
+    "file_type": "audio/mp3",
+    "title": "184: Discussing Vue.js and Personal Projects With Evan You",
+    "podcast_id": 207672,
+    "size": 79060959,
+    "podcast_uuid": "70d13d50-9efe-0130-1b90-723c91aeae46",
+    "playing_status": 2,
+    "played_up_to": 1902,
+    "is_deleted": false,
+    "starred": false
+  }
+
+  console.log('item', item);
+
+  var nitem = normalize(item);
+  console.log('nitem', nitem);
+
+  var ditem = denormalize(nitem);
+  console.log('ditem', ditem);
+
+
 }

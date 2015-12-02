@@ -6,6 +6,7 @@
 
 // dependencies - core-public-internal
 var Promise = require('bluebird');
+var _ = require('lodash');
 var log = require('./lib/log');
 var delta = require('./lib/delta');
 var store = require('./lib/store');
@@ -15,13 +16,59 @@ var allCredentials = require('./credentials.json').slice(0, 1);
 
 Promise.resolve(true)
   // Promise.reject(new Error('Abort now!'))
-  .then(store.impl.ouch.init)
+  .then(() => {
+    log.debug('Start testing pouch!');
+  })
+  .then(store.impl.pouch.init)
+  .then(() => {
+    const item = {
+      _id: 'question',
+      answer: Math.floor(Math.random() * 2) * 4 + 42
+    };
+    return store.impl.pouch.pchu.get(item)
+      .then((doc) => {
+        log.debug('got doc', JSON.stringify(doc));
+        // compare first, and skip if identical,
+        // otherwise use the _rev
+        if (doc) {
+          const _rev = doc._rev;
+          delete doc._rev;
+          const isIdentical = _.isEqual(item, doc);
+          if (isIdentical) {
+            log.debug('doc confirmed identical', JSON.stringify(doc));
+            // simulate
+            return {
+              ok: true,
+              id: doc._id,
+              rev: _rev
+            };
+          } else {
+            log.debug('-doc not identical', JSON.stringify(doc));
+            log.debug('+itm not identical', JSON.stringify(item));
+          }
+          item._rev = _rev;
+        }
+        log.debug('-%s doc', (doc) ? 'update' : 'new', JSON.stringify(item));
+        return store.impl.pouch.pchu.put(item);
+      });
+  })
+  .then(() => {
+    log.debug('Done testing pouch!');
+  })
+  .finally(function() {
+    log.debug('Done, done, releasing Pouch connection');
+    store.impl.pouch.end();
+  });
+
+if (0) Promise.resolve(true)
+  // Promise.reject(new Error('Abort now!'))
+  .then(store.impl.pouch.init)
   .then(main)
   .then(logMemAfterGC)
   .catch(verboseErrorHandler(false))
   .finally(function() {
-    log.debug('Done, done, releasing PG connection');
-    store.impl.pg.end();
+    log.debug('Done, done, releasing Pouch connection');
+    store.impl.pouch.end();
   });
 
 function main() {
@@ -53,7 +100,7 @@ function restore(credentials, extra) {
     filter: {
       __user: credentials.name
     }
-  }, store.impl.pg.save);
+  }, store.impl.pouch.save);
 
 }
 
@@ -103,8 +150,8 @@ function logMemAfterGC() {
     const inMB = (numBytes) => (numBytes / 1024 / 1024).toFixed(2) + 'MB';
     log.debug(pfx + 'Mem', {
       rss: inMB(mu.rss)
-      // heapTotal: inMB(mu.heapTotal),
-      // heapUsed: inMB(mu.heapUsed)
+        // heapTotal: inMB(mu.heapTotal),
+        // heapUsed: inMB(mu.heapUsed)
     });
   }
   showMem('-');

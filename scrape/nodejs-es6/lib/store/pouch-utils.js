@@ -28,7 +28,7 @@ function init() {
   return Promise.resolve(true);
 }
 
-function end(){
+function end() {
   log.debug('pchu:end');
   return Promise.resolve(true);
 }
@@ -36,16 +36,35 @@ function end(){
 function allDocs() {
   log.debug('pchu:allDocs');
   return db.allDocs({
-    include_docs:true
+    include_docs: true
   });
   // return Promise.resolve(true);
 }
 
-function get(){
-  log.debug('pchu:get');
-  return Promise.resolve(true);
+function get(item) {
+  log.debug('pchu:get', JSON.stringify(item));
+  const opts = {
+    // conflicts:true,
+    // revs:true
+  };
+  return db.get(item._id,opts).then((doc) => {
+    log.debug('pchu:get rsp', JSON.stringify(doc));
+    return doc;
+  }).catch(function(err) {
+    log.debug('pchu:get err', err);
+    if (err.status ===404){
+      return; // undefined, but not an exception
+    } else {
+      throw err;
+    }
+  });
 }
-function put(){
-  log.debug('pchu:put');
-  return Promise.resolve(true);
+
+function put(item) {
+  log.debug('pchu:put', JSON.stringify(item));
+  return db.put(item).then((response) => {
+    log.debug('pchu:put rsp', JSON.stringify(response));
+  }).catch((err) => {
+    log.debug('pchu:put err', err);
+  });
 }

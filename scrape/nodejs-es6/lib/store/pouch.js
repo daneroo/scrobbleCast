@@ -16,6 +16,7 @@ exports = module.exports = {
   load: load,
   // save: (item, opts) => {}, // returns (Promise)(status in insert,duplicate,error)
   save: save,
+  pchu:pchu, // temporary
   init: pchu.init, // setup the database pool, ddl...
   end: pchu.end
 };

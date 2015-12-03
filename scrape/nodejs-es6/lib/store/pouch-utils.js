@@ -24,12 +24,12 @@ var db = new PouchDB('pouchdb');
 
 //  design docs,.... resetDB?
 function init() {
-  log.debug('pchu:init');
+  // log.debug('pchu:init');
   return Promise.resolve(true);
 }
 
 function end() {
-  log.debug('pchu:end');
+  // log.debug('pchu:end');
   return Promise.resolve(true);
 }
 
@@ -50,29 +50,33 @@ function allDocs(pfx) {
 }
 
 function get(item) {
-  log.debug('pchu:get', JSON.stringify(item));
+  // log.debug('pchu:get', JSON.stringify(item));
   const opts = {
     // conflicts:true,
     // revs:true
   };
-  return db.get(item._id, opts).then((doc) => {
-    log.debug('pchu:get rsp', JSON.stringify(doc));
-    return doc;
-  }).catch(function(err) {
-    log.debug('pchu:get err', err);
-    if (err.status === 404) {
-      return; // undefined, but not an exception
-    } else {
-      throw err;
-    }
-  });
+  return db.get(item._id, opts)
+    // .then((doc) => {
+    //   log.debug('pchu:get rsp', JSON.stringify(doc));
+    //   return doc;
+    // })
+    .catch(function(err) {
+      if (err.status === 404) {
+        return; // undefined, but not an exception
+      } else {
+        log.debug('pchu:get err', err);
+        throw err;
+      }
+    });
 }
 
 function put(item) {
-  log.debug('pchu:put', JSON.stringify(item));
-  return db.put(item).then((response) => {
-    log.debug('pchu:put rsp', JSON.stringify(response));
+  // log.debug('pchu:put', JSON.stringify(item));
+  return db.put(item).then((rsp) => {
+    // log.debug('pchu:put rsp', JSON.stringify(rsp));
+    return rsp;
   }).catch((err) => {
-    log.debug('pchu:put err', err);
+    // log.debug('pchu:put err', err);
+    throw err;
   });
 }

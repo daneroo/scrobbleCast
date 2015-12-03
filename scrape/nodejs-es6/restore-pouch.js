@@ -6,73 +6,16 @@
 
 // dependencies - core-public-internal
 var Promise = require('bluebird');
-var _ = require('lodash');
+// var _ = require('lodash');
 var log = require('./lib/log');
 var delta = require('./lib/delta');
 var store = require('./lib/store');
 
 // globals
-var allCredentials = require('./credentials.json').slice(0, 1);
+var allCredentials = require('./credentials.json'); //.slice(0, 1);
+
 
 Promise.resolve(true)
-  // Promise.reject(new Error('Abort now!'))
-  .then(() => {
-    log.debug('Start testing pouch!');
-  })
-  .then(() => {
-    store.impl.pouch.test();
-    return Promise.reject('Done');
-  })
-  .then(store.impl.pouch.init)
-  .then(() => {
-    const item = {
-      _id: 'question' + (Math.floor(Math.random() * 2) + 1),
-      answer: Math.floor(Math.random() * 2) * 4 + 42
-    };
-    // get first (pessimistic)
-    return store.impl.pouch.pchu.get(item)
-      .then((doc) => {
-        log.debug('got doc', JSON.stringify(doc));
-        // compare first, and skip if identical,
-        // otherwise use the _rev
-        if (doc) {
-          const _rev = doc._rev;
-          delete doc._rev;
-          const isIdentical = _.isEqual(item, doc);
-          if (isIdentical) {
-            log.debug('doc confirmed identical', JSON.stringify(doc));
-            // simulate
-            return {
-              ok: true,
-              id: doc._id,
-              rev: _rev
-            };
-          } else {
-            log.debug('-doc not identical', JSON.stringify(doc));
-            log.debug('+itm not identical', JSON.stringify(item));
-          }
-          item._rev = _rev;
-        }
-        log.debug('-%s doc', (doc) ? 'update' : 'new', JSON.stringify(item));
-        return store.impl.pouch.pchu.put(item);
-      });
-  })
-  .then(() => {
-    log.debug('AllDocs!');
-    return store.impl.pouch.pchu.allDocs('question')
-      .then((rsp) => {
-        log.debug(JSON.stringify(rsp));
-      });
-  })
-  .then(() => {
-    log.debug('Done testing pouch!');
-  })
-  .finally(function() {
-    log.debug('Done, done, releasing Pouch connection');
-    store.impl.pouch.end();
-  });
-
-if (0) Promise.resolve(true)
   // Promise.reject(new Error('Abort now!'))
   .then(store.impl.pouch.init)
   .then(main)

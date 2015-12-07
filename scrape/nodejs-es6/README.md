@@ -29,15 +29,15 @@ Start a container and connect to it
 Note: try CouchDB 2.0 
 Don't put the data volume in `./data` because we often rsync!
 
-  docker run -d -p 5984:5984 -e COUCHDB_PASS="supersecret" -v $(pwd)/couchdb:/var/lib/couchdb tutum/couchdb 
+  docker run -d -p 5984:5984 -e COUCHDB_PASS="supersecret" -v $(pwd)/couchdb:/var/lib/couchdb --name couchdb tutum/couchdb
 
 Then open Futon 
- on [docker](http://admin:supersecret@192.168.59.103:5984/_utils/)
+ on [docker](http://admin:supersecret@docker:5984/_utils/)
  or [cantor](http://admin:supersecret@cantor:5984/_utils/)
 
 To compact database:
 
-  curl -H "Content-Type: application/json" -X POST http://admin:supersecret@cantor:5984/scrobblecast/_compact
+  curl -H "Content-Type: application/json" -X POST http://admin:supersecret@docker:5984/scrobblecast/_compact
 
 ### Docker file permissions
 *note* we now set uid/gid to daniel.daniel (1000), to match cantor numeric ids

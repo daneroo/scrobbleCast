@@ -4,7 +4,7 @@
 
 // dependencies - core-public-internal
 var Promise = require('bluebird');
-// var _ = require('lodash');
+var _ = require('lodash');
 var PouchDB = require('pouchdb');
 var log = require('../log');
 
@@ -29,8 +29,37 @@ function init() {
 }
 
 function end() {
-  // log.debug('pchu:end');
-  return Promise.resolve(true);
+  log.debug('pchu:end');
+  return Promise.resolve(true)
+    .then(sync);
+}
+
+function sync() {
+  log.debug('replicate to couch');
+  return new Promise(function(resolve, reject) {
+    PouchDB.sync(db, 'http://admin:supersecret@docker:5984/scrobblecast')
+      .on('change', function(info) {
+        // handle change
+        log.debug('sync:chg', _.omit(info,'docs'));
+      }).on('paused', function() {
+        // replication paused (e.g. user went offline)
+        log.debug('sync:paused');
+      }).on('active', function() {
+        // replicate resumed (e.g. user went back online)
+        log.debug('sync:active');
+      }).on('denied', function(info) {
+        // a document failed to replicate, e.g. due to permissions
+        log.debug('sync:denied', info);
+      }).on('complete', function(info) {
+        // handle complete
+        log.debug('sync:complete', info);
+        resolve(true);
+      }).on('error', function(err) {
+        // handle error
+        log.debug('sync:err', err);
+      });
+  });
+
 }
 
 function allDocs(pfx) {

@@ -11,7 +11,7 @@ var delta = require('./lib/delta');
 var store = require('./lib/store');
 
 // globals
-var allCredentials = require('./credentials.json').slice(0, 1);
+var allCredentials = require('./credentials.json'); //.slice(0, 1);
 
 Promise.resolve(true)
   // Promise.reject(new Error('Abort now!'))

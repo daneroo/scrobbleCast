@@ -7,23 +7,52 @@
 * Try using promises
 * Try using ES6
 
-## Docker
+## Docker Cloud
+  inject credentials somehow:
+  remove .dockerignore for 2 credential json files
+  remove user daniel clause causing perm probs.
+  How to set HOSTNAME???
+
+  inject data (before synch is possible)
+
+Build the image locally
 
   docker-compose build
-  docker-compose up -d
+  docker tag nodejses6_scrape:latest daneroo/scrobblecast:withcreds
+  # Just regenerate if you loose these keys (password is api key)
+  docker login -u daneroo -p f787d9cc-b151-48a1-84aa-3b39ac0bb972 -e daniel.lauzon@gmail.com
+  docker push daneroo/scrobblecast:withcreds
+
+
+
+## Docker
+This was for goedel, moving to dicker-cloud.
+
+    docker-compose build
+    docker-compose up -d
 
 ### PostgreSQL
 [Quick intro to PostgreSQL JSON.](http://clarkdave.net/2013/06/what-can-you-do-with-postgresql-and-json/)
 
 Start a container and connect to it
 
-  docker run -it --rm -p 5432:5432 --name postgres postgres
-  docker exec -it postgres createdb -U postgres scrobblecast
-  docker exec -it postgres psql -U postgres scrobblecast
+    docker run -it --rm -p 5432:5432 --name postgres postgres
+    docker exec -it postgres createdb -U postgres scrobblecast
+    docker exec -it postgres psql -U postgres scrobblecast
 
-  scrobblecast=#
-  select __user,__type,count(distinct uuid),max(__stamp) from items group by __user,__type;
-  select distinct uuid, item->>'title' as title from items where __user='daniel' and __type='podcast'
+    scrobblecast=#
+    select __user,__type,count(distinct uuid),max(__stamp) from items group by __user,__type;
+    select distinct uuid, item->>'title' as title from items where __user='daniel' and __type='podcast'
+
+`pgcrypto`:
+To enable: `create extension pgcrypto;`
+
+    time psql -U postgres -c "SELECT encode(digest(item::text, 'sha256'), 'hex') as digest from items order by digest;" scrobblecast|wc
+    131464  131464 8676509
+
+    real	0m1.399s
+    user	0m0.410s
+    sys	0m0.000s
 
 ### CouchDB for persistence
 Note: try CouchDB 2.0 

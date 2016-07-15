@@ -2,6 +2,13 @@
 
 ## TODO
 
+- restore-pg: buffer writes.
+- restore-pg: push to remote database (from dirac,darwin -> dockerX)
+- dedup: mark status, delete (window, or write to file);
+- Seperate dedup from consensus-signature
+  - dedup per uuid
+  - consensus based on digest of non deduped entries. (order by digest|date,..)
+- pg.saveAll - concurrency (use blubird (reduce, map(concurrency), mapSeries))
 - restore-pg switches from default `saveButVerifyIfDuplicate` to `checkThenSaveItem` on first fail...
 
 + pgcrypto in pg.init

@@ -20,6 +20,7 @@ exports = module.exports = {
   load: load,
   // save: (item, opts) => {}, // returns (Promise)(status in insert,duplicate,error)
   save: save,
+  saveAll: saveAll,
   init: pgu.init, // setup the database pool, ddl...
   end: pgu.end
 };
@@ -59,8 +60,13 @@ function save(item, opts) {
   // return saveButVerifyIfDuplicate(item);
 }
 
-//TODO(daneroo) Right now, if confirmIdentical is false, but key is present, return false, but should throw!
+function saveAll(items) {
+  //TODO(daneroo): Fix this concurrent save...
+  const pSave = items.map((item) => save(item));
+  return Promise.all(pSave);
+}
 
+//TODO(daneroo) Right now, if confirmIdentical is false, but key is present, return false, but should throw!
 // implementations
 function checkThenSaveItem(item) {
   // return confirmIdenticalByDigestCount(item)

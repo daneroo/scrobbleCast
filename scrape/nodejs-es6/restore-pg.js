@@ -43,16 +43,7 @@ function main() {
 // returns all items from extra, in an array
 function restore(credentials, extra) {
   const saver = store.impl.pg.save;
-
-  // TODO(daneroo) Move this to load filter
-  // just to short-circuit/date filter
-  // const saver = function(item,opts){
-  //   if (item.__stamp<'2016-07'){
-  //     return Promise.resolve(true);
-  //   }
-  //   // console.log(item.__stamp,typeof item.__stamp);
-  //   return store.impl.pg.save(item,opts);
-  // }
+  // TODO(daneroo): implement a local bufferd saver, move to lib?
 
   return store.impl.file.load({
     prefix: extra,
@@ -64,7 +55,7 @@ function restore(credentials, extra) {
     filter: {
       __user: credentials.name
     }
-  }, saver);
+  }, );
 
 }
 
@@ -83,7 +74,8 @@ function accumulateItems(credentials) {
   function itemHandler(item) {
     var changeCount = historyByType.merge(item);
     if (changeCount === 0) {
-      throw new Error(`Item Not deduped: |Δ|:${changeCount} ${JSON.stringify(item)}`);
+      // throw new Error(`Item Not deduped: |Δ|:${changeCount} ${JSON.stringify(item)}`);
+      log.verbose(`Item Not deduped: |Δ|:${changeCount}  ${item.__sourceType} ${item.title}`);
     }
     return Promise.resolve(true);
   }

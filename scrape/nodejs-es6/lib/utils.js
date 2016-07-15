@@ -56,10 +56,18 @@ function md5(str) {
   return hash;
 }
 
+// TODO(daneroo): option object for {algorithm:, prependAlgorithm:bool}
+function digest(str, algorithm) {
+  algorithm = algorithm || 'sha256';
+  var hash = crypto.createHash(algorithm).update(str).digest('hex');
+  return algorithm + ':' + hash;
+}
+
 exports = module.exports = {
   stamp: stamp,
   logStamp: logStamp,
   stampFromFile: stampFromFile,
   isEqualWithoutPrototypes: isEqualWithoutPrototypes,
+  digest: digest,
   md5: md5
 };

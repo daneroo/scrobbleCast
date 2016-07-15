@@ -1,11 +1,8 @@
 # implement the feed fetch in node.js
 
-* Docker
-* Auth
-* Wrap JSON Rest API in module
-* LevelDB Storage
-* Try using promises
-* Try using ES6
+## TODO
+
+- pgcrypto + digest in pg.init
 
 ## Docker
 
@@ -24,6 +21,14 @@ Start a container and connect to it
   scrobblecast=#
   select __user,__type,count(distinct uuid),max(__stamp) from items group by __user,__type;
   select distinct uuid, item->>'title' as title from items where __user='daniel' and __type='podcast'
+
+#### Using pg crypto
+The extension for `pgcrypto`, although available, must be loaded (once)
+
+    create extension pgcrypto;
+    # possible error if already loaded: ERROR:  extension "pgcrypto" already exists
+    # example use of digest; notice cast of item(::json) to ::text
+    SELECT encode(digest(item::text, 'sha256'), 'hex') from items limit 100;
 
 ### CouchDB for persistence
 Note: try CouchDB 2.0 

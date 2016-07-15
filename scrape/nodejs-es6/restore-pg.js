@@ -42,6 +42,17 @@ function main() {
 
 // returns all items from extra, in an array
 function restore(credentials, extra) {
+  const saver = store.impl.pg.save;
+
+  // TODO(daneroo) Move this to load filter
+  // just to short-circuit/date filter
+  // const saver = function(item,opts){
+  //   if (item.__stamp<'2016-07'){
+  //     return Promise.resolve(true);
+  //   }
+  //   // console.log(item.__stamp,typeof item.__stamp);
+  //   return store.impl.pg.save(item,opts);
+  // }
 
   return store.impl.file.load({
     prefix: extra,
@@ -53,7 +64,7 @@ function restore(credentials, extra) {
     filter: {
       __user: credentials.name
     }
-  }, store.impl.pg.save);
+  }, saver);
 
 }
 
@@ -87,10 +98,10 @@ function accumulateItems(credentials) {
 
 // ************ Utilities
 
-//  move to log.debugging module (as Factory?)
+//TODO(daneroo): move to log.debugging module (as Factory?)
 function verboseErrorHandler(shouldRethrow) {
   return function errorHandler(error) {
-    log.debug('error', error);
+    log.error('error', error);
     if (shouldRethrow) {
       throw (error);
     }

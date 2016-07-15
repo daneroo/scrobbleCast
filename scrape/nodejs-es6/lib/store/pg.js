@@ -6,6 +6,7 @@
 var Promise = require('bluebird');
 var _ = require('lodash');
 var log = require('../log');
+var utils = require('../utils');
 // these might be moved or exposed
 var pgu = require('./pg-utils');
 
@@ -60,7 +61,10 @@ function save(item, opts) {
 
 // implementations
 function checkThenSaveItem(item) {
-  return confirmIdentical(item)
+  return confirmIdenticalByHash(item)
+    .then(isIdentical => {
+      return isIdentical || confirmIdentical(item);
+    })
     .then(isIdentical => {
       return isIdentical || saveItem(item);
     });
@@ -98,7 +102,6 @@ function saveItem(item) {
 
 function confirmIdentical(item) {
   var keys = [item.__user, item.__stamp, item.__type, item.uuid, item.__sourceType];
-  // (__user, __stamp, __type, uuid, __sourceType)
   var sql = 'select item from items where __user=$1 AND __stamp=$2 AND __type=$3 AND uuid=$4 AND __sourceType=$5';
   return pgu.query(sql, keys)
     .then(result => {
@@ -108,12 +111,36 @@ function confirmIdentical(item) {
       var dbitem = result[0].item;
       var isIdentical = _.isEqual(item, dbitem);
       if (!isIdentical) {
-        log('Failed duplicate check', keys.join('/'));
-        log('-', item);
-        log('+', dbitem);
+        log.verbose('Failed duplicate check', keys.join('/'));
+        log.verbose('-', item);
+        log.verbose('+', dbitem);
 
       } else {
-        // log('Checked that duplicate is identical', keys.join('/'));
+        // log.verbose('Checked that item is identical', keys.join('/'));
+      }
+      return isIdentical;
+    });
+}
+
+function confirmIdenticalByHash(item) {
+  //TODO(daneroo): make algorithm a param (in query too!)
+  var algorithm = 'sha256';
+  var keys = [algorithm, item.__user, item.__stamp, item.__type, item.uuid, item.__sourceType];
+  var sql = 'SELECT encode(digest(item::text, $1), \'hex\') as digest from items where __user=$2 AND __stamp=$3 AND __type=$4 AND uuid=$5 AND __sourceType=$6';
+  var digest = utils.digest(JSON.stringify(item),algorithm);
+  return pgu.query(sql, keys)
+    .then(result => {
+      if (result.length === 0 || !result[0].digest) {
+        return false;
+      }
+      var dbdigest = algorithm+':'+result[0].digest;
+      var isIdentical = digest === dbdigest;
+      if (!isIdentical) {
+        log.verbose('Failed duplicate digest check', keys.join('/'));
+        log.verbose('-', digest);
+        log.verbose('+', dbdigest);
+      } else {
+        // log.verbose('Checked that digest is identical', keys.join('/'),digest);
       }
       return isIdentical;
     });

@@ -17,8 +17,11 @@
 
 Start a container and connect to it
 
-    docker run -it --rm -p 5432:5432 --name postgres postgres
-    docker exec -it postgres createdb -U postgres scrobblecast
+    docker run -it --rm -p 5432:5432 -e POSTGRES_DB=scrobblecast --name postgres postgres
+
+    # Database creation is now done with $POSTGRES_DB
+    # docker exec -it postgres createdb -U postgres scrobblecast
+
     docker exec -it postgres psql -U postgres scrobblecast
     docker exec -it postgres bash
       psql -U postgres scrobblecast -c "select count(distinct uuid) from items"

@@ -31,8 +31,6 @@ function end() {
 }
 
 // TODO(daneroo): move to config
-// var connectionString = 'postgres://docker:5432@localhost/postgres';
-// var connectionString = 'postgres://postgres@docker/scrobblecast';
 var connectionString = 'postgres://postgres@localhost/scrobblecast';
 var client;
 
@@ -77,12 +75,11 @@ function init() {
       var ddl = [
         'CREATE TABLE items ( ',
         '__user varchar(255), ',
-        '__stamp timestamp with time zone, ',
         '__type varchar(255), ',
         'uuid  varchar(255), ',
         '__sourceType varchar(255), ',
+        '__stamp timestamp with time zone, ',
         'item json, ',
-        // 'CONSTRAINT primary_idx PRIMARY KEY(__user, __stamp, __type, uuid, __sourceType) ',
         'CONSTRAINT primary_idx PRIMARY KEY(__user, __type, uuid, __sourceType, __stamp) ',
         ')'
       ].join('');

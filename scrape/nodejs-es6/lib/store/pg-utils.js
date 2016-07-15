@@ -25,12 +25,15 @@ exports = module.exports = {
   end: end // drain the pool! Doesn't loook async (pg.end has no cb.)
 };
 
-function end(){
+function end() {
   log.debug('pgu:end Closing connections, drain the pool!');
   pg.end();
 }
+
+// TODO(daneroo): move to config
 // var connectionString = 'postgres://docker:5432@localhost/postgres';
-var connectionString = 'postgres://postgres@docker/scrobblecast';
+// var connectionString = 'postgres://postgres@docker/scrobblecast';
+var connectionString = 'postgres://postgres@localhost/scrobblecast';
 var client;
 
 // just return result.rows, untils we need otherwise
@@ -85,17 +88,13 @@ function init() {
       ].join('');
       return ddlSilent(ddl);
     })
-    // .then(function(){
-    //   var ddl = 'CREATE UNIQUE INDEX master_unique_idx ON items (__user, __stamp, __type, uuid, __sourceType)';
-    //   return ddlSilent(ddl);
-    // })
-    // .then(function(){
-    //   var ddl = 'CREATE UNIQUE INDEX master_unique_idx ON items (__user, __stamp, __type, uuid, __sourceType)';
-    //   return ddlSilent(ddl);
-    // })
-    // .then(function() {
-    //   // var ddl = 'ALTER TABLE items ADD CONSTRAINT noduplicates UNIQUE (__user, __stamp, __type, uuid, __sourceType)';
-    //   var ddl = 'ALTER TABLE items ADD UNIQUE (__user, __stamp, __type, uuid, __sourceType)';
+    .then(function() {
+      var ddl = 'create extension pgcrypto';
+      return ddlSilent(ddl);
+    })
+    // .then(function () {
+    //   // was used for a lookup by digest: confirmIdenticalByDigestCount
+    //   var ddl = 'CREATE INDEX digest_idx ON items (encode(digest(item::text, \'sha256\'), \'hex\'))';
     //   return ddlSilent(ddl);
     // })
     .then(function(rows) {

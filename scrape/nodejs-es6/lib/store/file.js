@@ -80,8 +80,8 @@ function combineAssertions(opts) {
 
 // by time, or count,...
 function progress() {
-  const logEvery=3000;
-  // boud scope variables
+  const logEvery=5000;
+  // bound scope variables
   var soFar = 0;
   var start = +new Date();
 

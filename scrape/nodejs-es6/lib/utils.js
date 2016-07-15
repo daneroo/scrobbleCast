@@ -57,10 +57,13 @@ function md5(str) {
 }
 
 // TODO(daneroo): option object for {algorithm:, prependAlgorithm:bool}
-function digest(str, algorithm) {
+function digest(str, algorithm, prependAlgorithm) {
   algorithm = algorithm || 'sha256';
   var hash = crypto.createHash(algorithm).update(str).digest('hex');
-  return algorithm + ':' + hash;
+  if (prependAlgorithm){
+    hash = algorithm + ':' + hash;
+  }
+  return hash;
 }
 
 exports = module.exports = {

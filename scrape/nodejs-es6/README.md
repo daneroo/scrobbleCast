@@ -2,7 +2,10 @@
 
 ## TODO
 
-- pgcrypto + digest in pg.init
+- restore-pg switches from default `saveButVerifyIfDuplicate` to `checkThenSaveItem` on first fail...
+
++ pgcrypto in pg.init
++ digest in pg.items, with index on expression: no speedup
 
 ## Docker
 
@@ -14,13 +17,18 @@
 
 Start a container and connect to it
 
-  docker run -it --rm -p 5432:5432 --name postgres postgres
-  docker exec -it postgres createdb -U postgres scrobblecast
-  docker exec -it postgres psql -U postgres scrobblecast
+    docker run -it --rm -p 5432:5432 --name postgres postgres
+    docker exec -it postgres createdb -U postgres scrobblecast
+    docker exec -it postgres psql -U postgres scrobblecast
+    docker exec -it postgres bash
+      psql -U postgres scrobblecast -c "select count(distinct uuid) from items"
 
-  scrobblecast=#
-  select __user,__type,count(distinct uuid),max(__stamp) from items group by __user,__type;
-  select distinct uuid, item->>'title' as title from items where __user='daniel' and __type='podcast'
+    scrobblecast=#
+    select __user,__type,count(distinct uuid),max(__stamp) from items group by __user,__type;
+    select distinct uuid, item->>'title' as title from items where __user='daniel' and __type='podcast'
+    select __user,__type,uuid, count(distinct uuid) dis,count(*) as all,min(__stamp),max(__stamp) from items group by __user,__type,uuid order by count(*) desc;
+    # === mysqladmin proc
+    select * from pg_stat_activity
 
 #### Using pg crypto
 The extension for `pgcrypto`, although available, must be loaded (once)

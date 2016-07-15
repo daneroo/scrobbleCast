@@ -12,6 +12,8 @@ var pgu = require('./pg-utils');
 
 // var sinkFile = require('../sink/file');
 
+const DIGEST_ALGORITHM = 'sha256';
+
 // Exported API
 exports = module.exports = {
   // load: (opts, handler) => {} // foreach item, cb(item);
@@ -61,7 +63,8 @@ function save(item, opts) {
 
 // implementations
 function checkThenSaveItem(item) {
-  return confirmIdenticalByHash(item)
+  // return confirmIdenticalByDigestCount(item)
+  return confirmIdenticalByDigest(item)
     .then(isIdentical => {
       return isIdentical || confirmIdentical(item);
     })
@@ -122,20 +125,23 @@ function confirmIdentical(item) {
     });
 }
 
-function confirmIdenticalByHash(item) {
-  //TODO(daneroo): make algorithm a param (in query too!)
-  var algorithm = 'sha256';
-  var keys = [algorithm, item.__user, item.__stamp, item.__type, item.uuid, item.__sourceType];
+// This checks if the item selected by key exists has the proper digest
+// it fails if the keey lookup succeds, but the digest is wrong
+// TODO(daneroo): should probabley throw if the key exists, but the digest is wrong
+function confirmIdenticalByDigest(item) {
+  var digest = utils.digest(JSON.stringify(item),DIGEST_ALGORITHM,false);
+  var keys = [DIGEST_ALGORITHM, item.__user, item.__stamp, item.__type, item.uuid, item.__sourceType];
   var sql = 'SELECT encode(digest(item::text, $1), \'hex\') as digest from items where __user=$2 AND __stamp=$3 AND __type=$4 AND uuid=$5 AND __sourceType=$6';
-  var digest = utils.digest(JSON.stringify(item),algorithm);
+
   return pgu.query(sql, keys)
     .then(result => {
       if (result.length === 0 || !result[0].digest) {
         return false;
       }
-      var dbdigest = algorithm+':'+result[0].digest;
+      var dbdigest = result[0].digest;
       var isIdentical = digest === dbdigest;
       if (!isIdentical) {
+        // TODO(daneroo): should probabley throw if the key exists, but the digest is wrong
         log.verbose('Failed duplicate digest check', keys.join('/'));
         log.verbose('-', digest);
         log.verbose('+', dbdigest);

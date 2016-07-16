@@ -25,14 +25,12 @@ Promise.resolve(true)
   });
 
 function main() {
-  var extra = '';
-  // var extra = 'rollup'; // to switch to rollup..
   return Promise.each(allCredentials, function(credentials) {
     logMemAfterGC();
     log.verbose('Restore started', {
       user: credentials.name
     });
-    return restore(credentials, extra)
+    return restore(credentials)
       .then(function() {
         logMemAfterGC();
         return accumulateItems(credentials);
@@ -40,23 +38,25 @@ function main() {
   });
 }
 
-// returns all items from extra, in an array
-function restore(credentials, extra) {
+// first load from extra=rollup, then from extra=''
+function restore(credentials) {
   const saver = store.impl.pg.save;
   // TODO(daneroo): implement a local bufferd saver, move to lib?
 
-  return store.impl.file.load({
-    prefix: extra,
-    assert: {
-      // stampOrder: true,
-      // singleUser: true,
-      progress: true, // should not be an assertion.
-    },
-    filter: {
-      __user: credentials.name
-    }
-  }, );
+  return Promise.each(['rollup', ''], function (extra) {
 
+    return store.impl.file.load({
+      prefix: extra,
+      assert: {
+        // stampOrder: true,
+        // singleUser: true,
+        progress: true, // should not be an assertion.
+      },
+      filter: {
+        __user: credentials.name
+      }
+    }, saver);
+  });
 }
 
 function accumulateItems(credentials) {

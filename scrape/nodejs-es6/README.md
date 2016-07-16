@@ -11,9 +11,24 @@
   - consensus based on digest of non deduped entries. (order by digest|date,..)
 - restore-pg switches from default `saveButVerifyIfDuplicate` to `checkThenSaveItem` on first fail...
 
++ Move rollup'd files to archive (part of rollup)
 + pg.saveAll - concurrency (use blubird.each)
 + pgcrypto in pg.init
 + digest in pg.items, with index on expression: no speedup
+
+## Moving away from files
+
+- Confirming all old files are accounted for
+- Archiving : move all file which have been rollup'd into data/archive
+
+
+    mkdir -p data/archive/byUserStamp/daniel
+    mkdir -p data/archive/byUserStamp/stephane
+    cd data
+    # find -exec mv: gives lots of 'No such file or directory' errors: it's OK
+    find byUserStamp -type d -name 201[45]-\* -exec mv {} ./archive/{} \;
+    # move up to june(2016-06) ...
+    find byUserStamp -type d -name 2016-0[1-6]\* -exec echo mv {} ./archive/{} \;
 
 ## Docker
 

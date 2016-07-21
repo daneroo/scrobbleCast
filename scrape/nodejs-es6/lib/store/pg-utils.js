@@ -30,8 +30,10 @@ function end() {
   pg.end();
 }
 
-// TODO(daneroo): move to config
-var connectionString = 'postgres://postgres@localhost/scrobblecast';
+// TODO(daneroo): move to config, also see instapool
+var host = process.env.POSTGRES_HOST || 'localhost';
+var connectionString = 'postgres://postgres@'+host+'/scrobblecast';
+
 var client;
 
 // just return result.rows, untils we need otherwise

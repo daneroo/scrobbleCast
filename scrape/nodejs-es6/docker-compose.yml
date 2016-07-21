@@ -1,27 +1,45 @@
 # This is my new docker 1.9.1 compose file
+version: '2'
+services:
+  postgres:
+    image: postgres
+    environment:
+      - POSTGRES_DB=scrobblecast
+    volumes:
+     - ./data/postgresql:/var/lib/postgresql/data
+    ports:
+     - "5432:5432"
+    restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: "1m"
+        max-file: "2"
 
 
-scrape:
-  # container_name: scrape
-  build: .
+  scrape:
+    # container_name: scrape
+    build: .
+    environment:
+      # no value inherits from host (but not docker-machine host...)
+      - HOSTNAME
+      - POSTGRES_HOST=postgres
+    command: node cron.js
+    # ports:
+    #  - "8000:8000"
 
-  environment:
-    # no value inherits from host (but not docker-machine host...)
-    - HOSTNAME
-    # - KEY=value
+    volumes:
+      - ./credentials.json:/usr/src/app/credentials.json:ro
+      - ./credentials.loggly.json:/usr/src/app/credentials.loggly.json:ro
+      - ./data:/usr/src/app/data
+    links:
+      - postgres
 
-  command: node cron.js
-  # command: node logcheck.js
-
-  volumes:
-    - ./credentials.json:/usr/src/app/credentials.json:ro
-    - ./credentials.loggly.json:/usr/src/app/credentials.loggly.json:ro
-    - ./data:/usr/src/app/data
-  # links:
-  #   - mydb
-  #   - red
-  #   - rabbit
-  # ports:
-  #   - 80:8000
+    restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: "1m"
+        max-file: "2"
 
 

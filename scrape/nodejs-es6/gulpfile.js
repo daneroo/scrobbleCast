@@ -10,25 +10,17 @@ var paths = {
   source: ['./lib/*.js']
 };
 
-var plumberConf = {};
-
-if (process.env.CI) {
-  plumberConf.errorHandler = function(err) {
-    throw err;
-  };
-}
-
-gulp.task('lint', function() {
+gulp.task('lint', function () {
   return gulp.src(paths.lint)
-    .pipe(plugins.jshint('.jshintrc'))
-    .pipe(plugins.plumber(plumberConf))
-    .pipe(plugins.jscs())
-    .pipe(plugins.jshint.reporter('jshint-stylish'));
+    .pipe(plugins.eslint())
+    .pipe(plugins.eslint.format())
+    // To have the process exit with an error code (1) on
+    // lint error, return the stream and pipe to failAfterError last.
+    .pipe(plugins.eslint.failAfterError());
 });
 
 gulp.task('mocha', function() {
   gulp.src(paths.tests)
-    .pipe(plugins.plumber(plumberConf))
     .pipe(plugins.mocha({
       // compilers: {
       //   js: babel
@@ -42,7 +34,6 @@ gulp.task('istanbul', function(cb) {
     .pipe(plugins.istanbul()) // Covering files
     .on('finish', function() {
       gulp.src(paths.tests)
-        .pipe(plugins.plumber(plumberConf))
         .pipe(plugins.mocha())
         .pipe(plugins.istanbul.writeReports()) // Creating the reports after tests runned
         .on('finish', function() {

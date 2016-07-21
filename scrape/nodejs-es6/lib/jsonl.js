@@ -54,7 +54,8 @@ function write(filename, items, verbose) {
   fs.writeFileSync(filename, json);
   if (verbose) {
     var numItems = (items.length) ? items.length : 1;
-    log.info('jsonl.write',{
+    //TODO(daneroo): reset to info; verbose to avoid loggly for now
+    log.verbose('jsonl.write',{
       file:path.basename(filename),
       md5: utils.md5(json),
       n:numItems,

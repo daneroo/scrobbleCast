@@ -2,6 +2,9 @@
 
 ## TODO
 
+- scrape/nodejs-es6/lib/jsonl.js:57 restore log.info for jsonl.write
+- Use babel-node for async/await
+- confirm docker-compose logging (max-size/max-file) and restart
 - dedup: mark status, delete (window, or write to file);
 - config
 - restore-pg: buffer writes.
@@ -11,6 +14,8 @@
   - consensus based on digest of non deduped entries. (order by digest|date,..)
 - restore-pg switches from default `saveButVerifyIfDuplicate` to `checkThenSaveItem` on first fail...
 
++ babel/eslint for async/await
++ docker-compose
 + Move rollup'd files to archive (part of rollup)
 + pg.saveAll - concurrency (use blubird.each)
 + pgcrypto in pg.init

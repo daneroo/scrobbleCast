@@ -20,6 +20,7 @@ exports = module.exports = {
   load: load,
   // save: (item, opts) => {}, // returns (Promise)(status in insert,duplicate,error)
   save: save,
+  remove: remove,
   saveAll: saveAll,
   init: pgu.init, // setup the database pool, ddl...
   end: pgu.end
@@ -58,6 +59,21 @@ function save(item, opts) {
   // log.debug('pg:save saving item', item.__stamp);
   return checkThenSaveItem(item);
   // return saveButVerifyIfDuplicate(item);
+}
+
+function remove(item) {
+  function getFields(item) {
+    return [item.__user, item.__stamp, item.__type, item.uuid, item.__sourceType];
+  }
+  var fields = getFields(item);
+  log.debug('pg:remove deleting item', fields);
+
+  return pgu.insert('DELETE from items where __user=$1 AND __stamp=$2 AND __type=$3 AND uuid=$4 AND __sourceType=$5', fields)
+    .then(function (rowCount) {
+      if (rowCount !== 1) {
+        console.log('delete rowCount!=1', rowCount);
+      }
+    });
 }
 
 // TODO(daneroo): batch insert?

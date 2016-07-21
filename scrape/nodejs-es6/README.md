@@ -2,6 +2,7 @@
 
 ## TODO
 
+- babel into gulp
 - scrape/nodejs-es6/lib/jsonl.js:57 restore log.info for jsonl.write
 - Use babel-node for async/await
 - confirm docker-compose logging (max-size/max-file) and restart

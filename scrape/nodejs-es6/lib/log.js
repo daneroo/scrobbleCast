@@ -8,7 +8,7 @@ var os = require('os');
 var fs = require('fs');
 var winston = require('winston');
 require('winston-loggly');
-var packageJson = require('../package.json');
+var packageName = 'pocketscrape';
 var config = JSON.parse(fs.readFileSync('credentials.loggly.json').toString());
 
 var hostname = os.hostname();
@@ -17,7 +17,7 @@ var hostname = os.hostname();
 winston.add(winston.transports.Loggly, {
   token: config.token,
   subdomain: config.subdomain,
-  tags: [packageJson.name, 'host-' + hostname],
+  tags: [packageName, 'host-' + hostname],
   json: true
 });
 

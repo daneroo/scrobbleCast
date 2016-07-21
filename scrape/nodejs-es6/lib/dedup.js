@@ -6,10 +6,6 @@
 // overwrite minimal changeset to <data>/byUserStamp
 
 // dependencies - core-public-internal
-var fs = require('fs');
-var path = require('path');
-var mkdirp = require('mkdirp');
-var _ = require('lodash');
 var log = require('./log');
 // -- Implementation functions
 var store = require('./store');
@@ -22,7 +18,6 @@ exports = module.exports = {
 
 function dedupTask(credentials) {
   var historyByType = new delta.AccumulatorByTypeByUuid();
-  var maxStamp = '1970-01-01T00:00:00Z'; // to track increasing'ness
   var __user =  credentials.name;
   return Promise.resolve(true)
     .then(function() {
@@ -37,12 +32,14 @@ function dedupTask(credentials) {
         duplicates:0,
         keepers:0
       }
+      var duplicates=[];
       function itemHandler(item) {
         counts.total++;
         var changeCount = historyByType.merge(item);
 
         if (changeCount === 0) {
           counts.duplicates++;
+          duplicates.push(item);
           // log.verbose(`Mark as duplicate: |Δ|:${changeCount} ${JSON.stringify(item)}`);
           // log.verbose(`Mark as duplicate: |Δ|:${changeCount} ${item.__sourceType} ${item.title}`);
         } else {
@@ -56,10 +53,11 @@ function dedupTask(credentials) {
       return store.impl.pg.load(opts, itemHandler)
         .then((results) => {
           log.verbose('Deduped', counts);
-          return true;
+          return deleteDuplicates(duplicates);
         });
     })
     .then(function(dontCare) {
+      console.log('pong');
       historyByType.sortAndSave(__user);
       return true;
     })
@@ -70,4 +68,22 @@ function dedupTask(credentials) {
       throw error;
     });
 }
+
+async function deleteDuplicates(duplicates) {
+  let i = 0;
+  log.verbose('deleting %d duplicates', duplicates.length);
+  for (let item of duplicates) {
+    // await delay(1000);
+    await store.impl.pg.remove(item);
+    i++;
+    if (i % 1000 == 0) {
+      log.verbose('  ... removed', i);
+
+    }
+  }
+}
+
+// function delay(ms) {
+//   return new Promise(resolve => setTimeout(resolve, ms));
+// }
 

@@ -14,7 +14,7 @@ services:
       driver: json-file
       options:
         max-size: "1m"
-        max-file: "2"
+        # max-file: "2"
 
 
   scrape:
@@ -24,7 +24,7 @@ services:
       # no value inherits from host (but not docker-machine host...)
       - HOSTNAME
       - POSTGRES_HOST=postgres
-    command: node cron.js
+    # command: npm start
     # ports:
     #  - "8000:8000"
 
@@ -40,6 +40,6 @@ services:
       driver: json-file
       options:
         max-size: "1m"
-        max-file: "2"
+        # max-file: "2"
 
 

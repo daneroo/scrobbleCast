@@ -7,8 +7,14 @@ var paths = {
   lint: ['./gulpfile.js', '*.js', './lib/**/*.js'],
   watch: ['./gulpfile.js', './lib/**', './test/**/*.js', '!test/{temp,temp/**}'],
   tests: ['./test/**/*.js', '!test/{temp,temp/**}'],
-  source: ['./lib/*.js']
+  source: ['*.js', './lib/**/*.js']
 };
+
+gulp.task('build', () =>
+    gulp.src(paths.source,{base: '.'})
+        .pipe(plugins.babel())
+        .pipe(gulp.dest('dist'))
+);
 
 gulp.task('lint', function () {
   return gulp.src(paths.lint)

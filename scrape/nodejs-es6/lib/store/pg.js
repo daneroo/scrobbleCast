@@ -36,9 +36,9 @@ function load(opts, itemHandler) {
   }
   return pgu.query('select item from items where __user=$1 order by __user,__stamp,__type,uuid,__sourceType', [opts.filter.__user])
     .then(function(rows) {
-      log.verbose('pg:load ', {
-        rows: rows.length
-      });
+      // log.verbose('pg:load ', {
+      //   rows: rows.length
+      // });
 
       // mapSeries?
       return Promise.each(rows,function(row) {

@@ -2,11 +2,10 @@
 
 ## TODO
 
-- babel into gulp
+- sync: load all from file and database, compare
+- Fix babel'd start (cwd, and relative paths)
 - scrape/nodejs-es6/lib/jsonl.js:57 restore log.info for jsonl.write
-- Use babel-node for async/await
 - confirm docker-compose logging (max-size/max-file) and restart
-- dedup: mark status, delete (window, or write to file);
 - config
 - restore-pg: buffer writes.
 - restore-pg: push to remote database (from dirac,darwin -> dockerX)
@@ -15,6 +14,8 @@
   - consensus based on digest of non deduped entries. (order by digest|date,..)
 - restore-pg switches from default `saveButVerifyIfDuplicate` to `checkThenSaveItem` on first fail...
 
++ dedup: just delete from database;
++ babel into gulp
 + babel/eslint for async/await
 + docker-compose
 + Move rollup'd files to archive (part of rollup)

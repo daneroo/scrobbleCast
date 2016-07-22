@@ -60,6 +60,23 @@ function compare(fileItems, dbItems) {
   const dbHash = dbItems.reduce(storeByHash, {});
   log.verbose('hashed %d file items', Object.keys(fileHash).length);
   log.verbose('hashed %d db   items', Object.keys(dbHash).length);
+
+  Object.keys(fileHash).forEach(function (digest, idx) {
+    if (!dbHash[digest]) {
+      // log.verbose('file item %s not found in db',digest);
+      const item = fileHash[digest];
+      log.verbose('-!file', item.__stamp, item.title, idx);
+      if (idx === 89937) log.verbose('    ', item);
+    }
+  });
+  Object.keys(dbHash).forEach(function (digest, idx) {
+    if (!fileHash[digest]) {
+      // log.verbose('db item %s not found in file',digest);
+      const item = dbHash[digest];
+      log.verbose('-!db  ', item.__stamp, item.title, idx);
+      if (idx === 89937) log.verbose('    ', item);
+    }
+  });
 }
 // first load from extra=rollup, then from extra=''
 function loadFromFiles(credentials) {

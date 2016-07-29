@@ -25,23 +25,24 @@ function load(opts, itemHandler) {
   opts = opts || {};
   itemHandler = itemHandler || defaultItemHandler();
   opts.prefix = opts.prefix || ''; // ?? ''->'byUserStamp'
+
   if (!opts.filter.__user) {
     return Promise.reject(new Error('file:load missing required filter.__user'));
   }
 
+  // wrap itemHandler for progress and checks
   itemHandler = wrappedHandler(opts, itemHandler);
-  // srcFile.find(path.join(extrapath, 'byUserStamp', credentials.name, stamp, pattern))
-  return srcFile.find(path.join(opts.prefix || 'byUserStamp', '**/*.json?(l)'))
-    .then(function (files) {
-      // user filter :== path includes '/_user_/'
-      files = files.filter((file) => {
-        // log.verbose(file);
-        // includes => indexOf != -1
-        return file.includes('/' + opts.filter.__user + '/');
+
+  function findFilesForUser() {
+    // find all files in the prefixed path,
+    // then filter for '/user/' in path
+    return srcFile.find(path.join(opts.prefix || 'byUserStamp', '**/*.json?(l)'))
+      .then(function (files) {
+        return files.filter((file) => file.includes('/' + opts.filter.__user + '/'))
       });
-      log.verbose('-file.load', { user: opts.filter.__user, prefix: opts.prefix, files: files.length });
-      return files;
-    })
+  }
+
+  return findFilesForUser()
     .then(function (files) {
       var counts = {
         item: 0,
@@ -52,30 +53,17 @@ function load(opts, itemHandler) {
         counts.item += items.length;
         return Promise.each(items, function (item) {
           // return Promise.resolve(true);
-          return itemHandler({}, {}, {}, item);
+          return itemHandler(item);
         });
-      })
-        .then(() => {
-          log.verbose('counts', counts);
-          var wrap = {};
-          wrap[opts.filter.__user] = counts;
-          return wrap;
-        });
+      }).then(() => counts);
 
     })
-    // .then(reportCounts(opts))
-    // .then(function () {
-    //   return srcFile.iterator(opts.prefix, [{
-    //     name: opts.filter.__user
-    //   }], itemHandler, '**/*.json?(l)')
-    // })
     .then(reportCounts(opts));
 
 }
 
 function defaultItemHandler() {
-  return (item) => {
-    // log.verbose('Handled', item);
+  return (/*item*/) => {
     return Promise.resolve(true);
   };
 }
@@ -84,7 +72,7 @@ function defaultItemHandler() {
 // -massage the arguments into old form of srcFile.iterator's handler
 function wrappedHandler(opts, itemHandler) {
   const assert = combineAssertions(opts);
-  return function (credentials, stamp, file, item) {
+  return function (item) {
     // log.debug('-file:load Calling handler with item.stamp:%s', item.__stamp);
     assert(item);
     return itemHandler(item);
@@ -114,7 +102,7 @@ function combineAssertions(opts) {
   };
 }
 
-// function with bound local isolated scope
+// functions with bound local isolated scope
 
 // by time, or count,...
 function progress() {
@@ -167,18 +155,15 @@ function singleUser() {
   };
 }
 
-// opts.prefix = opts.prefix || '';
-// if (!opts.filter.__user) {
-
 function reportCounts(opts) {
   const prefix = opts.prefix;
   const user = opts.filter.__user;
 
   return (counts) => {
-    log.verbose('+file.load', counts);
-    Object.keys(counts).forEach(function (name) {
-      var c = counts[name];
-      log.verbose('file.load prefix:%s user:%s |stamps|:%s |f|:%s |i|:%s |ignored|:%s', prefix, user, c.stamp||0, c.file, c.part||c.item, c.ignoredFiles||0);
+    log.verbose('+file.load', {
+      prefix: prefix,
+      user: user,
+      counts: counts
     });
     return Promise.resolve(counts);
   };

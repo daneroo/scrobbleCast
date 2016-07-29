@@ -4,14 +4,19 @@
 
 - snapshots to dir, then [s3-cli sync](https://github.com/andrewrk/node-s3-cli)
 - remove `s3-cli`, replace by `s3` get creds from json instead of s3cfg.ini (.gitgnore)
+- config
+- speed pg-promise (see instapool)
+  http://vitaly-t.github.io/pg-promise/helpers.html#.insert
+  https://github.com/vitaly-t/pg-promise/wiki/Performance-Boost
+- deprecate srcFile
+- remove `.jsbeautifyrc, .jshitrc, .jscsrc`
 - replace npm scripts: `snapshots` and `restore`
 - sync: load all from file and database, compare
 - Fix babel'd start (cwd, and relative paths) Move scripts to (sub)folder to fix relative paths.
 - scrape/nodejs-es6/lib/jsonl.js:57 restore log.info for jsonl.write
 - confirm docker-compose logging (max-size/max-file) and restart
-- config
-- restore-pg: buffer writes.
-- restore-pg: push to remote database (from dirac,darwin -> dockerX)
+- restore: buffer writes.
+- restore: push to remote database (from dirac,darwin -> dockerX)
 - Seperate dedup from consensus-signature
   - dedup per uuid
   - consensus based on digest of non deduped entries. (order by digest|date,..)
@@ -26,8 +31,22 @@
 + pgcrypto in pg.init
 + digest in pg.items, with index on expression: no speedup
 
+## TESTING
+
+stephane-episode.json, md5=22567cb74b15ef1c621407862c242637, n=17936, MB=22.40
+stephane-podcast.json, md5=19a8e6733c891b7fa4b21e494031667e, n=131, MB=0.23
+daniel-episode.json,   md5=d7069cd5fedd450085c60d935aa1af3e, n=24167, MB=31.77
+daniel-podcast.json,   md5=7f87add9a903ca46d837092fde11d03b, n=92, MB=0.18
+
+  __user  | __type  | dist  | count |          max           
+----------+---------+-------+-------+------------------------
+ daniel   | episode | 24167 | 90375 | 2016-07-29 20:00:00+00
+ daniel   | podcast |    92 |   611 | 2016-07-29 04:00:00+00
+ stephane | episode | 17936 | 41240 | 2016-07-29 20:00:00+00
+ stephane | podcast |   131 |  4257 | 2016-07-29 16:00:00+00
+
 ## S3 Bucket and policy
-Objective: snapshots (monthly/daily/hourly) will be saved to an s3 bucket.
+Objective: snapshots (monthly [/daily/hourly] ) will be saved to an s3 bucket.
 
 This will be used as a seed for any new host, and replaces `data/rollup`.
 
@@ -37,7 +56,8 @@ However, we might want to consider `sinkFile.write( ,,{overwrite: true})` if we 
     ./node_modules/.bin/s3-cli --config s3cfg.ini ls s3://scrobblecast/
 
 - Bucket name: s3://scroblecast/ in region `US Standard`
-- Bucket Policy: 
+- Bucket Policy: The policiy naming `scrobblecast-s3-rw` is attached to the bucket.
+
 You gotta be kidding, separate statement for list, and put/get/delete
 
 

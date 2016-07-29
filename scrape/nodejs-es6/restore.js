@@ -19,19 +19,19 @@ Promise.resolve(true)
   .then(main)
   .then(logMemAfterGC)
   .catch(verboseErrorHandler(false))
-  .finally(function() {
+  .finally(function () {
     log.debug('Done, done, releasing PG connection');
     store.impl.pg.end();
   });
 
 function main() {
-  return Promise.each(allCredentials, function(credentials) {
+  return Promise.each(allCredentials, function (credentials) {
     logMemAfterGC();
     log.verbose('Restore started', {
       user: credentials.name
     });
     return restore(credentials)
-      .then(function() {
+      .then(function () {
         logMemAfterGC();
         return accumulateItems(credentials);
       });
@@ -43,6 +43,8 @@ function restore(credentials) {
   const saver = store.impl.pg.save;
   // TODO(daneroo): implement a local bufferd saver, move to lib?
 
+  // return Promise.each(['snapshots',''], function (extra) {
+  // return Promise.each(['noredux'], function (extra) {
   return Promise.each(['rollup', ''], function (extra) {
 
     return store.impl.file.load({

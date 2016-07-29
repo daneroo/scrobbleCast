@@ -39,6 +39,10 @@ function read(file) {
 
 function readLines(file) {
   var lines = fs.readFileSync(file, 'utf8').toString().split('\n');
+  // filter for empty lines
+  lines = lines.filter((line)=>{
+    return line.trim().length>0
+  });
   for (var i in lines) {
     lines[i] = JSON.parse(lines[i]);
   }

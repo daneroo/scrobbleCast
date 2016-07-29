@@ -6,7 +6,9 @@
   "scripts": {
     "NoBabelStart": "gulp build && node dist/cron.js",
     "start": "babel-node cron.js",
-    "test": "gulp test"
+    "test": "gulp test",
+    "snapshot": "s3-cli --config s3cfg.ini sync data/snapshots/ s3://scrobblecast/snapshots/",
+    "restore": "s3-cli --config s3cfg.ini sync s3://scrobblecast/snapshots/ data/snapshots/"
   },
   "author": {
     "name": "Daniel Lauzon"
@@ -31,6 +33,7 @@
     "pouchdb": "^5.1.0",
     "pull-stream": "^2.26.0",
     "request-promise": "^0.2.4",
+    "s3-cli": "^0.13.0",
     "winston": "^2.1.0",
     "winston-loggly": "^1.2.0"
   },

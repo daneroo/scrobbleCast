@@ -2,8 +2,11 @@
 
 ## TODO
 
+- snapshots to dir, then [s3-cli sync](https://github.com/andrewrk/node-s3-cli)
+- remove `s3-cli`, replace by `s3` get creds from json instead of s3cfg.ini (.gitgnore)
+- replace npm scripts: `snapshots` and `restore`
 - sync: load all from file and database, compare
-- Fix babel'd start (cwd, and relative paths)
+- Fix babel'd start (cwd, and relative paths) Move scripts to (sub)folder to fix relative paths.
 - scrape/nodejs-es6/lib/jsonl.js:57 restore log.info for jsonl.write
 - confirm docker-compose logging (max-size/max-file) and restart
 - config
@@ -22,6 +25,66 @@
 + pg.saveAll - concurrency (use blubird.each)
 + pgcrypto in pg.init
 + digest in pg.items, with index on expression: no speedup
+
+## S3 Bucket and policy
+Objective: snapshots (monthly/daily/hourly) will be saved to an s3 bucket.
+
+This will be used as a seed for any new host, and replaces `data/rollup`.
+
+For now, Using an on-disk cache, will allow us to use standard s3 sync tools.
+However, we might want to consider `sinkFile.write( ,,{overwrite: true})` if we have versioning in the bucket!
+
+    ./node_modules/.bin/s3-cli --config s3cfg.ini ls s3://scrobblecast/
+
+- Bucket name: s3://scroblecast/ in region `US Standard`
+- Bucket Policy: 
+You gotta be kidding, separate statement for list, and put/get/delete
+
+
+    {
+      "Id": "Policy1469750948684",
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Sid": "Stmt1469750860759",
+          "Action": [
+            "s3:ListBucket"
+          ],
+          "Effect": "Allow",
+          "Resource": "arn:aws:s3:::scrobblecast",
+          "Principal": {
+            "AWS": [
+              "arn:aws:iam::450450915582:user/scrobblecast-s3-rw"
+            ]
+          }
+        },
+        {
+          "Sid": "Stmt1469750944350",
+          "Action": [
+            "s3:DeleteObject",
+            "s3:GetObject",
+            "s3:PutObject"
+          ],
+          "Effect": "Allow",
+          "Resource": "arn:aws:s3:::scrobblecast/*",
+          "Principal": {
+            "AWS": [
+              "arn:aws:iam::450450915582:user/scrobblecast-s3-rw"
+            ]
+          }
+        }
+      ]
+    }
+Fix the paths to apply proper lifecycle rules:
+
+- from: `rollup/byUserStamp/daniel/2016-06-01T00:00:00Z//monthly-2016-06-01T00:00:00Z.jsonl`
+- to  `snapshots/monthly/daniel/monthly-daniel-2016-06-01T00:00:00Z.jsonl`
+- and `snapshots/daily/daniel/daily-daniel-2016-06-01T00:00:00Z.jsonl`
+- and `snapshots/hourly/daniel/hourly-daniel-2016-06-01T00:00:00Z.jsonl`
+
+- We will store (rollup) on s3
+- We will restore (rollup) from s3
+- We will [have expiry policy on daily/hourly](https://aws.amazon.com/blogs/aws/amazon-s3-object-expiration/)
 
 ## Moving away from files
 

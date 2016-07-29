@@ -4,7 +4,7 @@
 
 // dependencies - core-public-internal
 // var fs = require('fs');
-// var path = require('path');
+var path = require('path');
 // var mkdirp = require('mkdirp');
 // var Promise = require('bluebird');
 // var _ = require('lodash');
@@ -24,14 +24,26 @@ exports = module.exports = {
 function load(opts, itemHandler) {
   opts = opts || {};
   itemHandler = itemHandler || defaultItemHandler();
-  opts.prefix = opts.prefix || '';
+  opts.prefix = opts.prefix || ''; // ?? ''->'byUserStamp'
   if (!opts.filter.__user) {
     return Promise.reject(new Error('file:load missing required filter.__user'));
   }
-  return srcFile.iterator(opts.prefix, [{
-      name: opts.filter.__user
-    }], wrappedHandler(opts, itemHandler), '**/*.json?(l)')
-    .then(reportCounts(opts));
+  // srcFile.find(path.join(extrapath, 'byUserStamp', credentials.name, stamp, pattern))
+  return srcFile.find(path.join(opts.prefix || 'byUserStamp', '**/*.json?(l)'))
+    .then(function (files) {
+      files = files.filter((file) => {
+        // log.verbose(file);
+        // includes => indexOf != -1
+        return file.includes(opts.filter.__user);
+      });
+      log.verbose('store.imple.file.load', { user: opts.filter.__user, prefix: opts.prefix, files: files.length });
+
+      return srcFile.iterator(opts.prefix, [{
+        name: opts.filter.__user
+      }], wrappedHandler(opts, itemHandler), '**/*.json?(l)')
+        .then(reportCounts(opts));
+
+    });
 
 }
 
@@ -139,7 +151,7 @@ function reportCounts(opts) {
   return (counts) => {
     Object.keys(counts).forEach(function(name) {
       var c = counts[name];
-      log.debug('prefix:%s user:%s |stamps|:%s |f|:%s |p|:%s |ignored|:%s', prefix, user, c.stamp, c.file, c.part, c.ignoredFiles);
+      log.verbose('prefix:%s user:%s |stamps|:%s |f|:%s |p|:%s |ignored|:%s', prefix, user, c.stamp, c.file, c.part, c.ignoredFiles);
     });
     return Promise.resolve(counts);
   };

@@ -6,7 +6,7 @@
 // var fs = require('fs');
 var path = require('path');
 // var mkdirp = require('mkdirp');
-// var Promise = require('bluebird');
+var Promise = require('bluebird');
 // var _ = require('lodash');
 var log = require('../log');
 var srcFile = require('../source/file');
@@ -28,6 +28,8 @@ function load(opts, itemHandler) {
   if (!opts.filter.__user) {
     return Promise.reject(new Error('file:load missing required filter.__user'));
   }
+
+  itemHandler = wrappedHandler(opts, itemHandler);
   // srcFile.find(path.join(extrapath, 'byUserStamp', credentials.name, stamp, pattern))
   return srcFile.find(path.join(opts.prefix || 'byUserStamp', '**/*.json?(l)'))
     .then(function (files) {
@@ -37,14 +39,37 @@ function load(opts, itemHandler) {
         // includes => indexOf != -1
         return file.includes('/' + opts.filter.__user + '/');
       });
-      log.verbose('store.imple.file.load', { user: opts.filter.__user, prefix: opts.prefix, files: files.length });
+      log.verbose('-file.load', { user: opts.filter.__user, prefix: opts.prefix, files: files.length });
+      return files;
+    })
+    .then(function (files) {
+      var counts = {
+        item: 0,
+        file: files.length
+      };
+      return Promise.each(files, function (file) {
+        var items = srcFile.loadJSON(file);
+        counts.item += items.length;
+        return Promise.each(items, function (item) {
+          // return Promise.resolve(true);
+          return itemHandler({}, {}, {}, item);
+        });
+      })
+        .then(() => {
+          log.verbose('counts', counts);
+          var wrap = {};
+          wrap[opts.filter.__user] = counts;
+          return wrap;
+        });
 
-      return srcFile.iterator(opts.prefix, [{
-        name: opts.filter.__user
-      }], wrappedHandler(opts, itemHandler), '**/*.json?(l)')
-        .then(reportCounts(opts));
-
-    });
+    })
+    // .then(reportCounts(opts))
+    // .then(function () {
+    //   return srcFile.iterator(opts.prefix, [{
+    //     name: opts.filter.__user
+    //   }], itemHandler, '**/*.json?(l)')
+    // })
+    .then(reportCounts(opts));
 
 }
 
@@ -59,7 +84,7 @@ function defaultItemHandler() {
 // -massage the arguments into old form of srcFile.iterator's handler
 function wrappedHandler(opts, itemHandler) {
   const assert = combineAssertions(opts);
-  return function(credentials, stamp, file, item) {
+  return function (credentials, stamp, file, item) {
     // log.debug('-file:load Calling handler with item.stamp:%s', item.__stamp);
     assert(item);
     return itemHandler(item);
@@ -93,7 +118,7 @@ function combineAssertions(opts) {
 
 // by time, or count,...
 function progress() {
-  const logEvery=5000;
+  const logEvery = 10000;
   // bound scope variables
   var soFar = 0;
   var start = +new Date();
@@ -150,9 +175,10 @@ function reportCounts(opts) {
   const user = opts.filter.__user;
 
   return (counts) => {
-    Object.keys(counts).forEach(function(name) {
+    log.verbose('+file.load', counts);
+    Object.keys(counts).forEach(function (name) {
       var c = counts[name];
-      log.verbose('prefix:%s user:%s |stamps|:%s |f|:%s |p|:%s |ignored|:%s', prefix, user, c.stamp, c.file, c.part, c.ignoredFiles);
+      log.verbose('file.load prefix:%s user:%s |stamps|:%s |f|:%s |i|:%s |ignored|:%s', prefix, user, c.stamp||0, c.file, c.part||c.item, c.ignoredFiles||0);
     });
     return Promise.resolve(counts);
   };

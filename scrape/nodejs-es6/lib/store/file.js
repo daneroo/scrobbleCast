@@ -31,10 +31,11 @@ function load(opts, itemHandler) {
   // srcFile.find(path.join(extrapath, 'byUserStamp', credentials.name, stamp, pattern))
   return srcFile.find(path.join(opts.prefix || 'byUserStamp', '**/*.json?(l)'))
     .then(function (files) {
+      // user filter :== path includes '/_user_/'
       files = files.filter((file) => {
         // log.verbose(file);
         // includes => indexOf != -1
-        return file.includes(opts.filter.__user);
+        return file.includes('/' + opts.filter.__user + '/');
       });
       log.verbose('store.imple.file.load', { user: opts.filter.__user, prefix: opts.prefix, files: files.length });
 

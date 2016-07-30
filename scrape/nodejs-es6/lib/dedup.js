@@ -18,9 +18,9 @@ exports = module.exports = {
 
 function dedupTask(credentials) {
   var historyByType = new delta.AccumulatorByTypeByUuid();
-  var __user =  credentials.name;
+  var __user = credentials.name;
   return Promise.resolve(true)
-    .then(function() {
+    .then(function () {
       const opts = {
         filter: {
           __user: __user
@@ -28,11 +28,11 @@ function dedupTask(credentials) {
       };
 
       var counts = {
-        total:0,
-        duplicates:0,
-        keepers:0
+        total: 0,
+        duplicates: 0,
+        keepers: 0
       }
-      var duplicates=[];
+      var duplicates = [];
       function itemHandler(item) {
         counts.total++;
         var changeCount = historyByType.merge(item);
@@ -51,17 +51,16 @@ function dedupTask(credentials) {
       }
 
       return store.impl.pg.load(opts, itemHandler)
-        .then((results) => {
+        .then((/*items*/) => {
           log.verbose('Deduped', counts);
           return deleteDuplicates(duplicates);
         });
     })
-    .then(function(dontCare) {
-      console.log('pong');
+    .then(() => {
       historyByType.sortAndSave(__user);
       return true;
     })
-    .catch(function(error) { // TODO: might remove this altogether
+    .catch(function (error) { // TODO: might remove this altogether
       log.error('Dedup ', {
         error: error
       });

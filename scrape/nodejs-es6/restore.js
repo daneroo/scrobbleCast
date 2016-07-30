@@ -40,12 +40,35 @@ function main() {
 
 // first load from extra=rollup, then from extra=''
 function restore(credentials) {
-  const saver = store.impl.pg.save;
+  // const saver = store.impl.pg.save;
+  // TODO(daneroo) batchSaver(.flush) move to pg
+  const batchSize = 1000;
+  let tosave = [];
+  const flush = () => {
+    // log.verbose('-flush', tosave.length);
+    // if (tosave.length==0){
+    //   return Promise.resolve(true);
+    // }
+    return store.impl.pg.saveAll(tosave)
+      .then((results) => {
+        // log.verbose('+flush.saveAll', results.length);
+        tosave = [];
+        return results;
+      });
+  }
+  const saver = (item) => {
+    tosave.push(item);
+    if (tosave.length >= batchSize) {
+      return flush();
+    }
+    return Promise.resolve(true);
+  };
   // TODO(daneroo): implement a local bufferd saver, move to lib?
 
   // return Promise.each(['snapshots',''], function (extra) {
   // return Promise.each(['noredux'], function (extra) {
   return Promise.each(['rollup', ''], function (extra) {
+    // return Promise.each([''], function (extra) {
 
     return store.impl.file.load({
       prefix: extra,
@@ -57,7 +80,14 @@ function restore(credentials) {
       filter: {
         __user: credentials.name
       }
-    }, saver);
+    }, saver)
+      .then((counts) => {
+        log.verbose('restore:counts', counts);
+      })
+      .then(() => {
+        log.verbose('+last.flush', tosave.length);
+        return flush();
+      });
   });
 }
 
@@ -84,7 +114,7 @@ function accumulateItems(credentials) {
 
   return store.impl.pg.load(opts, itemHandler)
     .then((results) => {
-      log.debug('Merged', results.length);
+      log.verbose('Merged', results.length);
       historyByType.sortAndSave(__user);
     });
 

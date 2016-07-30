@@ -2,13 +2,17 @@
 
 ## TODO
 
+- Cleanup pgu.query with obj notation
+- Refactor pg-helpers.insert usage (getFields)
+- [speed pg-promise](http://vitaly-t.github.io/pg-promise/helpers.html#.insert)
+- [speed pg-promise see also](https://github.com/vitaly-t/pg-promise/wiki/Performance-Boost)
 - snapshots to dir, then [s3-cli sync](https://github.com/andrewrk/node-s3-cli)
 - remove `s3-cli`, replace by `s3` get creds from json instead of s3cfg.ini (.gitgnore)
 - config
-- speed pg-promise (see instapool)
-  http://vitaly-t.github.io/pg-promise/helpers.html#.insert
-  https://github.com/vitaly-t/pg-promise/wiki/Performance-Boost
+- [streaming with pg-promise](https://github.com/vitaly-t/pg-promise/wiki/Learn-by-Example#streaming)
+- [multiple return](http://www.2ality.com/2014/06/es6-multiple-return-values.html) (insert->ok,status)
 - deprecate srcFile
+- upgrade bluebird
 - remove `.jsbeautifyrc, .jshitrc, .jscsrc`
 - replace npm scripts: `snapshots` and `restore`
 - sync: load all from file and database, compare
@@ -27,7 +31,7 @@
 + babel/eslint for async/await
 + docker-compose
 + Move rollup'd files to archive (part of rollup)
-+ pg.saveAll - concurrency (use blubird.each)
++ pg.saveAll - concurrency (use bluebird.each)
 + pgcrypto in pg.init
 + digest in pg.items, with index on expression: no speedup
 

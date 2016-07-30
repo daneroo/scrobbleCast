@@ -30,6 +30,7 @@
     "loggly": "^1.0.8",
     "mkdirp": "^0.5.0",
     "pg": "^4.4.3",
+    "pg-promise": "^5.2.6",
     "pouchdb": "^5.1.0",
     "pull-stream": "^2.26.0",
     "request-promise": "^0.2.4",

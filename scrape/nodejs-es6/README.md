@@ -3,8 +3,10 @@
 ## TODO
 
 - Deprecate pgu.insert,pgu.query for pgu.db.any|none
-  - in pg.load,pg.remove,pg.confirmIdentical,pg.confirmIdenticalByDigest
-  - Cleanup pgu.query with obj notation
+  - in pg.remove
+  + in pg.load
+  + pg.confirmIdentical,pg.confirmIdenticalByDigest
+  + Cleanup pgu.query with obj notation
 - snapshots to dir, then [s3-cli sync](https://github.com/andrewrk/node-s3-cli)
 - remove `s3-cli`, replace by `s3` get creds from json instead of s3cfg.ini (.gitgnore)
 - config

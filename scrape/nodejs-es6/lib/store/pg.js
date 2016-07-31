@@ -28,7 +28,8 @@ exports = module.exports = {
   end: pgu.end
 };
 
-// return Promise.each(rows), but might better return map[Series]
+// return Promise.each(rows)
+// TODO(daneroo): but might better return map[Series] or spex, or streaming query
 function load(opts, itemHandler) {
   opts = opts || {};
   itemHandler = itemHandler || noop; //noop
@@ -36,11 +37,10 @@ function load(opts, itemHandler) {
   if (!opts.filter.__user) {
     return Promise.reject(new Error('file:load missing required opt filter.__user'));
   }
-  return pgu.query('select item from items where __user=$1 order by __user,__stamp,__type,uuid,__sourceType', [opts.filter.__user])
+  const sql = 'select item from items where __user=$1 order by __user,__stamp,__type,uuid,__sourceType';
+  return pgu.db.any(sql, [opts.filter.__user])
     .then(function (rows) {
-      // log.verbose('pg:load ', {
-      //   rows: rows.length
-      // });
+      log.verbose('pg:load ', { rows: rows.length });
 
       // mapSeries?
       return Promise.each(rows, function (row) {
@@ -199,22 +199,32 @@ function saveItem(item) {
 }
 
 function confirmIdentical(item) {
-  var keys = [item.__user, item.__stamp, item.__type, item.uuid, item.__sourceType];
-  var sql = 'select item from items where __user=$1 AND __stamp=$2 AND __type=$3 AND uuid=$4 AND __sourceType=$5';
-  return pgu.query(sql, keys)
+  const nmParams = pgu.getNamedParametersForItem(item);
+  delete nmParams.item;
+
+  // watch camelcase for __sourcetype NOT __sourceType,
+  // also ES6 templates use ${var}, helper can use {}, (), [], <>, //
+  const sql =
+    `SELECT item FROM items
+    WHERE __user=$[__user] AND __stamp=$[__stamp]
+    AND __type=$[__type] AND uuid=$[uuid]
+    AND __sourcetype=$[__sourcetype]`;
+
+  return pgu.db.oneOrNone(sql, nmParams)
     .then(result => {
-      if (result.length === 0 || !result[0].item) {
+      if (result === null || !result.item) {
         return false;
       }
-      var dbitem = result[0].item;
+      var dbitem = result.item;
       var isIdentical = _.isEqual(item, dbitem);
       if (!isIdentical) {
-        log.verbose('Failed duplicate check', keys.join('/'));
+        let vals = Object.keys(nmParams).map(k => nmParams[k]);
+        log.verbose('Failed duplicate check', vals.join('/'));
         log.verbose('-', item);
         log.verbose('+', dbitem);
-
       } else {
-        // log.verbose('Checked that item is identical', keys.join('/'));
+        // let vals = Object.keys(nmParams).map(k => nmParams[k]);
+        // log.verbose('Checked that item is identical', vals.join('/'));
       }
       return isIdentical;
     });
@@ -224,24 +234,37 @@ function confirmIdentical(item) {
 // it fails if the keey lookup succeds, but the digest is wrong
 // TODO(daneroo): should probably throw if the key exists, but the digest is wrong
 function confirmIdenticalByDigest(item) {
-  var digest = utils.digest(JSON.stringify(item), DIGEST_ALGORITHM, false);
-  var keys = [DIGEST_ALGORITHM, item.__user, item.__stamp, item.__type, item.uuid, item.__sourceType];
-  var sql = 'SELECT encode(digest(item::text, $1), \'hex\') as digest from items where __user=$2 AND __stamp=$3 AND __type=$4 AND uuid=$5 AND __sourceType=$6';
+  const digest = utils.digest(JSON.stringify(item), DIGEST_ALGORITHM, false);
 
-  return pgu.query(sql, keys)
+  const nmParams = pgu.getNamedParametersForItem(item);
+  delete nmParams.item;
+  nmParams.DIGEST_ALGORITHM = DIGEST_ALGORITHM;
+
+  // watch camelcase for __sourcetype NOT __sourceType,
+  // also ES6 templates use ${var}, helper can use {}, (), [], <>, //
+  const sql =
+    `SELECT encode(digest(item::text, $[DIGEST_ALGORITHM]), \'hex\') as digest
+    FROM items
+    WHERE __user=$[__user] AND __stamp=$[__stamp]
+    AND __type=$[__type] AND uuid=$[uuid]
+    AND __sourcetype=$[__sourcetype]`;
+
+  return pgu.db.oneOrNone(sql, nmParams)
     .then(result => {
-      if (result.length === 0 || !result[0].digest) {
+      if (result === null || !result.digest) {
         return false;
       }
-      var dbdigest = result[0].digest;
+      var dbdigest = result.digest;
       var isIdentical = digest === dbdigest;
       if (!isIdentical) {
-        // TODO(daneroo): should probabley throw if the key exists, but the digest is wrong
-        log.verbose('Failed duplicate digest check', keys.join('/'));
+        // TODO(daneroo): should probably throw if the key exists, but the digest is wrong
+        let vals = Object.keys(nmParams).map(k => nmParams[k]);
+        log.verbose('Failed duplicate digest check', vals.join('/'));
         log.verbose('-', digest);
         log.verbose('+', dbdigest);
       } else {
-        // log.verbose('Checked that digest is identical', keys.join('/'),digest);
+        // let vals = Object.keys(nmParams).map(k=>nmParams[k]);
+        // log.verbose('Checked that digest is identical', vals.join('/'), digest);
       }
       return isIdentical;
     });

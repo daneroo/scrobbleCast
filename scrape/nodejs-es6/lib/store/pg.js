@@ -18,8 +18,10 @@ const DIGEST_ALGORITHM = 'sha256';
 exports = module.exports = {
   // load: (opts, handler) => {} // foreach item, cb(item);
   load: load,
-  // save: (item, opts) => {}, // returns (Promise)(status in insert,duplicate,error)
+  // save: (item) => {}, // should return (Promise)(status in insert,duplicate,error)
   save: save,
+  // saveByBatch(batchSize) // accumulates writes, must be flushed at end
+  saveByBatch: saveByBatch,
   remove: remove,
   saveAll: saveAll,
   init: pgu.init, // setup the database pool, ddl...
@@ -70,6 +72,55 @@ function save(item) {
   // saveButVerifyIfDuplicate:full   264 seconds : sum ok
 }
 
+// return a function to be used in place of save
+// accumulates items for writing
+// the returned function has a .flush property, which must be called at end
+// e.g.
+// let saver = saveByBatch(3)
+// saver(item1); saver(item2); saver(item3); saver(item4);
+// saver.flush(); // saves the pending items in accumulator
+function saveByBatch(batchSize) {
+  // default batchSize
+  batchSize = batchSize || 1000;
+  // speed benchamarks with ~135k items, redone with helpers.insert (multi)
+  // batch=2 insert:empty     85 seconds : sum ok
+  // batch=10 insert:empty    55 seconds : sum ok
+  // batch=100 insert:empty   52 seconds : sum ok
+  // batch=100 insert:empty   52 seconds : sum ok
+  // batch=1000 insert:empty  38 seconds : sum ok
+  // batch=10000 insert:empty 41 seconds : sum ok
+
+  // batch=1000 insert,each.save:half  111 seconds : sum ok
+  // batch=1000 insert,each.save:half  113 seconds : sum ok
+
+  // batch=1000 insert,each.save:full  179 seconds : sum ok
+
+  // this is the saved item accumulator
+  let tosave = [];
+  const flush = () => {
+    // log.verbose('-flush', tosave.length);
+    return saveAll(tosave)
+      .then((results) => {
+        tosave = [];
+        return results;
+      });
+  }
+  const saver = (item) => {
+    tosave.push(item);
+    if (tosave.length >= batchSize) {
+      return flush();
+    }
+    return Promise.resolve(true);
+  };
+
+  // add the flush function to the returned
+  saver.flush = () => {
+    log.verbose('+last.flush called', tosave.length);
+    return flush();
+  }
+  return saver;
+}
+
 function remove(item) {
   function getFields(item) {
     return [item.__user, item.__stamp, item.__type, item.uuid, item.__sourceType];
@@ -92,19 +143,6 @@ function saveAll(items) {
   }
   // Bruteforce implementation:  items.each save!
   // return Promise.each(items, (item) => save(item));
-
-  // speed benchamarks with ~135k items, redone with helpers.insert (multi)
-  // batch=2 insert,each.save:empty     85 seconds : sum ok
-  // batch=10 insert,each.save:empty    55 seconds : sum ok
-  // batch=100 insert,each.save:empty   52 seconds : sum ok
-  // batch=100 insert,each.save:empty   52 seconds : sum ok
-  // batch=1000 insert,each.save:empty  38 seconds : sum ok
-  // batch=10000 insert,each.save:empty  41 seconds : sum ok
-
-  // batch=1000 insert,each.save:half  111 seconds : sum ok
-  // batch=1000 insert,each.save:half  113 seconds : sum ok
-
-  // batch=1000 insert,each.save:full  179 seconds : sum ok
 
   // TODO(daneroo): precede with filtering not present by hash!
   // which would turn this into sync!

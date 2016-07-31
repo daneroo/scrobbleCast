@@ -42,27 +42,8 @@ function restore(credentials) {
   // const saver = store.impl.pg.save;
   // TODO(daneroo) batchSaver(.flush) move to pg
   const batchSize = 1000; // trial and error...
-  let tosave = [];
-  const flush = () => {
-    // log.verbose('-flush', tosave.length);
-    // if (tosave.length==0){
-    //   return Promise.resolve(true);
-    // }
-    return store.impl.pg.saveAll(tosave)
-      .then((results) => {
-        // log.verbose('+flush.saveAll', results.length);
-        tosave = [];
-        return results;
-      });
-  }
-  const saver = (item) => {
-    tosave.push(item);
-    if (tosave.length >= batchSize) {
-      return flush();
-    }
-    return Promise.resolve(true);
-  };
-  // TODO(daneroo): implement a local bufferd saver, move to lib?
+
+  const saver = store.impl.pg.saveByBatch(batchSize);
 
   // let basepaths = ['noredux'];
   // let basepaths = ['snapshots', ''];
@@ -79,12 +60,8 @@ function restore(credentials) {
       __user: credentials.name
     }
   }, saver)
-    .then((counts) => {
-      log.verbose('restore:counts', counts);
-    })
     .then(() => {
-      log.verbose('+last.flush', tosave.length);
-      return flush();
+      return saver.flush();
     });
 }
 

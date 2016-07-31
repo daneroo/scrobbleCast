@@ -38,11 +38,10 @@ function main() {
   });
 }
 
-// first load from extra=rollup, then from extra=''
 function restore(credentials) {
   // const saver = store.impl.pg.save;
   // TODO(daneroo) batchSaver(.flush) move to pg
-  const batchSize = 1000;
+  const batchSize = 1000; // trial and error...
   let tosave = [];
   const flush = () => {
     // log.verbose('-flush', tosave.length);
@@ -65,30 +64,28 @@ function restore(credentials) {
   };
   // TODO(daneroo): implement a local bufferd saver, move to lib?
 
-  // return Promise.each(['snapshots',''], function (extra) {
-  // return Promise.each(['noredux'], function (extra) {
-  return Promise.each(['rollup', ''], function (extra) {
-    // return Promise.each([''], function (extra) {
+  // let basepaths = ['noredux'];
+  // let basepaths = ['snapshots', ''];
+  let basepaths = ['rollup', ''];
 
-    return store.impl.file.load({
-      prefix: extra,
-      assert: {
-        // stampOrder: true,
-        // singleUser: true,
-        progress: true, // should not be an assertion.
-      },
-      filter: {
-        __user: credentials.name
-      }
-    }, saver)
-      .then((counts) => {
-        log.verbose('restore:counts', counts);
-      })
-      .then(() => {
-        log.verbose('+last.flush', tosave.length);
-        return flush();
-      });
-  });
+  return store.impl.file.load({
+    prefix: basepaths,
+    assert: {
+      // stampOrder: true,
+      // singleUser: true,
+      progress: true, // should not be an assertion.
+    },
+    filter: {
+      __user: credentials.name
+    }
+  }, saver)
+    .then((counts) => {
+      log.verbose('restore:counts', counts);
+    })
+    .then(() => {
+      log.verbose('+last.flush', tosave.length);
+      return flush();
+    });
 }
 
 function accumulateItems(credentials) {

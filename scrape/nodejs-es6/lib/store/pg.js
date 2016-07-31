@@ -85,7 +85,7 @@ function remove(item) {
     });
 }
 
-// TODO(daneroo): figure out return promised return value
+// TODO(daneroo): figure out promised return value
 function saveAll(items) {
   if (items.length === 0) {
     return Promise.resolve(true);

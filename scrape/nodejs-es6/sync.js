@@ -88,19 +88,19 @@ function loadFromFiles(credentials) {
     items.push(item);
   };
 
-  return Promise.each(['rollup', ''], function (extra) {
-    return store.impl.file.load({
-      prefix: extra,
-      assert: {
-        // stampOrder: true,
-        // singleUser: true,
-        progress: false, // should not be an assertion.
-      },
-      filter: {
-        __user: credentials.name
-      }
-    }, accumulator);
-  })
+  let basepaths = ['rollup', ''];
+
+  return store.impl.file.load({
+    prefix: basepaths,
+    assert: {
+      // stampOrder: true,
+      // singleUser: true,
+      progress: false, // should not be an assertion.
+    },
+    filter: {
+      __user: credentials.name
+    }
+  }, accumulator)
     .then(function () {
       // log.verbose('loaded %d file items for %s', items.length, credentials.name);
       return items;

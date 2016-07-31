@@ -19,45 +19,63 @@ exports = module.exports = {
   load: load // foreach item, cb(item);
 };
 
-// opts: {prefix:(extra),filter:{__user,__type,__stamp:[start,end]}}
+// TODO filter:{__type,__stamp:[start,end]}
+// opts: {
+//     prefix: basepath || [base1,base2],
+//     filter: { __user:required }
+// }
 // cb:   (item,err) => Promise(item)
 function load(opts, itemHandler) {
   opts = opts || {};
+  // default itemHandler
   itemHandler = itemHandler || defaultItemHandler();
-  opts.prefix = opts.prefix || ''; // ?? ''->'byUserStamp'
 
+  // validate required user filter
   if (!opts.filter.__user) {
     return Promise.reject(new Error('file:load missing required filter.__user'));
   }
 
-  // wrap itemHandler for progress and checks
+  // default prefix (single)
+  opts.prefix = opts.prefix || ''; // ?? ''->'byUserStamp'
+  // coerce prefix to an array
+  if (!Array.isArray(opts.prefix)) {
+    opts.prefix = [opts.prefix];
+  }
+
+  // wrap itemHandler for progress and assertions
   itemHandler = wrappedHandler(opts, itemHandler);
 
-  function findFilesForUser() {
+  function findFilesForUser(prefix) {
     // find all files in the prefixed path,
     // then filter for '/user/' in path
-    return srcFile.find(path.join(opts.prefix || 'byUserStamp', '**/*.json?(l)'))
+    return srcFile.find(path.join(prefix || 'byUserStamp', '**/*.json?(l)'))
       .then(function (files) {
         return files.filter((file) => file.includes('/' + opts.filter.__user + '/'))
       });
   }
 
-  return findFilesForUser()
-    .then(function (files) {
-      var counts = {
-        item: 0,
-        file: files.length
-      };
-      return Promise.each(files, function (file) {
-        var items = srcFile.loadJSON(file);
-        counts.item += items.length;
-        return Promise.each(items, function (item) {
-          // return Promise.resolve(true);
-          return itemHandler(item);
-        });
-      }).then(() => counts);
+  var counts = {
+    item: 0,
+    file: 0
+  };
 
-    })
+  return Promise.each(opts.prefix, function (prefix) {
+
+    return findFilesForUser(prefix)
+      .then(function (files) {
+        counts.file += files.length;
+
+        return Promise.each(files, function (file) {
+          var items = srcFile.loadJSON(file);
+          counts.item += items.length;
+          return Promise.each(items, function (item) {
+            // return Promise.resolve(true);
+            return itemHandler(item);
+          });
+        });
+      });
+  })
+    .then(() => counts)
     .then(reportCounts(opts));
 
 }

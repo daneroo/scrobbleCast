@@ -41,7 +41,7 @@ function main() {
 function restore(credentials) {
   // const saver = store.impl.pg.save;
   // TODO(daneroo) batchSaver(.flush) move to pg
-  const batchSize = 1000; // trial and error...
+  const batchSize = 1000; // which is the default
 
   const saver = store.impl.pg.saveByBatch(batchSize);
 

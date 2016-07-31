@@ -2,10 +2,9 @@
 
 ## TODO
 
-- Cleanup pgu.query with obj notation
-- Refactor pg-helpers.insert usage (getFields)
-- [speed pg-promise](http://vitaly-t.github.io/pg-promise/helpers.html#.insert)
-- [speed pg-promise see also](https://github.com/vitaly-t/pg-promise/wiki/Performance-Boost)
+- Deprecate pgu.insert,pgu.query for pgu.db.any|none
+  - in pg.load,pg.remove,pg.confirmIdentical,pg.confirmIdenticalByDigest
+  - Cleanup pgu.query with obj notation
 - snapshots to dir, then [s3-cli sync](https://github.com/andrewrk/node-s3-cli)
 - remove `s3-cli`, replace by `s3` get creds from json instead of s3cfg.ini (.gitgnore)
 - config
@@ -26,6 +25,9 @@
   - consensus based on digest of non deduped entries. (order by digest|date,..)
 - restore-pg switches from default `saveButVerifyIfDuplicate` to `checkThenSaveItem` on first fail...
 
++ [speed pg-promise](http://vitaly-t.github.io/pg-promise/helpers.html#.insert)
++ [speed pg-promise see also](https://github.com/vitaly-t/pg-promise/wiki/Performance-Boost)
++ Refactor pg-helpers.insert usage (getFields)
 + dedup: just delete from database;
 + babel into gulp
 + babel/eslint for async/await
@@ -129,19 +131,25 @@ Fix the paths to apply proper lifecycle rules:
   docker-compose build
   docker-compose up -d
 
-### PostgreSQL
+## PostgreSQL
 [Quick intro to PostgreSQL JSON.](http://clarkdave.net/2013/06/what-can-you-do-with-postgresql-and-json/)
+
+### Using node.js pg-promise
+
++ [speed pg-promise](http://vitaly-t.github.io/pg-promise/helpers.html#.insert)
++ [speed pg-promise see also](https://github.com/vitaly-t/pg-promise/wiki/Performance-Boost)
+
+### Using pg with docker-compose
 
 Start a container and connect to it
 
-    docker run -it --rm -p 5432:5432 -e POSTGRES_DB=scrobblecast --name postgres postgres
+    docker-compose up -d postgres
 
-    # Database creation is now done with $POSTGRES_DB
-    # docker exec -it postgres createdb -U postgres scrobblecast
+    docker-compose exec postgres bash
+      psql -U postgres scrobblecast
+      psql -U postgres scrobblecast -c "select count(*) from items"
 
-    docker exec -it postgres psql -U postgres scrobblecast
-    docker exec -it postgres bash
-      psql -U postgres scrobblecast -c "select count(distinct uuid) from items"
+    docker-compose exec postgres psql -U postgres scrobblecast
 
     scrobblecast=#
     select __user,__type,count(distinct uuid),max(__stamp) from items group by __user,__type;
@@ -150,7 +158,7 @@ Start a container and connect to it
     # === mysqladmin proc
     select * from pg_stat_activity
 
-#### Using pg crypto
+### Using pg crypto
 The extension for `pgcrypto`, although available, must be loaded (once)
 
     create extension pgcrypto;
@@ -158,7 +166,7 @@ The extension for `pgcrypto`, although available, must be loaded (once)
     # example use of digest; notice cast of item(::json) to ::text
     SELECT encode(digest(item::text, 'sha256'), 'hex') from items limit 100;
 
-### CouchDB for persistence
+## CouchDB for persistence
 Note: try CouchDB 2.0 
 Don't put the data volume in `./data` because we often rsync!
 

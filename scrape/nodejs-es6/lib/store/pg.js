@@ -121,6 +121,8 @@ function saveByBatch(batchSize) {
   return saver;
 }
 
+// TODO(daneroo): make sure we are ony deleting one? by digest
+//   OK for now as these 5 fields are a primary key
 function remove(item) {
   function getFields(item) {
     return [item.__user, item.__stamp, item.__type, item.uuid, item.__sourceType];

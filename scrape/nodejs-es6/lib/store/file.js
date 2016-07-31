@@ -150,7 +150,7 @@ function checkStampOrdering() {
     var stamp = item.__stamp;
     log.debug('Checking stamp ordering: %s >=? %s', item.__stamp, maxStamp);
     if (stamp < maxStamp) {
-      log.error('Item stamp not increasing: %s > %j', maxStamp, item);
+      log.error(`Item stamp not increasing: ${stamp} < ${maxStamp}`, item);
       throw new Error('Item stamp not increasing');
     }
     maxStamp = stamp;

@@ -9,6 +9,7 @@ var Promise = require('bluebird');
 var PocketAPI = require('./lib/pocketAPI');
 var utils = require('./lib/utils');
 var log = require('./lib/log');
+// var tasks = require('./lib/tasks');
 
 var allCredentials = require('./credentials.json');
 
@@ -17,9 +18,19 @@ function tryemall(credentials) {
     host: os.hostname()
   });
   log.info('Start', credentials.name);
+
+  // use tasks instead od apiSession
+  // return tasks.quick(credentials)
+  // .then(()=>{
+  //   return tasks.dedup(credentials);
+  // });
+
+  // Use apiSession
   var apiSession = new PocketAPI({
     stamp: utils.stamp('10minutes')
   });
+
+
   return apiSession.sign_in(credentials)
     .then(apiSession.podcasts())
     .then(function(response) {
@@ -74,9 +85,13 @@ function iteration() {
 
 }
 
+// first invocation
 iteration();
-var itvl = setInterval(iteration, 10000);
-// run thrice
-setTimeout(function() {
-  clearInterval(itvl);
-}, 30000);
+if (false) {
+  // a few more invocations
+  var itvl = setInterval(iteration, 10000);
+  // run thrice
+  setTimeout(function () {
+    clearInterval(itvl);
+  }, 30000);
+}

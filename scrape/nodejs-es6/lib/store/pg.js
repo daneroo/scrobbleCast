@@ -121,19 +121,28 @@ function saveByBatch(batchSize) {
   return saver;
 }
 
-// TODO(daneroo): make sure we are ony deleting one? by digest
+// TODO(daneroo): delete by digest
 //   OK for now as these 5 fields are a primary key
 function remove(item) {
-  function getFields(item) {
-    return [item.__user, item.__stamp, item.__type, item.uuid, item.__sourceType];
-  }
-  var fields = getFields(item);
-  log.debug('pg:remove deleting item', fields);
+  const nmParams = pgu.getNamedParametersForItem(item);
+  delete nmParams.item;
 
-  return pgu.insert('DELETE from items where __user=$1 AND __stamp=$2 AND __type=$3 AND uuid=$4 AND __sourceType=$5', fields)
-    .then(function (rowCount) {
-      if (rowCount !== 1) {
-        console.log('delete rowCount!=1', rowCount);
+  // watch camelcase for __sourcetype NOT __sourceType,
+  // also ES6 templates use ${var}, helper can use {}, (), [], <>, //
+  const sql =
+    `DELETE from items WHERE
+    __user=$[__user] AND __stamp=$[__stamp]
+    AND __type=$[__type] AND uuid=$[uuid]
+    AND __sourcetype=$[__sourcetype]`;
+
+  log.verbose('pg:remove deleting item', nmParams);
+
+  // uses db.result to assert result.rowCount==1
+  return pgu.db.result(sql, nmParams)
+    .then(function (result) {
+      if (result.rowCount !== 1) {
+        log.warn('delete rowCount!=1', result);
+        log.warn('delete rowCount!=1', nmParams);
       }
     });
 }

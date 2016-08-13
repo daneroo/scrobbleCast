@@ -169,8 +169,10 @@ function progress(msg, response, meta) {
 // Called only once, replaces self with noop.
 var initDB=function(){
   initDB = function(){
+    // log.verbose('Dummy initialize');
     return Promise.resolve(true);
   }
+  // log.verbose('Actually initialize');
   return store.impl.pg.init();
 };
 

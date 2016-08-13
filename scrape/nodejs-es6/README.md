@@ -2,11 +2,6 @@
 
 ## TODO
 
-- Deprecate pgu.insert,pgu.query for pgu.db.any|none
-  - in pg.remove
-  + in pg.load
-  + pg.confirmIdentical,pg.confirmIdenticalByDigest
-  + Cleanup pgu.query with obj notation
 - snapshots to dir, then [s3-cli sync](https://github.com/andrewrk/node-s3-cli)
 - remove `s3-cli`, replace by `s3` get creds from json instead of s3cfg.ini (.gitgnore)
 - config
@@ -27,6 +22,7 @@
   - consensus based on digest of non deduped entries. (order by digest|date,..)
 - restore-pg switches from default `saveButVerifyIfDuplicate` to `checkThenSaveItem` on first fail...
 
++ Deprecate pgu.insert,pgu.query in favor of pgu.db.any|none
 + [speed pg-promise](http://vitaly-t.github.io/pg-promise/helpers.html#.insert)
 + [speed pg-promise see also](https://github.com/vitaly-t/pg-promise/wiki/Performance-Boost)
 + Refactor pg-helpers.insert usage (getFields)

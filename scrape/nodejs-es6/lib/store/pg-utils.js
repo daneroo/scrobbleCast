@@ -30,32 +30,10 @@ exports = module.exports = {
   insertSQL: insertSQL,
   // deprecated - use db?
   helpers: pgp.helpers,
-  query: query, // (sql,values) => Promise
-  insert: insert, // (sql,values) => Promise
   // lifecycle
   init: init, // return Promise(bool?)
   end: end // drain the pool! Doesn't loook async (pg.end has no cb.)
 };
-
-// just return result.rows, untils we need otherwise
-function query(sql, values) {
-  return db.any(sql, values)
-    .then(function (result) {
-      // console.log('pgu:query: result', result);
-      return result;
-    });
-}
-
-function insert(sql, values) {
-  return db.none(sql, values)
-    .then(function () {
-      return 1;
-    });
-  // .catch(function (error) {
-  //   log.error('pgu:insert:error ', error);
-  //   return 0;
-  // });
-}
 
 // support for insertSQL, getNamedParametersForItem only initialized once
 const columns = [
@@ -100,16 +78,16 @@ function insertSQL(items) {
 }
 
 function ddlSilent(ddl) {
-  return query(ddl)
+  return db.none(ddl)
     .catch(function (error) {
       log.verbose('silently caught %s', error.message);
     });
 }
 
 function init() {
-  return query('select 42 as answer')
+  return db.one('select 42 as answer')
     .then(function (result) {
-      log.verbose('%j', result);
+      log.verbose('init:test', result);
     })
     .then(function () {
       var ddl = [

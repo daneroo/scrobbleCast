@@ -24,8 +24,8 @@ exports = module.exports = {
   // implentations
   impl: {
     iface: {
-      save: (item, opts) => {}, // returns (Promise)(status in insert,duplicate,error)
-      load: (opts, cb) => {} // foreach item, cb(item);
+      save: (/*item, opts*/) => { }, // returns (Promise)(status in insert,duplicate,error)
+      load: (/*opts, cb*/) => { } // foreach item, cb(item);
     },
     pg: require('./pg'),
     pouch: require('./pouch'),

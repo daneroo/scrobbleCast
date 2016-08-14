@@ -34,7 +34,7 @@ Promise.resolve(true)
 function main() {
   var extra = '';
   // var extra = 'rollup'; // to switch to rollup..
-  return Promise.each(allCredentials, function(credentials) {
+  return Promise.each(allCredentials, function (credentials) {
     logMemAfterGC();
     log.info('Rollup started', {
       user: credentials.name
@@ -57,7 +57,7 @@ function loadItems(credentials, extra) {
   var historyByType = l.historyByType;
 
   function reportCounts(counts) {
-    Object.keys(counts).forEach(function(name) {
+    Object.keys(counts).forEach(function (name) {
       var maxStamp = l.getMaxStamp();
       // var msg = util.format('base:%s user:%s |stamps|:%s |f|:%s |p|:%s |ignored|:%s max(stamp):%s', extra, name, c.stamp, c.file, c.part, c.ignoredFiles, maxStamp);
       log.verbose('Rollup:counts', {
@@ -74,7 +74,7 @@ function loadItems(credentials, extra) {
   // this is the double iteration loader
   return srcFile.iterator(extra, [credentials], sharedHandler, '**/*.json?(l)')
     .then(reportCounts)
-    .then(function() {
+    .then(function () {
       // get and fix the stamp lowerbound
       var maxStamp = l.getMaxStamp();
 
@@ -87,7 +87,7 @@ function loadItems(credentials, extra) {
         return Promise.resolve(true);
       }
 
-      function skippingFilter(credentials, stamp, file, item) {
+      function skippingFilter(credentials, stamp /*, file , item */) {
         return (stamp > maxStamp);
       }
 
@@ -96,7 +96,7 @@ function loadItems(credentials, extra) {
         .then(reportCounts);
     })
     // return srcFile.iteratorWithRollup(extra, [credentials], sharedHandler, '**/*.json?(l)')
-    .then(function() {
+    .then(function () {
       var _user = credentials.name;
       historyByType.sortAndSave(_user);
       return Promise.resolve(true);

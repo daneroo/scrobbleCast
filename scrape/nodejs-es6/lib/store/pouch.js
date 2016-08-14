@@ -31,12 +31,12 @@ function load(opts, itemHandler) {
   }
   // trasnform opts.filter.user into start/end keys
   return pchu.allDocs(opts.filter.__user)
-    .then(function(rsp) {
+    .then(function (rsp) {
       log.verbose('pouch:load ', _.omit(rsp, 'rows'));
       log.verbose('pouch:load %d', rsp.rows.length);
 
       // mapSeries?
-      return Promise.each(rsp.rows, function(row) {
+      return Promise.each(rsp.rows, function (row) {
         // row. (id,key,value,doc)
         var item = denormalize(row.doc);
         // log.debug('-pg:load Calling handler with item.stamp:%s',item.__stamp);
@@ -44,14 +44,14 @@ function load(opts, itemHandler) {
       });
     });
 
-  function noop(item) {
+  function noop(/*item*/) {
     return Promise.resolve(true);
   }
 }
 
 // opts: {check:first?} => Promise(status), overwrite?
 // cases - insert ok, insert failed but duplicate is verified,
-function save(item, opts) {
+function save(item /*, opts*/) {
   // log.debug('pg:save saving item', item.__stamp);
   return saveItem(item);
 }
@@ -84,7 +84,7 @@ function saveItem(item) {
             return false; // or throw
           }
         })
-        .catch((err) => {
+        .catch((/*err*/) => {
           return false;
         });
     });

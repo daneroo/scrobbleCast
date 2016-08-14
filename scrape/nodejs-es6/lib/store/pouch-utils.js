@@ -36,25 +36,25 @@ function end() {
 
 function sync() {
   log.debug('replicate to couch');
-  return new Promise(function(resolve, reject) {
+  return new Promise(function (resolve /*, reject */) {
     PouchDB.sync(db, 'http://admin:supersecret@docker:5984/scrobblecast')
-      .on('change', function(info) {
+      .on('change', function (info) {
         // handle change
-        log.debug('sync:chg', _.omit(info,'docs'));
-      }).on('paused', function() {
+        log.debug('sync:chg', _.omit(info, 'docs'));
+      }).on('paused', function () {
         // replication paused (e.g. user went offline)
         log.debug('sync:paused');
-      }).on('active', function() {
+      }).on('active', function () {
         // replicate resumed (e.g. user went back online)
         log.debug('sync:active');
-      }).on('denied', function(info) {
+      }).on('denied', function (info) {
         // a document failed to replicate, e.g. due to permissions
         log.debug('sync:denied', info);
-      }).on('complete', function(info) {
+      }).on('complete', function (info) {
         // handle complete
         log.debug('sync:complete', info);
         resolve(true);
-      }).on('error', function(err) {
+      }).on('error', function (err) {
         // handle error
         log.debug('sync:err', err);
       });
@@ -89,7 +89,7 @@ function get(item) {
     //   log.debug('pchu:get rsp', JSON.stringify(doc));
     //   return doc;
     // })
-    .catch(function(err) {
+    .catch(function (err) {
       if (err.status === 404) {
         return; // undefined, but not an exception
       } else {

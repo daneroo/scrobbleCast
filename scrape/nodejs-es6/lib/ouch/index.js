@@ -24,6 +24,7 @@ function Ouch(db) {
 
 Ouch.prototype.get = function(item) {
   item = normalize(item);
+  return item;
 };
 
 // get the item from database (if it exists), then merge in new values, then put it back in the db

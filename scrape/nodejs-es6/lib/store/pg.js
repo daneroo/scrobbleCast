@@ -50,7 +50,7 @@ function load(opts, itemHandler) {
       });
     });
 
-  function noop(item) {
+  function noop(/*item*/) {
     return Promise.resolve(true);
   }
 }
@@ -190,17 +190,18 @@ function checkThenSaveItem(item) {
     });
 }
 
-function saveButVerifyIfDuplicate(item) {
-  return saveItem(item)
-    .catch(function (err) {
-      // todo check that values are equal...
-      if (err.message.startsWith('duplicate key')) {
-        return confirmIdentical(item);
-      } else {
-        throw err;
-      }
-    });
-}
+// Currently not used: commented for eslint
+// function saveButVerifyIfDuplicate(item) {
+//   return saveItem(item)
+//     .catch(function (err) {
+//       // todo check that values are equal...
+//       if (err.message.startsWith('duplicate key')) {
+//         return confirmIdentical(item);
+//       } else {
+//         throw err;
+//       }
+//     });
+// }
 
 // Save each item : problem, how do we traverse keys in an ordered way?
 function saveItem(item) {

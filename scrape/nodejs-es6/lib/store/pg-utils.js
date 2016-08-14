@@ -26,7 +26,7 @@ var db = pgp(config);
 // Exported API
 exports = module.exports = {
   db: db,
-  getNamedParametersForItem:getNamedParametersForItem,
+  getNamedParametersForItem: getNamedParametersForItem,
   insertSQL: insertSQL,
   // deprecated - use db?
   helpers: pgp.helpers,
@@ -106,15 +106,12 @@ function init() {
     .then(function () {
       var ddl = 'create extension pgcrypto';
       return ddlSilent(ddl);
-    })
-    // .then(function () {
-    //   // was used for a lookup by digest: confirmIdenticalByDigestCount
-    //   var ddl = 'CREATE INDEX digest_idx ON items (encode(digest(item::text, \'sha256\'), \'hex\'))';
-    //   return ddlSilent(ddl);
-    // })
-    .then(function (rows) {
-      // throw new Error('Early exit');
     });
+  // .then(function () {
+  //   // was used for a lookup by digest: confirmIdenticalByDigestCount
+  //   var ddl = 'CREATE INDEX digest_idx ON items (encode(digest(item::text, \'sha256\'), \'hex\'))';
+  //   return ddlSilent(ddl);
+  // });
 
 }
 

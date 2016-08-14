@@ -12,7 +12,8 @@ Scripts:
 - rollup: file:'' -> file:rollup (deprecated)
 
 - restore.js: file:rollup+'' -> pg (transition deprecated)
-- snapshot.js: pg -> file:snapshot
+- snapshot.js: pg -> file:snapshot 
+  - currently file:rollup+'' -> file:snapshots
 - s3-cli file:data/snapshots/ <->  s3://scrobblecast/snapshots/
 - sync.js: compare file:roolup+'', pg: (no write)
 

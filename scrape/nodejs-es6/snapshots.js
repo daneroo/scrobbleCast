@@ -89,7 +89,7 @@ function loadItems(credentials, extra) {
         return Promise.resolve(true);
       }
 
-      function skippingFilter(credentials, stamp, file, item) {
+      function skippingFilter(credentials, stamp /*, file , item */) {
         return (stamp > maxStamp);
       }
 

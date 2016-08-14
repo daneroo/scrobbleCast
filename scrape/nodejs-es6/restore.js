@@ -1,6 +1,6 @@
 'use strict';
 
-// This utility will read all source files: extra=''
+// This utility will read all source files: extra=[snapshots,'']
 // and dunp them into postgres
 // Object keys: user/type/uuid/stamp/
 
@@ -46,8 +46,8 @@ function restore(credentials) {
   const saver = store.impl.pg.saveByBatch(batchSize);
 
   // let basepaths = ['noredux'];
-  // let basepaths = ['snapshots', ''];
-  let basepaths = ['rollup', ''];
+  let basepaths = ['snapshots', ''];
+  // let basepaths = ['rollup', ''];
 
   return store.impl.file.load({
     prefix: basepaths,

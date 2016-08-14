@@ -1,5 +1,46 @@
 # implement the feed fetch in node.js
 
+## Sync paths
+
+Questions:
+- How has legacy diverged (detail)
+- How has peer diverged
+- Update to/from legacy
+
+Scripts:
+
+- rollup: file:'' -> file:rollup (deprecated)
+
+- restore.js: file:rollup+'' -> pg (transition deprecated)
+- snapshot.js: pg -> file:snapshot
+- s3-cli file:data/snapshots/ <->  s3://scrobblecast/snapshots/
+- sync.js: compare file:roolup+'', pg: (no write)
+
+Scenario:
+
+- init/sync from s3: 
+  - s3://scrobblecast/snapshots/ -> file:data/snapshots/
+  - file:data/snapshots/ -> pg
+  - dedup
+
+- scrape
+  - scrape:(quick|shallow|deep) -> pg
+  - dedup
+
+- sync(peer) MVP
+  - pg:peer -> pg, or pg:peer ->file:data/snapshots -> pg
+  - dedup
+
+- sync(legacy peer)
+  - rsync -> file:data
+  - file:data -> pg
+  - dedup
+
+- snapshot/sync to s3
+  - dedup
+  - pg -> file:data/snapshots
+  - file:data/snapshots/ ->  s3://scrobblecast/snapshots/
+
 ## TODO
 
 - snapshots to dir, then [s3-cli sync](https://github.com/andrewrk/node-s3-cli)
@@ -37,17 +78,17 @@
 
 ## TESTING
 
-stephane-episode.json, md5=22567cb74b15ef1c621407862c242637, n=17936, MB=22.40
-stephane-podcast.json, md5=19a8e6733c891b7fa4b21e494031667e, n=131, MB=0.23
-daniel-episode.json,   md5=d7069cd5fedd450085c60d935aa1af3e, n=24167, MB=31.77
-daniel-podcast.json,   md5=7f87add9a903ca46d837092fde11d03b, n=92, MB=0.18
+    stephane-episode.json, md5=22567cb74b15ef1c621407862c242637, n=17936, MB=22.40
+    stephane-podcast.json, md5=19a8e6733c891b7fa4b21e494031667e, n=131, MB=0.23
+    daniel-episode.json,   md5=d7069cd5fedd450085c60d935aa1af3e, n=24167, MB=31.77
+    daniel-podcast.json,   md5=7f87add9a903ca46d837092fde11d03b, n=92, MB=0.18
 
-  __user  | __type  | dist  | count |          max           
-----------+---------+-------+-------+------------------------
- daniel   | episode | 24167 | 90375 | 2016-07-29 20:00:00+00
- daniel   | podcast |    92 |   611 | 2016-07-29 04:00:00+00
- stephane | episode | 17936 | 41240 | 2016-07-29 20:00:00+00
- stephane | podcast |   131 |  4257 | 2016-07-29 16:00:00+00
+      __user  | __type  | dist  | count |          max           
+    ----------+---------+-------+-------+------------------------
+    daniel   | episode | 24167 | 90375 | 2016-07-29 20:00:00+00
+    daniel   | podcast |    92 |   611 | 2016-07-29 04:00:00+00
+    stephane | episode | 17936 | 41240 | 2016-07-29 20:00:00+00
+    stephane | podcast |   131 |  4257 | 2016-07-29 16:00:00+00
 
 ## S3 Bucket and policy
 Objective: snapshots (monthly [/daily/hourly] ) will be saved to an s3 bucket.

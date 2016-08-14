@@ -33,7 +33,7 @@ function tryemall(credentials) {
 
   return apiSession.sign_in(credentials)
     .then(apiSession.podcasts())
-    .then(function(response) {
+    .then(function (response) {
       if (response && response.length > 0) {
         log.verbose('Observed stamp', {
           stamp: response[0].__stamp
@@ -51,22 +51,22 @@ function tryemall(credentials) {
       // Wachtel on the Arts from CBC Radio's Ideas
       // uuid:'89beea90-5edf-012e-25b7-00163e1b201c'
     }))
-    .then(function(response) {
+    .then(function (response) {
       log.info('  02-podcasts', response.length);
     })
     .then(apiSession.new_releases())
-    .then(function(response) {
+    .then(function (response) {
       log.info('  03-new_releases', response.length);
     })
     .then(apiSession.in_progress())
-    .then(function(response) {
+    .then(function (response) {
       log.info('  04-in_progress', response.length);
     })
-    .then(function(response) {
+    .then(function (/*response*/) {
       log.info('Done', credentials.name);
       return credentials.name;
     })
-    .catch(function(error) {
+    .catch(function (error) {
       log.info('Error', JSON.stringify(error, null, 2));
       // throw error;
       return credentials.name;
@@ -74,24 +74,29 @@ function tryemall(credentials) {
 }
 
 function iteration() {
-  Promise.each(allCredentials, function(credentials) {
+  Promise.each(allCredentials, function (credentials) {
     return tryemall(credentials);
     // return tasks.quick(credentials);
     // return tasks.shallow(credentials);
     // return tasks.deep(credentials);
-  }).then(function() {
+  }).then(function () {
     log.info('Done all');
   });
 
 }
 
-// first invocation
-iteration();
-if (false) {
-  // a few more invocations
-  var itvl = setInterval(iteration, 10000);
-  // run thrice
-  setTimeout(function () {
-    clearInterval(itvl);
-  }, 30000);
+const iterations = 1;
+const intervalMS = 10000;
+if (iterations > 0) {
+  // first invocation
+  iteration();
+
+  if (iterations > 1) {
+    // a few more invocations
+    var itvl = setInterval(iteration, intervalMS);
+    setTimeout(function () {
+      clearInterval(itvl);
+    }, iterations * intervalMS);
+  }
+
 }

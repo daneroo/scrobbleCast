@@ -7,20 +7,22 @@ var colors = require('colors/safe'); // don't touch String prototype
 var log = require('./lib/log');
 var logcheck = require('./lib/logcheck');
 
+const showRawRecords = false;
+
 log.verbose('Starting LogCheck');
 
 //
 // Find items logged between today and yesterday.
 //
 logcheck.getMD5Records()
-  // .then(showRecords) // show raw data
+  .then(showRecords) // show raw data
   .then(aggRecords)
   .then(logcheck.detectMismatch)
-  .then(function(records) {
+  .then(function (records) {
     log.verbose('records:%s', records.length);
     return records;
   })
-  .catch(function(error) {
+  .catch(function (error) {
     log.error('logcheck: %s', error);
   });
 
@@ -41,7 +43,7 @@ function aggRecords(records) {
   var hosts = distinct(records, 'host'); // these are sorted
 
   function emptyHostMap() { // function bound to hosts, which is an array
-    return _.reduce(hosts, function(result, value, key) {
+    return _.reduce(hosts, function (result, value /* , key */) {
       result[value] = '-no value-';
       return result;
     }, {});
@@ -55,7 +57,7 @@ function aggRecords(records) {
     _(records).filter({
       user: u,
       type: t
-    }).each(function(r) {
+    }).each(function (r) {
       var stamp = r.stamp;
       // stamp is rounded to 10min so we can match entries.
       stamp = stamp.replace(/[0-9]:[0-9]{2}(\.[0-9]*)?Z$/, '0:00Z'); // round down to 10:00
@@ -67,9 +69,9 @@ function aggRecords(records) {
 
     var rows = [];
     // keep the table in reverse chronological order
-    _.keys(md5byStampByHost).sort().reverse().forEach(function(stamp) {
+    _.keys(md5byStampByHost).sort().reverse().forEach(function (stamp) {
       var row = [stamp];
-      _.keys(md5byStampByHost[stamp]).sort().forEach(function(host) {
+      _.keys(md5byStampByHost[stamp]).sort().forEach(function (host) {
         var md5 = md5byStampByHost[stamp][host];
         row.push(md5);
       });
@@ -78,8 +80,8 @@ function aggRecords(records) {
     return rows;
   }
 
-  types.forEach(function(t) {
-    users.forEach(function(u) {
+  types.forEach(function (t) {
+    users.forEach(function (u) {
       var rows = makeTableStampByHost(u, t);
 
       // reformat
@@ -140,7 +142,7 @@ function shortDate(stampStr) {
 
 function distinct(records, field) {
   var values = {};
-  records.forEach(function(r) {
+  records.forEach(function (r) {
     var value = r[field];
     values[value] = true;
   });
@@ -150,19 +152,19 @@ function distinct(records, field) {
 // Just print th records in a table, possible elipse to remove middle rows...
 function showRecords(records) {
   var origRecords = records; // needs to be returned to the promise chain
-  if (!records || !records.length) {
+  if (!showRawRecords || !records || !records.length) {
     return origRecords;
   }
 
-  var ellipsis = false;
-  var howMany = 3;
+  const ellipsis = false;
+  const howMany = 3;
   if (ellipsis && records.length > (howMany * 2)) {
     var dotdotdot = blankedObject(records[0], '.');
     records = records.slice(0, howMany).concat(dotdotdot, records.slice(-howMany));
   }
 
   var table = newTable(['stamp', 'host', 'user', 'type', 'md5']);
-  records.forEach(function(r) {
+  records.forEach(function (r) {
     var record = [r.stamp, r.host, r.user, r.type, r.md5];
     table.push(record);
   });
@@ -173,7 +175,7 @@ function showRecords(records) {
 // Utility to create an object with same keys, but default values
 function blankedObject(obj, defaultValue) {
   defaultValue = defaultValue === undefined ? '' : defaultValue;
-  return _.reduce(obj, function(result, value, key) {
+  return _.reduce(obj, function (result, value, key) {
     result[key] = defaultValue;
     return result;
   }, {});

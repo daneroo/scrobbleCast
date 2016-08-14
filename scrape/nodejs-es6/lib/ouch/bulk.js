@@ -11,11 +11,11 @@ exports = module.exports = {
   save: bulkSave
 };
 
-var log = function(){};
+var log = function () { };
 
 // Make jshint happy: external dependancies:
 var db;
-function save(item){
+function save(/*item*/) {
   // this just saves one item.
 }
 // batch's scope is dependant on how it is called
@@ -32,7 +32,7 @@ function bulkSave(batchSize) {
   // }
   // else
   var batch = [];
-  return function(item) {
+  return function (item) {
     // verbose('-bulkSave:', [batchSize,batch.length,item._id]);
     if (batch.length < batchSize) {
       // verbose('-create:bulk:', [item._id,item._rev]);
@@ -41,12 +41,12 @@ function bulkSave(batchSize) {
       return 'batched';
     }
     return db.bulkDocs(batch)
-      .then(function(result) {
-        var summary = _.countBy(result,function(one){
-          if (one.ok){
+      .then(function (result) {
+        var summary = _.countBy(result, function (one) {
+          if (one.ok) {
             return 'OK';
           }
-          if (one.error){
+          if (one.error) {
             return one.status;
           }
           return 'UNKNOWN';

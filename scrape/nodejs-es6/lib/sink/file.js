@@ -34,7 +34,7 @@ function pathForItems(items) {
   }
 
   // assertions - for keys
-  _.keys(keys).forEach(function(key) {
+  _.keys(keys).forEach(function (key) {
     if (!keys[key]) {
       console.log('pathForItems: missing key: ' + key);
       console.log('keys', keys);
@@ -83,6 +83,13 @@ function write(filename, items, opts) {
         file: filename,
         opt: opts
       });
+      if (utils.hasSameContent(olditems, items)){
+        log.error('sink.file.write: verify identical: samecontent policy would have allowed it');
+        // uncomment the next two lines to have the 'samecontent'' behavior
+        // jsonl.write(filename, items, opts.log);
+        // return;
+      }
+
       throw new Error(msg);
     } else {
       if (opts.log) {

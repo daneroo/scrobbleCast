@@ -44,7 +44,7 @@ Scenario:
 
 ## TODO
 
-- eslint cleanup
+- snapshots: clean up assertions (move them to store (like file.load?))
 - snapshots to dir, then [s3-cli sync](https://github.com/andrewrk/node-s3-cli)
 - remove `s3-cli`, replace by `s3` get creds from json instead of s3cfg.ini (.gitgnore)
 - config
@@ -52,7 +52,6 @@ Scenario:
 - [multiple return](http://www.2ality.com/2014/06/es6-multiple-return-values.html) (insert->ok,status)
 - deprecate srcFile
 - upgrade bluebird
-- remove `.jsbeautifyrc, .jshitrc, .jscsrc`
 - replace npm scripts: `snapshots` and `restore`
 - sync: load all from file and database, compare
 - Fix babel'd start (cwd, and relative paths) Move scripts to (sub)folder to fix relative paths.
@@ -65,6 +64,9 @@ Scenario:
   - consensus based on digest of non deduped entries. (order by digest|date,..)
 - restore-pg switches from default `saveButVerifyIfDuplicate` to `checkThenSaveItem` on first fail...
 
++ snashots now load from db
++ eslint cleanup
++ remove `.jsbeautifyrc, .jshitrc, .jscsrc`
 + Deprecate pgu.insert,pgu.query in favor of pgu.db.any|none
 + [speed pg-promise](http://vitaly-t.github.io/pg-promise/helpers.html#.insert)
 + [speed pg-promise see also](https://github.com/vitaly-t/pg-promise/wiki/Performance-Boost)
@@ -80,6 +82,12 @@ Scenario:
 
 ## TESTING
 
+stephane-episode.json, md5=a62b7af3614923648c949766ede13b58, n=18090, MB=22.61
+stephane-podcast.json, md5=7cb08a24fe420290581621be034f4ace, n=131, MB=0.23
+daniel-episode.json,   md5=046ae7ff5687bea1e3cca4a3723171bc, n=24449, MB=32.21
+daniel-podcast.json,   md5=e55c7a85be45c0e74f27b09f3a803433, n=93, MB=0.18
+
+
     stephane-episode.json, md5=22567cb74b15ef1c621407862c242637, n=17936, MB=22.40
     stephane-podcast.json, md5=19a8e6733c891b7fa4b21e494031667e, n=131, MB=0.23
     daniel-episode.json,   md5=d7069cd5fedd450085c60d935aa1af3e, n=24167, MB=31.77
@@ -93,6 +101,10 @@ Scenario:
     stephane | podcast |   131 |  4257 | 2016-07-29 16:00:00+00
 
 ## S3 Bucket and policy
+
+**2016-08-18 Versioning was enabled on s3://scrobblecast/**
+
+
 Objective: snapshots (monthly [/daily/hourly] ) will be saved to an s3 bucket.
 
 This will be used as a seed for any new host, and replaces `data/rollup`.

@@ -51,6 +51,50 @@ function isEqualWithoutPrototypes(a, b) {
   return _.isEqual(a, b);
 }
 
+// tentative set comparison, for relaxed overwrite rule
+function hasSameContent(a, b) {
+  // must be an array
+  log.verbose('array check:', { a: Array.isArray(a), b: Array.isArray(b) });
+  if (!Array.isArray(a) || !Array.isArray(b)) {
+    return false;
+  }
+  log.verbose('counts check:', { a: a.length, b: b.length });
+  if (a.length != b.length) {
+    return false;
+  }
+
+  const strfy = (item) => JSON.stringify(item);
+  const A = new Set(a.map(strfy));
+  const B = new Set(b.map(strfy));
+
+  let sameContent = true;
+  for (let aa of A) {
+    if (!B.has(aa)) {
+      sameContent = false;
+      log.verbose('aa is not in B', aa);
+    }
+  }
+  for (let bb of B) {
+    if (!A.has(bb)) {
+      sameContent = false;
+      log.verbose('bb is not in A', bb);
+    }
+  }
+  return sameContent
+  // function k(it) {
+  //   // return [it.__user, it.__stamp, it.__type, it.uuid, it.__sourceType].join('');
+  //   return [it.uuid, it.__sourceType].join('/');
+  // }
+  // for (let i = 0; i < Math.min(a.length, b.length); i++) {
+  //   const aa = a[i], bb = b[i];
+  //   if (strfy(aa) !== strfy(bb)) {
+  //     console.log('i,aa,bb', i, k(aa) + ' ' + k(bb));
+  //   }
+  // }
+
+
+}
+
 function md5(str) {
   var hash = crypto.createHash('md5').update(str).digest('hex');
   return hash;
@@ -60,7 +104,7 @@ function md5(str) {
 function digest(str, algorithm, prependAlgorithm) {
   algorithm = algorithm || 'sha256';
   var hash = crypto.createHash(algorithm).update(str).digest('hex');
-  if (prependAlgorithm){
+  if (prependAlgorithm) {
     hash = algorithm + ':' + hash;
   }
   return hash;
@@ -71,6 +115,7 @@ exports = module.exports = {
   logStamp: logStamp,
   stampFromFile: stampFromFile,
   isEqualWithoutPrototypes: isEqualWithoutPrototypes,
+  hasSameContent: hasSameContent,
   digest: digest,
   md5: md5
 };

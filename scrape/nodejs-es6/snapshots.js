@@ -17,9 +17,9 @@ var util = require('util');
 var Promise = require('bluebird');
 var log = require('./lib/log');
 
-var srcFile = require('./lib/source/file');
 var sinkFile = require('./lib/sink/file');
 var delta = require('./lib/delta');
+var store = require('./lib/store');
 
 // globals
 var allCredentials = require('./credentials.json');
@@ -34,75 +34,35 @@ Promise.resolve(true)
 //  perform dedup checking as we go, removing the need for accumulating all Items, only currentMonth
 // at the end validate that history with/without rollup is identical
 function main() {
-  // var extra = '';
-  var extra = 'rollup'; // to switch to rollup..
   return Promise.each(allCredentials, function (credentials) {
     logMemAfterGC();
-    log.info('Snapshots started', {
-      user: credentials.name
-    });
-    return rollup(credentials, extra);
+    log.info('Snapshots started', { user: credentials.name });
+    return loadItems(credentials);
   });
 }
 
-function rollup(credentials, extra) {
-  // blank out accumulators
-  return loadItems(credentials, extra);
-}
-
 // returns all items from extra, in an array
-function loadItems(credentials, extra) {
-  log.verbose('snapshots', credentials);
+function loadItems(credentials) {
   // shared handler for both extras
   var l = loader();
   var sharedHandler = l.handler;
   var historyByType = l.historyByType;
 
-  function reportCounts(counts) {
-    Object.keys(counts).forEach(function (name) {
-      var maxStamp = l.getMaxStamp();
-      // var msg = util.format('base:%s user:%s |stamps|:%s |f|:%s |p|:%s |ignored|:%s max(stamp):%s', extra, name, c.stamp, c.file, c.part, c.ignoredFiles, maxStamp);
-      log.verbose('Rollup:counts', {
-        base: extra,
-        user: name,
-        counts: counts,
-        maxStamp: maxStamp
-      });
-    });
-    return Promise.resolve(true);
-  }
+  return store.impl.pg.load({
+    filter: {
+      __user: credentials.name
+    }
+  }, sharedHandler)
+    .then((items) => {
+      log.verbose('Snapshot:counts', { user: credentials.name, items: items.length });
 
-  // TODO: clean this up for final logic, with opts
-  // this is the double iteration loader
-  return srcFile.iterator(extra, [credentials], sharedHandler, '**/*.json?(l)')
-    .then(reportCounts)
-    .then(function () {
-      // get and fix the stamp lowerbound
-      var maxStamp = l.getMaxStamp();
-
-      if (extra === 'rollup') {
-        log.verbose('Reading rest of entries from default', {
-          after: maxStamp
-        });
-      } else {
-        log.debug('NOT Reading rest of entries from default');
-        return Promise.resolve(true);
-      }
-
-      function skippingFilter(credentials, stamp /*, file , item */) {
-        return (stamp > maxStamp);
-      }
-
-      // now call with extra=''
-      return srcFile.iterator('', [credentials], sharedHandler, '**/*.json?(l)', skippingFilter)
-        .then(reportCounts);
     })
-    // return srcFile.iteratorWithRollup(extra, [credentials], sharedHandler, '**/*.json?(l)')
-    .then(function () {
+    .then(() => {
       var _user = credentials.name;
       historyByType.sortAndSave(_user);
       return Promise.resolve(true);
     });
+
 }
 
 // return an item handler for srcFile.iterator which:
@@ -196,7 +156,7 @@ function loader() {
   }
 
   // the actual itemHandler being returned
-  var handler = function itemHandler(credentials, stamp, file, item) {
+  var handler = function itemHandler(item) {
     // console.log('..stamp',stamp);
     // throw error if item.__stamp's are non-increasing
     checkStampOrdering(item);

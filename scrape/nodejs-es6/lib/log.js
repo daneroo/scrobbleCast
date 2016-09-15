@@ -31,11 +31,19 @@ winston.add(winston.transports.Console, {
   timestamp: true // logs in UTC
 });
 
+// http://tostring.it/2014/06/23/advanced-logging-with-nodejs/
+const morganStream  = {
+    write: function(message /*, encoding */){
+      // trim to remove new line
+        winston.info(message.trim());
+    }
+};
 exports = module.exports = {
   log: winston.log, // log(level,...)
   error: winston.error,
   warn: winston.warn,
   info: winston.info,
   verbose: winston.verbose,
-  debug: winston.debug
+  debug: winston.debug,
+  morganStream:morganStream
 };

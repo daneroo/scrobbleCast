@@ -4,20 +4,17 @@
 // TODO(daneroo): figure out how to control default level (which is info) from ENV (verbose,debug)
 
 // dependencies - core-public-internal
-var os = require('os');
-var fs = require('fs');
 var winston = require('winston');
 require('winston-loggly');
-var packageName = 'pocketscrape';
-var config = JSON.parse(fs.readFileSync('credentials.loggly.json').toString());
+var config = require('./config');
 
-var hostname = os.hostname();
+const packageName = 'pocketscrape';
 
 // default levels: { error: 0, warn: 1, info: 2, verbose: 3, debug: 4, silly: 5 }
 winston.add(winston.transports.Loggly, {
-  token: config.token,
-  subdomain: config.subdomain,
-  tags: [packageName, 'host-' + hostname],
+  token: config.loggly.token,
+  subdomain: config.loggly.subdomain,
+  tags: [packageName, 'host-' + config.hostname],
   json: true
 });
 

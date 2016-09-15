@@ -5,8 +5,8 @@ var path = require('path');
 var express = require('express');
 var morgan = require('morgan');
 
-var log = require('../log');
 var config = require('../config');
+var log = require('../log');
 var metrics = require('../metrics');
 
 // express/socket.io init

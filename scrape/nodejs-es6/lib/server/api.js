@@ -23,7 +23,8 @@ router.use(function authMiddleware(req, res, next) {
 router.get('/', function (req, res) {
   res.send('API Home');
 });
-// define the about route
+
+// define the digests route
 router.route('/digests')
   .get(function (req, res) {
     store.impl.pg.digests()
@@ -31,7 +32,14 @@ router.route('/digests')
         res.json(rows)
       })
       .catch((err) => {
-        res.send(err);
+        log.info('digests error',err);
+        // TODO(daneroo): Errors: https://kostasbariotis.com/rest-api-error-handling-with-express-js/
+        res.status(500).json({
+          name:'Error',
+          message:'The digests could not be listed',
+          statusCode:500,
+          errorCode:500 // could be app specific
+        });
       });
 
   });
@@ -40,6 +48,8 @@ router.route('/digests')
 // });
 
 router.route('/digest/:digest')
+  // .put(function(req, res) {
+  // })
   .get(function (req, res) {
     const digest = req.params.digest;
     log.verbose('/api/digest/', digest);
@@ -48,11 +58,16 @@ router.route('/digest/:digest')
         res.json(item)
       })
       .catch((err) => {
-        res.send(err);
+        log.info('getByDigest error',err);
+        // TODO(daneroo): Errors: https://kostasbariotis.com/rest-api-error-handling-with-express-js/
+        res.status(404).json({
+          name:'notFound',
+          message:'The item could not be found',
+          statusCode:404,
+          errorCode:404 // could be app specific
+        });
       });
 
   });
-    // .put(function(req, res) {
-    // })
 
 

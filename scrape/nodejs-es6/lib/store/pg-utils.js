@@ -10,18 +10,10 @@ var pgp = require('pg-promise')({
   // init options ? move to config
   promiseLib: Promise
 });
-var log = require('../log');
+const config = require('../config');
+const log = require('../log');
 
-// TODO(daneroo) move to global config
-const config = {
-  host: process.env.POSTGRES_HOST || 'localhost',
-  port: 5432,
-  // match ENV in docker-compose...
-  database: 'scrobblecast',
-  user: 'postgres'
-  // password: null
-};
-var db = pgp(config);
+var db = pgp(config.postgres);
 
 // Exported API
 exports = module.exports = {

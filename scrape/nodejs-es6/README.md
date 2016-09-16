@@ -208,6 +208,7 @@ Start a container and connect to it
     select __user,__type,count(distinct uuid),max(__stamp) from items group by __user,__type;
     select distinct uuid, item->>'title' as title from items where __user='daniel' and __type='podcast'
     select __user,__type,uuid, count(distinct uuid) dis,count(*) as all,min(__stamp),max(__stamp) from items group by __user,__type,uuid order by count(*) desc;
+    SELECT encode(digest(item::text, 'md5'), 'hex') as digest FROM items;
     # === mysqladmin proc
     select * from pg_stat_activity
 

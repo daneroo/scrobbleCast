@@ -16,6 +16,8 @@ const DIGEST_ALGORITHM = 'sha256';
 
 // Exported API
 exports = module.exports = {
+  digests: digests,
+  getByDigest:getByDigest,
   // load: (opts, handler) => {} // foreach item, cb(item);
   load: load,
   // save: (item) => {}, // should return (Promise)(status in insert,duplicate,error)
@@ -27,6 +29,52 @@ exports = module.exports = {
   init: pgu.init, // setup the database pool, ddl...
   end: pgu.end
 };
+
+function digests() {
+  const nmParams = {
+    DIGEST_ALGORITHM: DIGEST_ALGORITHM
+  }
+
+  // watch camelcase for __sourcetype NOT __sourceType,
+  // also ES6 templates use ${var}, helper can use {}, (), [], <>, //
+  // __user, __type, uuid, __sourceType, __stamp
+  const sql =
+    `SELECT encode(digest(item::text, $[DIGEST_ALGORITHM]), 'hex') as digest
+    FROM items
+    ORDER BY __stamp desc,digest
+    --LIMIT 10000`;
+
+  return pgu.db.any(sql, nmParams)
+    .then(function (rows) {
+      log.verbose('pg:digest ', { rows: rows.length });
+      return rows.map(r => {
+        return r.digest;
+      });
+    });
+
+}
+
+function getByDigest(digest) {
+  const nmParams = {
+    digest:digest,
+    DIGEST_ALGORITHM: DIGEST_ALGORITHM
+  }
+
+  // watch camelcase for __sourcetype NOT __sourceType,
+  // also ES6 templates use ${var}, helper can use {}, (), [], <>, //
+  // __user, __type, uuid, __sourceType, __stamp
+  const sql =
+    `SELECT item
+    FROM items
+    WHERE $[digest]=encode(digest(item::text, $[DIGEST_ALGORITHM]), 'hex')`;
+
+  return pgu.db.one(sql, nmParams)
+    .then(function (row) {
+      log.verbose('pg:getByDigest ', row);
+      return row.item;
+    });
+
+}
 
 // return Promise.each(rows)
 // TODO(daneroo): but might better return map[Series] or spex, or streaming query

@@ -1,0 +1,15 @@
+{
+  "ecmaFeatures": {
+    "modules": true,
+    "generators": true
+  },
+  "rules": {
+    "no-console": 0
+  },
+  "env": {
+    "es6": true,
+    "mocha": true,
+    "node": true
+  },
+  "extends": "eslint:recommended"
+}

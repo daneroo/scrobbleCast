@@ -46,8 +46,8 @@ function restore(credentials) {
   const saver = store.impl.pg.saveByBatch(batchSize);
 
   // let basepaths = ['noredux'];
-  let basepaths = ['snapshots', ''];
-  // let basepaths = ['rollup', ''];
+  // let basepaths = ['snapshots', ''];
+  let basepaths = ['rollup', ''];
 
   return store.impl.file.load({
     prefix: basepaths,

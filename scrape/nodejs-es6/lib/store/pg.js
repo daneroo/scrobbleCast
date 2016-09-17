@@ -183,7 +183,7 @@ function remove(item) {
     AND __type=$[__type] AND uuid=$[uuid]
     AND __sourcetype=$[__sourcetype]`;
 
-  log.verbose('pg:remove deleting item', nmParams);
+  // log.verbose('pg:remove deleting item', nmParams);
 
   // uses db.result to assert result.rowCount==1
   return pgu.db.result(sql, nmParams)

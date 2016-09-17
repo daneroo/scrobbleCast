@@ -24,7 +24,7 @@ winston.add(winston.transports.Loggly, {
 // Remove to add our own..
 winston.remove(winston.transports.Console);
 winston.add(winston.transports.Console, {
-  level: 'verbose', // for Console, could depend on ENV ?
+  level: 'debug', // for Console, could depend on ENV ?
   colorize: true, // true, 'all', message or level
   // showLevel: false, // not in console..., but looks weird with only timestamp
   // timestamp: function(){ return 'prefix-or local timestamp'; }

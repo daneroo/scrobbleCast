@@ -4,9 +4,9 @@
 
 // dependencies - core-public-internal
 // var fs = require('fs');
-// var path = require('path');
+var path = require('path');
 // var mkdirp = require('mkdirp');
-// var Promise = require('bluebird');
+var Promise = require('bluebird');
 // var _ = require('lodash');
 var log = require('../log');
 var srcFile = require('../source/file');
@@ -19,25 +19,69 @@ exports = module.exports = {
   load: load // foreach item, cb(item);
 };
 
-// opts: {prefix:(extra),filter:{__user,__type,__stamp:[start,end]}}
+// TODO filter:{__type,__stamp:[start,end]}
+// opts: {
+//     prefix: basepath || [base1,base2],
+//     filter: { __user:required }
+// }
 // cb:   (item,err) => Promise(item)
 function load(opts, itemHandler) {
   opts = opts || {};
+  // default itemHandler
   itemHandler = itemHandler || defaultItemHandler();
-  opts.prefix = opts.prefix || '';
+
+  // validate required user filter
   if (!opts.filter.__user) {
     return Promise.reject(new Error('file:load missing required filter.__user'));
   }
-  return srcFile.iterator(opts.prefix, [{
-      name: opts.filter.__user
-    }], wrappedHandler(opts, itemHandler), '**/*.json?(l)')
+
+  // default prefix (single)
+  opts.prefix = opts.prefix || ''; // ?? ''->'byUserStamp'
+  // coerce prefix to an array
+  if (!Array.isArray(opts.prefix)) {
+    opts.prefix = [opts.prefix];
+  }
+
+  // wrap itemHandler for progress and assertions
+  itemHandler = wrappedHandler(opts, itemHandler);
+
+  function findFilesForUser(prefix) {
+    // find all files in the prefixed path,
+    // then filter for '/user/' in path
+    return srcFile.find(path.join(prefix || 'byUserStamp', '**/*.json?(l)'))
+      .then(function (files) {
+        return files.filter((file) => file.includes('/' + opts.filter.__user + '/'))
+      });
+  }
+
+  var counts = {
+    item: 0,
+    file: 0
+  };
+
+  return Promise.each(opts.prefix, function (prefix) {
+
+    return findFilesForUser(prefix)
+      .then(function (files) {
+        counts.file += files.length;
+
+        return Promise.each(files, function (file) {
+          var items = srcFile.loadJSON(file);
+          counts.item += items.length;
+          return Promise.each(items, function (item) {
+            // return Promise.resolve(true);
+            return itemHandler(item);
+          });
+        });
+      });
+  })
+    .then(() => counts)
     .then(reportCounts(opts));
 
 }
 
 function defaultItemHandler() {
-  return (item) => {
-    // log.verbose('Handled', item);
+  return (/*item*/) => {
     return Promise.resolve(true);
   };
 }
@@ -46,7 +90,7 @@ function defaultItemHandler() {
 // -massage the arguments into old form of srcFile.iterator's handler
 function wrappedHandler(opts, itemHandler) {
   const assert = combineAssertions(opts);
-  return function(credentials, stamp, file, item) {
+  return function (item) {
     // log.debug('-file:load Calling handler with item.stamp:%s', item.__stamp);
     assert(item);
     return itemHandler(item);
@@ -76,12 +120,12 @@ function combineAssertions(opts) {
   };
 }
 
-// function with bound local isolated scope
+// functions with bound local isolated scope
 
 // by time, or count,...
 function progress() {
-  const logEvery=3000;
-  // boud scope variables
+  const logEvery = 10000;
+  // bound scope variables
   var soFar = 0;
   var start = +new Date();
 
@@ -106,7 +150,7 @@ function checkStampOrdering() {
     var stamp = item.__stamp;
     log.debug('Checking stamp ordering: %s >=? %s', item.__stamp, maxStamp);
     if (stamp < maxStamp) {
-      log.error('Item stamp not increasing: %s > %j', maxStamp, item);
+      log.error(`Item stamp not increasing: ${stamp} < ${maxStamp}`, item);
       throw new Error('Item stamp not increasing');
     }
     maxStamp = stamp;
@@ -129,17 +173,15 @@ function singleUser() {
   };
 }
 
-// opts.prefix = opts.prefix || '';
-// if (!opts.filter.__user) {
-
 function reportCounts(opts) {
   const prefix = opts.prefix;
   const user = opts.filter.__user;
 
   return (counts) => {
-    Object.keys(counts).forEach(function(name) {
-      var c = counts[name];
-      log.debug('prefix:%s user:%s |stamps|:%s |f|:%s |p|:%s |ignored|:%s', prefix, user, c.stamp, c.file, c.part, c.ignoredFiles);
+    log.verbose('+file.load', {
+      prefix: prefix,
+      user: user,
+      counts: counts
     });
     return Promise.resolve(counts);
   };

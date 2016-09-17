@@ -1,0 +1,25 @@
+{
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "sourceType": "module",
+    "allowImportExportEverywhere": false
+  },
+  "plugins": [
+    "babel"
+  ],
+  "ecmaFeatures": {
+    "modules": true,
+    "generators": true
+  },
+  "rules": {
+    "generator-star-spacing": 0,
+    "babel/generator-star-spacing": 1,
+    "no-console": 0
+  },
+  "env": {
+    "es6": true,
+    "mocha": true,
+    "node": true
+  },
+  "extends": "eslint:recommended"
+}

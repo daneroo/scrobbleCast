@@ -12,7 +12,7 @@ var _ = require('lodash');
 var PocketAPI = require('./pocketAPI');
 var log = require('./log');
 var utils = require('./utils');
-var sinkFile = require('./sink/file');
+var store = require('./store');
 var dedupTask = require('./dedup').dedupTask;
 var detectMismatchTask = require('./logcheck').detectMismatchTask;
 
@@ -79,12 +79,12 @@ function quickWithSession(apiSession) {
       .then(apiSession.new_releases())
       .then(function(response) {
         progress('03-new_releases', response);
-        sinkFile.writeByUserStamp(response);
+        saver(response);
       })
       .then(apiSession.in_progress())
       .then(function(response) {
         progress('04-in_progress', response);
-        sinkFile.writeByUserStamp(response);
+        saver(response);
       })
       // .then(function() {
       //   lifecycle('.quick', 'done', apiSession.user);
@@ -110,7 +110,7 @@ function scrape(credentials, isDeep) {
   return apiSession.sign_in(credentials)
     .then(apiSession.podcasts())
     .then(function(response) {
-      sinkFile.writeByUserStamp(response);
+      saver(response);
       progress('01-podcasts', response);
       return response;
     })
@@ -125,7 +125,7 @@ function scrape(credentials, isDeep) {
             maxPage: isDeep ? 0 : 1,
           }))
           .then(function(response) {
-            sinkFile.writeByUserStamp(response);
+            saver(response);
             progress('02-podcasts', response, {
               title: podcastByUuid[uuid][0].title
             });
@@ -162,5 +162,24 @@ function lifecycle(task, verb, user, elapsed) {
 }
 
 function progress(msg, response, meta) {
+  meta = meta || {};
   log.verbose('|%s|: %d', msg, response.length, meta);
+}
+
+// Called only once, replaces self with noop.
+var initDB=function(){
+  initDB = function(){
+    // log.verbose('Dummy initialize');
+    return Promise.resolve(true);
+  }
+  // log.verbose('Actually initialize');
+  return store.impl.pg.init();
+};
+
+// this is where I can switch from file to postgress persistence
+function saver(items) {
+  return initDB()
+    .then(function () {
+      return store.impl.pg.saveAll(items);
+    });
 }

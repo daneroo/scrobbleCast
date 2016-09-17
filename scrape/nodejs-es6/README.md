@@ -1,11 +1,190 @@
 # implement the feed fetch in node.js
 
-* Docker
-* Auth
-* Wrap JSON Rest API in module
-* LevelDB Storage
-* Try using promises
-* Try using ES6
+## Sync paths
+
+Questions:
+- How has legacy diverged (detail)
+- How has peer diverged
+- Update to/from legacy
+
+Scripts:
+
+- rollup: file:'' -> file:rollup (deprecated)
+
+- restore.js: file:rollup+'' -> pg (transition deprecated)
+- snapshot.js: pg -> file:snapshot 
+  - currently file:rollup+'' -> file:snapshots
+- s3-cli file:data/snapshots/ <->  s3://scrobblecast/snapshots/
+- sync.js: compare file:roolup+'', pg: (no write)
+
+Scenario:
+
+- init/sync from s3: 
+  - s3://scrobblecast/snapshots/ -> file:data/snapshots/
+  - file:data/snapshots/ -> pg
+  - dedup
+
+- scrape
+  - scrape:(quick|shallow|deep) -> pg
+  - dedup
+
+- sync(peer) MVP
+  - pg:peer -> pg, or pg:peer ->file:data/snapshots -> pg
+  - dedup
+
+- sync(legacy peer)
+  - rsync -> file:data
+  - file:data -> pg
+  - dedup
+
+- snapshot/sync to s3
+  - dedup
+  - pg -> file:data/snapshots
+  - file:data/snapshots/ ->  s3://scrobblecast/snapshots/
+
+## TODO
+
+- snapshots: clean up assertions (move them to store (like file.load?))
+- snapshots to dir, then [s3-cli sync](https://github.com/andrewrk/node-s3-cli)
+- remove `s3-cli`, replace by `s3` get creds from json instead of s3cfg.ini (.gitgnore)
+- config
+- [streaming with pg-promise](https://github.com/vitaly-t/pg-promise/wiki/Learn-by-Example#streaming)
+- [multiple return](http://www.2ality.com/2014/06/es6-multiple-return-values.html) (insert->ok,status)
+- deprecate srcFile
+- upgrade bluebird
+- replace npm scripts: `snapshots` and `restore`
+- sync: load all from file and database, compare
+- Fix babel'd start (cwd, and relative paths) Move scripts to (sub)folder to fix relative paths.
+- scrape/nodejs-es6/lib/jsonl.js:57 restore log.info for jsonl.write
+- confirm docker-compose logging (max-size/max-file) and restart
+- restore: buffer writes.
+- restore: push to remote database (from dirac,darwin -> dockerX)
+- Seperate dedup from consensus-signature
+  - dedup per uuid
+  - consensus based on digest of non deduped entries. (order by digest|date,..)
+- restore-pg switches from default `saveButVerifyIfDuplicate` to `checkThenSaveItem` on first fail...
+
++ snashots now load from db
++ eslint cleanup
++ remove `.jsbeautifyrc, .jshitrc, .jscsrc`
++ Deprecate pgu.insert,pgu.query in favor of pgu.db.any|none
++ [speed pg-promise](http://vitaly-t.github.io/pg-promise/helpers.html#.insert)
++ [speed pg-promise see also](https://github.com/vitaly-t/pg-promise/wiki/Performance-Boost)
++ Refactor pg-helpers.insert usage (getFields)
++ dedup: just delete from database;
++ babel into gulp
++ babel/eslint for async/await
++ docker-compose
++ Move rollup'd files to archive (part of rollup)
++ pg.saveAll - concurrency (use bluebird.each)
++ pgcrypto in pg.init
++ digest in pg.items, with index on expression: no speedup
+
+## TESTING
+
+stephane-episode.json, md5=a62b7af3614923648c949766ede13b58, n=18090, MB=22.61
+stephane-podcast.json, md5=7cb08a24fe420290581621be034f4ace, n=131, MB=0.23
+daniel-episode.json,   md5=046ae7ff5687bea1e3cca4a3723171bc, n=24449, MB=32.21
+daniel-podcast.json,   md5=e55c7a85be45c0e74f27b09f3a803433, n=93, MB=0.18
+
+
+    stephane-episode.json, md5=22567cb74b15ef1c621407862c242637, n=17936, MB=22.40
+    stephane-podcast.json, md5=19a8e6733c891b7fa4b21e494031667e, n=131, MB=0.23
+    daniel-episode.json,   md5=d7069cd5fedd450085c60d935aa1af3e, n=24167, MB=31.77
+    daniel-podcast.json,   md5=7f87add9a903ca46d837092fde11d03b, n=92, MB=0.18
+
+      __user  | __type  | dist  | count |          max           
+    ----------+---------+-------+-------+------------------------
+    daniel   | episode | 24167 | 90375 | 2016-07-29 20:00:00+00
+    daniel   | podcast |    92 |   611 | 2016-07-29 04:00:00+00
+    stephane | episode | 17936 | 41240 | 2016-07-29 20:00:00+00
+    stephane | podcast |   131 |  4257 | 2016-07-29 16:00:00+00
+
+## S3 Bucket and policy
+
+**2016-08-18 Versioning was enabled on s3://scrobblecast/**
+
+
+Objective: snapshots (monthly [/daily/hourly] ) will be saved to an s3 bucket.
+
+This will be used as a seed for any new host, and replaces `data/rollup`.
+
+For now, Using an on-disk cache, will allow us to use standard s3 sync tools.
+However, we might want to consider `sinkFile.write( ,,{overwrite: true})` if we have versioning in the bucket!
+
+    ./node_modules/.bin/s3-cli --config s3cfg.ini ls s3://scrobblecast/
+
+- Bucket name: s3://scroblecast/ in region `US Standard`
+- Bucket Policy: The policiy naming `scrobblecast-s3-rw` is attached to the bucket.
+
+You gotta be kidding, separate statement for list, and put/get/delete
+
+
+    {
+      "Id": "Policy1469750948684",
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Sid": "Stmt1469750860759",
+          "Action": [
+            "s3:ListBucket"
+          ],
+          "Effect": "Allow",
+          "Resource": "arn:aws:s3:::scrobblecast",
+          "Principal": {
+            "AWS": [
+              "arn:aws:iam::450450915582:user/scrobblecast-s3-rw"
+            ]
+          }
+        },
+        {
+          "Sid": "Stmt1469750944350",
+          "Action": [
+            "s3:DeleteObject",
+            "s3:GetObject",
+            "s3:PutObject"
+          ],
+          "Effect": "Allow",
+          "Resource": "arn:aws:s3:::scrobblecast/*",
+          "Principal": {
+            "AWS": [
+              "arn:aws:iam::450450915582:user/scrobblecast-s3-rw"
+            ]
+          }
+        }
+      ]
+    }
+Fix the paths to apply proper lifecycle rules:
+
+- from: `rollup/byUserStamp/daniel/2016-06-01T00:00:00Z//monthly-2016-06-01T00:00:00Z.jsonl`
+- to  `snapshots/monthly/daniel/monthly-daniel-2016-06-01T00:00:00Z.jsonl`
+- and `snapshots/daily/daniel/daily-daniel-2016-06-01T00:00:00Z.jsonl`
+- and `snapshots/hourly/daniel/hourly-daniel-2016-06-01T00:00:00Z.jsonl`
+
+- We will store (rollup) on s3
+- We will restore (rollup) from s3
+- We will [have expiry policy on daily/hourly](https://aws.amazon.com/blogs/aws/amazon-s3-object-expiration/)
+
+## Moving away from files
+
+- Confirming all old files are accounted for
+- Archiving : move all file which have been rollup'd into data/archive
+
+
+    mkdir -p data/archive/byUserStamp/daniel
+    mkdir -p data/archive/byUserStamp/stephane
+    cd data
+    # find -exec mv: gives lots of 'No such file or directory' errors: it's OK
+    find byUserStamp -type d -name 201[45]-\* -exec mv {} ./archive/{} \;
+    # move up to june(2016-08) ...
+    find byUserStamp -type d -name 2016-0[1-8]\* -exec echo mv {} ./archive/{} \;
+
+### Temp: seed/restore to pg from files
+Given a fresh db, restore from rollups.. synch with dirac
+
+    docker-compose up -d postgres
+    time node restore.js  # with basepaths = ['rollup', '']
+    docker-compose up -d scrape
 
 ## Docker Cloud
   inject credentials somehow:
@@ -31,30 +210,43 @@ This was for goedel, moving to dicker-cloud.
     docker-compose build
     docker-compose up -d
 
-### PostgreSQL
+## PostgreSQL
 [Quick intro to PostgreSQL JSON.](http://clarkdave.net/2013/06/what-can-you-do-with-postgresql-and-json/)
+
+### Using node.js pg-promise
+
++ [speed pg-promise](http://vitaly-t.github.io/pg-promise/helpers.html#.insert)
++ [speed pg-promise see also](https://github.com/vitaly-t/pg-promise/wiki/Performance-Boost)
+
+### Using pg with docker-compose
 
 Start a container and connect to it
 
-    docker run -it --rm -p 5432:5432 --name postgres postgres
-    docker exec -it postgres createdb -U postgres scrobblecast
-    docker exec -it postgres psql -U postgres scrobblecast
+    docker-compose up -d postgres
+
+    docker-compose exec postgres bash
+      psql -U postgres scrobblecast
+      psql -U postgres scrobblecast -c "select count(*) from items"
+
+    docker-compose exec postgres psql -U postgres scrobblecast
 
     scrobblecast=#
     select __user,__type,count(distinct uuid),max(__stamp) from items group by __user,__type;
     select distinct uuid, item->>'title' as title from items where __user='daniel' and __type='podcast'
+    select __user,__type,uuid, count(distinct uuid) dis,count(*) as all,min(__stamp),max(__stamp) from items group by __user,__type,uuid order by count(*) desc;
+    SELECT encode(digest(item::text, 'md5'), 'hex') as digest FROM items;
+    # === mysqladmin proc
+    select * from pg_stat_activity
 
-`pgcrypto`:
-To enable: `create extension pgcrypto;`
+### Using pg crypto
+The extension for `pgcrypto`, although available, must be loaded (once)
 
-    time psql -U postgres -c "SELECT encode(digest(item::text, 'sha256'), 'hex') as digest from items order by digest;" scrobblecast|wc
-    131464  131464 8676509
+    create extension pgcrypto;
+    # possible error if already loaded: ERROR:  extension "pgcrypto" already exists
+    # example use of digest; notice cast of item(::json) to ::text
+    SELECT encode(digest(item::text, 'sha256'), 'hex') from items limit 100;
 
-    real	0m1.399s
-    user	0m0.410s
-    sys	0m0.000s
-
-### CouchDB for persistence
+## CouchDB for persistence
 Note: try CouchDB 2.0 
 Don't put the data volume in `./data` because we often rsync!
 

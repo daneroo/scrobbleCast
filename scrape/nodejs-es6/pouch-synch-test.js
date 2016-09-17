@@ -71,7 +71,7 @@ function insThenSyncThenClose() {
     .then(() => {
       return db.close();
     })
-    .then((result) => {
+    .then((/*result*/) => {
       console.log('db1.close: ok');
     });
 
@@ -79,25 +79,25 @@ function insThenSyncThenClose() {
 
 function sync(db1, db2) {
 
-  return new Promise(function(resolve, reject) {
+  return new Promise(function (resolve /*, reject */) {
     PouchDB.sync(db1, db2)
-      .on('change', function(info) {
+      .on('change', function (info) {
         // handle change
         console.log('sync:chg', _.omit(info, 'docs'));
-      }).on('paused', function() {
+      }).on('paused', function () {
         // replication paused (e.g. user went offline)
         console.log('sync:paused');
-      }).on('active', function() {
+      }).on('active', function () {
         // replicate resumed (e.g. user went back online)
         console.log('sync:active');
-      }).on('denied', function(info) {
+      }).on('denied', function (info) {
         // a document failed to replicate, e.g. due to permissions
         console.log('sync:denied', info);
-      }).on('complete', function(info) {
+      }).on('complete', function (info) {
         // handle complete
         console.log('sync:complete', info);
         resolve(true);
-      }).on('error', function(err) {
+      }).on('error', function (err) {
         // handle error
         console.log('sync:err', err);
       });
@@ -112,13 +112,17 @@ function doit() {
       return insThenSyncThenClose();
     })
     .catch((err) => {
+      console.log('Does the tesdb directory exist?');
       console.log('uncaught err: %j', err);
     });
 
 }
 
-cancel = setInterval(doit, 5000);
-
+const duration = 10000; // 0 for forever
+doit();
+const cancel = setInterval(doit, 5000);
 setTimeout(() => {
-  // clearInterval(cancel);
-}, 10000);
+  if (duration > 0) {
+    clearInterval(cancel);
+  }
+}, duration);

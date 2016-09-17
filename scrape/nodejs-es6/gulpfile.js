@@ -7,28 +7,26 @@ var paths = {
   lint: ['./gulpfile.js', '*.js', './lib/**/*.js'],
   watch: ['./gulpfile.js', './lib/**', './test/**/*.js', '!test/{temp,temp/**}'],
   tests: ['./test/**/*.js', '!test/{temp,temp/**}'],
-  source: ['./lib/*.js']
+  source: ['*.js', './lib/**/*.js']
 };
 
-var plumberConf = {};
+gulp.task('build', () =>
+    gulp.src(paths.source,{base: '.'})
+        .pipe(plugins.babel())
+        .pipe(gulp.dest('dist'))
+);
 
-if (process.env.CI) {
-  plumberConf.errorHandler = function(err) {
-    throw err;
-  };
-}
-
-gulp.task('lint', function() {
+gulp.task('lint', function () {
   return gulp.src(paths.lint)
-    .pipe(plugins.jshint('.jshintrc'))
-    .pipe(plugins.plumber(plumberConf))
-    .pipe(plugins.jscs())
-    .pipe(plugins.jshint.reporter('jshint-stylish'));
+    .pipe(plugins.eslint())
+    .pipe(plugins.eslint.format())
+    // To have the process exit with an error code (1) on
+    // lint error, return the stream and pipe to failAfterError last.
+    .pipe(plugins.eslint.failAfterError());
 });
 
 gulp.task('mocha', function() {
   gulp.src(paths.tests)
-    .pipe(plugins.plumber(plumberConf))
     .pipe(plugins.mocha({
       // compilers: {
       //   js: babel
@@ -42,7 +40,6 @@ gulp.task('istanbul', function(cb) {
     .pipe(plugins.istanbul()) // Covering files
     .on('finish', function() {
       gulp.src(paths.tests)
-        .pipe(plugins.plumber(plumberConf))
         .pipe(plugins.mocha())
         .pipe(plugins.istanbul.writeReports()) // Creating the reports after tests runned
         .on('finish', function() {

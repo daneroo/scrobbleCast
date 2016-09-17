@@ -1,12 +1,11 @@
 'use strict';
 
-// This utility will read all source files: extra=''
+// This utility will read all source files: extra=[snapshots,'']
 // and dunp them into postgres
 // Object keys: user/type/uuid/stamp/
 
 // dependencies - core-public-internal
 var Promise = require('bluebird');
-// var _ = require('lodash');
 var log = require('./lib/log');
 var delta = require('./lib/delta');
 var store = require('./lib/store');
@@ -14,39 +13,44 @@ var store = require('./lib/store');
 // globals
 var allCredentials = require('./credentials.json'); //.slice(0, 1);
 
-
 Promise.resolve(true)
   // Promise.reject(new Error('Abort now!'))
-  .then(store.impl.pouch.init)
+  .then(store.impl.pg.init)
   .then(main)
   .then(logMemAfterGC)
   .catch(verboseErrorHandler(false))
-  .finally(function() {
-    log.debug('Done, done, releasing Pouch connection');
-    store.impl.pouch.end();
+  .finally(function () {
+    log.debug('Done, done, releasing PG connection');
+    store.impl.pg.end();
   });
 
 function main() {
-  var extra = '';
-  // var extra = 'rollup'; // to switch to rollup..
-  return Promise.each(allCredentials, function(credentials) {
+  return Promise.each(allCredentials, function (credentials) {
     logMemAfterGC();
     log.verbose('Restore started', {
       user: credentials.name
     });
-    return restore(credentials, extra)
-      .then(function() {
+    return restore(credentials)
+      .then(function () {
         logMemAfterGC();
         return accumulateItems(credentials);
       });
   });
 }
 
-// returns all items from extra, in an array
-function restore(credentials, extra) {
+function restore(credentials) {
+  // const saver = store.impl.pg.save;
+  // TODO(daneroo) batchSaver(.flush) move to pg
+  const batchSize = 1000; // which is the default
+
+  const saver = store.impl.pg.saveByBatch(batchSize);
+
+  // let basepaths = ['noredux'];
+  // let basepaths = ['snapshots', ''];
+  let basepaths = ['rollup', ''];
 
   return store.impl.file.load({
-    prefix: extra,
+    prefix: basepaths,
     assert: {
       // stampOrder: true,
       // singleUser: true,
@@ -55,8 +59,10 @@ function restore(credentials, extra) {
     filter: {
       __user: credentials.name
     }
-  }, store.impl.pouch.save);
-
+  }, saver)
+    .then(() => {
+      return saver.flush();
+    });
 }
 
 function accumulateItems(credentials) {
@@ -74,14 +80,15 @@ function accumulateItems(credentials) {
   function itemHandler(item) {
     var changeCount = historyByType.merge(item);
     if (changeCount === 0) {
-      throw new Error(`Item Not deduped: |Δ|:${changeCount} ${JSON.stringify(item)}`);
+      // throw new Error(`Item Not deduped: |Δ|:${changeCount} ${JSON.stringify(item)}`);
+      log.verbose(`Item Not deduped: |Δ|:${changeCount}  ${item.__sourceType} ${item.title}`);
     }
     return Promise.resolve(true);
   }
 
-  return store.impl.pouch.load(opts, itemHandler)
+  return store.impl.pg.load(opts, itemHandler)
     .then((results) => {
-      log.debug('Merged', results.length);
+      log.verbose('Merged', results.length);
       historyByType.sortAndSave(__user);
     });
 
@@ -89,10 +96,10 @@ function accumulateItems(credentials) {
 
 // ************ Utilities
 
-//  move to log.debugging module (as Factory?)
+//TODO(daneroo): move to log.debugging module (as Factory?)
 function verboseErrorHandler(shouldRethrow) {
   return function errorHandler(error) {
-    log.debug('error', error);
+    log.error('error', error);
     if (shouldRethrow) {
       throw (error);
     }
@@ -105,8 +112,8 @@ function logMemAfterGC() {
     const inMB = (numBytes) => (numBytes / 1024 / 1024).toFixed(2) + 'MB';
     log.debug(pfx + 'Mem', {
       rss: inMB(mu.rss)
-        // heapTotal: inMB(mu.heapTotal),
-        // heapUsed: inMB(mu.heapUsed)
+      // heapTotal: inMB(mu.heapTotal),
+      // heapUsed: inMB(mu.heapUsed)
     });
   }
   showMem('-');

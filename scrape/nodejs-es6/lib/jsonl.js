@@ -39,6 +39,10 @@ function read(file) {
 
 function readLines(file) {
   var lines = fs.readFileSync(file, 'utf8').toString().split('\n');
+  // filter for empty lines
+  lines = lines.filter((line)=>{
+    return line.trim().length>0
+  });
   for (var i in lines) {
     lines[i] = JSON.parse(lines[i]);
   }
@@ -54,7 +58,8 @@ function write(filename, items, verbose) {
   fs.writeFileSync(filename, json);
   if (verbose) {
     var numItems = (items.length) ? items.length : 1;
-    log.info('jsonl.write',{
+    //TODO(daneroo): reset to info; verbose to avoid loggly for now
+    log.verbose('jsonl.write',{
       file:path.basename(filename),
       md5: utils.md5(json),
       n:numItems,

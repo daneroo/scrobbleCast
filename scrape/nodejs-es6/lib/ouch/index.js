@@ -22,17 +22,18 @@ function Ouch(db) {
   this.db = db;
 }
 
-Ouch.prototype.get = function(item) {
+Ouch.prototype.get = function (item) {
   item = normalize(item);
+  return item;
 };
 
 // get the item from database (if it exists), then merge in new values, then put it back in the db
-Ouch.prototype.save = function(item) {
+Ouch.prototype.save = function (item) {
   item = normalize(item);
 
   return this.db.get(item._id)
     // .then(function(old_item))
-    .then(function(item) {
+    .then(function (item) {
       this.db.put(item);
     });
 };
@@ -59,7 +60,7 @@ function addKey(item) {
 // make this safer to apply twice
 function normalizeMeta(item) {
   item.meta = {};
-  ['__type', '__sourceType', '__user', '__stamp'].forEach(function(key) {
+  ['__type', '__sourceType', '__user', '__stamp'].forEach(function (key) {
     item.meta[key] = item[key];
     delete item[key];
   });

@@ -13,5 +13,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "immutable": "^3.8.1"
   }
 }

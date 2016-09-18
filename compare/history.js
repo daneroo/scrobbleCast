@@ -28,12 +28,20 @@ function history(src) {
     // .slice(2).toMap()
     .map(curriedEpisodeProjection(podcastTitles))
     .map(play_counts)
-    .filter(e => e.get('playedTime') > 0) // (playedTime>0)
-  // .map(e=> e.delete('play'))  // clean
+    .filter(e => e.get('playedTime') > 0)
 
   // console.log(JSON.stringify(episodes, null, 2))
+  summary(episodes)
 
-  List([1, 7, 30, 60, 365]).forEach(days => {
+}
+
+function summary(episodes) {
+  const first = new Date(episodes.minBy(e => e.get('firstPlayed')).get('firstPlayed'))
+  const last = new Date(episodes.maxBy(e => e.get('lastPlayed')).get('lastPlayed'))
+  const days = (last.getTime() - first.getTime()) / 86400000
+
+  console.log('Recent')
+  List([1, 7, 30, 60, 365, Math.ceil(days)]).forEach(days => {
     const since = daysAgo(days).getTime()
     const es = episodes.filter(e => {
       const lp = new Date(e.get('lastPlayed')).getTime()
@@ -41,19 +49,15 @@ function history(src) {
     })
     // console.log('total played', sum(episodes, 'playedTime'))
     const hours = sum(es, 'playedTime') / 3660
-    console.log(`played since ${days} days: ${hours.toFixed(1)} (avg ${(hours / days).toFixed(1)} h/d)`)
+    console.log(` since ${days} days: ${hours.toFixed(1)} h (avg ${(hours / days).toFixed(1)} h/d)`)
     // episodes.filter(e=> e.lastPlayed)
   })
 
-  console.log(`total play Time: ${(sum(episodes, 'playedTime') / 3600).toFixed(1)} `)
-  console.log('total episondes (played>0)', episodes.size)
-  const first = new Date(episodes.minBy(e => e.get('firstPlayed')).get('firstPlayed'))
-  const last = new Date(episodes.maxBy(e => e.get('lastPlayed')).get('lastPlayed'))
-  const days = (last.getTime() - first.getTime()) / 86400000
-  console.log(`history of ${days.toFixed(1)} days :  ${first.toISOString()}-${last.toISOString()} `)
-
+  console.log('Totals')
+  console.log(` Play Time: ${(sum(episodes, 'playedTime') / 3600).toFixed(1)} h`)
+  console.log(` Episodes: ${episodes.size} (played time>0)`)
+  console.log(` History of ${days.toFixed(1)} days :  (${first.toISOString().substr(0, 10)}-${last.toISOString().substr(0, 10)})`)
 }
-
 function daysAgo(days) {
   return new Date(+new Date() - 86400000 * days)
 }

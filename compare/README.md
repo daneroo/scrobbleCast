@@ -6,3 +6,9 @@ So this is to avoid constantly _rsync/ssh_'ing around
 
   ./get.sh
   node index.js
+
+## played history
+
+Second script, to try the played history analysis.
+
+  node history.js

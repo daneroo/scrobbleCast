@@ -102,7 +102,6 @@ function loadFromURL() {
 
   return rp(options)
     .then(function (digests) {
-      console.log(`loaded ${digests.length} digests from ${options.uri}`);
       return new Set(digests)
     });
 }
@@ -110,7 +109,6 @@ function loadFromDB() {
   log.debug('loadFromDB');
   return store.impl.pg.digests()
     .then(function (digests) {
-      console.log(`loaded ${digests.length} digests from local db`);
       return new Set(digests);
     });
 

@@ -34,11 +34,13 @@ function sync() {
     return loadFromFiles(credentials)
       .then(function (items) {
         fileItems = items;
+        log.verbose('|fileItems|',fileItems.length);
         logMemAfterGC();
         return loadFromDB(credentials);
       })
       .then(function (items) {
         dbItems = items;
+        log.verbose('|dbItems|',dbItems.length);
         log.verbose('Comparing for %s', credentials.name);
         return compare(fileItems, dbItems);
       })
@@ -65,7 +67,7 @@ function compare(fileItems, dbItems) {
     if (!dbHash[digest]) {
       // log.verbose('file item %s not found in db',digest);
       const item = fileHash[digest];
-      log.verbose('-!file', item.__stamp, item.title, idx);
+      log.verbose('-file & !db', item.__stamp, item.title, idx);
       if (idx === 89937) log.verbose('    ', item);
     }
   });
@@ -73,7 +75,7 @@ function compare(fileItems, dbItems) {
     if (!fileHash[digest]) {
       // log.verbose('db item %s not found in file',digest);
       const item = dbHash[digest];
-      log.verbose('-!db  ', item.__stamp, item.title, idx);
+      log.verbose('-db & !file', item.__stamp, item.title, idx);
       if (idx === 89937) log.verbose('    ', item);
     }
   });

@@ -186,6 +186,11 @@ Given a fresh db, restore from rollups.. synch with dirac
     time node restore.js  # with basepaths = ['rollup', '']
     docker-compose up -d scrape
 
+    # to start/kill/remove web api (until integrated)
+    docker-compose run -d -p 8000:8000 scrape node server.js
+    docker-compose kill nodejses6_scrape_run_1
+    docker-compose rm nodejses6_scrape_run_1
+
 ## Docker Cloud
   inject credentials somehow:
   remove .dockerignore for 2 credential json files
@@ -231,10 +236,12 @@ Start a container and connect to it
     docker-compose exec postgres psql -U postgres scrobblecast
 
     scrobblecast=#
+    select __user,__type,count(*),count(distinct uuid) as dist,max(__stamp) from items group by __user,__type;
     select __user,__type,count(distinct uuid),max(__stamp) from items group by __user,__type;
     select distinct uuid, item->>'title' as title from items where __user='daniel' and __type='podcast'
     select __user,__type,uuid, count(distinct uuid) dis,count(*) as all,min(__stamp),max(__stamp) from items group by __user,__type,uuid order by count(*) desc;
     SELECT encode(digest(item::text, 'md5'), 'hex') as digest FROM items;
+    delete from items where encode(digest(item::text, 'sha256'), 'hex')='b24ef01e3f97f940798573e3bc845f9ffd9a2576a5adaee829fb77a398eaf863';
     # === mysqladmin proc
     select * from pg_stat_activity
 

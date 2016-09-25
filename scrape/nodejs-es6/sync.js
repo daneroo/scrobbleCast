@@ -6,12 +6,13 @@
 
 // dependencies - core-public-internal
 var bluebird = require('bluebird');
+var _ = require('lodash');
 var rp = require('request-promise');
 var log = require('./lib/log');
 var store = require('./lib/store');
 
 // globals
-const baseURI=(process.argv.length>2)?process.argv[2]:'http://euler:8000/api'
+const baseURI = (process.argv.length > 2) ? process.argv[2] : 'http://euler:8000/api'
 
 Promise.resolve(true)
   // Promise.reject(new Error('Abort now!'))
@@ -22,8 +23,8 @@ Promise.resolve(true)
   .then(function () {
     log.debug('OK: Done, done, releasing PG connection');
     store.impl.pg.end();
-  },function (err) {
-    log.debug('ERR: Done, done, releasing PG connection',err);
+  }, function (err) {
+    log.debug('ERR: Done, done, releasing PG connection', err);
     store.impl.pg.end();
   });
 
@@ -79,20 +80,56 @@ function fetchMissingFromRemote(missingLocal) {
 
     // log.verbose(`--fetching ${options.uri}`)
     return rp(options)
-      // .then(function (item) {
-      //   log.verbose(`--fetched  ${options.uri}`,item)
-      //   return item
-      // })
-      .then(store.impl.pg.save)
+      // .then(store.impl.pg.save)
+      .then(saveWithExtraordinaryReconcile)
       .then(() => {
         log.verbose(`--persist:  ${options.uri}`)
       })
-      .catch(err=>{
-        log.verbose('sync err',err)
+      .catch(err => {
         log.verbose(`--failed:   ${options.uri}`)
-        
       })
   })
+}
+
+// Wraps store.impl.pg.save, with an attempt to resolve primary key violation with a custom rule:
+// namely if all fields identical except played_up_to, then select the one with the largest value
+function saveWithExtraordinaryReconcile(item) {
+  return store.impl.pg.getByKey(item)
+    .then(dbitem => {
+      if (!dbitem) {
+        return store.impl.pg.save(item)
+      }
+      var isIdentical = _.isEqual(item, dbitem);
+      // if an identical item existed, we would not be in reconciliation
+      log.verbose(`--obviously  identical:= ${isIdentical}`)
+
+      const mismatchedKeys = []
+      Object.keys(item).forEach(k => {
+        if (item[k] !== dbitem[k]) {
+          log.verbose(`  ${k}: ${item[k]} != ${dbitem[k]}`)
+          mismatchedKeys.push(k)
+        }
+      })
+      // condition of extraordinary reconciliation
+      // - only difference is in the played_up_to field
+      // - item.played_up_to > dbitem.played_up_to
+      if (_.isEqual(['played_up_to'], mismatchedKeys)) {
+        log.verbose('-sync:extraordinary')
+        log.verbose(`--item    ${JSON.stringify(dbitem)}`)
+        log.verbose(`--dbitem  ${JSON.stringify(dbitem)}`)
+        if (item.played_up_to > dbitem.played_up_to) {
+          log.info('sync:extraordinary reconciliation', item)
+          return store.impl.pg.remove(dbitem)
+            .then(() => {
+              return store.impl.pg.save(item)
+            })
+        } else {
+          log.info('sync:extraordinary reconciliation ignored, let the other side do it!',item)
+        }
+      }
+      // default to the normal error processing
+      return store.impl.pg.save(item)
+    })
 }
 function loadFromURL() {
   const options = {

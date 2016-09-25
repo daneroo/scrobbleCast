@@ -11,6 +11,7 @@ var log = require('./lib/log');
 var store = require('./lib/store');
 
 // globals
+const baseURI=(process.argv.length>2)?process.argv[2]:'http://euler:8000/api'
 
 Promise.resolve(true)
   // Promise.reject(new Error('Abort now!'))
@@ -27,7 +28,7 @@ Promise.resolve(true)
   });
 
 function sync() {
-  log.verbose('Sync started');
+  log.verbose(`Sync started from ${baseURI}`);
   let remoteDigests;
   let localDigests;
   return loadFromURL()
@@ -72,7 +73,7 @@ function compare(remoteDigests, localDigests) {
 function fetchMissingFromRemote(missingLocal) {
   return bluebird.each(missingLocal, (digest) => {
     const options = {
-      uri: `http://euler:8000/api/digest/${digest}`,
+      uri: `${baseURI}/digest/${digest}`,
       json: true // Automatically parses the JSON string in the response
     };
 
@@ -95,7 +96,7 @@ function fetchMissingFromRemote(missingLocal) {
 }
 function loadFromURL() {
   const options = {
-    uri: 'http://euler:8000/api/digests',
+    uri: `${baseURI}/digests`,
     json: true // Automatically parses the JSON string in the response
   };
 

@@ -194,7 +194,8 @@ Given a fresh db, restore from rollups.. synch with dirac
     # to run a single sync run
     docker-compose run --rm scrape node sync.js http://euler.imetrical.com:8000/api
     docker-compose run --rm scrape node sync.js http://192.168.3.131:8000/api
-
+    docker-compose run --rm scrape node sync.js http://192.168.5.144:8000/api
+    docker-compose run --rm scrape ./node_modules/.bin/babel-node dedup.js
 
 ## Docker Cloud
   inject credentials somehow:

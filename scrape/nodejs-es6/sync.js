@@ -75,6 +75,7 @@ function fetchMissingFromRemote(missingLocal) {
   return bluebird.each(missingLocal, (digest) => {
     const options = {
       uri: `${baseURI}/digest/${digest}`,
+      gzip: true, // for compression
       json: true // Automatically parses the JSON string in the response
     };
 
@@ -124,7 +125,7 @@ function saveWithExtraordinaryReconcile(item) {
               return store.impl.pg.save(item)
             })
         } else {
-          log.info('sync:extraordinary reconciliation ignored, let the other side do it!',item)
+          log.info('sync:extraordinary reconciliation ignored, let the other side do it!', item)
         }
       }
       // default to the normal error processing
@@ -134,6 +135,7 @@ function saveWithExtraordinaryReconcile(item) {
 function loadFromURL() {
   const options = {
     uri: `${baseURI}/digests`,
+    gzip: true, // for compression
     json: true // Automatically parses the JSON string in the response
   };
 

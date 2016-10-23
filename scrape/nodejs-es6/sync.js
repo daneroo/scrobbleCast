@@ -104,30 +104,52 @@ function saveWithExtraordinaryReconcile(item) {
       // if an identical item existed, we would not be in reconciliation
       log.verbose(`--obviously  identical:= ${isIdentical}`)
 
-      const mismatchedKeys = []
+      let mismatchedKeys = []
       Object.keys(item).forEach(k => {
         if (item[k] !== dbitem[k]) {
           log.verbose(`  ${k}: ${item[k]} != ${dbitem[k]}`)
           mismatchedKeys.push(k)
         }
       })
+      mismatchedKeys = mismatchedKeys.sort()
+
       // condition of extraordinary reconciliation
-      // - only difference is in the played_up_to field
+      // First Case: only difference is in the played_up_to field
       // - item.played_up_to > dbitem.played_up_to
       if (_.isEqual(['played_up_to'], mismatchedKeys)) {
-        log.verbose('-sync:extraordinary')
+        log.verbose('-sync:extraordinary:1')
         log.verbose(`--item    ${JSON.stringify(dbitem)}`)
         log.verbose(`--dbitem  ${JSON.stringify(dbitem)}`)
         if (item.played_up_to > dbitem.played_up_to) {
-          log.info('sync:extraordinary reconciliation', item)
+          log.info('sync:extraordinary:1 reconciliation', item)
           return store.impl.pg.remove(dbitem)
             .then(() => {
               return store.impl.pg.save(item)
             })
         } else {
-          log.info('sync:extraordinary reconciliation ignored, let the other side do it!', item)
+          log.info('sync:extraordinary:1 reconciliation ignored, let the other side do it!', item)
         }
       }
+      // Second case: only differences are played_up_to, and playing_status
+      // - item.played_up_to > dbitem.played_up_to, and
+      // - item.playing_status > dbitem.playing_status
+      // } else if (_.isEqual(['played_up_to', 'playing_status'])) {
+      if (_.isEqual(['played_up_to', 'playing_status'], mismatchedKeys)) {
+        log.verbose('-sync:extraordinary:2')
+        log.verbose(`--item    ${JSON.stringify(dbitem)}`)
+        log.verbose(`--dbitem  ${JSON.stringify(dbitem)}`)
+        if (item.played_up_to > dbitem.played_up_to &&
+          item.playing_status > dbitem.playing_status) {
+          log.info('sync:extraordinary:2 reconciliation', item)
+          return store.impl.pg.remove(dbitem)
+            .then(() => {
+              return store.impl.pg.save(item)
+            })
+        } else {
+          log.info('sync:extraordinary:2 reconciliation ignored, let the other side do it!', item)
+        }
+      }
+
       // default to the normal error processing
       return store.impl.pg.save(item)
     })

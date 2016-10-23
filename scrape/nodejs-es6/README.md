@@ -186,11 +186,6 @@ Given a fresh db, restore from rollups.. synch with dirac
     time node restore.js  # with basepaths = ['rollup', '']
     docker-compose up -d scrape
 
-    # to start/kill/remove web api (until integrated)
-    docker-compose run -d -p 8000:8000 scrape node server.js
-    docker kill nodejses6_scrape_run_1
-    docker rm nodejses6_scrape_run_1
-
     # to run a single sync run
     docker-compose run --rm scrape node sync.js http://euler.imetrical.com:8000/api
     docker-compose run --rm scrape node sync.js http://192.168.3.131:8000/api

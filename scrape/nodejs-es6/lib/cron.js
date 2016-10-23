@@ -4,11 +4,11 @@
 var Promise = require('bluebird');
 var cron = require('cron');
 var CronJob = cron.CronJob;
-var log = require('./lib/log');
-var tasks = require('./lib/tasks');
+var log = require('./log');
+var tasks = require('./tasks');
 
 // globals
-var allCredentials = require('./credentials.json');
+var allCredentials = [] // injected in start(injectedCredentials) below
 
 // TODO: this should become cronRunner, move to lib, receive/inject config
 // e.g. fomr index.js:
@@ -36,12 +36,12 @@ var recurrence = {
 // perform dedup task on all users, after main tasks are completed
 // returns a function
 function forEachUser(task) {
-  return function() {
+  return function () {
     return Promise.each(allCredentials, task)
-      .then(function() {
+      .then(function () {
         return Promise.each(allCredentials, tasks.dedup);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         // TODO, might want to catch before tasks.dedup is called, to make sure dedup always runs...
         console.error('cron:error', error);
       });
@@ -70,13 +70,18 @@ function runJob(task, when, perUser) {
   return job; // if you ever want to stop it.
 }
 
-log.info('Starting Cron');
-// auto-start all three
-runJob(tasks.deep, recurrence.everyDayAtMidnight, true); // var deep = ...
-runJob(tasks.shallow, recurrence.everyHourExceptMidnight, true); // var shallow =
-runJob(tasks.quick, recurrence.everyTenExceptOnTheHour, true); // var quick =
-runJob(tasks.logcheck, recurrence.everyTenMinutesOffsetByFour, false); // var logcheck =
 
-// make this process hang around
-// closing stdin (^D/EOF) will exit.
-process.stdin.resume();
+function start(injectedCredentials) {
+  // set the module golbal variable
+  allCredentials = injectedCredentials
+
+  log.info('Starting Cron');
+  // auto-start all three
+  runJob(tasks.deep, recurrence.everyDayAtMidnight, true); // var deep = ...
+  runJob(tasks.shallow, recurrence.everyHourExceptMidnight, true); // var shallow =
+  runJob(tasks.quick, recurrence.everyTenExceptOnTheHour, true); // var quick =
+  runJob(tasks.logcheck, recurrence.everyTenMinutesOffsetByFour, false); // var logcheck =
+}
+exports = module.exports = {
+  start: start
+};

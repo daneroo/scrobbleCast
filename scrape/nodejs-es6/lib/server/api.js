@@ -17,7 +17,8 @@ router.use(cors());
 // Middleware
 // support for Compression (Accept-Encoding: gzip|deflate)
 // as shown by: curl -i -H 'Accept-Encoding: deflate' http://0.0.0.0:8000/api/digests | wc
-router.use(compression())
+// TODO(daneroo): re-enable, causing Z_BUF_ERROR for now, might try putting on app.use()
+// router.use(compression())
 
 // TODO(daneroo): authentication
 router.use(function authMiddleware(req, res, next) {

@@ -1,12 +1,14 @@
 
 const fs = require('fs')
 const immutable = require('immutable')
+const moment = require('moment')
 const Map = immutable.Map
 const List = immutable.List
 
 all()
 
 function all() {
+  // ['daniel'].forEach(u => {
   ['daniel', 'stephane'].forEach(u => {
     console.log(`== For ${u}`)
     history({
@@ -32,9 +34,22 @@ function history(src) {
 
   // console.log(JSON.stringify(episodes, null, 2))
   summary(episodes)
-
+  recentList(episodes, 3)
 }
 
+function recentList(episodes, days) {
+  const es = episodes.filter(sinceDaysFilter(days))
+  console.log(`Recent List (${days} days)`)
+  es.forEach(e => {
+    const prop = e.get('playedProportion')
+    const f = {
+      ptitle: e.get('ptitle'),
+      when: moment(e.get('lastPlayed')).fromNow(),
+      percent: (prop<.9)?'('+(prop * 100).toFixed(0)+'%) ':''
+    }
+    console.log(`${f.when} ${f.percent}: ${f.ptitle}: - ${e.get('title')}`)
+  })
+}
 function summary(episodes) {
   const first = new Date(episodes.minBy(e => e.get('firstPlayed')).get('firstPlayed'))
   const last = new Date(episodes.maxBy(e => e.get('lastPlayed')).get('lastPlayed'))
@@ -42,12 +57,7 @@ function summary(episodes) {
 
   console.log('Recent')
   List([1, 7, 30, 60, 365, Math.ceil(days)]).forEach(days => {
-    const since = daysAgo(days).getTime()
-    const es = episodes.filter(e => {
-      const lp = new Date(e.get('lastPlayed')).getTime()
-      return lp > since
-    })
-    // console.log('total played', sum(episodes, 'playedTime'))
+    const es = episodes.filter(sinceDaysFilter(days))
     const hours = sum(es, 'playedTime') / 3660
     console.log(` since ${days} days: ${hours.toFixed(1)} h (avg ${(hours / days).toFixed(1)} h/d)`)
     // episodes.filter(e=> e.lastPlayed)
@@ -57,6 +67,14 @@ function summary(episodes) {
   console.log(` Play Time: ${(sum(episodes, 'playedTime') / 3600).toFixed(1)} h`)
   console.log(` Episodes: ${episodes.size} (played time>0)`)
   console.log(` History of ${days.toFixed(1)} days :  (${first.toISOString().substr(0, 10)}-${last.toISOString().substr(0, 10)})`)
+}
+
+function sinceDaysFilter(days) {
+  const since = daysAgo(days).getTime()
+  return e => {
+    const lp = new Date(e.get('lastPlayed')).getTime()
+    return lp > since
+  }
 }
 function daysAgo(days) {
   return new Date(+new Date() - 86400000 * days)

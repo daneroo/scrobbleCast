@@ -182,17 +182,31 @@ Fix the paths to apply proper lifecycle rules:
     find byUserStamp -type d -name 2016-0[1-8]\* -exec echo mv {} ./archive/{} \;
 
 ### Temp: seed/restore to pg from files
-Given a fresh db, restore from rollups.. synch with dirac
+Given a fresh db, restore from s3 snapshot, then synch with peers
 
-    docker-compose up -d postgres
-    time node restore.js  # with basepaths = ['rollup', '']
-    docker-compose up -d scrape
+```bash
+export HOSTNAME
+docker-compose build
+docker-compose up -d
+# restore from s3 -> data/snapshots -> pg
+docker-compose run --rm scrape npm run restore
+docker-compose run --rm scrape node restore.js
 
-    # to run a single sync run
-    docker-compose run --rm scrape node sync.js http://euler.imetrical.com:8000/api
-    docker-compose run --rm scrape node sync.js http://192.168.3.131:8000/api
-    docker-compose run --rm scrape node sync.js http://192.168.5.144:8000/api
-    docker-compose run --rm scrape ./node_modules/.bin/babel-node dedup.js
+# take a snapshot pg -> data/snapshots -> s3
+docker-compose run --rm scrape node snapshots.js
+docker-compose run --rm scrape npm run snapshot
+
+
+# to run a single sync run
+docker-compose run --rm scrape node sync.js http://euler.imetrical.com:8000/api
+docker-compose run --rm scrape node sync.js http://dirac.imetrical.com:8000/api
+docker-compose run --rm scrape node sync.js http://darwin.imetrical.com:8000/api
+docker-compose run --rm scrape node sync.js http://192.168.3.131:8000/api
+docker-compose run --rm scrape node sync.js http://192.168.5.144:8000/api
+
+# dedup as needed
+docker-compose run --rm scrape ./node_modules/.bin/babel-node dedup.js
+```
 
 ## Docker Cloud
   inject credentials somehow:

@@ -3,7 +3,7 @@ const os = require('os');
 const fs = require('fs');
 
 module.exports = {
-  hostname: os.hostname(),
+  hostname: process.env.HOSTNAME || os.hostname(),
   // TODO(daneroo) root directory relative...?
   loggly: JSON.parse(fs.readFileSync('credentials.loggly.json').toString()),
   express: {

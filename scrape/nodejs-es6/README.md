@@ -9,13 +9,13 @@ Questions:
 
 Scripts:
 
-- rollup: file:'' -> file:rollup (deprecated)
-
-- restore.js: file:rollup+'' -> pg (transition deprecated)
 - snapshot.js: pg -> file:snapshot 
   - currently file:rollup+'' -> file:snapshots
 - s3-cli file:data/snapshots/ <->  s3://scrobblecast/snapshots/
 - sync.js: compare file:roolup+'', pg: (no write)
+
+- rollup: file:'' -> file:rollup (deprecated)
+- restore.js: file:rollup+'' -> pg (transition deprecated)
 
 Scenario:
 
@@ -112,7 +112,9 @@ This will be used as a seed for any new host, and replaces `data/rollup`.
 For now, Using an on-disk cache, will allow us to use standard s3 sync tools.
 However, we might want to consider `sinkFile.write( ,,{overwrite: true})` if we have versioning in the bucket!
 
-    ./node_modules/.bin/s3-cli --config s3cfg.ini ls s3://scrobblecast/
+```bash
+./node_modules/.bin/s3-cli --config s3cfg.ini ls --recursive s3://scrobblecast/
+```
 
 - Bucket name: s3://scroblecast/ in region `US Standard`
 - Bucket Policy: The policiy naming `scrobblecast-s3-rw` is attached to the bucket.

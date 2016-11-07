@@ -12,6 +12,7 @@ var store = require('./lib/store');
 
 // globals
 var allCredentials = require('./credentials.json'); //.slice(0, 1);
+const basepaths = ['snapshots'];
 
 Promise.resolve(true)
   // Promise.reject(new Error('Abort now!'))
@@ -44,10 +45,6 @@ function restore(credentials) {
   const batchSize = 1000; // which is the default
 
   const saver = store.impl.pg.saveByBatch(batchSize);
-
-  // let basepaths = ['noredux'];
-  // let basepaths = ['snapshots', ''];
-  let basepaths = ['rollup', ''];
 
   return store.impl.file.load({
     prefix: basepaths,

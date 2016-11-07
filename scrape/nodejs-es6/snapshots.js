@@ -15,8 +15,8 @@
 // dependencies - core-public-internal
 var util = require('util');
 var Promise = require('bluebird');
+var config = require('./lib/config');
 var log = require('./lib/log');
-
 var sinkFile = require('./lib/sink/file');
 var delta = require('./lib/delta');
 var store = require('./lib/store');
@@ -47,6 +47,7 @@ function loadItems(credentials) {
   var l = loader();
   var sharedHandler = l.handler;
   var historyByType = l.historyByType;
+  var flush = l.flush;
 
   return store.impl.pg.load({
     filter: {
@@ -54,8 +55,11 @@ function loadItems(credentials) {
     }
   }, sharedHandler)
     .then((items) => {
-      log.verbose('Snapshot:counts', { user: credentials.name, items: items.length });
-
+      flush() // ok, cause it's synchronous (for now)
+      log.verbose('Snapshot:counts', {
+        user: credentials.name,
+        items: items.length
+      });
     })
     .then(() => {
       var _user = credentials.name;
@@ -141,7 +145,6 @@ function loader() {
       var suffix = 'jsonl';
 
       //TODO(daneroo) replace data/ with sink.dataDirName
-      // var outfile = util.format('data/rollup/byUserStamp/%s/%s/monthly-%s.%s', _user, previousMonth, previousMonth, suffix);
       var outfile = util.format('data/snapshots/monthly/%s/monthly-%s-%s.%s', _user, _user, previousMonth, suffix);
       sinkFile.write(outfile, itemsForMonth, {
         // TODO overwrite should be false, causing errors!
@@ -154,7 +157,26 @@ function loader() {
     itemsForMonth.push(item);
     previousMonth = month;
   }
+  function flush() {
+    // items is the result of the pg-load being passed through the promise chain
+    const remaining = itemsForMonth
+    log.verbose('Snapshot:flush', { remaining: remaining.length })
+    if (remaining.length > 0) {
+      var _user = remaining[0].__user;
+      var suffix = 'jsonl';
+      var hostname = config.hostname;
 
+      //TODO(daneroo) replace data/ with sink.dataDirName
+      var outfile = util.format('data/snapshots/current/%s/current-%s.%s.%s', _user, hostname, _user, suffix);
+      sinkFile.write(outfile, itemsForMonth, {
+        // TODO overwrite should be true for current/flush
+        // TODO Write verification needs to account for .jsonl
+        overwrite: true,
+        log: true
+      });
+      itemsForMonth = [];
+    }
+  }
   // the actual itemHandler being returned
   var handler = function itemHandler(item) {
     // console.log('..stamp',stamp);
@@ -177,7 +199,8 @@ function loader() {
   return {
     handler: handler,
     getMaxStamp: getMaxStamp,
-    historyByType: historyByType
+    historyByType: historyByType,
+    flush: flush
   };
 }
 
@@ -187,7 +210,7 @@ function loader() {
 function verboseErrorHandler(shouldRethrow) {
   return function errorHandler(error) {
     console.log(error);
-    log.error('Rollup:error', {
+    log.error('Snapshot:error', {
       error: error
     });
     if (shouldRethrow) {

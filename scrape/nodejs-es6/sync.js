@@ -86,7 +86,7 @@ function fetchMissingFromRemote(missingLocal) {
       .then(() => {
         log.verbose(`--persist:  ${options.uri}`)
       })
-      .catch(err => {
+      .catch((/*err*/) => {
         log.verbose(`--failed:   ${options.uri}`)
       })
   })

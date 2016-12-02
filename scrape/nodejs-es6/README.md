@@ -177,7 +177,8 @@ Fix the paths to apply proper lifecycle rules:
     # find -exec mv: gives lots of 'No such file or directory' errors: it's OK
     find byUserStamp -type d -name 201[45]-\* -exec mv {} ./archive/{} \;
     # move up to june(2016-08) ...
-    find byUserStamp -type d -name 2016-0[1-8]\* -exec echo mv {} ./archive/{} \;
+    find byUserStamp -type d -name 2016-0[1-9]\* -exec echo mv {} ./archive/{} \;
+    find byUserStamp -type d -name 2016-1[0-1]\* -exec echo mv {} ./archive/{} \;
 
 ### Temp: seed/restore to pg from files
 Given a fresh db, restore from rollups.. synch with dirac

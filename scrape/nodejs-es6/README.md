@@ -182,6 +182,12 @@ Fix the paths to apply proper lifecycle rules:
     find byUserStamp -type d -name 2016-0[1-9]\* -exec echo mv {} ./archive/{} \;
     find byUserStamp -type d -name 2016-1[0-1]\* -exec echo mv {} ./archive/{} \;
 
+### Archiving
+Moving to `/archive/mirror/scrobbleCast`
+```bash
+time tar cjvf scrobbleCast-data-archive.2016-12-01.tar.bz2 data/archive
+time tar cjvf scrobbleCast-data-noredux.2016-12-01.tar.bz2 data/noredux
+```
 ### Temp: seed/restore to pg from files
 Given a fresh db, restore from s3 snapshot, then synch with peers
 

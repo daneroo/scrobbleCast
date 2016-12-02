@@ -5,126 +5,172 @@
 // Object keys: user/type/uuid/stamp/
 
 // dependencies - core-public-internal
-var Promise = require('bluebird');
+var bluebird = require('bluebird');
+var _ = require('lodash');
+var rp = require('request-promise');
 var log = require('./lib/log');
 var store = require('./lib/store');
-var utils = require('./lib/utils');
 
 // globals
-var allCredentials = require('./credentials.json'); //.slice(0, 1);
+const baseURI = (process.argv.length > 2) ? process.argv[2] : 'http://euler:8000/api'
 
 Promise.resolve(true)
   // Promise.reject(new Error('Abort now!'))
   .then(store.impl.pg.init)
   .then(sync)
-  .then(logMemAfterGC)
   .catch(verboseErrorHandler(false))
-  .finally(function () {
-    log.debug('Done, done, releasing PG connection');
+  // this used to be a finally clause - for which there is a polyfill: https://www.promisejs.org/api/
+  .then(function () {
+    log.debug('OK: Done, done, releasing PG connection');
+    store.impl.pg.end();
+  }, function (err) {
+    log.debug('ERR: Done, done, releasing PG connection', err);
     store.impl.pg.end();
   });
 
 function sync() {
-  return Promise.each(allCredentials, function (credentials) {
-    log.verbose('Sync started', {
-      user: credentials.name
-    });
-    let fileItems;
-    let dbItems;
-    return loadFromFiles(credentials)
-      .then(function (items) {
-        fileItems = items;
-        logMemAfterGC();
-        return loadFromDB(credentials);
+  log.verbose(`Sync started from ${baseURI}`);
+  let remoteDigests;
+  let localDigests;
+  return loadFromURL()
+    .then(function (items) {
+      remoteDigests = items;
+      log.verbose('|remoteDigests|', remoteDigests.size);
+      logMemAfterGC();
+      return loadFromDB();
+    })
+    .then(function (items) {
+      localDigests = items;
+      log.verbose('|localDigests|', localDigests.size);
+      log.verbose('Comparing digests');
+      return compare(remoteDigests, localDigests);
+    })
+}
+
+function compare(remoteDigests, localDigests) {
+  log.verbose('loaded %d remote items', remoteDigests.size);
+  log.verbose('loaded %d local  items', localDigests.size);
+
+  const missingLocal = [];
+  remoteDigests.forEach(function (acc, digest) {
+    if (!localDigests.has(digest)) {
+      // log.verbose('-remote & !local', digest);
+      missingLocal.push(digest)
+    }
+
+  });
+  const missingRemote = []
+  localDigests.forEach(function (acc, digest) {
+    if (!remoteDigests.has(digest)) {
+      // log.verbose('-local & !remote', digest);
+      missingRemote.push(digest)
+    }
+  });
+  log.verbose(`missing local:${missingLocal.length} remote:${missingRemote.length}`)
+  return fetchMissingFromRemote(missingLocal);
+}
+
+
+function fetchMissingFromRemote(missingLocal) {
+  return bluebird.each(missingLocal, (digest) => {
+    const options = {
+      uri: `${baseURI}/digest/${digest}`,
+      gzip: true, // for compression
+      json: true // Automatically parses the JSON string in the response
+    };
+
+    // log.verbose(`--fetching ${options.uri}`)
+    return rp(options)
+      // .then(store.impl.pg.save)
+      .then(saveWithExtraordinaryReconcile)
+      .then(() => {
+        log.verbose(`--persist:  ${options.uri}`)
       })
-      .then(function (items) {
-        dbItems = items;
-        log.verbose('Comparing for %s', credentials.name);
-        return compare(fileItems, dbItems);
+      .catch((/*err*/) => {
+        log.verbose(`--failed:   ${options.uri}`)
       })
-  });
+  })
 }
 
-function compare(fileItems, dbItems) {
-  const DIGEST_ALGORITHM = 'sha256';
-  log.verbose('loaded %d file items', fileItems.length);
-  log.verbose('loaded %d db   items', dbItems.length);
+// Wraps store.impl.pg.save, with an attempt to resolve primary key violation with a custom rule:
+// namely if all fields identical except played_up_to, then select the one with the largest value
+function saveWithExtraordinaryReconcile(item) {
+  return store.impl.pg.getByKey(item)
+    .then(dbitem => {
+      if (!dbitem) {
+        return store.impl.pg.save(item)
+      }
+      var isIdentical = _.isEqual(item, dbitem);
+      // if an identical item existed, we would not be in reconciliation
+      log.verbose(`--obviously  identical:= ${isIdentical}`)
 
-  function storeByHash(acc, item) {
-    var digest = utils.digest(JSON.stringify(item), DIGEST_ALGORITHM, false);
-    acc[digest] = item;
-    return acc;
-  }
+      let mismatchedKeys = []
+      Object.keys(item).forEach(k => {
+        if (item[k] !== dbitem[k]) {
+          log.verbose(`  ${k}: ${item[k]} != ${dbitem[k]}`)
+          mismatchedKeys.push(k)
+        }
+      })
+      mismatchedKeys = mismatchedKeys.sort()
 
-  const fileHash = fileItems.reduce(storeByHash, {});
-  const dbHash = dbItems.reduce(storeByHash, {});
-  log.verbose('hashed %d file items', Object.keys(fileHash).length);
-  log.verbose('hashed %d db   items', Object.keys(dbHash).length);
+      // condition of extraordinary reconciliation
+      // First Case: only difference is in the played_up_to field
+      // - item.played_up_to > dbitem.played_up_to
+      if (_.isEqual(['played_up_to'], mismatchedKeys)) {
+        log.verbose('-sync:extraordinary:1')
+        log.verbose(`--item    ${JSON.stringify(dbitem)}`)
+        log.verbose(`--dbitem  ${JSON.stringify(dbitem)}`)
+        if (item.played_up_to > dbitem.played_up_to) {
+          log.info('sync:extraordinary:1 reconciliation', item)
+          return store.impl.pg.remove(dbitem)
+            .then(() => {
+              return store.impl.pg.save(item)
+            })
+        } else {
+          log.info('sync:extraordinary:1 reconciliation ignored, let the other side do it!', item)
+        }
+      }
+      // Second case: only differences are played_up_to, and playing_status
+      // - item.played_up_to > dbitem.played_up_to, and
+      // - item.playing_status > dbitem.playing_status
+      // } else if (_.isEqual(['played_up_to', 'playing_status'])) {
+      if (_.isEqual(['played_up_to', 'playing_status'], mismatchedKeys)) {
+        log.verbose('-sync:extraordinary:2')
+        log.verbose(`--item    ${JSON.stringify(dbitem)}`)
+        log.verbose(`--dbitem  ${JSON.stringify(dbitem)}`)
+        if (item.played_up_to > dbitem.played_up_to &&
+          item.playing_status > dbitem.playing_status) {
+          log.info('sync:extraordinary:2 reconciliation', item)
+          return store.impl.pg.remove(dbitem)
+            .then(() => {
+              return store.impl.pg.save(item)
+            })
+        } else {
+          log.info('sync:extraordinary:2 reconciliation ignored, let the other side do it!', item)
+        }
+      }
 
-  Object.keys(fileHash).forEach(function (digest, idx) {
-    if (!dbHash[digest]) {
-      // log.verbose('file item %s not found in db',digest);
-      const item = fileHash[digest];
-      log.verbose('-!file', item.__stamp, item.title, idx);
-      if (idx === 89937) log.verbose('    ', item);
-    }
-  });
-  Object.keys(dbHash).forEach(function (digest, idx) {
-    if (!fileHash[digest]) {
-      // log.verbose('db item %s not found in file',digest);
-      const item = dbHash[digest];
-      log.verbose('-!db  ', item.__stamp, item.title, idx);
-      if (idx === 89937) log.verbose('    ', item);
-    }
-  });
+      // default to the normal error processing
+      return store.impl.pg.save(item)
+    })
 }
-// first load from extra=rollup, then from extra=''
-function loadFromFiles(credentials) {
-  log.debug('loadFromFiles', {
-    user: credentials.name
-  });
-  const items = [];
-  const accumulator = function (item) {
-    items.push(item);
+function loadFromURL() {
+  const options = {
+    uri: `${baseURI}/digests`,
+    gzip: true, // for compression
+    json: true // Automatically parses the JSON string in the response
   };
 
-  let basepaths = ['rollup', ''];
-
-  return store.impl.file.load({
-    prefix: basepaths,
-    assert: {
-      // stampOrder: true,
-      // singleUser: true,
-      progress: false, // should not be an assertion.
-    },
-    filter: {
-      __user: credentials.name
-    }
-  }, accumulator)
-    .then(function () {
-      // log.verbose('loaded %d file items for %s', items.length, credentials.name);
-      return items;
+  return rp(options)
+    .then(function (digests) {
+      return new Set(digests)
     });
 }
-
-function loadFromDB(credentials) {
-  log.debug('loadFromDB', {
-    user: credentials.name
-  });
-  const items = [];
-  const accumulator = function (item) {
-    items.push(item);
-  };
-  const opts = {
-    filter: {
-      __user: credentials.name
-    }
-  };
-
-  return store.impl.pg.load(opts, accumulator)
-    .then(function () {
-      // log.verbose('loaded %d db items for %s', items.length, credentials.name);
-      return items;
+function loadFromDB() {
+  log.debug('loadFromDB');
+  return store.impl.pg.digests()
+    .then(function (digests) {
+      return new Set(digests);
     });
 
 }

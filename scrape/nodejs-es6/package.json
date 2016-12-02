@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "NoBabelStart": "gulp build && node dist/cron.js",
-    "start": "babel-node cron.js",
+    "start": "babel-node server.js",
     "test": "gulp test",
     "snapshot": "s3-cli --config s3cfg.ini sync data/snapshots/ s3://scrobblecast/snapshots/",
     "restore": "s3-cli --config s3cfg.ini sync s3://scrobblecast/snapshots/ data/snapshots/"
@@ -22,6 +22,7 @@
     "bluebird": "^2.3.10",
     "cli-table": "^0.3.1",
     "colors": "^1.1.2",
+    "compression": "^1.6.2",
     "cors": "^2.8.1",
     "couch-db": "^1.1.3",
     "cron": "^1.0.5",

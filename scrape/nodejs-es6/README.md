@@ -9,13 +9,13 @@ Questions:
 
 Scripts:
 
-- rollup: file:'' -> file:rollup (deprecated)
-
-- restore.js: file:rollup+'' -> pg (transition deprecated)
 - snapshot.js: pg -> file:snapshot 
   - currently file:rollup+'' -> file:snapshots
 - s3-cli file:data/snapshots/ <->  s3://scrobblecast/snapshots/
 - sync.js: compare file:roolup+'', pg: (no write)
+
+- rollup: file:'' -> file:rollup (deprecated)
+- restore.js: file:rollup+'' -> pg (transition deprecated)
 
 Scenario:
 
@@ -112,7 +112,9 @@ This will be used as a seed for any new host, and replaces `data/rollup`.
 For now, Using an on-disk cache, will allow us to use standard s3 sync tools.
 However, we might want to consider `sinkFile.write( ,,{overwrite: true})` if we have versioning in the bucket!
 
-    ./node_modules/.bin/s3-cli --config s3cfg.ini ls s3://scrobblecast/
+```bash
+./node_modules/.bin/s3-cli --config s3cfg.ini ls --recursive s3://scrobblecast/
+```
 
 - Bucket name: s3://scroblecast/ in region `US Standard`
 - Bucket Policy: The policiy naming `scrobblecast-s3-rw` is attached to the bucket.
@@ -181,11 +183,31 @@ Fix the paths to apply proper lifecycle rules:
     find byUserStamp -type d -name 2016-1[0-1]\* -exec echo mv {} ./archive/{} \;
 
 ### Temp: seed/restore to pg from files
-Given a fresh db, restore from rollups.. synch with dirac
+Given a fresh db, restore from s3 snapshot, then synch with peers
 
-    docker-compose up -d postgres
-    time node restore.js  # with basepaths = ['rollup', '']
-    docker-compose up -d scrape
+```bash
+export HOSTNAME
+docker-compose build
+docker-compose up -d
+# restore from s3 -> data/snapshots -> pg
+docker-compose run --rm scrape npm run restore
+docker-compose run --rm scrape node restore.js
+
+# take a snapshot pg -> data/snapshots -> s3
+docker-compose run --rm scrape node snapshots.js
+docker-compose run --rm scrape npm run snapshot
+
+
+# to run a single sync run
+docker-compose run --rm scrape node sync.js http://euler.imetrical.com:8000/api
+docker-compose run --rm scrape node sync.js http://dirac.imetrical.com:8000/api
+docker-compose run --rm scrape node sync.js http://darwin.imetrical.com:8000/api
+docker-compose run --rm scrape node sync.js http://192.168.3.131:8000/api
+docker-compose run --rm scrape node sync.js http://192.168.5.144:8000/api
+
+# dedup as needed
+docker-compose run --rm scrape ./node_modules/.bin/babel-node dedup.js
+```
 
 ## Docker Cloud
   inject credentials somehow:
@@ -232,10 +254,12 @@ Start a container and connect to it
     docker-compose exec postgres psql -U postgres scrobblecast
 
     scrobblecast=#
+    select __user,__type,count(*),count(distinct uuid) as dist,max(__stamp) from items group by __user,__type;
     select __user,__type,count(distinct uuid),max(__stamp) from items group by __user,__type;
     select distinct uuid, item->>'title' as title from items where __user='daniel' and __type='podcast'
     select __user,__type,uuid, count(distinct uuid) dis,count(*) as all,min(__stamp),max(__stamp) from items group by __user,__type,uuid order by count(*) desc;
     SELECT encode(digest(item::text, 'md5'), 'hex') as digest FROM items;
+    delete from items where encode(digest(item::text, 'sha256'), 'hex')='b24ef01e3f97f940798573e3bc845f9ffd9a2576a5adaee829fb77a398eaf863';
     # === mysqladmin proc
     select * from pg_stat_activity
 

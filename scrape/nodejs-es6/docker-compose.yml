@@ -25,8 +25,8 @@ services:
       - HOSTNAME
       - POSTGRES_HOST=postgres
     # command: npm start
-    # ports:
-    #  - "8000:8000"
+    ports:
+     - "8000:8000"
 
     volumes:
       - ./credentials.json:/usr/src/app/credentials.json:ro

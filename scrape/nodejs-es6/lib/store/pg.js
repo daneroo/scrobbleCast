@@ -18,6 +18,8 @@ const DIGEST_ALGORITHM = 'sha256';
 exports = module.exports = {
   digests: digests,
   getByDigest:getByDigest,
+  // for sync reconciliation
+  getByKey: getByKey,
   // load: (opts, handler) => {} // foreach item, cb(item);
   load: load,
   // save: (item) => {}, // should return (Promise)(status in insert,duplicate,error)
@@ -256,6 +258,30 @@ function saveItem(item) {
   return pgu.db.none(pgu.insertSQL(item));
 }
 
+// return item or null
+// copied from confirmIdentical()
+// not refactored because of detailed error loging in confirmIdentical()
+// exposed for proactive recociliation in sync
+function getByKey(item){
+  const nmParams = pgu.getNamedParametersForItem(item);
+  delete nmParams.item;
+
+  // watch camelcase for __sourcetype NOT __sourceType,
+  // also ES6 templates use ${var}, helper can use {}, (), [], <>, //
+  const sql =
+    `SELECT item FROM items
+    WHERE __user=$[__user] AND __stamp=$[__stamp]
+    AND __type=$[__type] AND uuid=$[uuid]
+    AND __sourcetype=$[__sourcetype]`;
+
+  return pgu.db.oneOrNone(sql, nmParams)
+    .then(result => {
+      if (result === null || !result.item) {
+        return null;
+      }
+      return result.item;
+    });
+}
 function confirmIdentical(item) {
   const nmParams = pgu.getNamedParametersForItem(item);
   delete nmParams.item;

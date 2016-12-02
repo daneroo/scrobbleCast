@@ -2,6 +2,7 @@
 
 // dependencies - core-public-internal
 const express = require('express');
+const compression = require('compression');
 const cors = require('cors');
 const log = require('../log');
 const store = require('../store');
@@ -12,6 +13,12 @@ module.exports = router;
 // Middleware
 // CORS
 router.use(cors());
+
+// Middleware
+// support for Compression (Accept-Encoding: gzip|deflate)
+// as shown by: curl -i -H 'Accept-Encoding: deflate' http://0.0.0.0:8000/api/digests | wc
+// TODO(daneroo): re-enable, causing Z_BUF_ERROR for now, might try putting on app.use()
+// router.use(compression())
 
 // TODO(daneroo): authentication
 router.use(function authMiddleware(req, res, next) {

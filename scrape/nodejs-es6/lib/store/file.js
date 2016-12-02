@@ -137,7 +137,7 @@ function progress() {
       var elapsed = (+new Date() - start) / 1000;
       var rate = (soFar / elapsed).toFixed(0) + 'r/s';
       // log('Progress %s: %s', soFar, elapsed, rate);
-      log.verbose('Progress: %s %s %s', rate, item.__user, item.__stamp);
+      log.verbose('Progress: %s %s %s (%d)', rate, item.__user, item.__stamp,soFar);
       // soFar = 0;
       // start = +new Date();
     }

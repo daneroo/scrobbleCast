@@ -1,7 +1,8 @@
 'use strict';
 
-// This utility will read all source files: extra=[snapshots,'']
-// and dunp them into postgres
+// This utility will read all source files: extra=['snapshots']
+//  (which includes monthly, and current (last monthly partial),
+// and dumps them into postgres
 // Object keys: user/type/uuid/stamp/
 
 // dependencies - core-public-internal

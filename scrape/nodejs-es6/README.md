@@ -192,6 +192,10 @@ time tar cjvf scrobbleCast-data-noredux.2016-12-01.tar.bz2 data/noredux
 Given a fresh db, restore from s3 snapshot, then synch with peers
 
 ```bash
+# start fresh? cleanup first?
+rm -rf data/
+
+# build and run
 export HOSTNAME
 docker-compose build
 docker-compose up -d
@@ -200,9 +204,8 @@ docker-compose run --rm scrape npm run restore
 docker-compose run --rm scrape node restore.js
 
 # take a snapshot pg -> data/snapshots -> s3
-docker-compose run --rm scrape node snapshots.js
+export HOSTNAME; docker-compose run --rm scrape node snapshots.js
 docker-compose run --rm scrape npm run snapshot
-
 
 # to run a single sync run
 docker-compose run --rm scrape node sync.js http://euler.imetrical.com:8000/api
@@ -213,6 +216,10 @@ docker-compose run --rm scrape node sync.js http://192.168.5.144:8000/api
 
 # dedup as needed
 docker-compose run --rm scrape ./node_modules/.bin/babel-node dedup.js
+
+# check sums after restore/snapshots...
+docker-compose run --rm scrape bash -c 'md5sum $(find data/snapshots -type f)|cut -d \  -f 1|sort|md5sum'
+
 ```
 
 ## Docker Cloud

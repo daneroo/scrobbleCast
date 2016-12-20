@@ -59,7 +59,7 @@ function write(filename, items, verbose) {
   if (verbose) {
     var numItems = (items.length) ? items.length : 1;
     //TODO(daneroo): reset to info; verbose to avoid loggly for now
-    log.verbose('jsonl.write',{
+    log.info('jsonl.write',{
       file:path.basename(filename),
       md5: utils.md5(json),
       n:numItems,

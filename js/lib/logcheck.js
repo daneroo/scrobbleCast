@@ -76,7 +76,15 @@ function detectMismatch(records) {
     var allMatch = _.uniq(_.values(byHost)).length === 1;
     if (!allMatch) {
       anyFailures = true;
-      var describe = _.merge(JSON.parse(userType), byHost);
+
+      var shortByHost = _.reduce(byHost, function (result, md5, host) {
+        host = host.split('.')[0];
+        md5 = md5.substr(0, 7)
+        result[host] = md5;
+        return result;
+      }, {});
+
+      var describe = _.merge(JSON.parse(userType), shortByHost);
       log.warn('logcheck signature mismatch', describe);
     }
   });
@@ -84,7 +92,7 @@ function detectMismatch(records) {
     var hostCount = _.size(_.countBy(records, r => r.host));
     log.info('logcheck signature matches confirmed', {
       hostCount: hostCount,
-      logRecords:records.length
+      logRecords: records.length
     });
   }
   // return for the promise chain
@@ -94,9 +102,9 @@ function detectMismatch(records) {
 // This function uses the node-loggly module directly, instead of winston-loggly
 // This makes this module more independant.
 function queryLoggly(searchOptions) {
-  return new Promise(function(resolve, reject) {
+  return new Promise(function (resolve, reject) {
     client.search(searchOptions)
-      .run(function(err, results) {
+      .run(function (err, results) {
         if (err) {
           // the error object doesn't work with loggly, convert to string to send
           log.error('logcheck.query: %s', err);
@@ -118,7 +126,7 @@ function queryLoggly(searchOptions) {
 function parseMD5Entries(entries) {
   var records = [];
 
-  entries.forEach(function(entry) {
+  entries.forEach(function (entry) {
     // stamp is no longer rounded here: moved to aggregator function
     var stamp = new Date(entry.timestamp).toJSON();
 

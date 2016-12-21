@@ -1,0 +1,50 @@
+# This is my new docker 1.9.1 compose file
+version: '2'
+
+volumes:
+  scrbl_pgdata:
+    external: false
+
+services:
+  postgres:
+    image: postgres
+    environment:
+      - POSTGRES_DB=scrobblecast
+    volumes:
+     - scrbl_pgdata:/var/lib/postgresql/data
+    ports:
+     - "5432:5432"
+    restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: "1m"
+        # max-file: "2"
+
+
+  scrape:
+    # container_name: scrape
+    build: .
+    environment:
+      # no value inherits from host (but not docker-machine host...)
+      - HOSTNAME
+      - POSTGRES_HOST=postgres
+    # command: npm start
+    ports:
+     - "8000:8000"
+
+    volumes:
+      - ./credentials.json:/usr/src/app/credentials.json:ro
+      - ./credentials.loggly.json:/usr/src/app/credentials.loggly.json:ro
+      - ./data:/usr/src/app/data
+    links:
+      - postgres
+
+    restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: "1m"
+        # max-file: "2"
+
+

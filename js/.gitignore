@@ -1,0 +1,12 @@
+credentials.json
+credentials.loggly.json
+s3cfg.ini
+node_modules/
+coverage/
+data/
+data.201[45]-*.tgz
+pouchdb/
+couchdb/
+podcast-history-*.json
+episode-history-*.json
+episode-play-history-*.json

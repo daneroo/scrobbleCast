@@ -194,6 +194,7 @@ Given a fresh db, restore from s3 snapshot, then synch with peers
 ```bash
 # start fresh? cleanup first?
 rm -rf data/
+docker volume rm js_scrbl_pgdata
 
 # build and run
 export HOSTNAME

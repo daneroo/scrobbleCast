@@ -215,7 +215,7 @@ docker-compose run --rm scrape node sync.js http://192.168.3.131:8000/api
 docker-compose run --rm scrape node sync.js http://192.168.5.144:8000/api
 
 # dedup as needed
-docker-compose run --rm scrape ./node_modules/.bin/babel-node dedup.js
+export HOSTNAME; docker-compose run --rm scrape node dedup.js
 
 # check sums after restore/snapshots...
 docker-compose run --rm scrape bash -c 'md5sum $(find data/snapshots -type f)|cut -d \  -f 1|sort|md5sum'

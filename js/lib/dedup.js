@@ -7,6 +7,7 @@
 
 // dependencies - core-public-internal
 var log = require('./log');
+var Promise = require('bluebird');
 // -- Implementation functions
 var store = require('./store');
 var delta = require('./delta');
@@ -68,21 +69,13 @@ function dedupTask(credentials) {
     });
 }
 
-async function deleteDuplicates(duplicates) {
-  let i = 0;
+function deleteDuplicates(duplicates) {
   log.verbose('deleting %d duplicates', duplicates.length);
-  for (let item of duplicates) {
-    // await delay(1000);
-    await store.impl.pg.remove(item);
-    i++;
-    if (i % 1000 == 0) {
-      log.verbose('  ... removed', i);
-
+  return Promise.each(duplicates, (item, index) => {
+    if (index % 1000 == 0) {
+      log.verbose('  ... removed', index);
     }
-  }
+    return store.impl.pg.remove(item);
+  })
 }
-
-// function delay(ms) {
-//   return new Promise(resolve => setTimeout(resolve, ms));
-// }
 

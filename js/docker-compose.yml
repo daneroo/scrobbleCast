@@ -1,12 +1,17 @@
 # This is my new docker 1.9.1 compose file
 version: '2'
+
+volumes:
+  scrbl_pgdata:
+    external: false
+
 services:
   postgres:
     image: postgres
     environment:
       - POSTGRES_DB=scrobblecast
     volumes:
-     - ./data/postgresql:/var/lib/postgresql/data
+     - scrbl_pgdata:/var/lib/postgresql/data
     ports:
      - "5432:5432"
     restart: unless-stopped

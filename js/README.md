@@ -205,6 +205,8 @@ docker-compose run --rm scrape npm run restore
 docker-compose run --rm scrape node restore.js
 
 # take a snapshot pg -> data/snapshots -> s3
+# -optionally, to avoid pushing other hosts 'current'
+#  rm -rf data/snapshots/current/
 export HOSTNAME; docker-compose run --rm scrape node snapshots.js
 docker-compose run --rm scrape npm run snapshot
 

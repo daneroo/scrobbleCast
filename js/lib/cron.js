@@ -29,6 +29,7 @@ var recurrence = {
   // everyHourOnTheHour: '10 0 * * * *',
   // everyTenMinutesOffsetByThree: '10 3-59/10 * * * *',
   everyTenMinutesOffsetByFour: '10 4-59/10 * * * *',
+  everyTenMinutesOffsetByFive: '10 5-59/10 * * * *',
   // everyMinute: '10 * * * * *'
 };
 
@@ -81,6 +82,7 @@ function start(injectedCredentials) {
   runJob(tasks.shallow, recurrence.everyHourExceptMidnight, true); // var shallow =
   runJob(tasks.quick, recurrence.everyTenExceptOnTheHour, true); // var quick =
   runJob(tasks.logcheck, recurrence.everyTenMinutesOffsetByFour, false); // var logcheck =
+  runJob(tasks.sync, recurrence.everyTenMinutesOffsetByFive, false); // var sync =
 }
 exports = module.exports = {
   start: start

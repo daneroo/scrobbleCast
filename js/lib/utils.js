@@ -24,6 +24,12 @@ function stamp(grain) {
   return now.toJSON().replace(/\.\d{3}Z$/, 'Z');
 }
 
+function ago(seconds){
+  var when = new Date(+new Date()-seconds*1000);
+  return when.toJSON().replace(/\.\d{3}Z$/, 'Z');
+  
+}
+
 // TODO: pubsub would be good
 function logStamp(message) {
   // console.log('deprecated: use log.info(\'info\',...)');
@@ -112,6 +118,7 @@ function digest(str, algorithm, prependAlgorithm) {
 
 exports = module.exports = {
   stamp: stamp,
+  ago: ago,
   logStamp: logStamp,
   stampFromFile: stampFromFile,
   isEqualWithoutPrototypes: isEqualWithoutPrototypes,

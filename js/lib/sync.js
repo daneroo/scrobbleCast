@@ -55,7 +55,7 @@ function compare(baseURI, remoteDigests, localDigests) {
       missingRemote.push(digest)
     }
   });
-  log.verbose(`missing local:${missingLocal.length} remote:${missingRemote.length}`)
+  log.info('Sync missing',{from:baseURI, local:missingLocal.length, remote:missingRemote.length})
   return fetchMissingFromRemote(baseURI, missingLocal);
 }
 

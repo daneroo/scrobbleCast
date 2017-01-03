@@ -34,7 +34,8 @@ router.get('/', function (req, res) {
 // define the digests route
 router.route('/digests')
   .get(function (req, res) {
-    store.impl.pg.digests()
+    let syncParams = req.query // pass on the query params to pg.digests
+    store.impl.pg.digests(syncParams)
       .then((rows) => {
         res.json(rows)
       })

@@ -17,7 +17,7 @@ const DIGEST_ALGORITHM = 'sha256';
 // Exported API
 exports = module.exports = {
   digests: digests,
-  getByDigest:getByDigest,
+  getByDigest: getByDigest,
   // for sync reconciliation
   getByKey: getByKey,
   // load: (opts, handler) => {} // foreach item, cb(item);
@@ -32,9 +32,12 @@ exports = module.exports = {
   end: pgu.end
 };
 
-function digests() {
+function digests(syncParams) {
+  syncParams = syncParams || {}
   const nmParams = {
-    DIGEST_ALGORITHM: DIGEST_ALGORITHM
+    DIGEST_ALGORITHM: DIGEST_ALGORITHM,
+    before: syncParams.before || '2040-01-01T00:00:00Z', // < (strict)
+    since: syncParams.since || '1970-01-01T00:00:00Z'   // >= (inclusive)
   }
 
   // watch camelcase for __sourcetype NOT __sourceType,
@@ -43,8 +46,8 @@ function digests() {
   const sql =
     `SELECT encode(digest(item::text, $[DIGEST_ALGORITHM]), 'hex') as digest
     FROM items
-    ORDER BY __stamp desc,digest
-    --LIMIT 10000`;
+    WHERE __stamp < $[before] AND __stamp >= $[since]
+    ORDER BY __stamp desc,digest`;
 
   return pgu.db.any(sql, nmParams)
     .then(function (rows) {
@@ -58,7 +61,7 @@ function digests() {
 
 function getByDigest(digest) {
   const nmParams = {
-    digest:digest,
+    digest: digest,
     DIGEST_ALGORITHM: DIGEST_ALGORITHM
   }
 
@@ -262,7 +265,7 @@ function saveItem(item) {
 // copied from confirmIdentical()
 // not refactored because of detailed error loging in confirmIdentical()
 // exposed for proactive recociliation in sync
-function getByKey(item){
+function getByKey(item) {
   const nmParams = pgu.getNamedParametersForItem(item);
   delete nmParams.item;
 

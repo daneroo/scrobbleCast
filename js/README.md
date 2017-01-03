@@ -64,6 +64,7 @@ Scenario:
   - consensus based on digest of non deduped entries. (order by digest|date,..)
 - restore-pg switches from default `saveButVerifyIfDuplicate` to `checkThenSaveItem` on first fail...
 
++ syncTask since-24hrs, before stamp(grain=10minutes)
 + snashots now load from db
 + eslint cleanup
 + remove `.jsbeautifyrc, .jshitrc, .jscsrc`
@@ -200,6 +201,8 @@ docker volume rm js_scrbl_pgdata
 export HOSTNAME
 docker-compose build
 docker-compose up -d
+docker-compose logs -f scrape
+
 # restore from s3 -> data/snapshots -> pg
 docker-compose run --rm scrape npm run restore
 docker-compose run --rm scrape node restore.js
@@ -279,6 +282,11 @@ Start a container and connect to it
     # === mysqladmin proc
     select * from pg_stat_activity
 
+    # time selective queries for __stamp
+    time docker-compose exec postgres psql -U postgres scrobblecast -c "select count(*) from items"
+    time docker-compose exec postgres psql -U postgres scrobblecast -q -P pager=off -c "select encode(digest(item::text, 'md5'), 'hex') as digest FROM items"
+    time docker-compose exec postgres psql -U postgres scrobblecast -q -P pager=off -c "select encode(digest(item::text, 'md5'), 'hex') as digest FROM items where __stamp>'2016-12-22 17:10'"
+    
 ### Using pg crypto
 The extension for `pgcrypto`, although available, must be loaded (once)
 

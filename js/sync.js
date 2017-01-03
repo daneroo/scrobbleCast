@@ -14,12 +14,12 @@ var utils = require('./lib/utils');
 const baseURI = (process.argv.length > 2) ? process.argv[2] : 'http://euler:8000/api'
 
 // *** Adjust params as needed, default is ALL TIME
-function syncAll(){
+function syncAll() {
   const syncParams = {
-    // since: utils.ago(24 * 3600),
+    // since: utils.ago(1 * 24 * 3600),
     // before: utils.stamp('10minutes')
   }
-  return sync.sync(baseURI,syncParams)
+  return sync.sync(baseURI, syncParams)
 }
 
 Promise.resolve(true)

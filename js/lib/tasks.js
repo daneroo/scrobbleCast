@@ -41,8 +41,8 @@ function sync() {
   const otherHost = (shortHost === 'euler') ? 'dirac' : 'euler'
   const baseURI = `http://${otherHost}.imetrical.com:8000/api`
   const syncParams = {
-    // since: utils.ago(24 * 3600),
-    // before: utils.stamp('10minutes')
+    since: utils.ago(24 * 3600),
+    before: utils.stamp('10minutes')
   }
 
   lifecycle('sync', 'start', 'admin');

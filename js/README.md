@@ -44,6 +44,7 @@ Scenario:
 
 ## TODO
 
+- sync (command) add quick, day, month all... param (all default)
 - snapshots: clean up assertions (move them to store (like file.load?))
 - snapshots to dir, then [s3-cli sync](https://github.com/andrewrk/node-s3-cli)
 - remove `s3-cli`, replace by `s3` get creds from json instead of s3cfg.ini (.gitgnore)

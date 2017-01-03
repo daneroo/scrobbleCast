@@ -34,6 +34,9 @@ function sync(baseURI, syncParams) {
       log.verbose('Comparing digests');
       return compare(baseURI, remoteDigests, localDigests);
     })
+    .catch(error => {
+      log.error('Sync error', error)
+    })
 }
 
 function compare(baseURI, remoteDigests, localDigests) {
@@ -55,7 +58,7 @@ function compare(baseURI, remoteDigests, localDigests) {
       missingRemote.push(digest)
     }
   });
-  log.info('Sync missing',{from:baseURI, local:missingLocal.length, remote:missingRemote.length})
+  log.info('Sync missing', { from: baseURI, local: missingLocal.length, remote: missingRemote.length })
   return fetchMissingFromRemote(baseURI, missingLocal);
 }
 

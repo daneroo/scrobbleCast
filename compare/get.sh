@@ -2,7 +2,8 @@
 
 username='daniel'
 hosts='darwin.imetrical.com dirac.imetrical.com euler.imetrical.com'
-remote='Code/iMetrical/scrobbleCast/scrape/nodejs-es6/data/history-*.json'
+# remote='Code/iMetrical/scrobbleCast/scrape/nodejs-es6/data/history-*.json'
+remote='Code/iMetrical/scrobbleCast/js/data/history-*.json'
 for host in ${hosts}; do
   echo '>>>' doing ${host}
   mkdir -p data/${host}

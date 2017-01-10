@@ -15,10 +15,12 @@ var utils = require('./utils');
 var store = require('./store');
 var dedupTask = require('./dedup').dedupTask;
 var detectMismatchTask = require('./logcheck').detectMismatchTask;
+var syncTask = require('./sync').sync;
 
 // Exported API
 exports = module.exports = {
   logcheck: logcheck,
+  sync: sync,
   dedup: dedup,
   quick: quick,
   shallow: shallow,
@@ -30,6 +32,23 @@ function logcheck() {
   return detectMismatchTask()
     .then(function() {
       lifecycle('logcheck', 'done', 'admin');
+    });
+}
+
+function sync() {
+  // poor man's discovery, default euler...
+  const shortHost = process.env.HOSTNAME.split('.')[0];
+  const otherHost = (shortHost === 'euler') ? 'dirac' : 'euler'
+  const baseURI = `http://${otherHost}.imetrical.com:8000/api`
+  const syncParams = {
+    since: utils.ago(24 * 3600),
+    before: utils.stamp('10minutes')
+  }
+
+  lifecycle('sync', 'start', 'admin');
+  return syncTask(baseURI,syncParams)
+    .then(function() {
+      lifecycle('sync', 'done', 'admin');
     });
 }
 

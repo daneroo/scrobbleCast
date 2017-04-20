@@ -280,6 +280,9 @@ Start a container and connect to it
     select __user,__type,uuid, count(distinct uuid) dis,count(*) as all,min(__stamp),max(__stamp) from items group by __user,__type,uuid order by count(*) desc;
     SELECT encode(digest(item::text, 'md5'), 'hex') as digest FROM items;
     delete from items where encode(digest(item::text, 'sha256'), 'hex')='b24ef01e3f97f940798573e3bc845f9ffd9a2576a5adaee829fb77a398eaf863';
+    # -- aggregates on episodesForPodcast
+    # - episodes per podcast
+    select item->>'podcast_uuid' as puuid, count(distinct uuid) as neuuid from items where __user='daniel' and __type='episode' group by puuid order by neuuid,puuid
     # === mysqladmin proc
     select * from pg_stat_activity
 

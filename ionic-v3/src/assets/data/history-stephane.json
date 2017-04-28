@@ -1,0 +1,144 @@
+[
+  {
+    "playedTime": 3109,
+    "firstPlayed": "2017-04-27T23:20:00Z",
+    "lastPlayed": "2017-04-28T00:30:00Z",
+    "playedProportion": 0.9835495096488454,
+    "status": {
+      "2017-04-21T05:00:00Z": 0,
+      "2017-04-27T23:20:00Z": 2
+    },
+    "duration": "3161",
+    "play": {
+      "2017-04-21T05:00:00Z": 0,
+      "2017-04-27T23:20:00Z": 881,
+      "2017-04-27T23:30:00Z": 1475,
+      "2017-04-28T00:10:00Z": 3024,
+      "2017-04-28T00:30:00Z": 3109
+    },
+    "podcast_uuid": "052df5e0-72b8-012f-1d57-525400c11844",
+    "title": "The Digital Industrial Revolution",
+    "playCount": 5,
+    "uuid": "4c62d9d0-0876-0135-ec96-4114446340cb",
+    "podcast_title": "TED Radio Hour"
+  },
+  {
+    "playedTime": 947,
+    "firstPlayed": "2017-04-28T00:00:00Z",
+    "lastPlayed": "2017-04-28T00:00:00Z",
+    "playedProportion": 1,
+    "status": {
+      "2017-04-24T18:00:00Z": 0,
+      "2017-04-28T00:00:00Z": 3
+    },
+    "duration": "947",
+    "play": {
+      "2017-04-24T18:00:00Z": 0,
+      "2017-04-28T00:00:00Z": 947
+    },
+    "podcast_uuid": "18910720-189c-0132-b004-5f4c86fd3263",
+    "title": "Docker's Quest for Simplicity with the Evolution of Containerd",
+    "playCount": 2,
+    "uuid": "753e6940-0b3d-0135-ecbb-4114446340cb",
+    "podcast_title": "The New Stack Makers"
+  },
+  {
+    "playedTime": 4182,
+    "firstPlayed": "2017-04-21T18:00:00Z",
+    "lastPlayed": "2017-04-21T19:00:00Z",
+    "playedProportion": 1,
+    "status": {
+      "2017-04-21T10:00:00Z": 0,
+      "2017-04-21T18:00:00Z": 2,
+      "2017-04-21T19:00:00Z": 3
+    },
+    "duration": "4182",
+    "play": {
+      "2017-04-21T10:00:00Z": 0,
+      "2017-04-21T18:00:00Z": 769,
+      "2017-04-21T18:10:00Z": 1217,
+      "2017-04-21T18:20:00Z": 1729,
+      "2017-04-21T18:30:00Z": 2241,
+      "2017-04-21T18:40:00Z": 2753,
+      "2017-04-21T18:50:00Z": 3522,
+      "2017-04-21T19:00:00Z": 4182
+    },
+    "podcast_uuid": "2743d720-0edf-0133-2204-059c869cc4eb",
+    "title": "21 with Balaji Srinivasan",
+    "playCount": 8,
+    "uuid": "63a18b70-08a1-0135-ecad-4114446340cb",
+    "podcast_title": "Software Engineering Daily"
+  },
+  {
+    "playedTime": 3210,
+    "firstPlayed": "2017-04-17T17:00:00Z",
+    "lastPlayed": "2017-04-18T15:10:00Z",
+    "playedProportion": 0.49316331233676447,
+    "status": {
+      "2017-04-14T22:00:00Z": 0,
+      "2017-04-17T17:00:00Z": 2,
+      "2017-04-21T18:00:00Z": 3
+    },
+    "duration": "6509",
+    "play": {
+      "2017-04-14T22:00:00Z": 0,
+      "2017-04-17T17:00:00Z": 359,
+      "2017-04-17T19:30:00Z": 870,
+      "2017-04-17T19:50:00Z": 1959,
+      "2017-04-17T20:00:00Z": 2439,
+      "2017-04-17T20:10:00Z": 2983,
+      "2017-04-18T15:10:00Z": 3210
+    },
+    "podcast_uuid": "8d728390-249c-0131-73be-723c91aeae46",
+    "title": "#71 — What Is Technology Doing to Us?",
+    "playCount": 7,
+    "uuid": "e9897560-0388-0135-ec79-4114446340cb",
+    "podcast_title": "Waking Up with Sam Harris"
+  },
+  {
+    "playedTime": 2413,
+    "firstPlayed": "2017-04-19T18:00:00Z",
+    "lastPlayed": "2017-04-19T18:30:00Z",
+    "playedProportion": 0.9844961240310077,
+    "status": {
+      "2017-04-17T09:00:00Z": 0,
+      "2017-04-19T18:00:00Z": 2,
+      "2017-04-21T18:00:00Z": 3
+    },
+    "duration": "2451",
+    "play": {
+      "2017-04-17T09:00:00Z": 0,
+      "2017-04-19T18:00:00Z": 612,
+      "2017-04-19T18:10:00Z": 868,
+      "2017-04-19T18:20:00Z": 1412,
+      "2017-04-19T18:30:00Z": 2413
+    },
+    "podcast_uuid": "7fe8c5d0-118f-0131-69e9-723c91aeae46",
+    "title": "Ep.179 - Post-Postmedia",
+    "playCount": 5,
+    "uuid": "80f0cdc0-0574-0135-ec79-4114446340cb",
+    "podcast_title": "CANADALAND"
+  },
+  {
+    "playedTime": 411,
+    "firstPlayed": "2017-04-17T16:50:00Z",
+    "lastPlayed": "2017-04-17T17:00:00Z",
+    "playedProportion": 0.12724458204334366,
+    "status": {
+      "2017-04-14T05:00:00Z": 0,
+      "2017-04-17T16:50:00Z": 2,
+      "2017-04-17T17:00:00Z": 3
+    },
+    "duration": "3230",
+    "play": {
+      "2017-04-14T05:00:00Z": 0,
+      "2017-04-17T16:50:00Z": 226,
+      "2017-04-17T17:00:00Z": 411
+    },
+    "podcast_uuid": "052df5e0-72b8-012f-1d57-525400c11844",
+    "title": "How It All Began",
+    "playCount": 3,
+    "uuid": "067b5490-02f8-0135-ec79-4114446340cb",
+    "podcast_title": "TED Radio Hour"
+  }
+]

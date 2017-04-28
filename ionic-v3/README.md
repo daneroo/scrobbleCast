@@ -6,12 +6,29 @@ This is a reboot of the front-end using ionic (v3) using angular-4.
 - remove a page
 - pages: status/sync,recent,podcast list,users
 
+## Serve
+```
+ionic serve
+```
+
+## Build
+Copy static assets to `src/assets/data`?
+```
+ionic build --prod
+http-server www
+```
+
 ## Generators
 
 ### Adding a page
 Generate, then change the class name from Status to StatusPage
 ```
 ionic g page status
+```
+
+### Adding a service
+```
+ionic g provider Recent
 ```
 
 ## Setup

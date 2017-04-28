@@ -9,7 +9,7 @@ all()
 
 function all() {
   // ['daniel'].forEach(u => {
-  ['daniel', 'stephane'].forEach(u => {
+    ['daniel', 'stephane'].forEach(u => {
     console.log(`== For ${u}`)
     history({
       h: 'dirac.imetrical.com',
@@ -35,19 +35,25 @@ function history(src) {
   // console.log(JSON.stringify(episodes, null, 2))
   summary(episodes)
   recentList(episodes, 3)
+  writeHistory(episodes, 14, src.u)
 }
 
+function writeHistory(episodes, days, user) {
+  const es = episodes.filter(sinceDaysFilter(days))
+  console.log(`Writing history (${user}, ${days} days)`)
+  fs.writeFileSync(`data/history-${user}.json`, JSON.stringify(es, null, 2))
+}
 function recentList(episodes, days) {
   const es = episodes.filter(sinceDaysFilter(days))
   console.log(`Recent List (${days} days)`)
   es.forEach(e => {
     const prop = e.get('playedProportion')
     const f = {
-      ptitle: e.get('ptitle'),
+      podcast_title: e.get('podcast_title'),
       when: moment(e.get('lastPlayed')).fromNow(),
-      percent: (prop<.9)?'('+(prop * 100).toFixed(0)+'%) ':''
+      percent: (prop < .9) ? '(' + (prop * 100).toFixed(0) + '%) ' : ''
     }
-    console.log(`${f.when} ${f.percent}: ${f.ptitle}: - ${e.get('title')}`)
+    console.log(`${f.when} ${f.percent}: ${f.podcast_title}: - ${e.get('title')}`)
   })
 }
 function summary(episodes) {
@@ -119,8 +125,8 @@ function curriedEpisodeProjection(podcastTitles) {
     return Map({
       // __lastUpdated: e.get('meta').get('__lastUpdated'),
       uuid: e.get('uuid'),
-      puuid: e.get('podcast_uuid'),
-      ptitle: podcastTitles.get(e.get('podcast_uuid')),
+      podcast_uuid: e.get('podcast_uuid'),
+      podcast_title: podcastTitles.get(e.get('podcast_uuid')),
       title: e.get('title'),
       duration: e.get('duration'),
       status: e.get('history').get('playing_status'),

@@ -1,52 +1,627 @@
 [
   {
-    "playedTime": 971,
+    "playedTime": 3666,
+    "firstPlayed": "2017-04-30T18:30:00Z",
+    "lastPlayed": "2017-04-30T21:00:00Z",
+    "playedProportion": 1.0021869874248224,
+    "status": {
+      "2017-04-29T06:00:00Z": 0,
+      "2017-04-30T18:30:00Z": 2,
+      "2017-04-30T21:00:00Z": 3
+    },
+    "duration": "3658",
+    "play": {
+      "2017-04-29T06:00:00Z": 0,
+      "2017-04-30T18:30:00Z": 153,
+      "2017-04-30T18:50:00Z": 682,
+      "2017-04-30T19:00:00Z": 1211,
+      "2017-04-30T19:10:00Z": 1958,
+      "2017-04-30T20:10:00Z": 2553,
+      "2017-04-30T20:30:00Z": 3377,
+      "2017-04-30T21:00:00Z": 3666
+    },
+    "podcast_uuid": "70d13d50-9efe-0130-1b90-723c91aeae46",
+    "title": "249: Open Source at Microsoft, Inclusion, Diversity, and OSCON with Scott Hanselman",
+    "playCount": 8,
+    "uuid": "0e1eda70-0ec7-0135-ecbb-4114446340cb",
+    "podcast_title": "The Changelog"
+  },
+  {
+    "playedTime": 2553,
+    "firstPlayed": "2017-04-30T17:30:00Z",
+    "lastPlayed": "2017-04-30T19:00:00Z",
+    "playedProportion": 0.9996084573218481,
+    "status": {
+      "2017-04-30T17:20:00Z": 2,
+      "2017-04-30T19:00:00Z": 3
+    },
+    "duration": 2554,
+    "play": {
+      "2017-04-30T17:30:00Z": 899,
+      "2017-04-30T17:50:00Z": 1789,
+      "2017-04-30T18:10:00Z": 2224,
+      "2017-04-30T19:00:00Z": 2553
+    },
+    "podcast_uuid": "85f383f0-1e6a-012e-0210-00163e1b201c",
+    "title": "Trump: '8-year assault' on Second Amendment is over, Trump leaves door open for military action against North Korea, McMaster backpedals on South Korea",
+    "playCount": 4,
+    "uuid": "ddc9d880-0ff0-0135-ecbb-4114446340cb",
+    "podcast_title": "Fareed Zakaria GPS"
+  },
+  {
+    "playedTime": 3275,
+    "firstPlayed": "2017-04-30T07:40:00Z",
+    "lastPlayed": "2017-04-30T09:00:00Z",
+    "playedProportion": 0.9975632043862321,
+    "status": {
+      "2017-04-30T07:40:00Z": 2,
+      "2017-04-30T09:00:00Z": 3
+    },
+    "duration": 3283,
+    "play": {
+      "2017-04-30T07:40:00Z": 195,
+      "2017-04-30T07:50:00Z": 1035,
+      "2017-04-30T08:10:00Z": 1995,
+      "2017-04-30T08:20:00Z": 2825,
+      "2017-04-30T09:00:00Z": 3275
+    },
+    "podcast_uuid": "05ccf3c0-1b97-012e-00b7-00163e1b201c",
+    "title": "354: Social media, social ills",
+    "playCount": 5,
+    "uuid": "6db60d80-0e73-0135-ecbb-4114446340cb",
+    "podcast_title": "Spark from CBC Radio"
+  },
+  {
+    "playedTime": 1031,
+    "firstPlayed": "2017-04-30T05:30:00Z",
+    "lastPlayed": "2017-04-30T05:40:00Z",
+    "playedProportion": 0.35320315176430284,
+    "status": {
+      "2017-04-30T05:30:00Z": 2,
+      "2017-04-30T08:00:00Z": 3
+    },
+    "duration": 2919,
+    "play": {
+      "2017-04-30T05:30:00Z": 223,
+      "2017-04-30T05:40:00Z": 1031
+    },
+    "podcast_uuid": "52b13ce0-0d7b-012e-fba4-00163e1b201c",
+    "title": "Hr2: Star-nosed Moles, Transportation Infrastructure, Richard Garwin Biography",
+    "playCount": 2,
+    "uuid": "f639d020-0e96-0135-ecbb-4114446340cb",
+    "podcast_title": "Science Friday"
+  },
+  {
+    "playedTime": 577,
+    "firstPlayed": "2017-04-30T08:00:00Z",
+    "lastPlayed": "2017-04-30T08:00:00Z",
+    "playedProportion": 0.17623701893708002,
+    "status": {
+      "2017-04-30T08:00:00Z": 3
+    },
+    "duration": 3274,
+    "play": {
+      "2017-04-30T08:00:00Z": 577
+    },
+    "podcast_uuid": "c3adff20-1b2f-012e-0081-00163e1b201c",
+    "title": "Don't Shoot the Messenger: the value of whistleblowing",
+    "playCount": 1,
+    "uuid": "77c353b0-0e73-0135-ecbb-4114446340cb",
+    "podcast_title": "Ideas from CBC Radio (Highlights)"
+  },
+  {
+    "playedTime": 654,
+    "firstPlayed": "2017-04-29T18:30:00Z",
+    "lastPlayed": "2017-04-30T01:50:00Z",
+    "playedProportion": 0.26055776892430277,
+    "status": {
+      "2017-04-26T10:00:00Z": 0,
+      "2017-04-29T18:30:00Z": 2,
+      "2017-04-30T08:00:00Z": 3
+    },
+    "duration": "2510",
+    "play": {
+      "2017-04-26T10:00:00Z": 0,
+      "2017-04-29T18:30:00Z": 615,
+      "2017-04-30T01:50:00Z": 654
+    },
+    "podcast_uuid": "2743d720-0edf-0133-2204-059c869cc4eb",
+    "title": "Spring Boot with Josh Long",
+    "playCount": 3,
+    "uuid": "09f48bd0-0c8f-0135-ecbb-4114446340cb",
+    "podcast_title": "Software Engineering Daily"
+  },
+  {
+    "playedTime": 3645,
+    "firstPlayed": "2017-04-30T05:40:00Z",
+    "lastPlayed": "2017-04-30T07:00:00Z",
+    "playedProportion": 1,
+    "status": {
+      "2017-04-28T12:00:00Z": 0,
+      "2017-04-30T05:40:00Z": 2,
+      "2017-04-30T07:00:00Z": 3
+    },
+    "duration": 3645,
+    "play": {
+      "2017-04-28T12:00:00Z": 0,
+      "2017-04-30T05:40:00Z": 1536,
+      "2017-04-30T06:50:00Z": 2112,
+      "2017-04-30T07:00:00Z": 3645
+    },
+    "podcast_uuid": "5bbc3e50-026e-0131-c9c5-723c91aeae46",
+    "title": "Trump is Making America Great Again",
+    "playCount": 4,
+    "uuid": "21058b40-0e37-0135-ecbb-4114446340cb",
+    "podcast_title": "Intelligence Squared"
+  },
+  {
+    "playedTime": 2910,
+    "firstPlayed": "2017-04-30T02:10:00Z",
+    "lastPlayed": "2017-04-30T06:00:00Z",
+    "playedProportion": 1,
+    "status": {
+      "2017-04-30T02:00:00Z": 2,
+      "2017-04-30T06:00:00Z": 3
+    },
+    "duration": 2910,
+    "play": {
+      "2017-04-30T02:10:00Z": 940,
+      "2017-04-30T02:30:00Z": 1970,
+      "2017-04-30T02:50:00Z": 2654,
+      "2017-04-30T06:00:00Z": 2910
+    },
+    "podcast_uuid": "52b13ce0-0d7b-012e-fba4-00163e1b201c",
+    "title": "Hr1: News Roundup, Worry, Human Settlement of the Americas, Genius, Spirals",
+    "playCount": 4,
+    "uuid": "f63ca420-0e96-0135-ecbb-4114446340cb",
+    "podcast_title": "Science Friday"
+  },
+  {
+    "playedTime": 348,
+    "firstPlayed": "2017-04-30T02:00:00Z",
+    "lastPlayed": "2017-04-30T02:00:00Z",
+    "playedProportion": 0.11561461794019934,
+    "status": {
+      "2017-04-29T13:00:00Z": 0,
+      "2017-04-30T02:00:00Z": 3
+    },
+    "duration": "3010",
+    "play": {
+      "2017-04-29T13:00:00Z": 0,
+      "2017-04-30T02:00:00Z": 348
+    },
+    "podcast_uuid": "e4ff94b0-8686-0130-0b07-723c91aeae46",
+    "title": "Homo naledi",
+    "playCount": 2,
+    "uuid": "fdb57e00-0f03-0135-ecbb-4114446340cb",
+    "podcast_title": "The Science Hour"
+  },
+  {
+    "playedTime": 198,
+    "firstPlayed": "2017-04-30T02:00:00Z",
+    "lastPlayed": "2017-04-30T02:00:00Z",
+    "playedProportion": 1.0421052631578946,
+    "status": {
+      "2017-04-28T20:00:00Z": 0,
+      "2017-04-30T02:00:00Z": 3
+    },
+    "duration": "190",
+    "play": {
+      "2017-04-28T20:00:00Z": 0,
+      "2017-04-30T02:00:00Z": 198
+    },
+    "podcast_uuid": "52905800-287d-012e-0725-00163e1b201c",
+    "title": "Quirks & Question - Why do hot and cold water sound different when poured?",
+    "playCount": 2,
+    "uuid": "fa22e580-0e78-0135-ecbb-4114446340cb",
+    "podcast_title": "Quirks and Quarks Segmented Show from CBC Radio"
+  },
+  {
+    "playedTime": 266,
+    "firstPlayed": "2017-04-30T01:50:00Z",
+    "lastPlayed": "2017-04-30T02:00:00Z",
+    "playedProportion": 0.15087918321043675,
+    "status": {
+      "2017-04-30T00:00:00Z": 0,
+      "2017-04-30T01:50:00Z": 2,
+      "2017-04-30T02:00:00Z": 3
+    },
+    "duration": "1763",
+    "play": {
+      "2017-04-30T00:00:00Z": 0,
+      "2017-04-30T01:50:00Z": 256,
+      "2017-04-30T02:00:00Z": 266
+    },
+    "podcast_uuid": "74a35900-0423-012e-f9a0-00163e1b201c",
+    "title": "President Trump's first 100 days in office",
+    "playCount": 3,
+    "uuid": "ea534af0-0f62-0135-ecbb-4114446340cb",
+    "podcast_title": "Global News Podcast"
+  },
+  {
+    "playedTime": 805,
+    "firstPlayed": "2017-04-30T02:00:00Z",
+    "lastPlayed": "2017-04-30T02:00:00Z",
+    "playedProportion": 0.3971386285150469,
+    "status": {
+      "2017-04-29T08:00:00Z": 0,
+      "2017-04-30T02:00:00Z": 3
+    },
+    "duration": "2027",
+    "play": {
+      "2017-04-29T08:00:00Z": 0,
+      "2017-04-30T02:00:00Z": 805
+    },
+    "podcast_uuid": "b633aa60-0bfe-012e-fb1f-00163e1b201c",
+    "title": "Weekend Extra",
+    "playCount": 2,
+    "uuid": "a273cb00-0edd-0135-ecbb-4114446340cb",
+    "podcast_title": "World Update: Daily Commute"
+  },
+  {
+    "playedTime": 3966,
+    "firstPlayed": "2017-04-29T05:50:00Z",
+    "lastPlayed": "2017-04-29T10:00:00Z",
+    "playedProportion": 0.9997479203428283,
+    "status": {
+      "2017-04-29T04:00:00Z": 0,
+      "2017-04-29T05:50:00Z": 2,
+      "2017-04-29T10:00:00Z": 3
+    },
+    "duration": "3967",
+    "play": {
+      "2017-04-29T04:00:00Z": 0,
+      "2017-04-29T05:50:00Z": 72,
+      "2017-04-29T06:00:00Z": 702,
+      "2017-04-29T07:20:00Z": 711,
+      "2017-04-29T07:30:00Z": 751,
+      "2017-04-29T09:30:00Z": 851,
+      "2017-04-29T09:40:00Z": 3523,
+      "2017-04-29T10:00:00Z": 3966
+    },
+    "podcast_uuid": "2433b8f0-0d4c-012e-fb96-00163e1b201c",
+    "title": "Ep. #423: Elizabeth Warren, Ernest Moniz",
+    "playCount": 8,
+    "uuid": "9f851830-0ebd-0135-ecbb-4114446340cb",
+    "podcast_title": "Real Time with Bill Maher"
+  },
+  {
+    "playedTime": 452,
+    "firstPlayed": "2017-04-29T10:00:00Z",
+    "lastPlayed": "2017-04-29T10:00:00Z",
+    "playedProportion": 0.9955947136563876,
+    "status": {
+      "2017-04-29T04:00:00Z": 0,
+      "2017-04-29T10:00:00Z": 3
+    },
+    "duration": "454",
+    "play": {
+      "2017-04-29T04:00:00Z": 0,
+      "2017-04-29T10:00:00Z": 452
+    },
+    "podcast_uuid": "2433b8f0-0d4c-012e-fb96-00163e1b201c",
+    "title": "Overtime - Episode #423: Nukes, Gun Control, Obama Speeches",
+    "playCount": 2,
+    "uuid": "9f828bc0-0ebd-0135-ecbb-4114446340cb",
+    "podcast_title": "Real Time with Bill Maher"
+  },
+  {
+    "playedTime": 1681,
+    "firstPlayed": "2017-04-28T17:00:00Z",
+    "lastPlayed": "2017-04-29T10:00:00Z",
+    "playedProportion": 0.9988116458704694,
+    "status": {
+      "2017-04-28T07:00:00Z": 0,
+      "2017-04-28T17:00:00Z": 2,
+      "2017-04-29T10:00:00Z": 3
+    },
+    "duration": 1683,
+    "play": {
+      "2017-04-28T07:00:00Z": 0,
+      "2017-04-28T17:00:00Z": 73,
+      "2017-04-29T07:30:00Z": 602,
+      "2017-04-29T07:40:00Z": 1022,
+      "2017-04-29T09:20:00Z": 1121,
+      "2017-04-29T10:00:00Z": 1681
+    },
+    "podcast_uuid": "3920d880-1b97-012e-00b9-00163e1b201c",
+    "title": "The challenge of getting the elements of your dowry just right!",
+    "playCount": 6,
+    "uuid": "0c633c20-0e0c-0135-ecbb-4114446340cb",
+    "podcast_title": "Laugh Out Loud from CBC Radio"
+  },
+  {
+    "playedTime": 1512,
+    "firstPlayed": "2017-04-29T05:50:00Z",
+    "lastPlayed": "2017-04-29T08:00:00Z",
+    "playedProportion": 1,
+    "status": {
+      "2017-04-29T05:50:00Z": 2,
+      "2017-04-29T08:00:00Z": 3
+    },
+    "duration": 1512,
+    "play": {
+      "2017-04-29T05:50:00Z": 47,
+      "2017-04-29T08:00:00Z": 1512
+    },
+    "podcast_uuid": "aeddb420-7217-0133-2cee-6dc413d6d41d",
+    "title": "100 Days: Trump's foreign policy",
+    "playCount": 2,
+    "uuid": "e2ab44b0-0e98-0135-ecbb-4114446340cb",
+    "podcast_title": "Amanpour"
+  },
+  {
+    "playedTime": 2810,
+    "firstPlayed": "2017-04-28T17:00:00Z",
+    "lastPlayed": "2017-04-29T08:00:00Z",
+    "playedProportion": 1.0057265569076592,
+    "status": {
+      "2017-04-27T12:00:00Z": 0,
+      "2017-04-28T17:00:00Z": 2,
+      "2017-04-29T08:00:00Z": 3
+    },
+    "duration": "2794",
+    "play": {
+      "2017-04-27T12:00:00Z": 0,
+      "2017-04-28T17:00:00Z": 807,
+      "2017-04-29T06:00:00Z": 1077,
+      "2017-04-29T06:20:00Z": 1947,
+      "2017-04-29T06:30:00Z": 2760,
+      "2017-04-29T08:00:00Z": 2810
+    },
+    "podcast_uuid": "5e6125f0-0424-012e-f9a0-00163e1b201c",
+    "title": "The Egyptian Book of the Dead",
+    "playCount": 6,
+    "uuid": "7028b6c0-0d6e-0135-ecbb-4114446340cb",
+    "podcast_title": "In Our Time"
+  },
+  {
+    "playedTime": 849,
+    "firstPlayed": "2017-04-29T05:30:00Z",
+    "lastPlayed": "2017-04-29T06:00:00Z",
+    "playedProportion": 1.0011792452830188,
+    "status": {
+      "2017-04-28T21:00:00Z": 0,
+      "2017-04-29T05:30:00Z": 2,
+      "2017-04-29T06:00:00Z": 3
+    },
+    "duration": "848",
+    "play": {
+      "2017-04-28T21:00:00Z": 0,
+      "2017-04-29T05:30:00Z": 59,
+      "2017-04-29T06:00:00Z": 849
+    },
+    "podcast_uuid": "52905800-287d-012e-0725-00163e1b201c",
+    "title": "'Let There Be Light'",
+    "playCount": 3,
+    "uuid": "e9d331b0-0e7b-0135-ecbb-4114446340cb",
+    "podcast_title": "Quirks and Quarks Segmented Show from CBC Radio"
+  },
+  {
+    "playedTime": 1114,
+    "firstPlayed": "2017-04-28T23:30:00Z",
+    "lastPlayed": "2017-04-28T23:40:00Z",
+    "playedProportion": 0.5799062988027069,
+    "status": {
+      "2017-04-28T21:00:00Z": 0,
+      "2017-04-28T23:30:00Z": 2,
+      "2017-04-29T05:00:00Z": 3
+    },
+    "duration": "1921",
+    "play": {
+      "2017-04-28T21:00:00Z": 0,
+      "2017-04-28T23:30:00Z": 689,
+      "2017-04-28T23:40:00Z": 1114
+    },
+    "podcast_uuid": "d22cc180-0dc1-012e-fbb9-00163e1b201c",
+    "title": "TRC #447: March For Science + Is Witchcraft a Crime in Canada? + Does a Unicorn Frappuccino Contain Coffee?",
+    "playCount": 3,
+    "uuid": "6f809590-0e81-0135-ecbb-4114446340cb",
+    "podcast_title": "The Reality Check"
+  },
+  {
+    "playedTime": 79,
+    "firstPlayed": "2017-04-28T17:00:00Z",
+    "lastPlayed": "2017-04-28T17:00:00Z",
+    "playedProportion": 0.035142348754448396,
+    "status": {
+      "2017-04-28T11:00:00Z": 0,
+      "2017-04-28T17:00:00Z": 2,
+      "2017-04-29T00:00:00Z": 3
+    },
+    "duration": 2248,
+    "play": {
+      "2017-04-28T11:00:00Z": 0,
+      "2017-04-28T17:00:00Z": 79
+    },
+    "podcast_uuid": "262069e0-e7df-0132-0ef7-059c869cc4eb",
+    "title": "The week ahead: Trivi-a-lago",
+    "playCount": 2,
+    "uuid": "e2d828a0-0e2e-0135-ecbb-4114446340cb",
+    "podcast_title": "The Economist Radio (All audio)"
+  },
+  {
+    "playedTime": 4765,
+    "firstPlayed": "2017-04-28T18:50:00Z",
+    "lastPlayed": "2017-04-28T21:00:00Z",
+    "playedProportion": 0.9995804489196559,
+    "status": {
+      "2017-04-27T21:00:00Z": 0,
+      "2017-04-28T18:50:00Z": 2,
+      "2017-04-28T21:00:00Z": 3
+    },
+    "duration": "4767",
+    "play": {
+      "2017-04-27T21:00:00Z": 0,
+      "2017-04-28T18:50:00Z": 859,
+      "2017-04-28T19:00:00Z": 1864,
+      "2017-04-28T19:20:00Z": 2694,
+      "2017-04-28T19:30:00Z": 3322,
+      "2017-04-28T20:00:00Z": 4435,
+      "2017-04-28T21:00:00Z": 4765
+    },
+    "podcast_uuid": "489621e0-00c8-0134-9c92-59d98c6b72b8",
+    "title": "44: Go4 and Contributing to Go with Brad Fitzpatrick",
+    "playCount": 7,
+    "uuid": "d2705d90-0db7-0135-ecbb-4114446340cb",
+    "podcast_title": "Go Time"
+  },
+  {
+    "playedTime": 1371,
     "firstPlayed": "2017-04-28T00:40:00Z",
-    "lastPlayed": "2017-04-28T00:40:00Z",
-    "playedProportion": 0.25851970181043665,
+    "lastPlayed": "2017-04-28T05:20:00Z",
+    "playedProportion": 0.36501597444089456,
     "status": {
       "2017-04-25T11:00:00Z": 0,
-      "2017-04-28T00:40:00Z": 2
+      "2017-04-28T00:40:00Z": 2,
+      "2017-04-28T19:00:00Z": 3
     },
     "duration": "3756",
     "play": {
       "2017-04-25T11:00:00Z": 0,
-      "2017-04-28T00:40:00Z": 971
+      "2017-04-28T00:40:00Z": 971,
+      "2017-04-28T01:40:00Z": 1310,
+      "2017-04-28T05:20:00Z": 1371
     },
     "podcast_uuid": "40d36c30-5580-0131-828c-723c91aeae46",
     "title": "Functional Geekery Episode 92 – Irina Guberman",
-    "playCount": 2,
+    "playCount": 4,
     "uuid": "f4a565e0-0bcd-0135-ecbb-4114446340cb",
     "podcast_title": "Functional Geekery"
   },
   {
-    "playedTime": 79,
+    "playedTime": 1208,
     "firstPlayed": "2017-04-28T00:40:00Z",
-    "lastPlayed": "2017-04-28T00:40:00Z",
-    "playedProportion": 0.0185533114138093,
+    "lastPlayed": "2017-04-28T08:40:00Z",
+    "playedProportion": 0.28370126820103336,
     "status": {
       "2017-04-27T17:00:00Z": 0,
-      "2017-04-28T00:40:00Z": 2
+      "2017-04-28T00:40:00Z": 2,
+      "2017-04-28T17:00:00Z": 3
     },
     "duration": "4258",
     "play": {
       "2017-04-27T17:00:00Z": 0,
-      "2017-04-28T00:40:00Z": 79
+      "2017-04-28T00:40:00Z": 79,
+      "2017-04-28T08:00:00Z": 357,
+      "2017-04-28T08:10:00Z": 1108,
+      "2017-04-28T08:40:00Z": 1208
     },
     "podcast_uuid": "0fb72d80-4c95-0130-e3d5-723c91aeae46",
     "title": "TYT - 04.26.17: Trump Tax Details, Obamacare, Ann Coulter, and Ivanka Trump",
-    "playCount": 2,
+    "playCount": 5,
     "uuid": "c2ad35e0-0d8c-0135-ecbb-4114446340cb",
     "podcast_title": "The Young Turks - FREE (Audio)"
   },
   {
-    "playedTime": 3900,
+    "playedTime": 10932,
+    "firstPlayed": "2017-04-28T08:40:00Z",
+    "lastPlayed": "2017-04-28T13:00:00Z",
+    "playedProportion": 0.9996342355523044,
+    "status": {
+      "2017-04-27T21:00:00Z": 0,
+      "2017-04-28T08:40:00Z": 2,
+      "2017-04-28T13:00:00Z": 3
+    },
+    "duration": 10936,
+    "play": {
+      "2017-04-28T08:40:00Z": 823,
+      "2017-04-28T09:30:00Z": 3583,
+      "2017-04-28T09:10:00Z": 2683,
+      "2017-04-28T09:00:00Z": 1733,
+      "2017-04-28T10:50:00Z": 8462,
+      "2017-04-28T13:00:00Z": 10932,
+      "2017-04-27T21:00:00Z": 0,
+      "2017-04-28T10:00:00Z": 5372,
+      "2017-04-28T09:40:00Z": 4472
+    },
+    "podcast_uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
+    "title": "924: \"Golden Bozos\"",
+    "playCount": 9,
+    "uuid": "d5a77fb0-0db4-0135-ecbb-4114446340cb",
+    "podcast_title": "No Agenda"
+  },
+  {
+    "playedTime": 1754,
+    "firstPlayed": "2017-04-28T12:10:00Z",
+    "lastPlayed": "2017-04-28T13:00:00Z",
+    "playedProportion": 0.9954597048808173,
+    "status": {
+      "2017-04-28T12:00:00Z": 0,
+      "2017-04-28T12:10:00Z": 2,
+      "2017-04-28T13:00:00Z": 3
+    },
+    "duration": "1762",
+    "play": {
+      "2017-04-28T12:00:00Z": 0,
+      "2017-04-28T12:10:00Z": 5,
+      "2017-04-28T12:30:00Z": 894,
+      "2017-04-28T13:00:00Z": 1754
+    },
+    "podcast_uuid": "b633aa60-0bfe-012e-fb1f-00163e1b201c",
+    "title": "Tillerson: US Open to Talks With Pyongyang",
+    "playCount": 4,
+    "uuid": "8298f6c0-0e31-0135-ecbb-4114446340cb",
+    "podcast_title": "World Update: Daily Commute"
+  },
+  {
+    "playedTime": 3092,
+    "firstPlayed": "2017-04-28T05:20:00Z",
+    "lastPlayed": "2017-04-28T08:00:00Z",
+    "playedProportion": 0.27923778560462387,
+    "status": {
+      "2017-04-28T02:00:00Z": 0,
+      "2017-04-28T05:20:00Z": 2,
+      "2017-04-28T13:00:00Z": 3
+    },
+    "duration": "11073",
+    "play": {
+      "2017-04-28T02:00:00Z": 0,
+      "2017-04-28T05:20:00Z": 315,
+      "2017-04-28T05:30:00Z": 936,
+      "2017-04-28T06:00:00Z": 965,
+      "2017-04-28T07:30:00Z": 2203,
+      "2017-04-28T07:50:00Z": 3082,
+      "2017-04-28T08:00:00Z": 3092
+    },
+    "podcast_uuid": "873e7420-042d-012e-f9a4-00163e1b201c",
+    "title": "#952 - Thaddeus Russell",
+    "playCount": 7,
+    "uuid": "1e8564f0-0dde-0135-ecbb-4114446340cb",
+    "podcast_title": "The Joe Rogan Experience"
+  },
+  {
+    "playedTime": 1667,
+    "firstPlayed": "2017-04-28T05:30:00Z",
+    "lastPlayed": "2017-04-28T06:00:00Z",
+    "playedProportion": 0.9940369707811568,
+    "status": {
+      "2017-04-27T17:00:00Z": 0,
+      "2017-04-28T05:30:00Z": 2,
+      "2017-04-28T06:00:00Z": 3
+    },
+    "duration": "1677",
+    "play": {
+      "2017-04-27T17:00:00Z": 0,
+      "2017-04-28T05:30:00Z": 187,
+      "2017-04-28T05:50:00Z": 1077,
+      "2017-04-28T06:00:00Z": 1667
+    },
+    "podcast_uuid": "66084f00-c6b1-0130-34d2-723c91aeae46",
+    "title": "Homo naledi, First humans in America, Dark matter detector, New theory of dark matter",
+    "playCount": 4,
+    "uuid": "860d8170-0d94-0135-ecbb-4114446340cb",
+    "podcast_title": "BBC Inside Science"
+  },
+  {
+    "playedTime": 4010,
     "firstPlayed": "2017-04-23T15:30:00Z",
-    "lastPlayed": "2017-04-28T00:20:00Z",
-    "playedProportion": 0.9752438109527382,
+    "lastPlayed": "2017-04-28T01:00:00Z",
+    "playedProportion": 1.0027506876719179,
     "status": {
       "2017-04-20T22:00:00Z": 0,
-      "2017-04-23T15:30:00Z": 2
+      "2017-04-23T15:30:00Z": 2,
+      "2017-04-28T01:00:00Z": 3
     },
     "duration": "3999",
     "play": {
@@ -56,13 +631,14 @@
       "2017-04-20T22:00:00Z": 0,
       "2017-04-28T00:20:00Z": 3900,
       "2017-04-28T00:10:00Z": 2980,
+      "2017-04-28T01:00:00Z": 4010,
       "2017-04-28T00:00:00Z": 2709,
       "2017-04-23T17:40:00Z": 1961,
       "2017-04-23T15:50:00Z": 797
     },
     "podcast_uuid": "489621e0-00c8-0134-9c92-59d98c6b72b8",
     "title": "43: Getting Better, Mentoring, and Drawing Gophers with Ashley McNamara",
-    "playCount": 9,
+    "playCount": 10,
     "uuid": "7d168410-083b-0135-ec96-4114446340cb",
     "podcast_title": "Go Time"
   },
@@ -85,7 +661,7 @@
       "2017-04-27T23:00:00Z": 2397
     },
     "podcast_uuid": "62e4f060-ec96-0133-9c5b-59d98c6b72b8",
-    "title": "Interview - Richard Feldman",
+    "title": "Richard Feldman Discusses Elm and How It Compares to React.js for Front-end Programming",
     "playCount": 5,
     "uuid": "fc8bec60-0d7e-0135-ecbb-4114446340cb",
     "podcast_title": "The InfoQ Podcast"
@@ -1974,432 +2550,5 @@
     "playCount": 4,
     "uuid": "77066a70-04ed-0135-ec79-4114446340cb",
     "podcast_title": "Spacepod"
-  },
-  {
-    "playedTime": 3486,
-    "firstPlayed": "2017-04-16T06:10:00Z",
-    "lastPlayed": "2017-04-16T08:00:00Z",
-    "playedProportion": 1.000286944045911,
-    "status": {
-      "2017-04-16T06:10:00Z": 2,
-      "2017-04-16T08:00:00Z": 3
-    },
-    "duration": 3485,
-    "play": {
-      "2017-04-16T06:10:00Z": 591,
-      "2017-04-16T06:20:00Z": 1024,
-      "2017-04-16T07:20:00Z": 1169,
-      "2017-04-16T07:30:00Z": 1866,
-      "2017-04-16T07:50:00Z": 2766,
-      "2017-04-16T08:00:00Z": 3486
-    },
-    "podcast_uuid": "f5b97290-0422-012e-f9a0-00163e1b201c",
-    "title": "Nukes",
-    "playCount": 6,
-    "uuid": "7bd2e1d0-fd97-0134-ec79-4114446340cb",
-    "podcast_title": "Radiolab"
-  },
-  {
-    "playedTime": 3323,
-    "firstPlayed": "2017-04-15T22:00:00Z",
-    "lastPlayed": "2017-04-16T07:00:00Z",
-    "playedProportion": 0.9975983188231762,
-    "status": {
-      "2017-04-15T00:00:00Z": 0,
-      "2017-04-15T22:00:00Z": 2,
-      "2017-04-16T07:00:00Z": 3
-    },
-    "duration": "3331",
-    "play": {
-      "2017-04-15T00:00:00Z": 0,
-      "2017-04-15T22:00:00Z": 26,
-      "2017-04-16T02:10:00Z": 768,
-      "2017-04-16T02:30:00Z": 2476,
-      "2017-04-16T02:40:00Z": 2484,
-      "2017-04-16T06:00:00Z": 2923,
-      "2017-04-16T07:00:00Z": 3323
-    },
-    "podcast_uuid": "ede41160-9eeb-012f-3e7d-525400c11844",
-    "title": "Extended Classic: Space Chronicles (Part 1)",
-    "playCount": 7,
-    "uuid": "79a4b610-0394-0135-ec79-4114446340cb",
-    "podcast_title": "StarTalk Radio"
-  },
-  {
-    "playedTime": 1679,
-    "firstPlayed": "2017-04-16T02:40:00Z",
-    "lastPlayed": "2017-04-16T03:00:00Z",
-    "playedProportion": 0.9946682464454977,
-    "status": {
-      "2017-04-16T02:40:00Z": 2,
-      "2017-04-16T03:00:00Z": 3
-    },
-    "duration": 1688,
-    "play": {
-      "2017-04-16T02:40:00Z": 285,
-      "2017-04-16T02:50:00Z": 1185,
-      "2017-04-16T03:00:00Z": 1679
-    },
-    "podcast_uuid": "3920d880-1b97-012e-00b9-00163e1b201c",
-    "title": "Best of Victoria: Wasps, Wine and Ferry language.",
-    "playCount": 3,
-    "uuid": "1dbed500-034b-0135-ec79-4114446340cb",
-    "podcast_title": "Laugh Out Loud from CBC Radio"
-  },
-  {
-    "playedTime": 88,
-    "firstPlayed": "2017-04-16T00:00:00Z",
-    "lastPlayed": "2017-04-16T00:00:00Z",
-    "playedProportion": 0.02979011509817197,
-    "status": {
-      "2017-04-15T00:00:00Z": 0,
-      "2017-04-16T00:00:00Z": 3
-    },
-    "duration": 2954,
-    "play": {
-      "2017-04-15T00:00:00Z": 0,
-      "2017-04-16T00:00:00Z": 88
-    },
-    "podcast_uuid": "52b13ce0-0d7b-012e-fba4-00163e1b201c",
-    "title": "Hr2: Heiltsuk Archaeology, Brain Difference, Water Widget, Shoelace Physics",
-    "playCount": 2,
-    "uuid": "0a2bca10-039a-0135-ec79-4114446340cb",
-    "podcast_title": "Science Friday"
-  },
-  {
-    "playedTime": 1451,
-    "firstPlayed": "2017-04-15T20:10:00Z",
-    "lastPlayed": "2017-04-15T22:00:00Z",
-    "playedProportion": 0.99519890260631,
-    "status": {
-      "2017-04-14T21:00:00Z": 0,
-      "2017-04-15T20:10:00Z": 2,
-      "2017-04-15T22:00:00Z": 3
-    },
-    "duration": "1458",
-    "play": {
-      "2017-04-14T21:00:00Z": 0,
-      "2017-04-15T20:10:00Z": 465,
-      "2017-04-15T21:40:00Z": 871,
-      "2017-04-15T21:50:00Z": 1112,
-      "2017-04-15T22:00:00Z": 1451
-    },
-    "podcast_uuid": "d22cc180-0dc1-012e-fbb9-00163e1b201c",
-    "title": "TRC #445: Social Priming + Feral Girl Living With Monkeys? + Origin Of The Dollar Sign",
-    "playCount": 5,
-    "uuid": "912f7380-037d-0135-ec79-4114446340cb",
-    "podcast_title": "The Reality Check"
-  },
-  {
-    "playedTime": 2951,
-    "firstPlayed": "2017-04-15T16:40:00Z",
-    "lastPlayed": "2017-04-15T21:00:00Z",
-    "playedProportion": 1.0006781959986437,
-    "status": {
-      "2017-04-15T00:00:00Z": 0,
-      "2017-04-15T16:40:00Z": 2,
-      "2017-04-15T21:00:00Z": 3
-    },
-    "duration": 2949,
-    "play": {
-      "2017-04-15T00:00:00Z": 0,
-      "2017-04-15T16:40:00Z": 576,
-      "2017-04-15T18:20:00Z": 580,
-      "2017-04-15T19:30:00Z": 1309,
-      "2017-04-15T19:40:00Z": 2732,
-      "2017-04-15T21:00:00Z": 2951
-    },
-    "podcast_uuid": "52b13ce0-0d7b-012e-fba4-00163e1b201c",
-    "title": "Hr1: News Roundup, PIN Security, Not A Scientist, Simulating Mars, Enceladus",
-    "playCount": 6,
-    "uuid": "0a2fb4a0-039a-0135-ec79-4114446340cb",
-    "podcast_title": "Science Friday"
-  },
-  {
-    "playedTime": 2345,
-    "firstPlayed": "2017-04-15T16:10:00Z",
-    "lastPlayed": "2017-04-15T17:00:00Z",
-    "playedProportion": 0.5683470673776054,
-    "status": {
-      "2017-04-14T10:00:00Z": 0,
-      "2017-04-15T16:10:00Z": 2,
-      "2017-04-15T17:00:00Z": 3
-    },
-    "duration": "4126",
-    "play": {
-      "2017-04-14T10:00:00Z": 0,
-      "2017-04-15T16:10:00Z": 984,
-      "2017-04-15T17:00:00Z": 2345
-    },
-    "podcast_uuid": "2743d720-0edf-0133-2204-059c869cc4eb",
-    "title": "Facebook Open Source with Tom Occhino",
-    "playCount": 3,
-    "uuid": "9def7040-031f-0135-ec79-4114446340cb",
-    "podcast_title": "Software Engineering Daily"
-  },
-  {
-    "playedTime": 1293,
-    "firstPlayed": "2017-04-15T15:40:00Z",
-    "lastPlayed": "2017-04-15T16:00:00Z",
-    "playedProportion": 0.6699481865284974,
-    "status": {
-      "2017-04-14T16:00:00Z": 0,
-      "2017-04-15T15:40:00Z": 2,
-      "2017-04-15T16:00:00Z": 3
-    },
-    "duration": "1930",
-    "play": {
-      "2017-04-14T16:00:00Z": 0,
-      "2017-04-15T15:40:00Z": 277,
-      "2017-04-15T16:00:00Z": 1293
-    },
-    "podcast_uuid": "62e4f060-ec96-0133-9c5b-59d98c6b72b8",
-    "title": "Jean Barmash on Inter-Service RPC with gRPC/Thrift, Designing Public APIs, & Lean/Constraint Theory",
-    "playCount": 3,
-    "uuid": "278fba70-0357-0135-ec79-4114446340cb",
-    "podcast_title": "The InfoQ Podcast"
-  },
-  {
-    "playedTime": 2837,
-    "firstPlayed": "2017-04-15T07:30:00Z",
-    "lastPlayed": "2017-04-15T09:00:00Z",
-    "playedProportion": 0.9968376669009136,
-    "status": {
-      "2017-04-15T03:00:00Z": 0,
-      "2017-04-15T07:30:00Z": 2,
-      "2017-04-15T09:00:00Z": 3
-    },
-    "duration": "2846",
-    "play": {
-      "2017-04-15T03:00:00Z": 0,
-      "2017-04-15T07:30:00Z": 648,
-      "2017-04-15T07:50:00Z": 1548,
-      "2017-04-15T08:00:00Z": 2417,
-      "2017-04-15T09:00:00Z": 2837
-    },
-    "podcast_uuid": "0fb72d80-4c95-0130-e3d5-723c91aeae46",
-    "title": "TYT - 04.14.17: North Korea, Friendly Fire, Detention Centers, and Butt Jeans",
-    "playCount": 5,
-    "uuid": "fe14e600-03ad-0135-ec79-4114446340cb",
-    "podcast_title": "The Young Turks - FREE (Audio)"
-  },
-  {
-    "playedTime": 6516,
-    "firstPlayed": "2017-04-15T05:20:00Z",
-    "lastPlayed": "2017-04-15T08:00:00Z",
-    "playedProportion": 1.0010754340144414,
-    "status": {
-      "2017-04-14T22:00:00Z": 0,
-      "2017-04-15T05:20:00Z": 2,
-      "2017-04-15T08:00:00Z": 3
-    },
-    "duration": "6509",
-    "play": {
-      "2017-04-15T05:50:00Z": 837,
-      "2017-04-15T06:30:00Z": 3566,
-      "2017-04-15T07:20:00Z": 6236,
-      "2017-04-15T06:20:00Z": 2676,
-      "2017-04-15T08:00:00Z": 6516,
-      "2017-04-15T07:00:00Z": 5366,
-      "2017-04-15T05:20:00Z": 5,
-      "2017-04-15T06:00:00Z": 1767,
-      "2017-04-14T22:00:00Z": 0,
-      "2017-04-15T06:50:00Z": 4476
-    },
-    "podcast_uuid": "8d728390-249c-0131-73be-723c91aeae46",
-    "title": "#71 — What Is Technology Doing to Us?",
-    "playCount": 10,
-    "uuid": "e9897560-0388-0135-ec79-4114446340cb",
-    "podcast_title": "Waking Up with Sam Harris"
-  },
-  {
-    "playedTime": 843,
-    "firstPlayed": "2017-04-14T17:50:00Z",
-    "lastPlayed": "2017-04-14T19:00:00Z",
-    "playedProportion": 0.4546925566343042,
-    "status": {
-      "2017-04-14T17:00:00Z": 0,
-      "2017-04-14T17:50:00Z": 2,
-      "2017-04-14T19:00:00Z": 3
-    },
-    "duration": "1854",
-    "play": {
-      "2017-04-14T17:00:00Z": 0,
-      "2017-04-14T17:50:00Z": 275,
-      "2017-04-14T18:00:00Z": 659,
-      "2017-04-14T18:10:00Z": 823,
-      "2017-04-14T19:00:00Z": 843
-    },
-    "podcast_uuid": "74a35900-0423-012e-f9a0-00163e1b201c",
-    "title": "China fears conflict over North Korea",
-    "playCount": 5,
-    "uuid": "2452b6f0-035b-0135-ec79-4114446340cb",
-    "podcast_title": "Global News Podcast"
-  },
-  {
-    "playedTime": 11562,
-    "firstPlayed": "2017-04-14T08:10:00Z",
-    "lastPlayed": "2017-04-14T13:00:00Z",
-    "playedProportion": 0.9994813278008299,
-    "status": {
-      "2017-04-14T08:10:00Z": 2,
-      "2017-04-14T13:00:00Z": 3
-    },
-    "duration": 11568,
-    "play": {
-      "2017-04-14T08:10:00Z": 554,
-      "2017-04-14T08:20:00Z": 1574,
-      "2017-04-14T08:40:00Z": 2334,
-      "2017-04-14T08:50:00Z": 3234,
-      "2017-04-14T09:50:00Z": 6653,
-      "2017-04-14T13:00:00Z": 11562
-    },
-    "podcast_uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
-    "title": "920: \"Succulent\"",
-    "playCount": 6,
-    "uuid": "a9ebef50-02bc-0135-ec79-4114446340cb",
-    "podcast_title": "No Agenda"
-  },
-  {
-    "playedTime": 1397,
-    "firstPlayed": "2017-04-14T07:40:00Z",
-    "lastPlayed": "2017-04-14T09:00:00Z",
-    "playedProportion": 0.9957234497505346,
-    "status": {
-      "2017-04-14T04:00:00Z": 3,
-      "2017-04-14T04:20:00Z": 1,
-      "2017-04-14T07:40:00Z": 2,
-      "2017-04-14T09:00:00Z": 3
-    },
-    "duration": 1403,
-    "play": {
-      "2017-04-14T07:40:00Z": 148,
-      "2017-04-14T07:50:00Z": 1038,
-      "2017-04-14T09:00:00Z": 1397
-    },
-    "podcast_uuid": "0cc43410-1d2f-012e-0175-00163e1b201c",
-    "title": "255- The Architect of Hollywood",
-    "playCount": 3,
-    "uuid": "ab9ffd30-009b-0135-ec79-4114446340cb",
-    "podcast_title": "99% Invisible"
-  },
-  {
-    "playedTime": 513,
-    "firstPlayed": "2017-04-14T01:40:00Z",
-    "lastPlayed": "2017-04-14T01:50:00Z",
-    "playedProportion": 0.17043189368770764,
-    "status": {
-      "2017-04-13T12:00:00Z": 0,
-      "2017-04-14T01:40:00Z": 2,
-      "2017-04-14T09:00:00Z": 3
-    },
-    "duration": "3010",
-    "play": {
-      "2017-04-13T12:00:00Z": 0,
-      "2017-04-14T01:40:00Z": 246,
-      "2017-04-14T01:50:00Z": 513
-    },
-    "podcast_uuid": "5e6125f0-0424-012e-f9a0-00163e1b201c",
-    "title": "Rosa Luxemburg",
-    "playCount": 3,
-    "uuid": "7c53e460-0266-0135-ec79-4114446340cb",
-    "podcast_title": "In Our Time"
-  },
-  {
-    "playedTime": 3358,
-    "firstPlayed": "2017-04-14T04:50:00Z",
-    "lastPlayed": "2017-04-14T08:00:00Z",
-    "playedProportion": 0.9976232917409388,
-    "status": {
-      "2017-04-12T18:00:00Z": 0,
-      "2017-04-14T04:50:00Z": 2,
-      "2017-04-14T08:00:00Z": 3
-    },
-    "duration": "3366",
-    "play": {
-      "2017-04-14T04:50:00Z": 213,
-      "2017-04-14T07:20:00Z": 2628,
-      "2017-04-12T18:00:00Z": 0,
-      "2017-04-14T08:00:00Z": 3358,
-      "2017-04-14T06:10:00Z": 2131,
-      "2017-04-14T07:00:00Z": 2608,
-      "2017-04-14T05:10:00Z": 1002,
-      "2017-04-14T05:50:00Z": 1221,
-      "2017-04-14T06:40:00Z": 2274,
-      "2017-04-14T07:30:00Z": 2948
-    },
-    "podcast_uuid": "5e27c480-3fcb-0133-be19-0d11918ab357",
-    "title": "Forrest Shaw and the solar system's organ.",
-    "playCount": 10,
-    "uuid": "61f6bbf0-01d1-0135-ec79-4114446340cb",
-    "podcast_title": "Surely You're Joking"
-  },
-  {
-    "playedTime": 811,
-    "firstPlayed": "2017-04-14T04:00:00Z",
-    "lastPlayed": "2017-04-14T05:00:00Z",
-    "playedProportion": 0.8101898101898102,
-    "status": {
-      "2017-04-14T00:00:00Z": 0,
-      "2017-04-14T04:00:00Z": 2,
-      "2017-04-14T05:00:00Z": 3
-    },
-    "duration": 1001,
-    "play": {
-      "2017-04-14T00:00:00Z": 0,
-      "2017-04-14T04:00:00Z": 12,
-      "2017-04-14T04:40:00Z": 101,
-      "2017-04-14T05:00:00Z": 811
-    },
-    "podcast_uuid": "262069e0-e7df-0132-0ef7-059c869cc4eb",
-    "title": "The week ahead: Turkey's fragile future",
-    "playCount": 4,
-    "uuid": "e24d7100-02d2-0135-ec79-4114446340cb",
-    "podcast_title": "The Economist Radio (All audio)"
-  },
-  {
-    "playedTime": 348,
-    "firstPlayed": "2017-04-14T02:00:00Z",
-    "lastPlayed": "2017-04-14T02:00:00Z",
-    "playedProportion": 0.10619469026548672,
-    "status": {
-      "2017-04-14T02:00:00Z": 3
-    },
-    "duration": 3277,
-    "play": {
-      "2017-04-14T02:00:00Z": 348
-    },
-    "podcast_uuid": "c3adff20-1b2f-012e-0081-00163e1b201c",
-    "title": "Biocentrism: Rethinking Time, Space, Consciousness, and the Illusion of Death (Encore Oct 4, 2016)",
-    "playCount": 1,
-    "uuid": "a418de20-02aa-0135-ec79-4114446340cb",
-    "podcast_title": "Ideas from CBC Radio (Highlights)"
-  },
-  {
-    "playedTime": 2569,
-    "firstPlayed": "2017-04-13T23:50:00Z",
-    "lastPlayed": "2017-04-14T02:00:00Z",
-    "playedProportion": 0.9996108949416342,
-    "status": {
-      "2017-04-13T04:00:00Z": 0,
-      "2017-04-13T23:50:00Z": 2,
-      "2017-04-14T02:00:00Z": 3
-    },
-    "duration": "2570",
-    "play": {
-      "2017-04-13T04:00:00Z": 0,
-      "2017-04-13T23:50:00Z": 237,
-      "2017-04-14T00:00:00Z": 683,
-      "2017-04-14T00:50:00Z": 892,
-      "2017-04-14T01:00:00Z": 1294,
-      "2017-04-14T01:20:00Z": 2179,
-      "2017-04-14T01:30:00Z": 2559,
-      "2017-04-14T02:00:00Z": 2569
-    },
-    "podcast_uuid": "d81fbcb0-0422-012e-f9a0-00163e1b201c",
-    "title": "Earth 2.0: What Would Our Economy Look Like?",
-    "playCount": 8,
-    "uuid": "a2cbf7c0-0228-0135-ec79-4114446340cb",
-    "podcast_title": "Freakonomics Radio"
   }
 ]

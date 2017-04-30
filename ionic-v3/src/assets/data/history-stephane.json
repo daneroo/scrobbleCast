@@ -6,7 +6,8 @@
     "playedProportion": 0.9835495096488454,
     "status": {
       "2017-04-21T05:00:00Z": 0,
-      "2017-04-27T23:20:00Z": 2
+      "2017-04-27T23:20:00Z": 2,
+      "2017-04-30T18:00:00Z": 3
     },
     "duration": "3161",
     "play": {
@@ -21,6 +22,26 @@
     "playCount": 5,
     "uuid": "4c62d9d0-0876-0135-ec96-4114446340cb",
     "podcast_title": "TED Radio Hour"
+  },
+  {
+    "playedTime": 608,
+    "firstPlayed": "2017-04-30T17:50:00Z",
+    "lastPlayed": "2017-04-30T17:50:00Z",
+    "playedProportion": 0.5049833887043189,
+    "status": {
+      "2017-04-26T06:00:00Z": 0,
+      "2017-04-30T17:50:00Z": 2
+    },
+    "duration": 1204,
+    "play": {
+      "2017-04-26T06:00:00Z": 0,
+      "2017-04-30T17:50:00Z": 608
+    },
+    "podcast_uuid": "dc0f58f0-e3b7-012f-94fb-723c91aeae46",
+    "title": "AI Learns from Us. So It Learns Bias.",
+    "playCount": 2,
+    "uuid": "28355340-0c6e-0135-ecbb-4114446340cb",
+    "podcast_title": "Note to Self"
   },
   {
     "playedTime": 947,

@@ -17,7 +17,10 @@
       </ion-thumbnail>
       <h2>{{item.title}}</h2>
       <h3>{{item.podcast_title}}</h3>
-      <ion-note item-right>{{item.lastPlayed}}</ion-note>
+      <ion-note item-right>
+        {{item.lastPlayed | amTimeAgo}}
+        <br> {{item.playedProportion | percent:'2.0-0'}}
+      </ion-note>
       <pre *ngIf="isSelected(item)">{{item|json}}</pre>
     </ion-item>
   </ion-list>

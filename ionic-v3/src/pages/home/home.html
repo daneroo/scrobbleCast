@@ -12,11 +12,12 @@
 
   <ion-list>
     <ion-item *ngFor="let item of items" (click)="itemTapped($event, item)">
-      <ion-avatar item-left>
+      <ion-thumbnail item-left>
         <img src="http://www.cbc.ca/radio/podcasts/images/promo-quirks-segments.jpg">
-      </ion-avatar>
+      </ion-thumbnail>
       <h2>{{item.title}}</h2>
       <h3>{{item.podcast_title}}</h3>
+      <ion-note item-right>{{item.lastPlayed}}</ion-note>
       <pre *ngIf="isSelected(item)">{{item|json}}</pre>
     </ion-item>
   </ion-list>

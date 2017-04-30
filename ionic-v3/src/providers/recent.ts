@@ -12,13 +12,13 @@ import 'rxjs/add/operator/catch';
 */
 @Injectable()
 export class Recent {
-
+  url: string = '/assets/data/history-daniel.json';
   constructor(public http: Http) {
     console.log('Hello Recent Provider');
   }
 
   getItems() {
-    return this.http.get('/assets/data/history-daniel.json')
+    return this.http.get(this.url)
       .map(this.extractData)
       .catch(this.handleError);;
   }

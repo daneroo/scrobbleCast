@@ -19,7 +19,7 @@
       <h3>{{item.podcast_title}}</h3>
       <ion-note item-right>
         {{item.lastPlayed | amTimeAgo}}
-        <br> {{item.playedProportion | percent:'2.0-0'}}
+        <span *ngIf="item.playedProportion<.95">({{item.playedProportion | percent:'2.0-0'}})</span>
       </ion-note>
       <pre *ngIf="isSelected(item)">{{item|json}}</pre>
     </ion-item>

@@ -1,0 +1,27 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Home</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <h3>Recent episodes</h3>
+
+  <ion-list>
+    <ion-item *ngFor="let item of items" (click)="itemTapped($event, item)">
+      <ion-thumbnail item-left>
+        <img src="http://www.cbc.ca/radio/podcasts/images/promo-quirks-segments.jpg">
+      </ion-thumbnail>
+      <h2>{{item.title}}</h2>
+      <h3>{{item.podcast_title}}</h3>
+      <ion-note item-right>
+        {{item.lastPlayed | amTimeAgo}}
+        <span *ngIf="item.playedProportion<.95">({{item.playedProportion | percent:'2.0-0'}})</span>
+      </ion-note>
+      <pre *ngIf="isSelected(item)">{{item|json}}</pre>
+    </ion-item>
+  </ion-list>
+</ion-content>

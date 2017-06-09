@@ -1,94 +1,25 @@
 [
   {
-    "playedTime": 2753,
-    "firstPlayed": "2017-05-03T15:10:00Z",
-    "lastPlayed": "2017-05-03T18:00:00Z",
-    "playedProportion": 0.6511352885525071,
+    "playedTime": 1471,
+    "firstPlayed": "2017-05-28T23:10:00Z",
+    "lastPlayed": "2017-05-28T23:30:00Z",
+    "playedProportion": 0.4956199460916442,
     "status": {
-      "2017-05-02T10:00:00Z": 0,
-      "2017-05-03T15:10:00Z": 2,
-      "2017-05-03T18:00:00Z": 3
+      "2017-05-25T12:00:00Z": 0,
+      "2017-05-28T23:10:00Z": 2,
+      "2017-06-02T02:00:00Z": 3
     },
-    "duration": "4228",
+    "duration": "2968",
     "play": {
-      "2017-05-02T10:00:00Z": 0,
-      "2017-05-03T15:10:00Z": 2102,
-      "2017-05-03T15:20:00Z": 2737,
-      "2017-05-03T18:00:00Z": 2753
+      "2017-05-25T12:00:00Z": 0,
+      "2017-05-28T23:10:00Z": 511,
+      "2017-05-28T23:30:00Z": 1471
     },
-    "podcast_uuid": "2743d720-0edf-0133-2204-059c869cc4eb",
-    "title": "Data Intensive Applications with Martin Kleppmann",
-    "playCount": 4,
-    "uuid": "6179d540-1146-0135-52f3-452518e2d253",
-    "thumbnail_url": "http://softwaredaily.wpengine.com/wp-content/uploads/powerpress/SED_square_solid_bg.png",
-    "podcast_title": "Software Engineering Daily"
-  },
-  {
-    "playedTime": 608,
-    "firstPlayed": "2017-04-30T17:50:00Z",
-    "lastPlayed": "2017-04-30T17:50:00Z",
-    "playedProportion": 0.5049833887043189,
-    "status": {
-      "2017-04-26T06:00:00Z": 0,
-      "2017-04-30T17:50:00Z": 2,
-      "2017-05-02T02:00:00Z": 3
-    },
-    "duration": 1204,
-    "play": {
-      "2017-04-26T06:00:00Z": 0,
-      "2017-04-30T17:50:00Z": 608
-    },
-    "podcast_uuid": "dc0f58f0-e3b7-012f-94fb-723c91aeae46",
-    "title": "AI Learns from Us. So It Learns Bias.",
-    "playCount": 2,
-    "uuid": "28355340-0c6e-0135-ecbb-4114446340cb",
-    "thumbnail_url": "https://media2.wnyc.org/i/1400/1400/l/80/1/N2S_WNYCStudios_1400.jpg",
-    "podcast_title": "Note to Self"
-  },
-  {
-    "playedTime": 3109,
-    "firstPlayed": "2017-04-27T23:20:00Z",
-    "lastPlayed": "2017-04-28T00:30:00Z",
-    "playedProportion": 0.9835495096488454,
-    "status": {
-      "2017-04-21T05:00:00Z": 0,
-      "2017-04-27T23:20:00Z": 2,
-      "2017-04-30T18:00:00Z": 3
-    },
-    "duration": "3161",
-    "play": {
-      "2017-04-21T05:00:00Z": 0,
-      "2017-04-27T23:20:00Z": 881,
-      "2017-04-27T23:30:00Z": 1475,
-      "2017-04-28T00:10:00Z": 3024,
-      "2017-04-28T00:30:00Z": 3109
-    },
-    "podcast_uuid": "052df5e0-72b8-012f-1d57-525400c11844",
-    "title": "The Digital Industrial Revolution",
-    "playCount": 5,
-    "uuid": "4c62d9d0-0876-0135-ec96-4114446340cb",
-    "thumbnail_url": "https://media.npr.org/assets/img/2015/03/18/ted_sq-3426270a541795b78233a698dd7965d407545cf3.jpg?s=1400",
-    "podcast_title": "TED Radio Hour"
-  },
-  {
-    "playedTime": 947,
-    "firstPlayed": "2017-04-28T00:00:00Z",
-    "lastPlayed": "2017-04-28T00:00:00Z",
-    "playedProportion": 1,
-    "status": {
-      "2017-04-24T18:00:00Z": 0,
-      "2017-04-28T00:00:00Z": 3
-    },
-    "duration": "947",
-    "play": {
-      "2017-04-24T18:00:00Z": 0,
-      "2017-04-28T00:00:00Z": 947
-    },
-    "podcast_uuid": "18910720-189c-0132-b004-5f4c86fd3263",
-    "title": "Docker's Quest for Simplicity with the Evolution of Containerd",
-    "playCount": 2,
-    "uuid": "753e6940-0b3d-0135-ecbb-4114446340cb",
-    "thumbnail_url": "http://i1.sndcdn.com/avatars-000115856938-s0r47h-original.png",
-    "podcast_title": "The New Stack Makers"
+    "podcast_uuid": "a56c9e00-5332-0132-d11f-5f4c86fd3263",
+    "title": "Data science and deep learning in retail",
+    "playCount": 3,
+    "uuid": "ce184000-236a-0135-52f8-452518e2d253",
+    "thumbnail_url": "http://cdn.oreillystatic.com/radar/datashow-podcast/data-podcast-1400x1400.png",
+    "podcast_title": "O'Reilly Data Show - O'Reilly Media Podcast"
   }
 ]

@@ -11,8 +11,13 @@ This is a reboot of the front-end using ionic (v3) using angular-4.
 ionic serve
 ```
 
+## Copy static assets to `src/assets/data`?
+```
+(cd ../../history; ./get.sh; time npm start)
+scp -p ../../history/data/history-*.json src/assets/data/
+```
+
 ## Build
-Copy static assets to `src/assets/data`?
 ```
 ionic build --prod
 http-server www

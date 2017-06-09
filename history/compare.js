@@ -5,7 +5,7 @@ const immutable = require('immutable')
 
 compareAll()
 
-function compareAll() {
+function compareAll () {
   // const hosts = ['darwin', 'dirac', 'euler'].map(h => h + '.imetrical.com')
   // const hosts = ['darwin', 'dirac'].map(h => h + '.imetrical.com')
   const hosts = ['dirac', 'euler'].map(h => h + '.imetrical.com')
@@ -28,28 +28,27 @@ function compareAll() {
   })
 }
 
-// apply f_tuph forall types, users, and pairs of hosts
+// apply forAllTypesUsersParirOfHosts forall types, users, and pairs of hosts
 // f_tuh(t,u,[h1,h2])
-function combinatorics(ts, us, hs, f_tuph) {
+function combinatorics (ts, us, hs, forAllTypesUsersParirOfHosts) {
   ts.forEach(t => {
     us.forEach(u => {
       // console.log(`- ${t}-${u}`)
       pairs(hs).forEach(([h1, h2]) => {
-        f_tuph(t, u, [h1, h2])
+        forAllTypesUsersParirOfHosts(t, u, [h1, h2])
       })
     })
   })
 }
 
 // quick compare histories
-function quickCompareHistory([m1, m2]) {
-  console.log(` equals `,immutable.is(m1,m2))
-  const [nm1,nm2] = [m1,m2].map(removeHistoryAndMetaFromMap)
-  console.log(` w/o hist,meta `,immutable.is(nm1,nm2))
-
+function quickCompareHistory ([m1, m2]) { // eslint-disable-line no-unused-vars
+  console.log(` equals `, immutable.is(m1, m2))
+  const [nm1, nm2] = [m1, m2].map(removeHistoryAndMetaFromMap)
+  console.log(` w/o hist,meta `, immutable.is(nm1, nm2))
 }
 // compare histories
-function compareHistory([m1, m2]) {
+function compareHistory ([m1, m2]) {
   const diffs = removeCommon([m1, m2])
   // console.log('=diffs', JSON.stringify(diffs, null, 2))
 
@@ -57,11 +56,11 @@ function compareHistory([m1, m2]) {
   console.log('=merged', JSON.stringify(merged, null, 2))
 }
 
-function removeHistoryAndMetaFromMap(m) {
+function removeHistoryAndMetaFromMap (m) {
   return m.map(v => v.delete('history').delete('meta'))
 }
 // these now have removed common (do they have equivalent keys?)
-function prettyMerge([m1, m2]) {
+function prettyMerge ([m1, m2]) {
   const k1 = immutable.Set(m1.keys())
   const k2 = immutable.Set(m2.keys())
   const allkeys = k1.union(k2)
@@ -70,15 +69,15 @@ function prettyMerge([m1, m2]) {
     const m2k = m2.get(k)
     if (!immutable.Map.isMap(m1k) || !immutable.Map.isMap(m2k)) {
       // return [k, [m1k, m2k]] //leaf
-      const show = (x) => (typeof x == 'undefined' || x === null) ? '?' : x
-      return [k, [show(m1k), show(m2k)].join(' => ')] //leaf
+      const show = (x) => (typeof x === 'undefined' || x === null) ? '?' : x
+      return [k, [show(m1k), show(m2k)].join(' => ')] // leaf
     }
     return [k, prettyMerge([m1k, m2k])]
   }))
   return merged
 }
 // remove common elements from 2 maps => returns both maps
-function removeCommon([m1, m2]) {
+function removeCommon ([m1, m2]) {
   if (!immutable.Map.isMap(m1) || !immutable.Map.isMap(m2)) {
     // console.log('!diffs', JSON.stringify([m1, m2], null, 2))
     return [m1, m2]
@@ -102,11 +101,11 @@ function removeCommon([m1, m2]) {
   return [m1d, m2d]
 }
 
-function short(long) {
+function short (long) {
   return long.split('.')[0]
 }
 // console.log('pairs',pairs([1, 2, 3]))
-function pairs(list) {
+function pairs (list) {
   if (list.length < 2) { return [] }
   const first = list[0]
   const rest = list.slice(1)
@@ -114,7 +113,7 @@ function pairs(list) {
   return restpairs.concat(pairs(rest))
 }
 // load a  History file (list of maps(all have uuid))
-function loadHistory(f) {
+function loadHistory (f) {
   // console.log('loading', f)
   // const o = [{a:1,b:[2,22]},{a:3,b:[4,44]}]
   const o = JSON.parse(fs.readFileSync('data/' + f, 'utf8'))

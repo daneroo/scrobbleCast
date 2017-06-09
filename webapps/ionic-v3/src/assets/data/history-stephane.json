@@ -90,33 +90,5 @@
     "uuid": "753e6940-0b3d-0135-ecbb-4114446340cb",
     "thumbnail_url": "http://i1.sndcdn.com/avatars-000115856938-s0r47h-original.png",
     "podcast_title": "The New Stack Makers"
-  },
-  {
-    "playedTime": 4182,
-    "firstPlayed": "2017-04-21T18:00:00Z",
-    "lastPlayed": "2017-04-21T19:00:00Z",
-    "playedProportion": 1,
-    "status": {
-      "2017-04-21T10:00:00Z": 0,
-      "2017-04-21T18:00:00Z": 2,
-      "2017-04-21T19:00:00Z": 3
-    },
-    "duration": "4182",
-    "play": {
-      "2017-04-21T10:00:00Z": 0,
-      "2017-04-21T18:00:00Z": 769,
-      "2017-04-21T18:10:00Z": 1217,
-      "2017-04-21T18:20:00Z": 1729,
-      "2017-04-21T18:30:00Z": 2241,
-      "2017-04-21T18:40:00Z": 2753,
-      "2017-04-21T18:50:00Z": 3522,
-      "2017-04-21T19:00:00Z": 4182
-    },
-    "podcast_uuid": "2743d720-0edf-0133-2204-059c869cc4eb",
-    "title": "21 with Balaji Srinivasan",
-    "playCount": 8,
-    "uuid": "63a18b70-08a1-0135-ecad-4114446340cb",
-    "thumbnail_url": "http://softwaredaily.wpengine.com/wp-content/uploads/powerpress/SED_square_solid_bg.png",
-    "podcast_title": "Software Engineering Daily"
   }
 ]

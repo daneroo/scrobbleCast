@@ -10,3 +10,4 @@ couchdb/
 podcast-history-*.json
 episode-history-*.json
 episode-play-history-*.json
+.vscode/

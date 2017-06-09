@@ -1,11 +1,11 @@
-'use strict';
+'use strict'
 
 // dependencies - core-public-internal
-var Promise = require('bluebird');
-var cron = require('cron');
-var CronJob = cron.CronJob;
-var log = require('./log');
-var tasks = require('./tasks');
+var Promise = require('bluebird')
+var cron = require('cron')
+var CronJob = cron.CronJob
+var log = require('./log')
+var tasks = require('./tasks')
 
 // globals
 var allCredentials = [] // injected in start(injectedCredentials) below
@@ -29,61 +29,60 @@ var recurrence = {
   // everyHourOnTheHour: '10 0 * * * *',
   // everyTenMinutesOffsetByThree: '10 3-59/10 * * * *',
   everyTenMinutesOffsetByFour: '10 4-59/10 * * * *',
-  everyTenMinutesOffsetByFive: '10 5-59/10 * * * *',
+  everyTenMinutesOffsetByFive: '10 5-59/10 * * * *'
   // everyMinute: '10 * * * * *'
-};
+}
 
 // serial execution of <task> for each credentialed user
 // perform dedup task on all users, after main tasks are completed
 // returns a function
-function forEachUser(task) {
+function forEachUser (task) {
   return function () {
     return Promise.each(allCredentials, task)
       .then(function () {
-        return Promise.each(allCredentials, tasks.dedup);
+        return Promise.each(allCredentials, tasks.dedup)
       })
       .catch(function (error) {
         // TODO, might want to catch before tasks.dedup is called, to make sure dedup always runs...
-        console.error('cron:error', error);
-      });
-  };
+        console.error('cron:error', error)
+      })
+  }
 }
 // auto-starts
-function runJob(task, when, perUser) {
-  var message = 'Starting CronJob:';
+function runJob (task, when, perUser) {
+  var message = 'Starting CronJob:'
   if (task.name) { // depends on the finction having been defined non-anonymously
-    message += ' ' + task.name;
+    message += ' ' + task.name
   }
   if (perUser) { // depends on the finction having been defined non-anonymously
-    message += ' ' + '(user)';
-    task = forEachUser(task);
+    message += ' ' + '(user)'
+    task = forEachUser(task)
   }
-  message += ' ' + when;
+  message += ' ' + when
 
-  log.info(message);
+  log.info(message)
 
   var job = new CronJob({
     // timeZone: "America/Montreal" // npm install time, if you want to use TZ
     cronTime: when,
     onTick: task,
     start: true // default is true, else, if start:false, use job.start()
-  });
-  return job; // if you ever want to stop it.
+  })
+  return job // if you ever want to stop it.
 }
 
-
-function start(injectedCredentials) {
+function start (injectedCredentials) {
   // set the module golbal variable
   allCredentials = injectedCredentials
 
-  log.info('Starting Cron');
+  log.info('Starting Cron')
   // auto-start all three
-  runJob(tasks.deep, recurrence.everyDayAtMidnight, true); // var deep = ...
-  runJob(tasks.shallow, recurrence.everyHourExceptMidnight, true); // var shallow =
-  runJob(tasks.quick, recurrence.everyTenExceptOnTheHour, true); // var quick =
-  runJob(tasks.logcheck, recurrence.everyTenMinutesOffsetByFour, false); // var logcheck =
-  runJob(tasks.sync, recurrence.everyTenMinutesOffsetByFive, false); // var sync =
+  runJob(tasks.deep, recurrence.everyDayAtMidnight, true) // var deep = ...
+  runJob(tasks.shallow, recurrence.everyHourExceptMidnight, true) // var shallow =
+  runJob(tasks.quick, recurrence.everyTenExceptOnTheHour, true) // var quick =
+  runJob(tasks.logcheck, recurrence.everyTenMinutesOffsetByFour, false) // var logcheck =
+  runJob(tasks.sync, recurrence.everyTenMinutesOffsetByFive, false) // var sync =
 }
 exports = module.exports = {
   start: start
-};
+}

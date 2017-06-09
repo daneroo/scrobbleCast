@@ -1,6 +1,6 @@
 // Shared configrations
-const os = require('os');
-const fs = require('fs');
+const os = require('os')
+const fs = require('fs')
 
 module.exports = {
   hostname: process.env.HOSTNAME || os.hostname(),
@@ -18,4 +18,4 @@ module.exports = {
     user: 'postgres'
     // password: null
   }
-};
+}

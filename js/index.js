@@ -1,23 +1,23 @@
-'use strict';
+'use strict'
 
 // This is meant to exercise the fetch API
 // Can use it to test under request error conditions
 
 // dependencies - core-public-internal
-var os = require('os');
-var Promise = require('bluebird');
-var PocketAPI = require('./lib/pocketAPI');
-var utils = require('./lib/utils');
-var log = require('./lib/log');
+var os = require('os')
+var Promise = require('bluebird')
+var PocketAPI = require('./lib/pocketAPI')
+var utils = require('./lib/utils')
+var log = require('./lib/log')
 // var tasks = require('./lib/tasks');
 
-var allCredentials = require('./credentials.json');
+var allCredentials = require('./credentials.json')
 
-function tryemall(credentials) {
+function tryemall (credentials) {
   log.info('Scrape Smoke Test', {
     host: os.hostname()
-  });
-  log.info('Start', credentials.name);
+  })
+  log.info('Start', credentials.name)
 
   // use tasks instead od apiSession
   // return tasks.quick(credentials)
@@ -28,8 +28,7 @@ function tryemall(credentials) {
   // Use apiSession
   var apiSession = new PocketAPI({
     stamp: utils.stamp('10minutes')
-  });
-
+  })
 
   return apiSession.sign_in(credentials)
     .then(apiSession.podcasts())
@@ -37,9 +36,9 @@ function tryemall(credentials) {
       if (response && response.length > 0) {
         log.verbose('Observed stamp', {
           stamp: response[0].__stamp
-        });
+        })
       }
-      log.info('  01-podcasts', response.length);
+      log.info('  01-podcasts', response.length)
     })
     .then(apiSession.podcastPages({
       // maxPage:3,
@@ -52,51 +51,49 @@ function tryemall(credentials) {
       // uuid:'89beea90-5edf-012e-25b7-00163e1b201c'
     }))
     .then(function (response) {
-      log.info('  02-podcasts', response.length);
+      log.info('  02-podcasts', response.length)
     })
     .then(apiSession.new_releases())
     .then(function (response) {
-      log.info('  03-new_releases', response.length);
+      log.info('  03-new_releases', response.length)
     })
     .then(apiSession.in_progress())
     .then(function (response) {
-      log.info('  04-in_progress', response.length);
+      log.info('  04-in_progress', response.length)
     })
-    .then(function (/*response*/) {
-      log.info('Done', credentials.name);
-      return credentials.name;
+    .then(function (/* response */) {
+      log.info('Done', credentials.name)
+      return credentials.name
     })
     .catch(function (error) {
-      log.info('Error', JSON.stringify(error, null, 2));
+      log.info('Error', JSON.stringify(error, null, 2))
       // throw error;
-      return credentials.name;
-    });
+      return credentials.name
+    })
 }
 
-function iteration() {
+function iteration () {
   Promise.each(allCredentials, function (credentials) {
-    return tryemall(credentials);
+    return tryemall(credentials)
     // return tasks.quick(credentials);
     // return tasks.shallow(credentials);
     // return tasks.deep(credentials);
   }).then(function () {
-    log.info('Done all');
-  });
-
+    log.info('Done all')
+  })
 }
 
-const iterations = 1;
-const intervalMS = 10000;
+const iterations = 1
+const intervalMS = 10000
 if (iterations > 0) {
   // first invocation
-  iteration();
+  iteration()
 
   if (iterations > 1) {
     // a few more invocations
-    var itvl = setInterval(iteration, intervalMS);
+    var itvl = setInterval(iteration, intervalMS)
     setTimeout(function () {
-      clearInterval(itvl);
-    }, iterations * intervalMS);
+      clearInterval(itvl)
+    }, iterations * intervalMS)
   }
-
 }

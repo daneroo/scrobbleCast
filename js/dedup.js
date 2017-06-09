@@ -1,9 +1,9 @@
-'use strict';
+'use strict'
 
-var Promise = require('bluebird');
-var tasks = require('./lib/tasks');
+var Promise = require('bluebird')
+var tasks = require('./lib/tasks')
 
 // globals
-var allCredentials = require('./credentials.json');
+var allCredentials = require('./credentials.json')
 
-Promise.each(allCredentials, tasks.dedup);
+Promise.each(allCredentials, tasks.dedup)

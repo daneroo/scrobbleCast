@@ -1,18 +1,18 @@
-'use strict';
+'use strict'
 
 // pg implementation (save only)
 
 // dependencies - core-public-internal
-var Promise = require('bluebird');
-var _ = require('lodash');
-var log = require('../log');
-var utils = require('../utils');
+var Promise = require('bluebird')
+var _ = require('lodash')
+var log = require('../log')
+var utils = require('../utils')
 // these might be moved or exposed
-var pgu = require('./pg-utils');
+var pgu = require('./pg-utils')
 
 // var sinkFile = require('../sink/file');
 
-const DIGEST_ALGORITHM = 'sha256';
+const DIGEST_ALGORITHM = 'sha256'
 
 // Exported API
 exports = module.exports = {
@@ -30,9 +30,9 @@ exports = module.exports = {
   saveAll: saveAll,
   init: pgu.init, // setup the database pool, ddl...
   end: pgu.end
-};
+}
 
-function digests(syncParams) {
+function digests (syncParams) {
   syncParams = syncParams || {}
   const nmParams = {
     DIGEST_ALGORITHM: DIGEST_ALGORITHM,
@@ -47,19 +47,18 @@ function digests(syncParams) {
     `SELECT encode(digest(item::text, $[DIGEST_ALGORITHM]), 'hex') as digest
     FROM items
     WHERE __stamp < $[before] AND __stamp >= $[since]
-    ORDER BY __stamp desc,digest`;
+    ORDER BY __stamp desc,digest`
 
   return pgu.db.any(sql, nmParams)
     .then(function (rows) {
-      log.verbose('pg:digest ', { rows: rows.length });
+      log.verbose('pg:digest ', { rows: rows.length })
       return rows.map(r => {
-        return r.digest;
-      });
-    });
-
+        return r.digest
+      })
+    })
 }
 
-function getByDigest(digest) {
+function getByDigest (digest) {
   const nmParams = {
     digest: digest,
     DIGEST_ALGORITHM: DIGEST_ALGORITHM
@@ -71,48 +70,47 @@ function getByDigest(digest) {
   const sql =
     `SELECT item
     FROM items
-    WHERE $[digest]=encode(digest(item::text, $[DIGEST_ALGORITHM]), 'hex')`;
+    WHERE $[digest]=encode(digest(item::text, $[DIGEST_ALGORITHM]), 'hex')`
 
   return pgu.db.one(sql, nmParams)
     .then(function (row) {
-      log.verbose('pg:getByDigest ', row);
-      return row.item;
-    });
-
+      log.verbose('pg:getByDigest ', row)
+      return row.item
+    })
 }
 
 // return Promise.each(rows)
 // TODO(daneroo): but might better return map[Series] or spex, or streaming query
-function load(opts, itemHandler) {
-  opts = opts || {};
-  itemHandler = itemHandler || noop; //noop
-  opts.prefix = opts.prefix || '';
+function load (opts, itemHandler) {
+  opts = opts || {}
+  itemHandler = itemHandler || noop // noop
+  opts.prefix = opts.prefix || ''
   if (!opts.filter.__user) {
-    return Promise.reject(new Error('file:load missing required opt filter.__user'));
+    return Promise.reject(new Error('file:load missing required opt filter.__user'))
   }
-  const sql = 'select item from items where __user=$1 order by __user,__stamp,__type,uuid,__sourceType';
+  const sql = 'select item from items where __user=$1 order by __user,__stamp,__type,uuid,__sourceType'
   return pgu.db.any(sql, [opts.filter.__user])
     .then(function (rows) {
-      log.verbose('pg:load ', { rows: rows.length });
+      log.verbose('pg:load ', { rows: rows.length })
 
       // mapSeries?
       return Promise.each(rows, function (row) {
-        var item = row.item;
+        var item = row.item
         // log.debug('-pg:load Calling handler with item.stamp:%s',item.__stamp);
-        return itemHandler(item);
-      });
-    });
+        return itemHandler(item)
+      })
+    })
 
-  function noop(/*item*/) {
-    return Promise.resolve(true);
+  function noop (/* item */) {
+    return Promise.resolve(true)
   }
 }
 
 // opts: {check:first?} => Promise(status)
 // cases - insert ok, insert failed but duplicate is verified,
-function save(item) {
+function save (item) {
   // log.verbose('pg:save saving item', { user: item.__user, stamp: item.__stamp });
-  return checkThenSaveItem(item);
+  return checkThenSaveItem(item)
   // return saveButVerifyIfDuplicate(item);
 
   // speed benchamarks with ~135k items, redone with pgp
@@ -132,9 +130,9 @@ function save(item) {
 // let saver = saveByBatch(3)
 // saver(item1); saver(item2); saver(item3); saver(item4);
 // saver.flush(); // saves the pending items in accumulator
-function saveByBatch(batchSize) {
+function saveByBatch (batchSize) {
   // default batchSize
-  batchSize = batchSize || 1000;
+  batchSize = batchSize || 1000
   // speed benchamarks with ~135k items, redone with helpers.insert (multi)
   // batch=2 insert:empty     85 seconds : sum ok
   // batch=10 insert:empty    55 seconds : sum ok
@@ -149,36 +147,36 @@ function saveByBatch(batchSize) {
   // batch=1000 insert,each.save:full  179 seconds : sum ok
 
   // this is the saved item accumulator
-  let tosave = [];
+  let tosave = []
   const flush = () => {
     // log.verbose('-flush', tosave.length);
     return saveAll(tosave)
       .then((results) => {
-        tosave = [];
-        return results;
-      });
+        tosave = []
+        return results
+      })
   }
   const saver = (item) => {
-    tosave.push(item);
+    tosave.push(item)
     if (tosave.length >= batchSize) {
-      return flush();
+      return flush()
     }
-    return Promise.resolve(true);
-  };
+    return Promise.resolve(true)
+  }
 
   // add the flush function to the returned
   saver.flush = () => {
-    log.verbose('+last.flush called', tosave.length);
-    return flush();
+    log.verbose('+last.flush called', tosave.length)
+    return flush()
   }
-  return saver;
+  return saver
 }
 
 // TODO(daneroo): delete by digest
 //   OK for now as these 5 fields are a primary key
-function remove(item) {
-  const nmParams = pgu.getNamedParametersForItem(item);
-  delete nmParams.item;
+function remove (item) {
+  const nmParams = pgu.getNamedParametersForItem(item)
+  delete nmParams.item
 
   // watch camelcase for __sourcetype NOT __sourceType,
   // also ES6 templates use ${var}, helper can use {}, (), [], <>, //
@@ -186,7 +184,7 @@ function remove(item) {
     `DELETE from items WHERE
     __user=$[__user] AND __stamp=$[__stamp]
     AND __type=$[__type] AND uuid=$[uuid]
-    AND __sourcetype=$[__sourcetype]`;
+    AND __sourcetype=$[__sourcetype]`
 
   // log.verbose('pg:remove deleting item', nmParams);
 
@@ -194,16 +192,16 @@ function remove(item) {
   return pgu.db.result(sql, nmParams)
     .then(function (result) {
       if (result.rowCount !== 1) {
-        log.warn('delete rowCount!=1', result);
-        log.warn('delete rowCount!=1', nmParams);
+        log.warn('delete rowCount!=1', result)
+        log.warn('delete rowCount!=1', nmParams)
       }
-    });
+    })
 }
 
 // TODO(daneroo): figure out promised return value
-function saveAll(items) {
+function saveAll (items) {
   if (items.length === 0) {
-    return Promise.resolve(true);
+    return Promise.resolve(true)
   }
   // Bruteforce implementation:  items.each save!
   // return Promise.each(items, (item) => save(item));
@@ -220,27 +218,24 @@ function saveAll(items) {
         // fall back to iterating on each item.save
         // adjust return value on success
         return Promise.each(items, (item) => save(item))
-          .then(() => true);
-
+          .then(() => true)
       } else {
-        log.verbose('insert error', error);
-        throw error;
+        log.verbose('insert error', error)
+        throw error
       }
-    });
-
-
+    })
 }
 
-//TODO(daneroo) Right now, if confirmIdentical is false, but key is present, return false, but should throw!
+// TODO(daneroo) Right now, if confirmIdentical is false, but key is present, return false, but should throw!
 // implementations
-function checkThenSaveItem(item) {
+function checkThenSaveItem (item) {
   return confirmIdenticalByDigest(item)
     .then(isIdentical => {
-      return isIdentical || confirmIdentical(item);
+      return isIdentical || confirmIdentical(item)
     })
     .then(isIdentical => {
-      return isIdentical || saveItem(item);
-    });
+      return isIdentical || saveItem(item)
+    })
 }
 
 // Currently not used: commented for eslint
@@ -257,17 +252,17 @@ function checkThenSaveItem(item) {
 // }
 
 // Save each item : problem, how do we traverse keys in an ordered way?
-function saveItem(item) {
-  return pgu.db.none(pgu.insertSQL(item));
+function saveItem (item) {
+  return pgu.db.none(pgu.insertSQL(item))
 }
 
 // return item or null
 // copied from confirmIdentical()
 // not refactored because of detailed error loging in confirmIdentical()
 // exposed for proactive recociliation in sync
-function getByKey(item) {
-  const nmParams = pgu.getNamedParametersForItem(item);
-  delete nmParams.item;
+function getByKey (item) {
+  const nmParams = pgu.getNamedParametersForItem(item)
+  delete nmParams.item
 
   // watch camelcase for __sourcetype NOT __sourceType,
   // also ES6 templates use ${var}, helper can use {}, (), [], <>, //
@@ -275,19 +270,19 @@ function getByKey(item) {
     `SELECT item FROM items
     WHERE __user=$[__user] AND __stamp=$[__stamp]
     AND __type=$[__type] AND uuid=$[uuid]
-    AND __sourcetype=$[__sourcetype]`;
+    AND __sourcetype=$[__sourcetype]`
 
   return pgu.db.oneOrNone(sql, nmParams)
     .then(result => {
       if (result === null || !result.item) {
-        return null;
+        return null
       }
-      return result.item;
-    });
+      return result.item
+    })
 }
-function confirmIdentical(item) {
-  const nmParams = pgu.getNamedParametersForItem(item);
-  delete nmParams.item;
+function confirmIdentical (item) {
+  const nmParams = pgu.getNamedParametersForItem(item)
+  delete nmParams.item
 
   // watch camelcase for __sourcetype NOT __sourceType,
   // also ES6 templates use ${var}, helper can use {}, (), [], <>, //
@@ -295,64 +290,64 @@ function confirmIdentical(item) {
     `SELECT item FROM items
     WHERE __user=$[__user] AND __stamp=$[__stamp]
     AND __type=$[__type] AND uuid=$[uuid]
-    AND __sourcetype=$[__sourcetype]`;
+    AND __sourcetype=$[__sourcetype]`
 
   return pgu.db.oneOrNone(sql, nmParams)
     .then(result => {
       if (result === null || !result.item) {
-        return false;
+        return false
       }
-      var dbitem = result.item;
-      var isIdentical = _.isEqual(item, dbitem);
+      var dbitem = result.item
+      var isIdentical = _.isEqual(item, dbitem)
       if (!isIdentical) {
-        let vals = Object.keys(nmParams).map(k => nmParams[k]);
-        log.verbose('Failed duplicate check', vals.join('/'));
-        log.verbose('-', item);
-        log.verbose('+', dbitem);
+        let vals = Object.keys(nmParams).map(k => nmParams[k])
+        log.verbose('Failed duplicate check', vals.join('/'))
+        log.verbose('-', item)
+        log.verbose('+', dbitem)
       } else {
         // let vals = Object.keys(nmParams).map(k => nmParams[k]);
         // log.verbose('Checked that item is identical', vals.join('/'));
       }
-      return isIdentical;
-    });
+      return isIdentical
+    })
 }
 
 // This checks if the item selected by key exists has the proper digest
 // it fails if the keey lookup succeds, but the digest is wrong
 // TODO(daneroo): should probably throw if the key exists, but the digest is wrong
-function confirmIdenticalByDigest(item) {
-  const digest = utils.digest(JSON.stringify(item), DIGEST_ALGORITHM, false);
+function confirmIdenticalByDigest (item) {
+  const digest = utils.digest(JSON.stringify(item), DIGEST_ALGORITHM, false)
 
-  const nmParams = pgu.getNamedParametersForItem(item);
-  delete nmParams.item;
-  nmParams.DIGEST_ALGORITHM = DIGEST_ALGORITHM;
+  const nmParams = pgu.getNamedParametersForItem(item)
+  delete nmParams.item
+  nmParams.DIGEST_ALGORITHM = DIGEST_ALGORITHM
 
   // watch camelcase for __sourcetype NOT __sourceType,
   // also ES6 templates use ${var}, helper can use {}, (), [], <>, //
   const sql =
-    `SELECT encode(digest(item::text, $[DIGEST_ALGORITHM]), \'hex\') as digest
+    `SELECT encode(digest(item::text, $[DIGEST_ALGORITHM]), 'hex') as digest
     FROM items
     WHERE __user=$[__user] AND __stamp=$[__stamp]
     AND __type=$[__type] AND uuid=$[uuid]
-    AND __sourcetype=$[__sourcetype]`;
+    AND __sourcetype=$[__sourcetype]`
 
   return pgu.db.oneOrNone(sql, nmParams)
     .then(result => {
       if (result === null || !result.digest) {
-        return false;
+        return false
       }
-      var dbdigest = result.digest;
-      var isIdentical = digest === dbdigest;
+      var dbdigest = result.digest
+      var isIdentical = digest === dbdigest
       if (!isIdentical) {
         // TODO(daneroo): should probably throw if the key exists, but the digest is wrong
-        let vals = Object.keys(nmParams).map(k => nmParams[k]);
-        log.verbose('Failed duplicate digest check', vals.join('/'));
-        log.verbose('-', digest);
-        log.verbose('+', dbdigest);
+        let vals = Object.keys(nmParams).map(k => nmParams[k])
+        log.verbose('Failed duplicate digest check', vals.join('/'))
+        log.verbose('-', digest)
+        log.verbose('+', dbdigest)
       } else {
         // let vals = Object.keys(nmParams).map(k=>nmParams[k]);
         // log.verbose('Checked that digest is identical', vals.join('/'), digest);
       }
-      return isIdentical;
-    });
+      return isIdentical
+    })
 }

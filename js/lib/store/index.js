@@ -28,6 +28,7 @@ exports = module.exports = {
       load: (/* opts, cb */) => { } // foreach item, cb(item);
     },
     pg: require('./pg'),
+    // db: require('./db'),
     file: require('./file') // load only for now
   }
 }

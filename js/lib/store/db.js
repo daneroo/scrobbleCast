@@ -1,0 +1,309 @@
+// This is the sequelize implentation of the store API
+'use strict'
+
+// pg implementation (save only)
+
+// dependencies - core-public-internal
+var Promise = require('bluebird')
+var log = require('../log')
+var utils = require('../utils')
+const orm = require('../model/orm')
+// these might be moved or exposed
+var pgu = require('./pg-utils')
+
+// var sinkFile = require('../sink/file');
+
+// Use default from utils?
+const DIGEST_ALGORITHM = 'sha256'
+
+// Exported API
+exports = module.exports = {
+  init: init, // setup the database pool, ddl...
+  end: end,
+
+  // save: (item) => {}, // should return (Promise)(status in insert,duplicate,error)
+  save: save,
+
+  // saveByBatch(batchSize) // accumulates writes, must be flushed at end
+  saveByBatch: saveByBatch,
+  saveAll: saveAll,
+
+  // load: (opts, handler) => {} // foreach item, cb(item);
+  load: load,
+
+  // above is done
+  digests: digests,
+  getByDigest: getByDigest,
+  // for sync reconciliation
+  getByKey: getByKey,
+
+  remove: remove
+}
+
+async function init () {
+  return orm.init()
+}
+
+async function end () {
+  log.debug('sequelize: Closing connections, drain the pool!')
+  return orm.sequelize.close()
+}
+
+async function _exists (item) {
+  const digest = utils.digest(JSON.stringify(item), DIGEST_ALGORITHM, false)
+  const count = await orm.Item.count({
+    where: {
+      digest: digest
+    }
+  })
+  return count === 1
+}
+
+// This detects the specific error from insertion of a duplicate item (by digest primary key)
+function _isErrorDuplicateDigest (error) {
+  // It seems this test is suffient
+  if (error.name === 'SequelizeUniqueConstraintError') {
+    // Log if other assumtions are not correct (just in case)
+    if (!error.errors ||
+        !error.errors.length > 0 ||
+        error.errors[0].message !== 'digest must be unique' ||
+        error.errors[0].path !== 'digest'
+        ) {
+      log.error('_isErrorDuplicateDigest', {message: error.message, name: error.name, errors: error.errors})
+    }
+    return true
+  }
+  return false
+}
+
+// TODO(daneroo): combines both checkThenSave, and saveButVerifyIfDuplicate
+async function save (item) {
+  // log.verbose('pg:save saving item', { user: item.__user, stamp: item.__stamp });
+
+  // check then save
+  if (await _exists(item)) {
+    return true
+  }
+  try {
+    await orm.Item.create({ item: item })
+    return true
+  } catch (error) {
+    // extract to own function (duplicate by digest)
+    if (_isErrorDuplicateDigest(error)) {
+      return true
+    }
+    throw error
+  }
+
+  // return checkThenSaveItem(item)
+  // return saveButVerifyIfDuplicate(item);
+
+  // speed benchamarks with ~135k items, redone with pgp
+  // Conclusion full=> checkThenSaveItem, emtpy=>saveButVerifyIfDuplicate
+
+  // checkThenSaveItem:full          162 seconds : sum ok
+  // checkThenSaveItem:empty         423 seconds : sum ok
+  // saveButVerifyIfDuplicate:full   266 seconds : sum ok
+  // saveButVerifyIfDuplicate:empty  165 seconds : sum ok
+  // saveButVerifyIfDuplicate:full   264 seconds : sum ok
+}
+
+// return a function to be used in place of save
+// accumulates items for writing
+// the returned function has a .flush property, which must be called at end
+// e.g.
+// let saver = saveByBatch(3)
+// saver(item1); saver(item2); saver(item3); saver(item4);
+// saver.flush(); // saves the pending items in accumulator
+function saveByBatch (batchSize) {
+  // default batchSize
+  batchSize = batchSize || 1000
+  // speed benchamarks with ~135k items, redone with helpers.insert (multi)
+  // batch=2 insert:empty     85 seconds : sum ok
+  // batch=10 insert:empty    55 seconds : sum ok
+  // batch=100 insert:empty   52 seconds : sum ok
+  // batch=100 insert:empty   52 seconds : sum ok
+  // batch=1000 insert:empty  38 seconds : sum ok
+  // batch=10000 insert:empty 41 seconds : sum ok
+
+  // batch=1000 insert,each.save:half  111 seconds : sum ok
+  // batch=1000 insert,each.save:half  113 seconds : sum ok
+
+  // batch=1000 insert,each.save:full  179 seconds : sum ok
+
+  // this is the saved item accumulator
+  let tosave = []
+  const flush = () => {
+    // log.verbose('-flush', tosave.length);
+    return saveAll(tosave)
+      .then((results) => {
+        tosave = []
+        return results
+      })
+  }
+  const saver = (item) => {
+    tosave.push(item)
+    if (tosave.length >= batchSize) {
+      return flush()
+    }
+    return Promise.resolve(true)
+  }
+
+  // add the flush function to the returned
+  saver.flush = () => {
+    log.verbose('+last.flush called', tosave.length)
+    return flush()
+  }
+  return saver
+}
+
+// TODO(daneroo): preemtively eliminate duplicate digests
+async function saveAll (items) {
+  if (items.length === 0) {
+    return true
+  }
+
+  const wrapped = items.map(i => ({ item: i }))
+
+  try {
+    /* const inBulk = */ await orm.Item.bulkCreate(wrapped)
+    return true
+  } catch (error) {
+    // rethrow unless we know it's a duplicate digest error
+    if (!_isErrorDuplicateDigest(error)) {
+      log.error('saveAll:error', {message: error.message, name: error.name, errors: error.errors})
+      throw error
+    }
+    // log.debug('saveAll: At least one duplicate digest, save each item')
+  }
+
+  // If we get here it's because we had a duplicate digest, so save each item
+  for (let item of items) {
+    await save(item)
+  }
+  return true
+}
+
+// TODO(daneroo): but might better return map[Series] or spex, or streaming query
+async function load (opts, itemHandler) {
+  opts = opts || {}
+  const noop = async () => true // default handler (async)
+  itemHandler = itemHandler || noop
+  // opts.prefix = opts.prefix || ''
+  if (!opts.filter.__user) {
+    throw (new Error('file:load missing required opt filter.__user'))
+  }
+
+  const items = await orm.Item.findAll({
+    attributes: ['item'],
+    where: {
+      '__user': opts.filter.__user
+    },
+    order: ['__user', '__stamp', '__type', 'uuid', '__sourceType']
+  })
+
+  const results = []
+  for (let item of items) {
+    results.push(await itemHandler(item.item))
+  }
+  return results
+}
+
+// ABOVE is done //////////////////////////////////
+function digests (syncParams) {
+  syncParams = syncParams || {}
+  const nmParams = {
+    DIGEST_ALGORITHM: DIGEST_ALGORITHM,
+    before: syncParams.before || '2040-01-01T00:00:00Z', // < (strict)
+    since: syncParams.since || '1970-01-01T00:00:00Z'   // >= (inclusive)
+  }
+
+  // watch camelcase for __sourcetype NOT __sourceType,
+  // also ES6 templates use ${var}, helper can use {}, (), [], <>, //
+  // __user, __type, uuid, __sourceType, __stamp
+  const sql =
+    `SELECT encode(digest(item::text, $[DIGEST_ALGORITHM]), 'hex') as digest
+    FROM items
+    WHERE __stamp < $[before] AND __stamp >= $[since]
+    ORDER BY __stamp desc,digest`
+
+  return pgu.db.any(sql, nmParams)
+    .then(function (rows) {
+      log.verbose('pg:digest ', { rows: rows.length })
+      return rows.map(r => {
+        return r.digest
+      })
+    })
+}
+
+function getByDigest (digest) {
+  const nmParams = {
+    digest: digest,
+    DIGEST_ALGORITHM: DIGEST_ALGORITHM
+  }
+
+  // watch camelcase for __sourcetype NOT __sourceType,
+  // also ES6 templates use ${var}, helper can use {}, (), [], <>, //
+  // __user, __type, uuid, __sourceType, __stamp
+  const sql =
+    `SELECT item
+    FROM items
+    WHERE $[digest]=encode(digest(item::text, $[DIGEST_ALGORITHM]), 'hex')`
+
+  return pgu.db.one(sql, nmParams)
+    .then(function (row) {
+      log.verbose('pg:getByDigest ', row)
+      return row.item
+    })
+}
+
+// TODO(daneroo): delete by digest
+//   OK for now as these 5 fields are a primary key
+function remove (item) {
+  const nmParams = pgu.getNamedParametersForItem(item)
+  delete nmParams.item
+
+  // watch camelcase for __sourcetype NOT __sourceType,
+  // also ES6 templates use ${var}, helper can use {}, (), [], <>, //
+  const sql =
+    `DELETE from items WHERE
+    __user=$[__user] AND __stamp=$[__stamp]
+    AND __type=$[__type] AND uuid=$[uuid]
+    AND __sourcetype=$[__sourcetype]`
+
+  // log.verbose('pg:remove deleting item', nmParams);
+
+  // uses db.result to assert result.rowCount==1
+  return pgu.db.result(sql, nmParams)
+    .then(function (result) {
+      if (result.rowCount !== 1) {
+        log.warn('delete rowCount!=1', result)
+        log.warn('delete rowCount!=1', nmParams)
+      }
+    })
+}
+
+// return item or null
+// copied from confirmIdentical()
+// not refactored because of detailed error loging in confirmIdentical()
+// exposed for proactive recociliation in sync
+function getByKey (item) {
+  const nmParams = pgu.getNamedParametersForItem(item)
+  delete nmParams.item
+
+  // watch camelcase for __sourcetype NOT __sourceType,
+  // also ES6 templates use ${var}, helper can use {}, (), [], <>, //
+  const sql =
+    `SELECT item FROM items
+    WHERE __user=$[__user] AND __stamp=$[__stamp]
+    AND __type=$[__type] AND uuid=$[uuid]
+    AND __sourcetype=$[__sourcetype]`
+
+  return pgu.db.oneOrNone(sql, nmParams)
+    .then(result => {
+      if (result === null || !result.item) {
+        return null
+      }
+      return result.item
+    })
+}

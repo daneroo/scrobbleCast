@@ -13,18 +13,24 @@ var store = require('./lib/store')
 
 // globals
 var allCredentials = require('./credentials.json') // .slice(0, 1);
+
 // const basepaths = ['snapshots'];
 const basepaths = ['snapshots/monthly', 'snapshots/current']
+const destinationStore = store.impl.pg
+// const destinationStore = store.impl.db
 
 Promise.resolve(true)
   // Promise.reject(new Error('Abort now!'))
-  .then(store.impl.pg.init)
+  .then(destinationStore.init)
   .then(main)
   .then(logMemAfterGC)
   .catch(verboseErrorHandler(false))
-  .finally(function () {
-    log.debug('Done, done, releasing PG connection')
-    store.impl.pg.end()
+  .finally(async function () {
+    log.debug('Closing connection')
+    await destinationStore.end()
+    log.debug('Closed connection')
+    // seems to hang with sequelize for postgres
+    process.exit(0)
   })
 
 function main () {
@@ -42,11 +48,11 @@ function main () {
 }
 
 function restore (credentials) {
-  // const saver = store.impl.pg.save;
+  // const saver = destinationStore.save;
   // TODO(daneroo) batchSaver(.flush) move to pg
   const batchSize = 1000 // which is the default
 
-  const saver = store.impl.pg.saveByBatch(batchSize)
+  const saver = destinationStore.saveByBatch(batchSize)
 
   return store.impl.file.load({
     prefix: basepaths,
@@ -85,7 +91,7 @@ function accumulateItems (credentials) {
     return Promise.resolve(true)
   }
 
-  return store.impl.pg.load(opts, itemHandler)
+  return destinationStore.load(opts, itemHandler)
     .then((results) => {
       log.verbose('Merged', results.length)
       historyByType.sortAndSave(__user)
@@ -123,7 +129,7 @@ function logMemAfterGC () {
 
     showMem('+')
   } else {
-    log.debug('  Garbage collection unavailable.  Pass --expose-gc when launching node to enable forced garbage collection.')
+    // log.debug('  Garbage collection unavailable.  Pass --expose-gc when launching node to enable forced garbage collection.')
   }
   return Promise.resolve(true)
 }

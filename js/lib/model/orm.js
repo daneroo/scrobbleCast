@@ -24,12 +24,11 @@ function defineModels () {
 
   const Item = sequelize.define('item', {
     digest: {type: Sequelize.STRING, primaryKey: true, allowNull: false},
-    __user: {type: Sequelize.STRING, unique: 'secondary', allowNull: false},
-    __type: {type: Sequelize.STRING, unique: 'secondary', allowNull: false},
-    uuid: {type: Sequelize.STRING, unique: 'secondary', allowNull: false},
-    __sourceType: {type: Sequelize.STRING, unique: 'secondary', allowNull: false},
-    __stamp: {type: Sequelize.STRING, unique: 'secondary', allowNull: false},
-    // item: JsonField(sequelize, 'item', 'item')
+    __user: {type: Sequelize.STRING, allowNull: false},
+    __type: {type: Sequelize.STRING, allowNull: false},
+    uuid: {type: Sequelize.STRING, allowNull: false},
+    __sourceType: {type: Sequelize.STRING, allowNull: false},
+    __stamp: {type: Sequelize.STRING, allowNull: false},
     item: {
       type: Sequelize.TEXT,
       get: function () {
@@ -61,7 +60,10 @@ function defineModels () {
       // beforeBulkCreate: instances => instances.forEach(injectKeys),
       // beforeValidate: injectKeys
       // beforeCreate: injectKeys
-    }
+    },
+    indexes: [{
+      fields: ['__user', '__type', 'uuid', '__sourceType', '__stamp']
+    }]
   })
 
   async function init () {

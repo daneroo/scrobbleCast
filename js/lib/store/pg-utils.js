@@ -106,7 +106,7 @@ function init () {
     })
 }
 
-function end () {
+async function end () {
   log.debug('pgu:end Closing connections, drain the pool!')
-  pgp.end()
+  return pgp.end()
 }

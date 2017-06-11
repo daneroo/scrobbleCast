@@ -1,1 +1,2 @@
-#--require test/common-setup
+# comment
+--require test/common-setup

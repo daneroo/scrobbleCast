@@ -72,6 +72,7 @@ function defineModels () {
   async function init () {
     return sequelize.sync()
   }
+
   return {
     init: init,
     sequelize: sequelize,

@@ -4,6 +4,7 @@ const expect = require('chai').expect
 
 const orm = require('../../../lib/model/orm')
 const utils = require('../../../lib/utils')
+const helpers = require('../../helpers')
 
 // const config = require('../../../api/config')
 
@@ -17,39 +18,14 @@ describe('sequelize', function () {
     await orm.sequelize.sync({ force: true })
   })
 
-  function makeItem (i) {
-    const mod = 16 ** 4 // 4 hex chars
-    const hex = Number(mod + i % mod).toString(16).substr(-4)
-    return {
-      '__type': 'episode',
-      '__sourceType': '02-podcasts',
-      '__user': 'mock',
-      '__stamp': '2017-06-01T00:00:00Z',
-      'podcast_uuid': `podcast-${hex}`,
-      'id': null,
-      'uuid': `episode-${hex}`
-      // 'url': 'http://podcast.com/episode.mp3',
-      // 'published_at': '2017-05-31 00:00:00',
-      // 'duration': '1733',
-      // 'file_type': 'audio/mp3',
-      // 'title': 'Worldwide condemnation of Kabul bombing',
-      // 'size': 13864000,
-      // 'playing_status': 0,
-      // 'played_up_to': 0,
-      // 'is_deleted': 0,
-      // 'starred': 0,
-      // 'is_video': false
-    }
-  }
-
   function create (item) {
     return orm.Item.create({ item: item })
   }
 
   describe('item', function () {
-    it('should create an item', async () => {
-      const want = makeItem(0)
-      const item = await create(makeItem(0))
+    it('should create an item and verify injected keys(digest,__user,..)', async () => {
+      const want = helpers.makeItem(0)
+      const item = await create(helpers.makeItem(0))
       expect(item.item).to.deep.equal(want)
       // check outer keys are inserted properly
       expect(item.digest).to.equal(utils.digest(JSON.stringify(want)))
@@ -63,21 +39,21 @@ describe('sequelize', function () {
       expect(item.__stamp).to.deep.equal(want.__stamp)
     })
     it('should create another item', async () => {
-      const want = makeItem(1)
-      const item = await create(makeItem(1))
+      const want = helpers.makeItem(1)
+      const item = await create(helpers.makeItem(1))
           // assert stuff
       expect(item).to.not.equal(null)
       expect(item.item).to.deep.equal(want)
     })
 
     it('should not create an item with duplicate key', async () => {
-      const want = makeItem(2)
+      const want = helpers.makeItem(2)
 
-      const item = await create(makeItem(2))
+      const item = await create(helpers.makeItem(2))
       expect(item.item).to.deep.equal(want)
 
       try {
-        const item2 = await create(makeItem(2))
+        const item2 = await create(helpers.makeItem(2))
         expect('').to.equal('this should not be reached')
         expect(item2.item).to.deep.equal(want)
       } catch (err) {
@@ -87,15 +63,15 @@ describe('sequelize', function () {
 
     it('should bulk create some items', async () => {
       const items = await orm.Item.bulkCreate([
-        {item: makeItem(3)},
-        {item: makeItem(4)}
+        {item: helpers.makeItem(3)},
+        {item: helpers.makeItem(4)}
       ])
       expect(items.length).to.equal(2)
-      expect(items[0].get('item', {plain: true})).to.deep.equal(makeItem(3))
+      expect(items[0].get('item', {plain: true})).to.deep.equal(helpers.makeItem(3))
     })
 
     it('should find an existing item by digest', async () => {
-      const want = makeItem(0)
+      const want = helpers.makeItem(0)
       const digest = utils.digest(JSON.stringify(want))
       const item = await orm.Item.findOne({
         where: {
@@ -106,7 +82,7 @@ describe('sequelize', function () {
     })
 
     it('should find an existing item by id (digest)', async () => {
-      const want = makeItem(0)
+      const want = helpers.makeItem(0)
       const digest = utils.digest(JSON.stringify(want))
       const item = await orm.Item.findById(digest)
       expect(item.item).to.deep.equal(want)
@@ -125,7 +101,7 @@ describe('sequelize', function () {
 
     // depends on previous items - may be brittle
     it('should find many digests', async () => {
-      const want = [0, 1, 2, 3, 4].map(i => utils.digest(JSON.stringify(makeItem(i))))
+      const want = [0, 1, 2, 3, 4].map(i => utils.digest(JSON.stringify(helpers.makeItem(i))))
       const digests = await orm.Item.findAll({
         attributes: ['digest'],
         raw: true,
@@ -144,7 +120,7 @@ describe('sequelize', function () {
     })
 
     it('should delete an item', async() => {
-      const toDelete = makeItem(0)
+      const toDelete = helpers.makeItem(0)
       const digest = utils.digest(JSON.stringify(toDelete))
       const affectedRows = await orm.Item.destroy({
         where: {

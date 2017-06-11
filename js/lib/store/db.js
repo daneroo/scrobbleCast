@@ -30,14 +30,25 @@ exports = module.exports = {
 
   // load: (opts, handler) => {} // foreach item, cb(item);
   load: load,
+  getByDigest: getByDigest,
 
   // above is done
   digests: digests,
-  getByDigest: getByDigest,
   // for sync reconciliation
   getByKey: getByKey,
 
   remove: remove
+}
+
+// expose private methods for tests
+// TODO(daneroo): is this a bad idea?
+if (process.env.NODE_ENV === 'test') {
+  Object.assign(exports, {
+    _digest: _digest,
+    _exists: _exists,
+    _isErrorDuplicateDigest: _isErrorDuplicateDigest,
+    _filterExisting: _filterExisting
+  })
 }
 
 async function init () {
@@ -87,6 +98,7 @@ async function save (item) {
   if (await _exists(item)) {
     return true
   }
+
   try {
     await orm.Item.create({ item: item })
     return true
@@ -243,6 +255,16 @@ async function load (opts, itemHandler) {
   return results
 }
 
+async function getByDigest (digest) {
+  const wrapped = await orm.Item.findOne({
+    attributes: ['item'],
+    where: {
+      digest: digest
+    }
+  })
+  return wrapped.item
+}
+
 // ABOVE is done //////////////////////////////////
 function digests (syncParams) {
   syncParams = syncParams || {}
@@ -267,27 +289,6 @@ function digests (syncParams) {
       return rows.map(r => {
         return r.digest
       })
-    })
-}
-
-function getByDigest (digest) {
-  const nmParams = {
-    digest: digest,
-    DIGEST_ALGORITHM: DIGEST_ALGORITHM
-  }
-
-  // watch camelcase for __sourcetype NOT __sourceType,
-  // also ES6 templates use ${var}, helper can use {}, (), [], <>, //
-  // __user, __type, uuid, __sourceType, __stamp
-  const sql =
-    `SELECT item
-    FROM items
-    WHERE $[digest]=encode(digest(item::text, $[DIGEST_ALGORITHM]), 'hex')`
-
-  return pgu.db.one(sql, nmParams)
-    .then(function (row) {
-      log.verbose('pg:getByDigest ', row)
-      return row.item
     })
 }
 

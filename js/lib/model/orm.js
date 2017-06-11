@@ -44,6 +44,9 @@ function defineModels () {
         const str = JSON.stringify(value)
         this.setDataValue('item', str)
         // inject outer keys
+
+        // could be conditional if already set...
+        // if (!this.dataValues['digest']) { ..set.. }
         this.setDataValue('digest', utils.digest(str))
         this.setDataValue('__user', value.__user)
         this.setDataValue('__type', value.__type)

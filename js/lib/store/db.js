@@ -49,8 +49,11 @@ async function end () {
   return orm.sequelize.close()
 }
 
+function _digest (item) {
+  return utils.digest(JSON.stringify(item), DIGEST_ALGORITHM, false)
+}
 async function _exists (item) {
-  const digest = utils.digest(JSON.stringify(item), DIGEST_ALGORITHM, false)
+  const digest = _digest(item)
   const count = await orm.Item.count({
     where: {
       digest: digest
@@ -88,24 +91,18 @@ async function save (item) {
     await orm.Item.create({ item: item })
     return true
   } catch (error) {
-    // extract to own function (duplicate by digest)
+    // saveButVerifyIfDuplicate : should never happen because of check above
     if (_isErrorDuplicateDigest(error)) {
       return true
     }
     throw error
   }
 
-  // return checkThenSaveItem(item)
-  // return saveButVerifyIfDuplicate(item);
-
-  // speed benchamarks with ~135k items, redone with pgp
-  // Conclusion full=> checkThenSaveItem, emtpy=>saveButVerifyIfDuplicate
-
-  // checkThenSaveItem:full          162 seconds : sum ok
-  // checkThenSaveItem:empty         423 seconds : sum ok
-  // saveButVerifyIfDuplicate:full   266 seconds : sum ok
-  // saveButVerifyIfDuplicate:empty  165 seconds : sum ok
-  // saveButVerifyIfDuplicate:full   264 seconds : sum ok
+  // new benchmarks with sequelize (205k items)
+  // sqlite:   checckThenSave:full             181s : sum ok
+  // sqlite:   saveButVerifyIfDuplicate:full   227s : sum ok
+  // postgres: checckThenSave:full             381s : sum ok
+  // postgres: saveButVerifyIfDuplicate:full   378s : sum ok
 }
 
 // return a function to be used in place of save
@@ -157,16 +154,53 @@ function saveByBatch (batchSize) {
   return saver
 }
 
+// returns the items which are not already present
+// as determined by digest (primary key) lookup
+async function _filterExisting (wrappedItemsWithDigests) {
+  const digests = wrappedItemsWithDigests.map(i => i.digest)
+
+  const existingDigests = await orm.Item.findAll({
+    raw: true,
+    attibutes: ['digest'],
+    where: {
+      digest: {
+        $in: digests
+      }
+    }
+  }).map(i => i.digest)
+  // if no existing digests, return original array
+  if (existingDigests.length === 0) {
+    return wrappedItemsWithDigests
+  }
+  // console.log('existing digests', existingDigests.length)
+
+  // make a lookup for filtering
+  const exists = {}
+  existingDigests.forEach(digest => {
+    exists[digest] = true
+  })
+
+  const filtered = wrappedItemsWithDigests.filter(item => !exists[item.digest])
+
+  return filtered
+}
+
 // TODO(daneroo): preemtively eliminate duplicate digests
 async function saveAll (items) {
   if (items.length === 0) {
     return true
   }
 
-  const wrapped = items.map(i => ({ item: i }))
+  const wrapped = items.map(i => ({item: i, digest: _digest(i)}))
+
+  const needSaving = await _filterExisting(wrapped)
+  if (needSaving.length === 0) {
+    return true
+  }
+  // log.debug('filterd:', needSaving.length)
 
   try {
-    /* const inBulk = */ await orm.Item.bulkCreate(wrapped)
+    await orm.Item.bulkCreate(needSaving)
     return true
   } catch (error) {
     // rethrow unless we know it's a duplicate digest error

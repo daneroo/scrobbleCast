@@ -16,6 +16,7 @@ var allCredentials = require('./credentials.json') // .slice(0, 1);
 
 // const basepaths = ['snapshots'];
 const basepaths = ['snapshots/monthly', 'snapshots/current']
+
 const destinationStore = store.impl.pg
 // const destinationStore = store.impl.db
 

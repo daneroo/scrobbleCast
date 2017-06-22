@@ -7,11 +7,12 @@ exports = module.exports = {
 function makeItem (i) {
   const mod = 16 ** 4 // 4 hex chars
   const hex = Number(mod + i % mod).toString(16).substr(-4)
+  const day = `${i}`.padStart(2, '0')
   return {
     '__type': 'episode',
     '__sourceType': '02-podcasts',
     '__user': 'mock',
-    '__stamp': '2017-06-01T00:00:00Z',
+    '__stamp': `2017-06-${day}T00:00:00Z`,
     'podcast_uuid': `podcast-${hex}`,
     'id': null,
     'uuid': `episode-${hex}`

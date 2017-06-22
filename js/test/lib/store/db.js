@@ -43,8 +43,24 @@ describe('store', function () {
     it.skip('should saveByBatch...', async () => {})
     it.skip('should saveAll...', async () => {})
     it.skip('should load...', async () => {})
-    it.skip('should getByDigest...', async () => {})
-    it.skip('should digests...', async () => {})
+    it.skip('should getByDigest when exists', async () => {})
+    it.skip('should getByDigest when not found', async () => {})
+
+    it('should get digests', async () => {
+      const items = [1, 2, 3, 4]
+        .map(i => helpers.makeItem(i))
+        .map(it => it)
+      await db.saveAll(items)
+
+      const got = await db.digests({})
+      expect(got).to.deep.equal([
+        'b6029b4fe3cc47c68c5611e01d315a4be20fb3a39304b4255567a40bacc9b3ca',
+        '2a87b34d35438cf1a0b696898f075b9cdcb156698f7edf86e337a220c92c0a22',
+        '4c01804183b5f842c4b30407d2d117d1419e2a8e05ca7e986511497639f6c84a',
+        '2eaafe32f069588325a2487f23999506b5619f3c0e8a7113f7effa511dd95173'
+      ])
+    })
+
     it.skip('should getByKey...', async () => {})
     it.skip('should remove...', async () => {})
     it.skip('should saveByBatch...', async () => {})
@@ -52,7 +68,7 @@ describe('store', function () {
     describe('private', function () {
       it('should calculate the _digest of an item', async () => {
         const item = helpers.makeItem(0)
-        const want = 'e026c69fd19bc05deae620ac32b85dbe70bdddd81fd5b34fe732212ed169ce2e'
+        const want = '39b3d1263027fefa1b881599a099e9096a5cdab12eb156f336225de68e747f62'
         const got = db._digest(item)
         expect(got).to.equal(want)
       })

@@ -197,7 +197,6 @@ async function _filterExisting (wrappedItemsWithDigests) {
   return filtered
 }
 
-// TODO(daneroo): preemtively eliminate duplicate digests
 async function saveAll (items) {
   if (items.length === 0) {
     return true
@@ -265,32 +264,29 @@ async function getByDigest (digest) {
   return wrapped.item
 }
 
-// ABOVE is done //////////////////////////////////
-function digests (syncParams) {
+async function digests (syncParams) {
   syncParams = syncParams || {}
   const nmParams = {
-    DIGEST_ALGORITHM: DIGEST_ALGORITHM,
     before: syncParams.before || '2040-01-01T00:00:00Z', // < (strict)
     since: syncParams.since || '1970-01-01T00:00:00Z'   // >= (inclusive)
   }
 
-  // watch camelcase for __sourcetype NOT __sourceType,
-  // also ES6 templates use ${var}, helper can use {}, (), [], <>, //
-  // __user, __type, uuid, __sourceType, __stamp
-  const sql =
-    `SELECT encode(digest(item::text, $[DIGEST_ALGORITHM]), 'hex') as digest
-    FROM items
-    WHERE __stamp < $[before] AND __stamp >= $[since]
-    ORDER BY __stamp desc,digest`
+  const items = await orm.Item.findAll({
+    raw: true,
+    attributes: ['digest'],
+    where: {
+      '__stamp': {
+        $lt: nmParams.before, // < before (strict)
+        $gte: nmParams.since  // >= since (inclusive)
+      }
+    },
+    order: [['__stamp', 'DESC'], 'digest']
+  }).map(r => r.digest)
 
-  return pgu.db.any(sql, nmParams)
-    .then(function (rows) {
-      log.verbose('pg:digest ', { rows: rows.length })
-      return rows.map(r => {
-        return r.digest
-      })
-    })
+  return items
 }
+
+// ABOVE is done //////////////////////////////////
 
 // TODO(daneroo): delete by digest
 //   OK for now as these 5 fields are a primary key

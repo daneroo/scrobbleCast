@@ -1,15 +1,15 @@
 'use strict'
 
-// This utility will read all source files: extra=['snapshots']
+// This utility will read all source snapshots
 //  (which includes monthly, and current (last monthly partial),
-// and dumps them into postgres
-// Object keys: user/type/uuid/stamp/
+// and restores them into store.db
 
 // dependencies - core-public-internal
 var Promise = require('bluebird')
 var log = require('./lib/log')
 var delta = require('./lib/delta')
 var store = require('./lib/store')
+var utils = require('./lib/utils')
 
 // globals
 var allCredentials = require('./credentials.json') // .slice(0, 1);
@@ -17,45 +17,40 @@ var allCredentials = require('./credentials.json') // .slice(0, 1);
 // const basepaths = ['snapshots'];
 const basepaths = ['snapshots/monthly', 'snapshots/current']
 
-const destinationStore = store.impl.pg
-// const destinationStore = store.impl.db
+// const destinationStore = store.impl.pg
+const destinationStore = store.impl.db
 
-Promise.resolve(true)
-  // Promise.reject(new Error('Abort now!'))
-  .then(destinationStore.init)
-  .then(main)
-  .then(logMemAfterGC)
-  .catch(verboseErrorHandler(false))
-  .finally(async function () {
-    log.debug('Closing connection')
-    await destinationStore.end()
-    log.debug('Closed connection')
+main()
+
+async function main () {
+  try {
+    await destinationStore.init()
+
+    for (let credentials of allCredentials) {
+      log.verbose('Restore started', { user: credentials.name })
+      await restore(credentials)
+      await accumulateItems(credentials)
+    }
+  } catch (err) {
+    log.error('error', err)
+  }
+
+  await digestOfDigests()
+
+  log.debug('Closing connection')
+  await destinationStore.end()
+  log.debug('Closed connection')
+
     // seems to hang with sequelize for postgres
-    process.exit(0)
-  })
-
-function main () {
-  return Promise.each(allCredentials, function (credentials) {
-    logMemAfterGC()
-    log.verbose('Restore started', {
-      user: credentials.name
-    })
-    return restore(credentials)
-      .then(function () {
-        logMemAfterGC()
-        return accumulateItems(credentials)
-      })
-  })
+  process.exit(0)
 }
 
-function restore (credentials) {
+async function restore (credentials) {
   // const saver = destinationStore.save;
   // TODO(daneroo) batchSaver(.flush) move to pg
   const batchSize = 1000 // which is the default
 
-  const saver = destinationStore.saveByBatch(batchSize)
-
-  return store.impl.file.load({
+  const loadOpts = {
     prefix: basepaths,
     assert: {
       // stampOrder: true,
@@ -65,72 +60,37 @@ function restore (credentials) {
     filter: {
       __user: credentials.name
     }
-  }, saver)
-    .then(() => {
-      return saver.flush()
-    })
+  }
+  const saver = destinationStore.saveByBatch(batchSize)
+
+  await store.impl.file.load(loadOpts, saver)
+  await saver.flush()
 }
 
-function accumulateItems (credentials) {
+async function digestOfDigests () {
+  const digests = await destinationStore.digests()
+  const dod = utils.digest(JSON.stringify(digests), 'sha256', true)
+  log.info('Digest of digests', { items: digests.length, digest: dod })
+}
+
+async function accumulateItems (credentials) {
   const __user = credentials.name
   const historyByType = new delta.AccumulatorByTypeByUuid()
-  log.debug('accumulateItems', {
-    user: __user
-  })
-  const opts = {
-    filter: {
-      __user: __user
-    }
-  }
 
-  function itemHandler (item) {
+  log.debug('accumulateItems', { user: __user })
+
+  const opts = { filter: { __user: __user } }
+
+  async function itemHandler (item) {
     var changeCount = historyByType.merge(item)
     if (changeCount === 0) {
       // throw new Error(`Item Not deduped: |Δ|:${changeCount} ${JSON.stringify(item)}`);
       log.verbose(`Item Not deduped: |Δ|:${changeCount}  ${item.__sourceType} ${item.title}`)
     }
-    return Promise.resolve(true)
+    return true
   }
 
-  return destinationStore.load(opts, itemHandler)
-    .then((results) => {
-      log.verbose('Merged', results.length)
-      historyByType.sortAndSave(__user)
-    })
-}
-
-// ************ Utilities
-
-// TODO(daneroo): move to log.debugging module (as Factory?)
-function verboseErrorHandler (shouldRethrow) {
-  return function errorHandler (error) {
-    log.error('error', error)
-    if (shouldRethrow) {
-      throw (error)
-    }
-  }
-}
-
-function logMemAfterGC () {
-  function showMem (pfx) {
-    const mu = process.memoryUsage()
-    const inMB = (numBytes) => (numBytes / 1024 / 1024).toFixed(2) + 'MB'
-    log.debug(pfx + 'Mem', {
-      rss: inMB(mu.rss)
-      // heapTotal: inMB(mu.heapTotal),
-      // heapUsed: inMB(mu.heapUsed)
-    })
-  }
-  showMem('-')
-  if (global.gc) {
-    global.gc()
-    global.gc()
-    global.gc()
-    global.gc()
-
-    showMem('+')
-  } else {
-    // log.debug('  Garbage collection unavailable.  Pass --expose-gc when launching node to enable forced garbage collection.')
-  }
-  return Promise.resolve(true)
+  const results = await destinationStore.load(opts, itemHandler)
+  log.verbose('Merged', results.length)
+  historyByType.sortAndSave(__user)
 }

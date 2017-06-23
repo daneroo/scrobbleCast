@@ -127,6 +127,7 @@ async function save (item) {
 function saveByBatch (batchSize) {
   // default batchSize
   batchSize = batchSize || 1000
+  // speed benchamarks with ~208k items: postgres: TODO(daneroo)
   // speed benchamarks with ~208k items: sqlite
   // batch=10000 empty  58 seconds
   // batch=1000  empty  39 seconds <--

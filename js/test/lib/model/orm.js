@@ -8,11 +8,11 @@ const helpers = require('../../helpers')
 
 // const config = require('../../../api/config')
 
-describe('sequelize', function () {
+describe('sequelize/orm', function () {
   // this.timeout(20000)
   before(async () => {
     if (process.env.NODE_ENV !== 'test') {
-      return Promise.reject(new Error('Tests must be run with NODE_ENV==test to ensure data safety'))
+      throw new Error('Tests must be run with NODE_ENV==test to ensure data safety')
     }
     await orm.sequelize.dropAllSchemas()
     await orm.sequelize.sync({ force: true })

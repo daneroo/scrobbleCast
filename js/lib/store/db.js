@@ -118,51 +118,45 @@ async function save (item) {
 }
 
 // return a function to be used in place of save
-// accumulates items for writing
+// which accumulates items for writing
 // the returned function has a .flush property, which must be called at end
 // e.g.
 // let saver = saveByBatch(3)
 // saver(item1); saver(item2); saver(item3); saver(item4);
-// saver.flush(); // saves the pending items in accumulator
+// saver.flush(); // saves any pending items in accumulator
 function saveByBatch (batchSize) {
   // default batchSize
   batchSize = batchSize || 1000
-  // speed benchamarks with ~135k items, redone with helpers.insert (multi)
-  // batch=2 insert:empty     85 seconds : sum ok
-  // batch=10 insert:empty    55 seconds : sum ok
-  // batch=100 insert:empty   52 seconds : sum ok
-  // batch=100 insert:empty   52 seconds : sum ok
-  // batch=1000 insert:empty  38 seconds : sum ok
-  // batch=10000 insert:empty 41 seconds : sum ok
-
-  // batch=1000 insert,each.save:half  111 seconds : sum ok
-  // batch=1000 insert,each.save:half  113 seconds : sum ok
-
-  // batch=1000 insert,each.save:full  179 seconds : sum ok
+  // speed benchamarks with ~208k items: sqlite
+  // batch=10000 empty  58 seconds
+  // batch=1000  empty  39 seconds <--
+  // batch=100   empty  57 seconds
+  // batch=1000  half   26 seconds <-- (digest like [0-7]%)
+  // batch=1000  half   26 seconds <-- (__stamp > '2016-02-01')
+  // batch=10000 full   14 seconds
+  // batch=1000  full   10 seconds <--
+  // batch=100   full   12 seconds
+  // batch=10    full   27 seconds
 
   // this is the saved item accumulator
   let tosave = []
-  const flush = () => {
-    // log.verbose('-flush', tosave.length);
-    return saveAll(tosave)
-      .then((results) => {
-        tosave = []
-        return results
-      })
+
+  async function flush () {
+    // log.verbose('-flush', tosave.length)
+    const result = await saveAll(tosave)
+    tosave = []
+    return result
   }
-  const saver = (item) => {
+  async function saver (item) {
     tosave.push(item)
     if (tosave.length >= batchSize) {
       return flush()
     }
-    return Promise.resolve(true)
+    return true
   }
 
-  // add the flush function to the returned
-  saver.flush = () => {
-    log.verbose('+last.flush called', tosave.length)
-    return flush()
-  }
+  // add the flush function to the returned function as an attribute
+  saver.flush = flush
   return saver
 }
 
@@ -205,10 +199,11 @@ async function saveAll (items) {
   const wrapped = items.map(i => ({item: i, digest: _digest(i)}))
 
   const needSaving = await _filterExisting(wrapped)
+  // log.verbose('-needSaving', needSaving.length)
+
   if (needSaving.length === 0) {
     return true
   }
-  // log.debug('filterd:', needSaving.length)
 
   try {
     await orm.Item.bulkCreate(needSaving)
@@ -235,7 +230,7 @@ async function load (opts, itemHandler) {
   const noop = async () => true // default handler (async)
   itemHandler = itemHandler || noop
   // opts.prefix = opts.prefix || ''
-  if (!opts.filter.__user) {
+  if (!opts.filter || !opts.filter.__user) {
     throw (new Error('file:load missing required opt filter.__user'))
   }
 
@@ -261,23 +256,23 @@ async function getByDigest (digest) {
       digest: digest
     }
   })
-  return wrapped.item
+  return wrapped ? wrapped.item : null
 }
 
 async function digests (syncParams) {
   syncParams = syncParams || {}
   const nmParams = {
-    before: syncParams.before || '2040-01-01T00:00:00Z', // < (strict)
-    since: syncParams.since || '1970-01-01T00:00:00Z'   // >= (inclusive)
+    since: syncParams.since || '1970-01-01T00:00:00Z',   // >= (inclusive)
+    before: syncParams.before || '2040-01-01T00:00:00Z' // < (strict)
   }
 
   const items = await orm.Item.findAll({
     raw: true,
-    attributes: ['digest'],
+    attributes: ['digest', '__stamp'],
     where: {
       '__stamp': {
-        $lt: nmParams.before, // < before (strict)
-        $gte: nmParams.since  // >= since (inclusive)
+        $gte: nmParams.since,  // >= since (inclusive)
+        $lt: nmParams.before // < before (strict)
       }
     },
     order: [['__stamp', 'DESC'], 'digest']
@@ -288,53 +283,28 @@ async function digests (syncParams) {
 
 // ABOVE is done //////////////////////////////////
 
-// TODO(daneroo): delete by digest
-//   OK for now as these 5 fields are a primary key
-function remove (item) {
-  const nmParams = pgu.getNamedParametersForItem(item)
-  delete nmParams.item
-
-  // watch camelcase for __sourcetype NOT __sourceType,
-  // also ES6 templates use ${var}, helper can use {}, (), [], <>, //
-  const sql =
-    `DELETE from items WHERE
-    __user=$[__user] AND __stamp=$[__stamp]
-    AND __type=$[__type] AND uuid=$[uuid]
-    AND __sourcetype=$[__sourcetype]`
-
-  // log.verbose('pg:remove deleting item', nmParams);
-
-  // uses db.result to assert result.rowCount==1
-  return pgu.db.result(sql, nmParams)
-    .then(function (result) {
-      if (result.rowCount !== 1) {
-        log.warn('delete rowCount!=1', result)
-        log.warn('delete rowCount!=1', nmParams)
-      }
-    })
+// Delete by digest
+// log.warn if item not found
+// returns: The number of destroyed rows
+async function remove (item) {
+  const digest = _digest(item)
+  const rowCount = await orm.Item.destroy({
+    attributes: ['item'],
+    where: {
+      digest: digest
+    }
+  })
+  if (rowCount !== 1) {
+    log.warn('remove rowCount!=1', {rowCount: rowCount, digest: digest, item: item})
+  }
+  return rowCount
 }
 
+// Deprecated, throws. Refactor out of sync...
 // return item or null
 // copied from confirmIdentical()
 // not refactored because of detailed error loging in confirmIdentical()
-// exposed for proactive recociliation in sync
-function getByKey (item) {
-  const nmParams = pgu.getNamedParametersForItem(item)
-  delete nmParams.item
-
-  // watch camelcase for __sourcetype NOT __sourceType,
-  // also ES6 templates use ${var}, helper can use {}, (), [], <>, //
-  const sql =
-    `SELECT item FROM items
-    WHERE __user=$[__user] AND __stamp=$[__stamp]
-    AND __type=$[__type] AND uuid=$[uuid]
-    AND __sourcetype=$[__sourcetype]`
-
-  return pgu.db.oneOrNone(sql, nmParams)
-    .then(result => {
-      if (result === null || !result.item) {
-        return null
-      }
-      return result.item
-    })
+// exposed for proactive recociliation in sync::saveWithExtraordinaryReconcile
+async function getByKey (item) {
+  throw new Error('db::getByKey deprecated')
 }

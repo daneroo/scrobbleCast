@@ -30,7 +30,10 @@ module.exports = {
       // logging: () => {},
       logging: process.env.DB_LOG ? console.log : () => {},
       // SQLite only
-      storage: process.env.DB_SQLITE_FILENAME || 'data/sqlite/scrobblecast.sqlite'
+      storage: process.env.DB_SQLITE_FILENAME ||
+        (process.env.NODE_ENV !== 'test'
+          ? 'data/sqlite/scrobblecast.sqlite'
+          : 'data/sqlite/scrobblecast-test.sqlite')
     }
   },
 

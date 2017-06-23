@@ -1,7 +1,12 @@
 
 'use strict'
 exports = module.exports = {
+  makeItems: makeItems,
   makeItem: makeItem
+}
+
+function makeItems (is) {
+  return is.map(i => makeItem(i))
 }
 
 function makeItem (i) {

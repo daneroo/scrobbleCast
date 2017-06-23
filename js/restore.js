@@ -5,7 +5,6 @@
 // and restores them into store.db
 
 // dependencies - core-public-internal
-var Promise = require('bluebird')
 var log = require('./lib/log')
 var delta = require('./lib/delta')
 var store = require('./lib/store')
@@ -17,8 +16,8 @@ var allCredentials = require('./credentials.json') // .slice(0, 1);
 // const basepaths = ['snapshots'];
 const basepaths = ['snapshots/monthly', 'snapshots/current']
 
-// const destinationStore = store.impl.pg
-const destinationStore = store.impl.db
+const destinationStore = store.impl.pg
+// const destinationStore = store.impl.db
 
 main()
 

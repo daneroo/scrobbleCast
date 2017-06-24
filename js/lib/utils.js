@@ -113,6 +113,30 @@ function digest (str, algorithm, prependAlgorithm) {
   return hash
 }
 
+async function logMemAfterGC () {
+  function showMem (pfx) {
+    var msg = `${pfx}Mem after GC (MB)`
+    log.verbose(msg, {
+      mem: {
+        rss: (process.memoryUsage().rss / 1024 / 1024).toFixed(2),
+        heapTotal: (process.memoryUsage().heapTotal / 1024 / 1024).toFixed(2),
+        heapUsed: (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)
+      }
+    })
+  }
+  showMem('-')
+  if (global.gc) {
+    global.gc()
+    global.gc()
+    global.gc()
+    global.gc()
+
+    showMem('+')
+  } else {
+    // log.debug('Garbage collection unavailable.  Pass --expose-gc when launching node to enable forced garbage collection.')
+  }
+}
+
 exports = module.exports = {
   stamp: stamp,
   ago: ago,
@@ -121,5 +145,6 @@ exports = module.exports = {
   isEqualWithoutPrototypes: isEqualWithoutPrototypes,
   hasSameContent: hasSameContent,
   digest: digest,
-  md5: md5
+  md5: md5,
+  logMemAfterGC: logMemAfterGC
 }

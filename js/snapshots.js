@@ -1,20 +1,18 @@
 'use strict'
 
-// Was forked from rollup.js
-// This utility will read all db entries
-//   required filter: __user
-// and 'rollup' into Month files: with stamps up to (strict <) begining of month
-//  -optional jsonl
+// This utility will read everything from store.db
+// and produces snapshot files.
+// The snapshots are aggregated by user/month
+// the last (incomplete) month is flushed to 'current'
+//   snapshots/monthly/<user>/monthly-<user>-<month>.jsonl
+//   snapshots/current/<user>/current-<host>.<user>.jsonl
+
 // TODO(daneroo): maybe ...
-//  -verify deduped
-//  -optional gzipping
-//  -optional partial signature? in content
-//  -optional content addressable filename (include md5 sig)
-// verify or write new required rollups
+// - make file writing async
+// - optional gzipping
+// - externalize dedup verification...
 
 // dependencies - core-public-internal
-var util = require('util')
-var Promise = require('bluebird')
 var config = require('./lib/config')
 var log = require('./lib/log')
 var sinkFile = require('./lib/sink/file')
@@ -24,61 +22,57 @@ var store = require('./lib/store')
 // globals
 var allCredentials = require('./credentials.json')
 
-Promise.resolve(true)
-  .then(main)
-  .then(logMemAfterGC)
-  .catch(verboseErrorHandler(false))
+const basepath = ['data/snapshots/']
 
-// TODO: The eventual flow should be
-// -loadItems from extra=''
-//  perform dedup checking as we go, removing the need for accumulating all Items, only currentMonth
-// at the end validate that history with/without rollup is identical
-function main () {
-  return Promise.each(allCredentials, function (credentials) {
-    logMemAfterGC()
-    log.info('Snapshots started', { user: credentials.name })
-    return loadItems(credentials)
-  })
+const sourceStore = store.impl.pg
+// const sourceStore = store.impl.db
+
+main()
+
+async function main () {
+  try {
+    for (let credentials of allCredentials) {
+      log.info('Snapshots started', { user: credentials.name })
+      await snapshotForUser(credentials)
+    }
+  } catch (err) {
+    log.error('error', err)
+  }
 }
 
-// returns all items from extra, in an array
-function loadItems (credentials) {
-  // shared handler for both extras
-  var l = loader()
-  var sharedHandler = l.handler
-  var historyByType = l.historyByType
-  var flush = l.flush
+async function snapshotForUser (credentials) {
+  const writerCtx = newWriterCtx() //
 
-  return store.impl.pg.load({
+  const loadOpts = {
     filter: {
       __user: credentials.name
     }
-  }, sharedHandler)
-    .then((items) => {
-      flush() // ok, cause it's synchronous (for now)
-      log.verbose('Snapshot:counts', {
-        user: credentials.name,
-        items: items.length
-      })
-    })
-    .then(() => {
-      var _user = credentials.name
-      historyByType.sortAndSave(_user)
-      return Promise.resolve(true)
-    })
+  }
+
+  const items = await sourceStore.load(loadOpts, writerCtx.handler)
+
+  await writerCtx.flush() // ok, cause it's synchronous (for now)
+  log.verbose('Snapshot:counts', {
+    user: credentials.name,
+    items: items.length
+  })
+
+  writerCtx.historyByType.sortAndSave(credentials.name)
 }
 
-// return an item handler for srcFile.iterator which:
+// return an object with these functions: {
+//   handler: item handler for store.db.load which:
+//   historyByType: accumulated stae for deduping on the fly
+//   flush: function for writing the last pendin month
+// The handler
 // - reports item progress (moved to write logging)
 // - validates increasing stamp order
 // - acccumulates items in an {type:[items]} which is passed in.
 // - writes out any completed months
-function loader () {
+
+function newWriterCtx () {
   // throw error if item.__stamp's are non-increasing
   var maxStamp = '1970-01-01T00:00:00Z' // to track increasing'ness
-  function getMaxStamp () {
-    return maxStamp
-  }
 
   function checkStampOrdering (item) {
     var stamp = item.__stamp
@@ -117,7 +111,7 @@ function loader () {
         changeCount: changeCount,
         item: item
       })
-      var msg = util.format('* Item Not deduped: %s %j', changeCount, item)
+      var msg = `* Item Not deduped: ${changeCount} ${item}`
       throw new Error(msg)
     }
   }
@@ -141,11 +135,9 @@ function loader () {
       var _user = item.__user
       var suffix = 'jsonl'
 
-      // TODO(daneroo) replace data/ with sink.dataDirName
-      var outfile = util.format('data/snapshots/monthly/%s/monthly-%s-%s.%s', _user, _user, previousMonth, suffix)
+      // TODO(daneroo) make async
+      var outfile = `${basepath}/monthly/${_user}/monthly-${_user}-${previousMonth}.${suffix}`
       sinkFile.write(outfile, itemsForMonth, {
-        // TODO overwrite should be false, causing errors!
-        // TODO Write verification needs to account for .jsonl
         overwrite: false,
         log: true
       })
@@ -154,6 +146,8 @@ function loader () {
     itemsForMonth.push(item)
     previousMonth = month
   }
+
+  // TODO(daneroo) make async
   function flush () {
     // items is the result of the pg-load being passed through the promise chain
     const remaining = itemsForMonth
@@ -163,19 +157,18 @@ function loader () {
       var suffix = 'jsonl'
       var hostname = config.hostname
 
-      // TODO(daneroo) replace data/ with sink.dataDirName
-      var outfile = util.format('data/snapshots/current/%s/current-%s.%s.%s', _user, hostname, _user, suffix)
+      // TODO(daneroo) make async
+      var outfile = `${basepath}/current/${_user}/current-${hostname}.${_user}.${suffix}`
       sinkFile.write(outfile, itemsForMonth, {
-        // TODO overwrite should be true for current/flush
-        // TODO Write verification needs to account for .jsonl
         overwrite: true,
         log: true
       })
       itemsForMonth = []
     }
   }
+
   // the actual itemHandler being returned
-  var handler = function itemHandler (item) {
+  async function handler (item) {
     // console.log('..stamp',stamp);
     // throw error if item.__stamp's are non-increasing
     checkStampOrdering(item)
@@ -184,59 +177,13 @@ function loader () {
 
     checkForDedup(item)
 
-    // append to returned list
-    // items.push(item);
-
     // buffered - write
     writeByMonth(item)
-
-    return Promise.resolve(true)
   }
 
   return {
     handler: handler,
-    getMaxStamp: getMaxStamp,
     historyByType: historyByType,
     flush: flush
   }
-}
-
-// ************ Utilities
-
-//  move to logging module (as Factory?)
-function verboseErrorHandler (shouldRethrow) {
-  return function errorHandler (error) {
-    console.log(error)
-    log.error('Snapshot:error', {
-      error: error
-    })
-    if (shouldRethrow) {
-      throw (error)
-    }
-  }
-}
-
-function logMemAfterGC () {
-  function showMem (pfx) {
-    var msg = util.format('%sMem after GC (MB)', pfx)
-    log.verbose(msg, {
-      mem: {
-        rss: (process.memoryUsage().rss / 1024 / 1024).toFixed(2),
-        heapTotal: (process.memoryUsage().heapTotal / 1024 / 1024).toFixed(2),
-        heapUsed: (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)
-      }
-    })
-  }
-  showMem('-')
-  if (global.gc) {
-    global.gc()
-    global.gc()
-    global.gc()
-    global.gc()
-
-    showMem('+')
-  } else {
-    log.debug('Garbage collection unavailable.  Pass --expose-gc when launching node to enable forced garbage collection.')
-  }
-  return Promise.resolve(true)
 }

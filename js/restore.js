@@ -26,7 +26,7 @@ async function main () {
     await destinationStore.init()
 
     for (let credentials of allCredentials) {
-      log.verbose('Restore started', { user: credentials.name })
+      log.info('Restore started', { user: credentials.name })
       await restore(credentials)
       await accumulateItems(credentials)
     }

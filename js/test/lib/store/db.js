@@ -320,6 +320,43 @@ describe('store', function () {
       expect(await db.digests()).to.deep.equal([ ])
     })
 
+    it('should remove an multiple items even if some are not present', async () => {
+      const items = helpers.makeItems([0, 1, 2, 3, 4, 5, 6, 7])
+      const ok = await db.saveAll(items)
+      expect(ok).to.equal(true)
+
+      expect(await db.digests()).to.deep.equal([
+        'f6015930b9b4c8dfeaec33902f835711407fa3e0ad63f7c4daafeaa3b55c505a', // 7
+        '744a820f0ad761a17b5620233d79ee4588c3b1de46c18b0fc93547929f57fa84', // 6
+        '053f344178c6d150a6644a1a673dff97227f341f6f08ad693a2399af5b4bf081', // 5
+        'b6029b4fe3cc47c68c5611e01d315a4be20fb3a39304b4255567a40bacc9b3ca', // 4
+        '2a87b34d35438cf1a0b696898f075b9cdcb156698f7edf86e337a220c92c0a22', // 3
+        '4c01804183b5f842c4b30407d2d117d1419e2a8e05ca7e986511497639f6c84a', // 2
+        '2eaafe32f069588325a2487f23999506b5619f3c0e8a7113f7effa511dd95173', // 1
+        '39b3d1263027fefa1b881599a099e9096a5cdab12eb156f336225de68e747f62' // 0
+      ])
+
+      // removeAll(2,4,6) // items[1,3,5]
+      let count = await db.removeAll([2, 4, 6].map(i => items[i]))
+      expect(count).to.equal(3)
+      expect(await db.digests()).to.deep.equal([
+        'f6015930b9b4c8dfeaec33902f835711407fa3e0ad63f7c4daafeaa3b55c505a', // 7
+        '053f344178c6d150a6644a1a673dff97227f341f6f08ad693a2399af5b4bf081', // 5
+        '2a87b34d35438cf1a0b696898f075b9cdcb156698f7edf86e337a220c92c0a22', // 3
+        '2eaafe32f069588325a2487f23999506b5619f3c0e8a7113f7effa511dd95173', // 1
+        '39b3d1263027fefa1b881599a099e9096a5cdab12eb156f336225de68e747f62' // 0
+      ])
+
+      // removeAll(2,3,4,5,6) // items
+      count = await db.removeAll([2, 3, 4, 5, 6].map(i => items[i]))
+      expect(count).to.equal(2)
+      expect(await db.digests()).to.deep.equal([
+        'f6015930b9b4c8dfeaec33902f835711407fa3e0ad63f7c4daafeaa3b55c505a', // 7
+        '2eaafe32f069588325a2487f23999506b5619f3c0e8a7113f7effa511dd95173', // 1
+        '39b3d1263027fefa1b881599a099e9096a5cdab12eb156f336225de68e747f62' // 0
+      ])
+    })
+
     describe('private', function () {
       it('should calculate the _digest of an item', async () => {
         const item = helpers.makeItem(0)

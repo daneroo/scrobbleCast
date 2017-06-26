@@ -1,5 +1,9 @@
 # implement the feed fetch in node.js
 
+## Not on docker `screen`
+```
+screen -q -R
+```
 ## Sync paths
 
 Questions:

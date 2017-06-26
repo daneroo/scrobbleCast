@@ -4,12 +4,10 @@
 // pg implementation (save only)
 
 // dependencies - core-public-internal
-var Promise = require('bluebird')
 var log = require('../log')
 var utils = require('../utils')
 const orm = require('../model/orm')
 // these might be moved or exposed
-var pgu = require('./pg-utils')
 
 // var sinkFile = require('../sink/file');
 
@@ -37,7 +35,8 @@ exports = module.exports = {
   // for sync reconciliation
   getByKey: getByKey,
 
-  remove: remove
+  remove: remove,
+  removeAll: removeAll
 }
 
 // expose private methods for tests
@@ -307,7 +306,22 @@ async function remove (item) {
     }
   })
   if (rowCount !== 1) {
-    log.warn('remove rowCount!=1', {rowCount: rowCount, digest: digest, item: item})
+    log.warn('remove unexpected rowCount!=1', {rowCount: rowCount, digest: digest})
+  }
+  return rowCount
+}
+
+// TODO removeByBatch: modelled on saveAll/saveByBatch
+async function removeAll (items) {
+  const digests = items.map(_digest)
+  const rowCount = await orm.Item.destroy({
+    attributes: ['item'],
+    where: {
+      digest: digests
+    }
+  })
+  if (rowCount !== items.length) {
+    log.warn('removeAll unexpected rowCount!', {rowCount: rowCount, items: items.length})
   }
   return rowCount
 }

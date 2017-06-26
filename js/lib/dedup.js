@@ -69,13 +69,14 @@ function dedupTask (credentials) {
     })
 }
 
+// move this into db.removeAll, with progress as in store.file
 async function deleteDuplicates (duplicates) {
+  const start = +new Date()
   log.verbose('deleting %d duplicates', duplicates.length)
-  return store.db.removeAll(duplicates)
-  // return Promise.each(duplicates, (item, index) => {
-  //   if (index % 1000 === 0) {
-  //     log.verbose('  ... removed', index)
-  //   }
-  //   return store.db.remove(item)
-  // })
+
+  const soFar = await store.db.removeAll(duplicates)
+
+  const elapsed = (+new Date() - start) / 1000
+  const rate = (soFar / elapsed).toFixed(0) + 'r/s'
+  log.verbose(`deleted duplicates`, { items: soFar, elapsed: elapsed, rate: rate })
 }

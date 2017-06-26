@@ -69,14 +69,20 @@ function dedupTask (credentials) {
     })
 }
 
-// move this into db.removeAll, with progress as in store.file
+// move this into db.removeAll, does batch logic
 async function deleteDuplicates (duplicates) {
+  const maxBatchSize = 1000
   const start = +new Date()
   log.verbose('deleting %d duplicates', duplicates.length)
 
-  const soFar = await store.db.removeAll(duplicates)
-
-  const elapsed = (+new Date() - start) / 1000
-  const rate = (soFar / elapsed).toFixed(0) + 'r/s'
-  log.verbose(`deleted duplicates`, { items: soFar, elapsed: elapsed, rate: rate })
+  let soFar = 0
+  while (duplicates.length > 0) {
+    // this removes maxBatchsize elements from duplicates
+    const batch = duplicates.splice(0, maxBatchSize)
+    const actuallyRemoved = await store.db.removeAll(batch)
+    soFar += actuallyRemoved
+    const elapsed = (+new Date() - start) / 1000
+    const rate = (soFar / elapsed).toFixed(0) + 'r/s'
+    log.verbose(` .. deleted duplicates`, { items: soFar, remaining: duplicates.length, elapsed: elapsed, rate: rate })
+  }
 }

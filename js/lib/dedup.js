@@ -69,12 +69,13 @@ function dedupTask (credentials) {
     })
 }
 
-function deleteDuplicates (duplicates) {
+async function deleteDuplicates (duplicates) {
   log.verbose('deleting %d duplicates', duplicates.length)
-  return Promise.each(duplicates, (item, index) => {
-    if (index % 1000 === 0) {
-      log.verbose('  ... removed', index)
-    }
-    return store.db.remove(item)
-  })
+  return store.db.remove(duplicates)
+  // return Promise.each(duplicates, (item, index) => {
+  //   if (index % 1000 === 0) {
+  //     log.verbose('  ... removed', index)
+  //   }
+  //   return store.db.remove(item)
+  // })
 }

@@ -51,7 +51,7 @@ function dedupTask (credentials) {
         return Promise.resolve(true)
       }
 
-      return store.impl.pg.load(opts, itemHandler)
+      return store.db.load(opts, itemHandler)
         .then((/* items */) => {
           log.verbose('Deduped', counts)
           return deleteDuplicates(duplicates)
@@ -75,6 +75,6 @@ function deleteDuplicates (duplicates) {
     if (index % 1000 === 0) {
       log.verbose('  ... removed', index)
     }
-    return store.impl.pg.remove(item)
+    return store.db.remove(item)
   })
 }

@@ -24,9 +24,6 @@ var allCredentials = require('./credentials.json')
 
 const basepath = ['data/snapshots/']
 
-const sourceStore = store.impl.pg
-// const sourceStore = store.impl.db
-
 main()
 
 async function main () {
@@ -38,6 +35,9 @@ async function main () {
   } catch (err) {
     log.error('error', err)
   }
+
+  // seems to hang with sequelize for postgres
+  process.exit(0)
 }
 
 async function snapshotForUser (credentials) {
@@ -49,7 +49,7 @@ async function snapshotForUser (credentials) {
     }
   }
 
-  const items = await sourceStore.load(loadOpts, writerCtx.handler)
+  const items = await store.db.load(loadOpts, writerCtx.handler)
 
   await writerCtx.flush() // ok, cause it's synchronous (for now)
   log.verbose('Snapshot:counts', {

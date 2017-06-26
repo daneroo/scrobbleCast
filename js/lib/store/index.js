@@ -21,6 +21,11 @@
 exports = module.exports = {
   // common
 
+  // deprecate impl member, use db and file
+  // db: require('./pg'),
+  db: require('./db'),
+  file: require('./file'),
+
   // implentations
   impl: {
     iface: {

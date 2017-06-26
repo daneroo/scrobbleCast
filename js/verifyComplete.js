@@ -32,13 +32,13 @@ let basepaths = ['rollup', '', 'archive', 'redux', 'snapshots', 'noredux']
 
 Promise.resolve(true)
   // Promise.reject(new Error('Abort now!'))
-  .then(store.impl.pg.init)
+  .then(store.db.init)
   .then(main)
   .then(logMemAfterGC)
   .catch(verboseErrorHandler(false))
   .finally(function () {
     log.debug('Done, done, releasing PG connection')
-    store.impl.pg.end()
+    store.db.end()
   })
 
 function main () {
@@ -186,7 +186,7 @@ function preload (credentials) {
     return Promise.resolve(true)
   }
 
-  return store.impl.pg.load(opts, itemHandler)
+  return store.db.load(opts, itemHandler)
     .then((results) => {
       log.verbose('Preloaded results', results.length)
       log.verbose('Preloaded uuids', Object.keys(itemsByUuid).length)

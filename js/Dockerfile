@@ -9,8 +9,8 @@ RUN ln -sf /usr/share/zoneinfo/Canada/Eastern /etc/localtime
 # RUN groupadd -r -g 1000 daniel && useradd -r -g daniel -u 1000 daniel
 # USER daniel
 
-# replace this with your application's default port
-#EXPOSE 8888
+# Default port
+EXPOSE 8000
 
 # Repeat thi to assign USER properly
 CMD [ "npm", "start" ]

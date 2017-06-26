@@ -16,14 +16,11 @@ var allCredentials = require('./credentials.json') // .slice(0, 1);
 // const basepaths = ['snapshots'];
 const basepaths = ['snapshots/monthly', 'snapshots/current']
 
-const destinationStore = store.impl.pg
-// const destinationStore = store.impl.db
-
 main()
 
 async function main () {
   try {
-    await destinationStore.init()
+    await store.db.init()
 
     for (let credentials of allCredentials) {
       log.info('Restore started', { user: credentials.name })
@@ -37,7 +34,7 @@ async function main () {
   await digestOfDigests()
 
   log.debug('Closing connection')
-  await destinationStore.end()
+  await store.db.end()
   log.debug('Closed connection')
 
     // seems to hang with sequelize for postgres
@@ -45,7 +42,7 @@ async function main () {
 }
 
 async function restore (credentials) {
-  // const saver = destinationStore.save;
+  // const saver = store.db.save;
   // TODO(daneroo) batchSaver(.flush) move to pg
   const batchSize = 1000 // which is the default
 
@@ -60,14 +57,14 @@ async function restore (credentials) {
       __user: credentials.name
     }
   }
-  const saver = destinationStore.saveByBatch(batchSize)
+  const saver = store.db.saveByBatch(batchSize)
 
   await store.impl.file.load(loadOpts, saver)
   await saver.flush()
 }
 
 async function digestOfDigests () {
-  const digests = await destinationStore.digests()
+  const digests = await store.db.digests()
   const dod = utils.digest(JSON.stringify(digests), 'sha256', true)
   log.info('Digest of digests', { items: digests.length, digest: dod })
 }
@@ -89,7 +86,7 @@ async function accumulateItems (credentials) {
     return true
   }
 
-  const results = await destinationStore.load(opts, itemHandler)
+  const results = await store.db.load(opts, itemHandler)
   log.verbose('Merged', results.length)
   historyByType.sortAndSave(__user)
 }

@@ -23,16 +23,16 @@ function syncAll () {
 
 Promise.resolve(true)
   // Promise.reject(new Error('Abort now!'))
-  .then(store.impl.pg.init)
+  .then(store.db.init)
   .then(syncAll)
   .catch(verboseErrorHandler(false))
   // this used to be a finally clause - for which there is a polyfill: https://www.promisejs.org/api/
   .then(function () {
     log.debug('OK: Done, done, releasing PG connection')
-    store.impl.pg.end()
+    store.db.end()
   }, function (err) {
     log.debug('ERR: Done, done, releasing PG connection', err)
-    store.impl.pg.end()
+    store.db.end()
   })
 
 // ************ Utilities

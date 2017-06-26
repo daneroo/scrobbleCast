@@ -258,15 +258,35 @@ describe('store', function () {
       }
     })
 
-    it('should thrown an error when deprecated getByKey is called', async () => {
+    // This was to test deprecation notice of getByKey
+    // it.skip('should thrown an error when deprecated getByKey is called', async () => {
+    //   const item = helpers.makeItem(1)
+    //   try {
+    //     /* const got = */ await db.getByKey(item)
+    //     throw (new Error('should not reach this'))
+    //   } catch (err) {
+    //     expect(err.message).to.equal('db::getByKey deprecated')
+    //   }
+    // })
+
+    it('should find an item with getByKey', async () => {
       const item = helpers.makeItem(1)
+      const ok = await db.save(item)
+      expect(ok).to.equal(true)
+
+      const got = await db.getByKey(item)
+      expect(got).to.deep.equal(item)
+    })
+    it('should return null getByKey(item) is not found', async () => {
+      const item = helpers.makeItem(2)
       try {
-        /* const got = */ await db.getByKey(item)
-        throw (new Error('should not reach this'))
+        const got = await db.getByKey(item)
+        expect(got).to.equal(null)
       } catch (err) {
-        expect(err.message).to.equal('db::getByKey deprecated')
+        throw (new Error('should not reach this'))
       }
     })
+
     it('should remove an item if it exists and if it does\'nt', async () => {
       const items = helpers.makeItems([1, 2])
       const ok = await db.saveAll(items)

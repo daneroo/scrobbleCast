@@ -71,7 +71,7 @@ function fetchMissingFromRemote (baseURI, missingLocal) {
 
     // log.verbose(`--fetching ${options.uri}`)
     return rp(options)
-      // .then(store.impl.pg.save)
+      // .then(store.db.save)
       .then(saveWithExtraordinaryReconcile)
       .then(() => {
         log.verbose(`--persist:  ${options.uri}`)
@@ -82,13 +82,13 @@ function fetchMissingFromRemote (baseURI, missingLocal) {
   })
 }
 
-// Wraps store.impl.pg.save, with an attempt to resolve primary key violation with a custom rule:
+// Wraps store.db.save, with an attempt to resolve primary key violation with a custom rule:
 // namely if all fields identical except played_up_to, then select the one with the largest value
 function saveWithExtraordinaryReconcile (item) {
-  return store.impl.pg.getByKey(item)
+  return store.db.getByKey(item)
     .then(dbitem => {
       if (!dbitem) {
-        return store.impl.pg.save(item)
+        return store.db.save(item)
       }
       var isIdentical = _.isEqual(item, dbitem)
       // if an identical item existed, we would not be in reconciliation
@@ -112,9 +112,9 @@ function saveWithExtraordinaryReconcile (item) {
         log.verbose(`--dbitem  ${JSON.stringify(dbitem)}`)
         if (item.played_up_to > dbitem.played_up_to) {
           log.info('sync:extraordinary:1 reconciliation', item)
-          return store.impl.pg.remove(dbitem)
+          return store.db.remove(dbitem)
             .then(() => {
-              return store.impl.pg.save(item)
+              return store.db.save(item)
             })
         } else {
           log.info('sync:extraordinary:1 reconciliation ignored, let the other side do it!', item)
@@ -131,9 +131,9 @@ function saveWithExtraordinaryReconcile (item) {
         if (item.played_up_to > dbitem.played_up_to &&
           item.playing_status > dbitem.playing_status) {
           log.info('sync:extraordinary:2 reconciliation', item)
-          return store.impl.pg.remove(dbitem)
+          return store.db.remove(dbitem)
             .then(() => {
-              return store.impl.pg.save(item)
+              return store.db.save(item)
             })
         } else {
           log.info('sync:extraordinary:2 reconciliation ignored, let the other side do it!', item)
@@ -141,7 +141,7 @@ function saveWithExtraordinaryReconcile (item) {
       }
 
       // default to the normal error processing
-      return store.impl.pg.save(item)
+      return store.db.save(item)
     })
 }
 function loadFromURL (baseURI, syncParams) {
@@ -159,7 +159,7 @@ function loadFromURL (baseURI, syncParams) {
 }
 function loadFromDB (syncParams) {
   log.debug('loadFromDB')
-  return store.impl.pg.digests(syncParams)
+  return store.db.digests(syncParams)
     .then(function (digests) {
       return new Set(digests)
     })

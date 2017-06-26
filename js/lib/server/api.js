@@ -35,7 +35,7 @@ router.get('/', function (req, res) {
 router.route('/digests')
   .get(function (req, res) {
     let syncParams = req.query // pass on the query params to pg.digests
-    store.impl.pg.digests(syncParams)
+    store.db.digests(syncParams)
       .then((rows) => {
         res.json(rows)
       })
@@ -60,7 +60,7 @@ router.route('/digest/:digest')
   .get(function (req, res) {
     const digest = req.params.digest
     log.verbose('/api/digest/', digest)
-    store.impl.pg.getByDigest(digest)
+    store.db.getByDigest(digest)
       .then((item) => {
         res.json(item)
       })

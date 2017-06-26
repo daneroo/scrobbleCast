@@ -127,8 +127,19 @@ async function save (item) {
 function saveByBatch (batchSize) {
   // default batchSize
   batchSize = batchSize || 1000
-  // speed benchamarks with ~208k items: postgres: TODO(daneroo)
-  // speed benchamarks with ~208k items: sqlite
+  // tested with restore 2017-06-24
+  // benchamarks with ~208k items: postgres
+  // batch=10000 empty 100 seconds
+  // batch=1000  empty  58 seconds <--
+  // batch=100   empty  78 seconds
+  // batch=1000  half   45 seconds <-- (digest like [0-7]%) inserts interleaved
+  // batch=1000  half   40 seconds <-- (__stamp > '2016-02-01') All insrts at end
+  // batch=10000 full   18 seconds
+  // batch=1000  full   17 seconds <--
+  // batch=100   full   18 seconds
+  // batch=10    full   52 seconds
+
+  // benchamarks with ~208k items: sqlite
   // batch=10000 empty  58 seconds
   // batch=1000  empty  39 seconds <--
   // batch=100   empty  57 seconds
@@ -307,5 +318,15 @@ async function remove (item) {
 // not refactored because of detailed error loging in confirmIdentical()
 // exposed for proactive recociliation in sync::saveWithExtraordinaryReconcile
 async function getByKey (item) {
-  throw new Error('db::getByKey deprecated')
+  // throw new Error('db::getByKey deprecated')
+  const digest = _digest(item)
+  const found = await orm.Item.findOne({
+    attributes: ['item'],
+    where: {
+      digest: digest
+    }
+  })
+  // console.log('found', found)
+  // console.log('found.item', found.item)
+  return (found) ? found.item : null
 }

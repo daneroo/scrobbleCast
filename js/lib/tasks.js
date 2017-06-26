@@ -192,13 +192,13 @@ var initDB = function () {
     return Promise.resolve(true)
   }
   // log.verbose('Actually initialize');
-  return store.impl.pg.init()
+  return store.db.init()
 }
 
 // this is where I can switch from file to postgress persistence
 function saver (items) {
   return initDB()
     .then(function () {
-      return store.impl.pg.saveAll(items)
+      return store.db.saveAll(items)
     })
 }

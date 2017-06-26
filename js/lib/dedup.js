@@ -71,7 +71,7 @@ function dedupTask (credentials) {
 
 async function deleteDuplicates (duplicates) {
   log.verbose('deleting %d duplicates', duplicates.length)
-  return store.db.remove(duplicates)
+  return store.db.removeAll(duplicates)
   // return Promise.each(duplicates, (item, index) => {
   //   if (index % 1000 === 0) {
   //     log.verbose('  ... removed', index)

@@ -13,7 +13,7 @@ main()
 async function main () {
   for (let credentials of allCredentials) {
     // await tasks.shallow(credentials)
-    // await tasks.deep(credentials)
+    await tasks.deep(credentials)
     await tasks.quick(credentials)
     await tasks.dedup(credentials)
   }

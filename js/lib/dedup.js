@@ -71,6 +71,9 @@ function dedupTask (credentials) {
 
 // move this into db.removeAll, does batch logic
 async function deleteDuplicates (duplicates) {
+  // shallow copy of duplicates because batching process is destructive
+  duplicates = duplicates.slice()
+
   const maxBatchSize = 1000
   const start = +new Date()
   log.verbose('deleting %d duplicates', duplicates.length)
@@ -83,6 +86,6 @@ async function deleteDuplicates (duplicates) {
     soFar += actuallyRemoved
     const elapsed = (+new Date() - start) / 1000
     const rate = (soFar / elapsed).toFixed(0) + 'r/s'
-    log.verbose(` .. deleted duplicates`, { items: soFar, remaining: duplicates.length, elapsed: elapsed, rate: rate })
+    log.verbose(` .. deleted duplicates`, { deleted: soFar, remaining: duplicates.length, elapsed: elapsed, rate: rate })
   }
 }

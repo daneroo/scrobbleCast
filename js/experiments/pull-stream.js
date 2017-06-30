@@ -1,7 +1,7 @@
-"use strict";
+'use strict'
 
-var fs = require('fs');
-var pull = require('pull-stream');
+// var fs = require('fs')
+var pull = require('pull-stream')
 
 //  simple example - works
 // pull(
@@ -26,50 +26,48 @@ var pull = require('pull-stream');
 //   // });
 // }
 
-
-var createSourceStream = pull.Source(function() {
-  return function(end, cb) {
+var createSourceStream = pull.Source(function () {
+  return function (end, cb) {
     // return cb(end, Math.random())
-    setTimeout(function() {
-      cb(end, Math.random());
-    }, 50);
+    setTimeout(function () {
+      cb(end, Math.random())
+    }, 50)
   }
 })
 
-var createThroughStream = pull.Through(function(read) {
-  return function(end, cb) {
-    // read(end, cb)
-    read(end, function(end2, data) {
-      console.log('--data:', data, 1 - data);
-      cb(end, data)
-    })
-  }
-})
+// var createThroughStream = pull.Through(function (read) {
+//   return function (end, cb) {
+//     // read(end, cb)
+//     read(end, function (end2, data) {
+//       console.log('--data:', data, 1 - data)
+//       cb(end, data)
+//     })
+//   }
+// })
 
-var plusOne = pull.map(function(data) {
+var plusOne = pull.map(function (data) {
   // if null ?
-  return data + 1;
-});
-
-var plusN = function(n) {
-  return pull.map(function(data) {
-    // if null ?
-    return data + n;
-  })
-};
-
-
-var createSinkStream = pull.Sink(function(read) {
-  read(null, function next(end, data) {
-    if (end) return
-    console.log(data)
-    read(null, next)
-  })
+  return data + 1
 })
+
+var plusN = function (n) {
+  return pull.map(function (data) {
+    // if null ?
+    return data + n
+  })
+}
+
+// var createSinkStream = pull.Sink(function (read) {
+//   read(null, function next (end, data) {
+//     if (end) return
+//     console.log(data)
+//     read(null, next)
+//   })
+// })
 
 // same as above (better end check)
-var logger = pull.Sink(function(read) {
-  read(null, function next(end, data) {
+var logger = pull.Sink(function (read) {
+  read(null, function next (end, data) {
     if (end === true) return
     if (end) throw end
 
@@ -79,11 +77,12 @@ var logger = pull.Sink(function(read) {
 })
 
 // copied from pull.log
-var mySink = function(read, done) {
-    return pull.drain(read, function(data) {
-      console.log(data)
-    }, done)
-  }
+// var mySink = function (read, done) {
+//   return pull.drain(read, function (data) {
+//     console.log(data)
+//   }, done)
+// }
+
   // NOT WORKING pull(createSourceStream(), createThroughStream()), createSinkStream());
   // pull(createSourceStream(),pull.log()) // ok
   // pull(createSourceStream(),logger()) // ok, but stack overflow (when no async??)
@@ -107,6 +106,5 @@ pull(createSourceStream(), pull.take(100), plusOne, plusN(10), logger()) // ok
 //     //   console.log(ary)
 //     // }),
 //   )
-
 
 // /end

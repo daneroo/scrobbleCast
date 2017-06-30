@@ -44,6 +44,7 @@ Scenario:
 
 ## TODO
 
+- sync (command) add quick, day, month all... param (all default)
 - snapshots: clean up assertions (move them to store (like file.load?))
 - snapshots to dir, then [s3-cli sync](https://github.com/andrewrk/node-s3-cli)
 - remove `s3-cli`, replace by `s3` get creds from json instead of s3cfg.ini (.gitgnore)
@@ -64,6 +65,7 @@ Scenario:
   - consensus based on digest of non deduped entries. (order by digest|date,..)
 - restore-pg switches from default `saveButVerifyIfDuplicate` to `checkThenSaveItem` on first fail...
 
++ syncTask since-24hrs, before stamp(grain=10minutes)
 + snashots now load from db
 + eslint cleanup
 + remove `.jsbeautifyrc, .jshitrc, .jscsrc`
@@ -200,11 +202,15 @@ docker volume rm js_scrbl_pgdata
 export HOSTNAME
 docker-compose build
 docker-compose up -d
+docker-compose logs -f scrape
+
 # restore from s3 -> data/snapshots -> pg
 docker-compose run --rm scrape npm run restore
 docker-compose run --rm scrape node restore.js
 
 # take a snapshot pg -> data/snapshots -> s3
+# -optionally, to avoid pushing other hosts 'current'
+#  rm -rf data/snapshots/current/
 export HOSTNAME; docker-compose run --rm scrape node snapshots.js
 docker-compose run --rm scrape npm run snapshot
 
@@ -274,9 +280,17 @@ Start a container and connect to it
     select __user,__type,uuid, count(distinct uuid) dis,count(*) as all,min(__stamp),max(__stamp) from items group by __user,__type,uuid order by count(*) desc;
     SELECT encode(digest(item::text, 'md5'), 'hex') as digest FROM items;
     delete from items where encode(digest(item::text, 'sha256'), 'hex')='b24ef01e3f97f940798573e3bc845f9ffd9a2576a5adaee829fb77a398eaf863';
+    # -- aggregates on episodesForPodcast
+    # - episodes per podcast
+    select item->>'podcast_uuid' as puuid, count(distinct uuid) as neuuid from items where __user='daniel' and __type='episode' group by puuid order by neuuid,puuid
     # === mysqladmin proc
     select * from pg_stat_activity
 
+    # time selective queries for __stamp
+    time docker-compose exec postgres psql -U postgres scrobblecast -c "select count(*) from items"
+    time docker-compose exec postgres psql -U postgres scrobblecast -q -P pager=off -c "select encode(digest(item::text, 'md5'), 'hex') as digest FROM items"
+    time docker-compose exec postgres psql -U postgres scrobblecast -q -P pager=off -c "select encode(digest(item::text, 'md5'), 'hex') as digest FROM items where __stamp>'2016-12-22 17:10'"
+    
 ### Using pg crypto
 The extension for `pgcrypto`, although available, must be loaded (once)
 

@@ -1,0 +1,25 @@
+[
+  {
+    "playedTime": 1471,
+    "firstPlayed": "2017-05-28T23:10:00Z",
+    "lastPlayed": "2017-05-28T23:30:00Z",
+    "playedProportion": 0.4956199460916442,
+    "status": {
+      "2017-05-25T12:00:00Z": 0,
+      "2017-05-28T23:10:00Z": 2,
+      "2017-06-02T02:00:00Z": 3
+    },
+    "duration": "2968",
+    "play": {
+      "2017-05-25T12:00:00Z": 0,
+      "2017-05-28T23:10:00Z": 511,
+      "2017-05-28T23:30:00Z": 1471
+    },
+    "podcast_uuid": "a56c9e00-5332-0132-d11f-5f4c86fd3263",
+    "title": "Data science and deep learning in retail",
+    "playCount": 3,
+    "uuid": "ce184000-236a-0135-52f8-452518e2d253",
+    "thumbnail_url": "http://cdn.oreillystatic.com/radar/datashow-podcast/data-podcast-1400x1400.png",
+    "podcast_title": "O'Reilly Data Show - O'Reilly Media Podcast"
+  }
+]

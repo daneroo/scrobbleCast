@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 // Main Module file for store API and implementations
 // -must consider a streaming save (bulk loading)
@@ -21,14 +21,19 @@
 exports = module.exports = {
   // common
 
+  // deprecate impl member, use db and file
+  // db: require('./pg'),
+  db: require('./db'),
+  file: require('./file'),
+
   // implentations
   impl: {
     iface: {
-      save: (/*item, opts*/) => { }, // returns (Promise)(status in insert,duplicate,error)
-      load: (/*opts, cb*/) => { } // foreach item, cb(item);
+      save: (/* item, opts */) => { }, // returns (Promise)(status in insert,duplicate,error)
+      load: (/* opts, cb */) => { } // foreach item, cb(item);
     },
     pg: require('./pg'),
-    pouch: require('./pouch'),
+    db: require('./db'),
     file: require('./file') // load only for now
   }
-};
+}

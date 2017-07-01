@@ -222,6 +222,7 @@ docker-compose run --rm scrape npm run snapshot
 docker-compose run --rm scrape node sync.js http://euler.imetrical.com:8000/api
 docker-compose run --rm scrape node sync.js http://dirac.imetrical.com:8000/api
 docker-compose run --rm scrape node sync.js http://darwin.imetrical.com:8000/api
+docker-compose run --rm scrape node sync.js http://newton.imetrical.com:8000/api
 docker-compose run --rm scrape node sync.js http://192.168.3.131:8000/api
 docker-compose run --rm scrape node sync.js http://192.168.5.144:8000/api
 

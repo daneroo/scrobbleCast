@@ -34,7 +34,7 @@ const columns = [
   '__type',
   'uuid',
   // no camelCase! __sourceType -> __sourcetype
-  '__sourcetype',
+  {name: '__sourcetype', prop: '__sourceType'}
   'item'
 ]
 const columnSet = new pgp.helpers.ColumnSet(columns, { table: 'items' })
@@ -58,15 +58,8 @@ function getNamedParametersForItem (item) {
 // if items is not an array, assume it is a single item
 // uses pg-promise insert helper
 function insertSQL (items) {
-  let fields
-  if (Array.isArray(items)) {
-    fields = items.map(getNamedParametersForItem)
-  } else {
-    let item = items // just to clear on our intent
-    fields = getNamedParametersForItem(item)
-  }
   // this returns a (possibly mulitple) insert query
-  return pgp.helpers.insert(fields, columnSet)
+  return pgp.helpers.insert(items, columnSet)
 }
 
 function ddlSilent (ddl) {

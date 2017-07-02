@@ -15,6 +15,7 @@ var _ = require('lodash')
 var log = require('./log')
 
 exports = module.exports = {
+  getCheckpointRecords: getCheckpointRecords,
   // query: queryLoggly, // need to parametrized before being exposed
   detectMismatchTask: detectMismatchTask,
   getMD5Records: getMD5Records,
@@ -23,6 +24,25 @@ exports = module.exports = {
 
 var config = JSON.parse(fs.readFileSync('credentials.loggly.json').toString())
 var client = loggly.createClient(config)
+
+async function getCheckpointRecords () {
+  // The search options can be parametrized later (hours,runs...)
+  var searchOptions = {
+    query: 'tag:pocketscrape AND json.message:checkpoint AND json.digest:*',
+    from: '-24h',
+    until: 'now',
+    order: 'desc', // which is the default
+    // max size is about 1728=12*24*6, entiresPerRun*24h(retention) * 6runs/hour
+    // at 12 entries per task run: 2 type * 2 users * 3 hosts, so this is 36 runs, or 6 hours.
+    size: 432
+  }
+
+  return queryLoggly(searchOptions)
+    .then(parseCheckpointEntries)
+    .catch(err => {
+      console.error(err)
+    })
+}
 
 function getMD5Records () {
   // The search options can be parametrized later (hours,runs...)
@@ -44,7 +64,7 @@ function getMD5Records () {
 // convenience to be run from task.
 // run the query, detection and log it!
 function detectMismatchTask () {
-  return getMD5Records()
+  return getCheckpointRecords()
     .then(detectMismatch)
 }
 
@@ -63,7 +83,7 @@ function detectMismatch (records) {
     result[userType] = result[userType] || {}
     // don't overwrite, since we want the latest, and assume descending stamp ordering
     if (!result[userType][host]) {
-      result[userType][host] = record.md5
+      result[userType][host] = record.digest
     }
     return result
   }, {})
@@ -156,4 +176,31 @@ function parseMD5Entries (entries) {
     records.push(record)
   })
   return records
+}
+
+function parseCheckpointEntries (entries) {
+  var records = []
+
+  entries.forEach(function (entry) {
+    // stamp is no longer rounded here: moved to aggregator function
+    const stamp = new Date(entry.timestamp).toJSON()
+
+    // host from tags: [ 'pocketscrape', 'host-darwin.imetrical.com' ]
+    var host = _.filter(entry.tags, tag => tag.match(/^host-/))[0].replace(/^host-/, '')
+    const digest = getDigest(entry.event.json.digest)
+
+    var record = {
+      stamp: stamp,
+      host: host,
+      digest: digest
+    }
+
+    records.push(record)
+  })
+  return records
+}
+
+function getDigest (digest) {
+    //  as digest was reported as {digest:'sha256:9872398479238749'}, remove the sha256 part if present
+  return digest.startsWith('sha256:') ? digest.substr(7) : digest
 }

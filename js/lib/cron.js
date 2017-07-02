@@ -36,6 +36,8 @@ var recurrence = {
 
 // serial execution of <task> for each credentialed user
 // perform dedup task on all users, after main tasks are completed
+// then perform a checkpoint
+// TODO(daneroo) move checkpoint into composed or separate task
 // returns a function
 function forEachUser (task) {
   return function () {

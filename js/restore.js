@@ -8,7 +8,6 @@
 var log = require('./lib/log')
 var delta = require('./lib/delta')
 var store = require('./lib/store')
-var utils = require('./lib/utils')
 
 // globals
 var allCredentials = require('./credentials.json') // .slice(0, 1);
@@ -64,9 +63,8 @@ async function restore (credentials) {
 }
 
 async function digestOfDigests () {
-  const digests = await store.db.digests()
-  const dod = utils.digest(JSON.stringify(digests), 'sha256', true)
-  log.info('Digest of digests', { items: digests.length, digest: dod })
+  const dod = await store.db.digestOfDigests()
+  log.info('checkpoint', { digest: dod })
 }
 
 async function accumulateItems (credentials) {

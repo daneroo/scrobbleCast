@@ -6,22 +6,20 @@ volumes:
     external: false
 
 services:
-  postgres:
-    image: postgres
-    environment:
-      - POSTGRES_DB=scrobblecast
-    volumes:
-      - ./data/postgresql:/var/lib/postgresql/data
-      # - scrbl_pgdata:/var/lib/postgresql/data
-    ports:
-     - "5432:5432"
-    restart: unless-stopped
-    logging:
-      driver: json-file
-      options:
-        max-size: "1m"
-        # max-file: "2"
-
+  # postgres:
+  #   image: postgres
+  #   environment:
+  #     - POSTGRES_DB=scrobblecast
+  #   volumes:
+  #     - ./data/postgresql:/var/lib/postgresql/data
+  #   ports:
+  #    - "5432:5432"
+  #   restart: unless-stopped
+  #   logging:
+  #     driver: json-file
+  #     options:
+  #       max-size: "2m"
+  #       # max-file: "2"
 
   scrape:
     # container_name: scrape
@@ -29,7 +27,7 @@ services:
     environment:
       # no value inherits from host (but not docker-machine host...)
       - HOSTNAME
-      - POSTGRES_HOST=postgres
+      - DB_DIALECT=sqlite
     # command: npm start
     ports:
      - "8000:8000"
@@ -45,7 +43,7 @@ services:
     logging:
       driver: json-file
       options:
-        max-size: "1m"
+        max-size: "2m"
         # max-file: "2"
 
 

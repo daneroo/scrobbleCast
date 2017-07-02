@@ -5,6 +5,20 @@ _Note on `screen`:_
 screen -q -R
 ```
 
+## Test 
+Until npm run sescan passes!
+```
+npm run unit
+
+# - postgres
+docker-compose -f docker-compose-services.yml up -d
+DB_DIALECT=postgres npm run unit
+
+# - or more verbose
+DB_LOG=1 DB_DIALECT=postgres npm run unit
+```
+
+
 ## TODO
 
 - cleanup
@@ -13,6 +27,7 @@ screen -q -R
   - remove store.pg
   - npm outdated
   - mkdir data/sqlite
+- CI
 - default hostname sanity (report on start)
 - refactor tasks: composable, adjust perUser, dedup vs checkpoint
 - sync: discovery

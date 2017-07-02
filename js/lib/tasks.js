@@ -11,6 +11,7 @@ var _ = require('lodash')
 // mine
 var PocketAPI = require('./pocketAPI')
 var log = require('./log')
+var config = require('./config')
 var utils = require('./utils')
 var store = require('./store')
 var dedupTask = require('./dedup').dedupTask
@@ -37,7 +38,7 @@ function logcheck () {
 
 function sync () {
   // poor man's discovery, default euler...
-  const shortHost = process.env.HOSTNAME.split('.')[0]
+  const shortHost = config.hostname.split('.')[0]
   const otherHost = (shortHost === 'euler') ? 'dirac' : 'euler'
   const baseURI = `http://${otherHost}.imetrical.com:8000/api`
   const syncParams = {

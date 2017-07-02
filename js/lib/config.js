@@ -20,7 +20,7 @@ module.exports = {
     settings: {
       host: process.env.DB_HOST || 'localhost',
       dialect: process.env.DB_DIALECT || 'sqlite',
-      //  dialect: 'mysql'|'sqlite'|'postgres'|'mssql',
+      // port: process.env.DB_PORT || 5432, // or depending on DB_DIALECT,...
 
       pool: {
         max: 10,
@@ -35,16 +35,5 @@ module.exports = {
           ? 'data/sqlite/scrobblecast.sqlite'
           : 'data/sqlite/scrobblecast-test.sqlite')
     }
-  },
-
-  // Will be depcrated
-  postgres: {
-    // set table/table prefix...?
-    host: process.env.POSTGRES_HOST || 'localhost',
-    port: 5432,
-    // match ENV in docker-compose...
-    database: 'scrobblecast',
-    user: 'postgres'
-    // password: null
   }
 }

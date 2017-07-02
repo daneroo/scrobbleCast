@@ -7,14 +7,14 @@ var colors = require('colors/safe') // don't touch String prototype
 var log = require('./lib/log')
 var logcheck = require('./lib/logcheck')
 
-const showRawRecords = false
+const showRawRecords = true
 
 log.verbose('Starting LogCheck')
 
 //
 // Find items logged between today and yesterday.
 //
-logcheck.getMD5Records()
+logcheck.getCheckpointRecords()
   .then(showRecords) // show raw data
   .then(aggRecords)
   .then(logcheck.detectMismatch)
@@ -38,8 +38,8 @@ logcheck.getMD5Records()
 // this function assumes that incoming records are descending
 function aggRecords (records) {
   // records.reverse();
-  var types = distinct(records, 'type') // .reverse();
-  var users = distinct(records, 'user') // these are sorted
+  // var types = distinct(records, 'type') // .reverse();
+  // var users = distinct(records, 'user') // these are sorted
   var hosts = distinct(records, 'host') // these are sorted
 
   function emptyHostMap () { // function bound to hosts, which is an array
@@ -52,19 +52,16 @@ function aggRecords (records) {
   // map [{stamp, host, user, type, md5}] - array of obj
   // to [[ stamp, host1-md5,.. hostn-md5]] - array of arrays
   // first filtering for a specific user and type
-  function makeTableStampByHost (u, t) { // function is bound to records
+  function makeTableStampByHost () { // function is bound to records
     var md5byStampByHost = {}
-    _(records).filter({
-      user: u,
-      type: t
-    }).each(function (r) {
+    _(records).each(function (r) {
       var stamp = r.stamp
       // stamp is rounded to 10min so we can match entries.
       stamp = stamp.replace(/[0-9]:[0-9]{2}(\.[0-9]*)?Z$/, '0:00Z') // round down to 10:00
 
       md5byStampByHost[stamp] = md5byStampByHost[stamp] || emptyHostMap()
       // TODO(daneroo) prevent overwrite - if we assume descending order.
-      md5byStampByHost[stamp][r.host] = r.md5
+      md5byStampByHost[stamp][r.host] = r.digest
     })
 
     var rows = []
@@ -80,45 +77,41 @@ function aggRecords (records) {
     return rows
   }
 
-  types.forEach(function (t) {
-    users.forEach(function (u) {
-      var rows = makeTableStampByHost(u, t)
+  var rows = makeTableStampByHost()
 
       // reformat
-      rows = rows.map(row => {
+  rows = rows.map(row => {
         // adjust the output each row in stamp, md5,md5,..
-        return row.map((v, idx) => {
-          if (idx === 0) { // this is the stamp
-            return shortDate(v)
-          }
-          return v.substr(0, 7) // a la github
-        })
-      })
-
-      // keep only until first match
-      var foundIdentical = false
-      rows = rows.filter((row) => {
-        // is all md5's are equal (1 distinct vale)
-        if (!foundIdentical && _.uniq(row.slice(1)).length === 1) {
-          foundIdentical = true
-          row[0] = colors.green(row[0])
-          return true
-        }
-        return !foundIdentical
-      })
-
-      // now the ouput - as table
-      var shortHosts = hosts.map(host => {
-        return host.split('.')[0]
-      })
-      var header = [u + '-' + t].concat(shortHosts)
-      var table = newTable(header)
-      rows.forEach(row => {
-        table.push(row)
-      })
-      console.log(table.toString())
+    return row.map((v, idx) => {
+      if (idx === 0) { // this is the stamp
+        return shortDate(v)
+      }
+      return v.substr(0, 7) // a la github
     })
   })
+
+      // keep only until first match
+  var foundIdentical = false
+  rows = rows.filter((row) => {
+        // is all md5's are equal (1 distinct vale)
+    if (!foundIdentical && _.uniq(row.slice(1)).length === 1) {
+      foundIdentical = true
+      row[0] = colors.green(row[0])
+      return true
+    }
+    return !foundIdentical
+  })
+
+      // now the ouput - as table
+  var shortHosts = hosts.map(host => {
+    return host.split('.')[0]
+  })
+  var header = ['checkpoint'].concat(shortHosts)
+  var table = newTable(header)
+  rows.forEach(row => {
+    table.push(row)
+  })
+  console.log(table.toString())
 
   return records
 }
@@ -151,6 +144,7 @@ function distinct (records, field) {
 
 // Just print th records in a table, possible elipse to remove middle rows...
 function showRecords (records) {
+  // console.log(records)
   var origRecords = records // needs to be returned to the promise chain
   if (!showRawRecords || !records || !records.length) {
     return origRecords
@@ -163,9 +157,9 @@ function showRecords (records) {
     records = records.slice(0, howMany).concat(dotdotdot, records.slice(-howMany))
   }
 
-  var table = newTable(['stamp', 'host', 'user', 'type', 'md5'])
+  var table = newTable(['stamp', 'host', 'digest'])
   records.forEach(function (r) {
-    var record = [r.stamp, r.host, r.user, r.type, r.md5]
+    var record = [r.stamp, r.host, r.digest]
     table.push(record)
   })
   console.log(table.toString())

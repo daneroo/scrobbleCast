@@ -1,6 +1,6 @@
 # implement the feed fetch in node.js
 
-_Note on `screen`_
+_Note on `screen`:_
 ```
 screen -q -R
 ```

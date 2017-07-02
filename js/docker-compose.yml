@@ -36,8 +36,6 @@ services:
       - ./credentials.json:/usr/src/app/credentials.json:ro
       - ./credentials.loggly.json:/usr/src/app/credentials.loggly.json:ro
       - ./data:/usr/src/app/data
-    links:
-      - postgres
 
     restart: unless-stopped
     logging:

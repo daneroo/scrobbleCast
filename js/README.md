@@ -26,6 +26,13 @@ DB_LOG=1 DB_DIALECT=postgres npm run unit
   - Prune and move evernote to .
   - ~~remove store.impl.pg~~
   - npm outdated
+    - bluebird
+    - lodash
+    - chai, chai-as-promised,shoud
+    - socket-io?
+    - request-promise
+    - pull-stream
+    - glob
   - mkdir data/sqlite
 - CI
 - default hostname sanity (report on start)

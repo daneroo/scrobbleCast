@@ -24,7 +24,7 @@ DB_LOG=1 DB_DIALECT=postgres npm run unit
 - cleanup
   - ~~Prune README~~
   - Prune and move evernote to .
-  - remove store.pg
+  - ~~remove store.impl.pg~~
   - npm outdated
   - mkdir data/sqlite
 - CI

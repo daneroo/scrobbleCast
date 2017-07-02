@@ -36,8 +36,7 @@ async function main () {
     log.error('error', err)
   }
 
-  // seems to hang with sequelize for postgres
-  process.exit(0)
+  await store.db.end()
 }
 
 async function snapshotForUser (credentials) {

@@ -58,7 +58,10 @@ async function init () {
 
 async function end () {
   log.debug('sequelize: Closing connections, drain the pool!')
-  return orm.sequelize.close()
+  // slequelize.close seems to be fixed for postgres now (sequelize 4.2.1)
+  // https://github.com/sequelize/sequelize/commit/e239a04da62f7fa5bb127743e67da5ff0f80b756
+  await orm.sequelize.close()
+  log.debug('sequelize: Closed connections, drained the pool!')
 }
 
 function _digest (item) {
@@ -296,7 +299,7 @@ async function digests (syncParams) {
 
 async function digestOfDigests () {
   const d = await digests()
-  return utils.digest(JSON.stringify(d), 'sha256', true)
+  return utils.digest(JSON.stringify(d), 'sha256', false)
 }
 
 // Delete by digest

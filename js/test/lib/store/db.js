@@ -263,7 +263,7 @@ describe('store', function () {
       await db.saveAll(items)
 
       const got = await db.digestOfDigests()
-      expect(got).to.equal('sha256:084bb7cb8df1c14bbb672ff64de3eb8e191468ef6db9b1ac68c577c60b01f7e4')
+      expect(got).to.equal('084bb7cb8df1c14bbb672ff64de3eb8e191468ef6db9b1ac68c577c60b01f7e4')
     })
 
     // This was to test deprecation notice of getByKey

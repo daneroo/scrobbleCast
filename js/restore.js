@@ -32,12 +32,7 @@ async function main () {
 
   await digestOfDigests()
 
-  log.debug('Closing connection')
   await store.db.end()
-  log.debug('Closed connection')
-
-    // seems to hang with sequelize for postgres
-  process.exit(0)
 }
 
 async function restore (credentials) {

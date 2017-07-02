@@ -35,7 +35,7 @@ DB_LOG=1 DB_DIALECT=postgres npm run unit
     - glob
   - mkdir data/sqlite
 - CI
-- default hostname sanity (report on start)
+- ~~default hostname sanity (report on start)~~
 - refactor tasks: composable, adjust perUser, dedup vs checkpoint
 - sync: discovery
 - sync: recent (day,..)

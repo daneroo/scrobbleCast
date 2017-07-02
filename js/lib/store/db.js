@@ -30,13 +30,15 @@ exports = module.exports = {
   load: load,
   getByDigest: getByDigest,
 
-  // above is done
   digests: digests,
-  // for sync reconciliation
-  getByKey: getByKey,
+  digestOfDigests: digestOfDigests,
 
   remove: remove,
-  removeAll: removeAll
+  removeAll: removeAll,
+
+  // Deprecated: for sync reconciliation
+  getByKey: getByKey
+
 }
 
 // expose private methods for tests
@@ -292,7 +294,10 @@ async function digests (syncParams) {
   return items
 }
 
-// ABOVE is done //////////////////////////////////
+async function digestOfDigests () {
+  const d = await digests()
+  return utils.digest(JSON.stringify(d), 'sha256', true)
+}
 
 // Delete by digest
 // log.warn if item not found

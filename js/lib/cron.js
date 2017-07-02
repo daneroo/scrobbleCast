@@ -6,6 +6,7 @@ var cron = require('cron')
 var CronJob = cron.CronJob
 var log = require('./log')
 var tasks = require('./tasks')
+var store = require('./store') // just for checkpoint
 
 // globals
 var allCredentials = [] // injected in start(injectedCredentials) below
@@ -41,6 +42,10 @@ function forEachUser (task) {
     return Promise.each(allCredentials, task)
       .then(function () {
         return Promise.each(allCredentials, tasks.dedup)
+      })
+      .then(async () => {
+        const dod = await store.db.digestOfDigests()
+        log.info('checkpoint', { digest: dod })
       })
       .catch(function (error) {
         // TODO, might want to catch before tasks.dedup is called, to make sure dedup always runs...

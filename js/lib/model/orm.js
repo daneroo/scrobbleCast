@@ -1,5 +1,7 @@
 'use strict'
 
+const path = require('path')
+const mkdirp = require('mkdirp')
 const Sequelize = require('sequelize')
 // Implemented my own hooks similar to sequelize-json
 // const JsonField = require('sequelize-json')
@@ -70,6 +72,11 @@ function defineModels () {
   })
 
   async function init () {
+    if (config.sequelize.settings.dialect === 'sqlite') {
+      const dir = path.dirname(config.sequelize.settings.storage)
+      // log.info('make sure sqlite storage path exists', {dialect: config.sequelize.settings.dialect, storage: config.sequelize.settings.storage, dir: dir})
+      mkdirp.sync(dir)
+    }
     return sequelize.sync()
   }
 

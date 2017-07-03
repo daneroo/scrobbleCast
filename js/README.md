@@ -28,7 +28,7 @@ DB_LOG=1 DB_DIALECT=postgres npm run unit
     - chai, chai-as-promised,should
     - lodash
     - request-promise
-  - mkdir data/sqlite
+  - ~~mkdir data/sqlite~~
 - CI - (Codeship)
 - refactor tasks: composable, adjust perUser, dedup vs checkpoint
 - refactor store.file (sink|source/file)

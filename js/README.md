@@ -29,7 +29,7 @@ DB_LOG=1 DB_DIALECT=postgres npm run unit
     - lodash
     - request-promise
   - mkdir data/sqlite
-- CI - secscan ok! (codeship?)
+- CI - (Codeship)
 - refactor tasks: composable, adjust perUser, dedup vs checkpoint
 - refactor store.file (sink|source/file)
 - sync: discovery (ipfs / socket.io / socket.io-p2p?)

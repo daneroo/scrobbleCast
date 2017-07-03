@@ -21,7 +21,7 @@
     "url": "git+https://github.com/github.com:daneroo/scrobbleCast.git"
   },
   "engines": {
-    "node" : ">=8.0"
+    "node" : "^8.1.2"
   },
   "license": "ISC",
   "dependencies": {

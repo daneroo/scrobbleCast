@@ -22,19 +22,14 @@ DB_LOG=1 DB_DIALECT=postgres npm run unit
 ## TODO
 
 - cleanup
-  - ~~Prune README~~
   - Prune and move evernote to .
-  - ~~remove store.impl.pg~~
   - npm outdated
     - bluebird
     - chai, chai-as-promised,should
     - lodash
     - request-promise
   - mkdir data/sqlite
-- ~~remove prometheus metrics~~
-- ~~remove socket.io~~
 - CI - secscan ok! (codeship?)
-- ~~default hostname sanity (report on start)~~
 - refactor tasks: composable, adjust perUser, dedup vs checkpoint
 - refactor store.file (sink|source/file)
 - sync: discovery (ipfs / socket.io / socket.io-p2p?)

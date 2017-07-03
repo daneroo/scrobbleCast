@@ -27,17 +27,17 @@ DB_LOG=1 DB_DIALECT=postgres npm run unit
   - ~~remove store.impl.pg~~
   - npm outdated
     - bluebird
+    - chai, chai-as-promised,should
     - lodash
-    - chai, chai-as-promised,shoud
-    - socket-io?
     - request-promise
-    - pull-stream
-    - glob
   - mkdir data/sqlite
-- CI
+- ~~remove prometheus metrics~~
+- ~~remove socket.io~~
+- CI - secscan ok! (codeship?)
 - ~~default hostname sanity (report on start)~~
 - refactor tasks: composable, adjust perUser, dedup vs checkpoint
-- sync: discovery
+- refactor store.file (sink|source/file)
+- sync: discovery (ipfs / socket.io / socket.io-p2p?)
 - sync: recent (day,..)
 - store.load streaming
 - data driven tests (dedup)

@@ -53,7 +53,7 @@ async function restore (credentials) {
   }
   const saver = store.db.saveByBatch(batchSize)
 
-  await store.impl.file.load(loadOpts, saver)
+  await store.file.load(loadOpts, saver)
   await saver.flush()
 }
 

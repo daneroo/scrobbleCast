@@ -12,6 +12,7 @@ describe('store', function () {
     if (process.env.NODE_ENV !== 'test') {
       throw new Error('Tests must be run with NODE_ENV==test to ensure data safety')
     }
+    await orm.init() // side effect creates storage directory for sqlite
   })
   beforeEach(async () => {
     await orm.sequelize.dropAllSchemas()

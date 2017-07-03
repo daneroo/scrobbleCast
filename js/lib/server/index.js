@@ -10,13 +10,11 @@ const express = require('express')
 const morgan = require('morgan')
 const config = require('../config')
 const log = require('../log')
-const metrics = require('../metrics')
 const api = require('./api')
 
-// express/socket.io init
+// express init
 const app = express()
 const server = require('http').createServer(app)
-const io = require('socket.io')(server)
 
 app.use(morgan('tiny', { // dev has color - we really want structured logging
   skip: function (req /*, res */) {
@@ -25,29 +23,10 @@ app.use(morgan('tiny', { // dev has color - we really want structured logging
   stream: log.morganStream
 }))
 
-// Instrument for prometheus
-app.get('/metrics', metrics.prometheus.metricsFunc())
-
 app.use('/api', api)
 
 // static app
 app.use(express.static(path.join(__dirname, 'public')))
-
-// Socket.io below
-
-io.on('connection', function (socket) {
-  io.emit('info', {
-    msg: 'user connected'
-  })
-  socket.on('disconnect', function () {
-    io.emit('info', {
-      msg: 'user disconnected'
-    })
-  })
-})
-
-// Inject socket.io into metrics
-metrics.setSockio(io)
 
 function start () {
   server.listen(config.express.port, function () {

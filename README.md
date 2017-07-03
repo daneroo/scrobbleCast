@@ -1,5 +1,10 @@
 # scrobbleCast
 
+master: [ ![Codeship Status for daneroo/scrobbleCast](https://app.codeship.com/projects/1306ce10-4248-0135-e58f-567ddc53c8a8/status?branch=master)](https://app.codeship.com/projects/230307)
+
+develop: [ ![Codeship Status for daneroo/scrobbleCast](https://app.codeship.com/projects/1306ce10-4248-0135-e58f-567ddc53c8a8/status?branch=develop)](https://app.codeship.com/projects/230307)
+
+
 * __Idea__: capture and present podcast metadata about *listening events*, as well as *rating* and *categorization*. This can extend to a social network of participants' influence stream.
 * __Stretch Goal__: Distributed consesus and processing; sharing influence, directing serendipity.
 
@@ -20,22 +25,15 @@ To do that we could first:
 
 ## Action (components and experiments)
 
-* Scrape all meta for feeds by scraping with casper
-* Same scrape with node.js (ES6?)
-* Scrape-aaS (docker)
+* Scrape feed with node.js (ES6?)
 * Angular - ionic (Ang-1.2), material- (Ang-1.3), ES6/Ang-2.0
 * Minimal frontend - Angular-material (<json.file)
 * implement pull from angular (CORS, ionic/phonegap)
 
 ## Parts
 
-### scrape 
-
-* cacsper
-* nodejs-es6 : the es6 is vestigial!
+* nodejs scrape
     * API, promises, rate-limiting, cron
-
-###
 * web app
-    * trying `generator-gulp-webapp`: not angular-awar, but really nice (fast)
-    * doing `cg-angular`: not angular-awar, but really nice (fast)
+    * Angular.io 
+    * React (nextjs)

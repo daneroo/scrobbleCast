@@ -20,6 +20,9 @@
     "type": "git",
     "url": "git+https://github.com/github.com:daneroo/scrobbleCast.git"
   },
+  "engines": {
+    "node" : ">=8.0"
+  },
   "license": "ISC",
   "dependencies": {
     "bluebird": "^2.3.10",

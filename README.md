@@ -1,8 +1,11 @@
 # scrobbleCast
 
-master: [ ![Codeship Status for daneroo/scrobbleCast](https://app.codeship.com/projects/1306ce10-4248-0135-e58f-567ddc53c8a8/status?branch=master)](https://app.codeship.com/projects/230307)
-
-develop: [ ![Codeship Status for daneroo/scrobbleCast](https://app.codeship.com/projects/1306ce10-4248-0135-e58f-567ddc53c8a8/status?branch=develop)](https://app.codeship.com/projects/230307)
+- Codeship:
+  - master: [ ![Codeship Status for daneroo/scrobbleCast](https://app.codeship.com/projects/1306ce10-4248-0135-e58f-567ddc53c8a8/status?branch=master)](https://app.codeship.com/projects/230307)
+  - develop: [ ![Codeship Status for daneroo/scrobbleCast](https://app.codeship.com/projects/1306ce10-4248-0135-e58f-567ddc53c8a8/status?branch=develop)](https://app.codeship.com/projects/230307)
+- Travis:
+  - master: [![Build Status](https://travis-ci.org/daneroo/scrobbleCast.svg?branch=master)](https://travis-ci.org/daneroo/scrobbleCast)
+  - develop: [![Build Status](https://travis-ci.org/daneroo/scrobbleCast.svg?branch=develop)](https://travis-ci.org/daneroo/scrobbleCast)
 
 
 * __Idea__: capture and present podcast metadata about *listening events*, as well as *rating* and *categorization*. This can extend to a social network of participants' influence stream.

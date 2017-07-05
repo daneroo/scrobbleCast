@@ -1,0 +1,18 @@
+language: node_js
+
+# test on two node.js versions: 0.6 and 0.8
+node_js:
+  - 8.1
+
+before_install: cd js
+
+install:
+  - npm install
+
+script:
+  - npm test
+
+# configure notifications (email, IRC, campfire etc)
+# please update this section to your needs!
+#notifications:
+#  irc: "irc.freenode.org#travis"

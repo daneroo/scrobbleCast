@@ -7,70 +7,81 @@ var colors = require('colors/safe') // don't touch String prototype
 var log = require('./lib/log')
 var logcheck = require('./lib/logcheck')
 
-const showRawRecords = true
+const showRawRecords = false
+const justTask = false
 
-log.verbose('Starting LogCheck')
+main()
 
-//
-// Find items logged between today and yesterday.
-//
-logcheck.getCheckpointRecords()
-  .then(showRecords) // show raw data
-  .then(aggRecords)
-  .then(logcheck.detectMismatch)
-  .then(function (records) {
-    log.verbose('records:%s', records.length)
-    return records
-  })
-  .catch(function (error) {
-    log.error('logcheck: %s', error)
-  })
+async function main () {
+  log.verbose('Starting LogCheck')
+  if (justTask) {
+    logcheck.logcheckTask()
+  } else {
+    //
+    // Find items logged between today and yesterday.
+    //
+    try {
+      const checkpointRecords = await logcheck.getCheckpointRecords()
+      // console.log(JSON.stringify(checkpointRecords, null, 2))
 
-// TODO(daneroo) refactor some more
-// put the aggregation and data production into lib, but not the table stuff
-// TODO(daneroo) in the unlikely event that more than one value is present for the same stamp,
-//   we might want to ensure we have the latest value... (assume or ensure sort order)
-//   e.g. break one, and resubmit with manual dedup.
-// TODO(daneroo) what if we have -no value- in comparison
+      if (showRawRecords) {
+        showRecords(checkpointRecords)
+      }
+
+      // {host:stamp}
+      const nonReporting = logcheck.detectNonReporting(checkpointRecords, new Date())
+      for (let host in nonReporting) {
+        log.error('logcheck.noreport', { host: host, since: nonReporting[host] })
+      }
+
+      const reportingRecords = logcheck.removeNonReporting(checkpointRecords, nonReporting)
+      logcheck.detectMismatch(reportingRecords)
+
+      aggRecords(reportingRecords)
+    } catch (error) {
+      log.error('logcheck.error', error)
+    }
+  }
+}
 
 // group by stamp rounded to 10min
 // deduplicate, or find first match
 // this function assumes that incoming records are descending
 function aggRecords (records) {
-  // records.reverse();
-  // var types = distinct(records, 'type') // .reverse();
-  // var users = distinct(records, 'user') // these are sorted
-  var hosts = distinct(records, 'host') // these are sorted
-
+  const hosts = distinct(records, 'host') // these are sorted
+  const NOVALUE = '-no value-'
   function emptyHostMap () { // function bound to hosts, which is an array
     return _.reduce(hosts, function (result, value /* , key */) {
-      result[value] = '-no value-'
+      result[value] = NOVALUE
       return result
     }, {})
   }
 
-  // map [{stamp, host, user, type, md5}] - array of obj
-  // to [[ stamp, host1-md5,.. hostn-md5]] - array of arrays
-  // first filtering for a specific user and type
+  // map [{stamp, host, digest}] - array of obj
+  // to [[ stamp, host1-digest,.. hostn-digest]] - array of arrays
   function makeTableStampByHost () { // function is bound to records
-    var md5byStampByHost = {}
+    var digestbyStampByHost = {}
     _(records).each(function (r) {
-      var stamp = r.stamp
       // stamp is rounded to 10min so we can match entries.
-      stamp = stamp.replace(/[0-9]:[0-9]{2}(\.[0-9]*)?Z$/, '0:00Z') // round down to 10:00
+      var stamp = r.stamp.replace(/[0-9]:[0-9]{2}(\.[0-9]*)?Z$/, '0:00Z') // round down to 10:00
 
-      md5byStampByHost[stamp] = md5byStampByHost[stamp] || emptyHostMap()
-      // TODO(daneroo) prevent overwrite - if we assume descending order.
-      md5byStampByHost[stamp][r.host] = r.digest
+      digestbyStampByHost[stamp] = digestbyStampByHost[stamp] || emptyHostMap()
+      if (digestbyStampByHost[stamp][r.host] === NOVALUE) {
+        digestbyStampByHost[stamp][r.host] = r.digest
+      } else {
+        // console.log('Not overwriting, assuming DESC stamp order', stamp, r.host)
+        // console.log('keep', digestbyStampByHost[stamp][r.host])
+        // console.log('discard', r.digest)
+      }
     })
 
+    // [stamp, digestOfHost1, digestOfHost2, digestOfHost3,...]
     var rows = []
     // keep the table in reverse chronological order
-    _.keys(md5byStampByHost).sort().reverse().forEach(function (stamp) {
-      var row = [stamp]
-      _.keys(md5byStampByHost[stamp]).sort().forEach(function (host) {
-        var md5 = md5byStampByHost[stamp][host]
-        row.push(md5)
+    _.keys(digestbyStampByHost).sort().reverse().forEach(function (stamp) {
+      const row = [stamp]
+      _.keys(digestbyStampByHost[stamp]).sort().forEach(function (host) {
+        row.push(digestbyStampByHost[stamp][host])
       })
       rows.push(row)
     })
@@ -79,21 +90,25 @@ function aggRecords (records) {
 
   var rows = makeTableStampByHost()
 
-      // reformat
+  // reformat
+  function shortDate (stampStr) {
+    return stampStr.substr(11, 9)
+  }
+
   rows = rows.map(row => {
-        // adjust the output each row in stamp, md5,md5,..
+    // adjust the output each row in stamp, digest,digest,..
     return row.map((v, idx) => {
       if (idx === 0) { // this is the stamp
         return shortDate(v)
       }
-      return v.substr(0, 7) // a la github
+      return v.substr(0, 7) // shortDigest a la github
     })
   })
 
-      // keep only until first match
+  // keep only until first match
   var foundIdentical = false
   rows = rows.filter((row) => {
-        // is all md5's are equal (1 distinct vale)
+    // is all digests's are equal (1 distinct vale)
     if (!foundIdentical && _.uniq(row.slice(1)).length === 1) {
       foundIdentical = true
       row[0] = colors.green(row[0])
@@ -102,9 +117,9 @@ function aggRecords (records) {
     return !foundIdentical
   })
 
-      // now the ouput - as table
+  // now the ouput - as table
   var shortHosts = hosts.map(host => {
-    return host.split('.')[0]
+    return host.split('.')[0] // shortHost
   })
   var header = ['checkpoint'].concat(shortHosts)
   var table = newTable(header)
@@ -112,25 +127,6 @@ function aggRecords (records) {
     table.push(row)
   })
   console.log(table.toString())
-
-  return records
-}
-
-// General way of formatting dates, for timezone and proper formating,
-// For now since I'm still using GMT, substr on the stamp is OK.
-function shortDate (stampStr) {
-  return stampStr.substr(11, 9)
-  // Weekday+ shortTime in local timezone
-  // var stamp = new Date(stampStr);
-  // var opts = {
-  //   timeZone: 'America/Montreal', // 'UTC'
-  //   timeZoneName: 'short',
-  //   weekday: 'short',
-  //   hour: 'numeric',
-  //   hour12: false,
-  //   minute: 'numeric'
-  // };
-  // return stamp.toLocaleString('en-US', opts);
 }
 
 function distinct (records, field) {
@@ -146,7 +142,7 @@ function distinct (records, field) {
 function showRecords (records) {
   // console.log(records)
   var origRecords = records // needs to be returned to the promise chain
-  if (!showRawRecords || !records || !records.length) {
+  if (!records || !records.length) {
     return origRecords
   }
 
@@ -163,7 +159,6 @@ function showRecords (records) {
     table.push(record)
   })
   console.log(table.toString())
-  return origRecords
 }
 
 // Utility to create an object with same keys, but default values

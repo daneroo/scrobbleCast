@@ -1,0 +1,15 @@
+machine:
+  node:
+    version: 8.1.2
+
+dependencies:
+  override:
+    - npm install
+    pwd:
+      js
+
+test:
+  override:
+    - npm test
+    pwd:
+      js

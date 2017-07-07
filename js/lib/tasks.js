@@ -15,7 +15,7 @@ var config = require('./config')
 var utils = require('./utils')
 var store = require('./store')
 var dedupTask = require('./dedup').dedupTask
-var detectMismatchTask = require('./logcheck').detectMismatchTask
+var logcheckTask = require('./logcheck').logcheckTask
 var syncTask = require('./sync').sync
 
 // Exported API
@@ -30,7 +30,7 @@ exports = module.exports = {
 
 function logcheck () {
   lifecycle('logcheck', 'start', 'admin')
-  return detectMismatchTask()
+  return logcheckTask()
     .then(function () {
       lifecycle('logcheck', 'done', 'admin')
     })

@@ -5,14 +5,10 @@ machine:
 general:
   build_dir: js
 
-# dependencies:
-#   override:
-#     - npm install
-#     pwd:
-#       js
+dependencies:
+  override:
+    - npm install
 
-# test:
-#   override:
-#     - npm test
-#     pwd:
-#       js
+test:
+  override:
+    - npm test

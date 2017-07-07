@@ -9,10 +9,10 @@
 // Uses native Promise
 
 // dependencies - core-public-internal
-var fs = require('fs')
-var loggly = require('loggly')
-var _ = require('lodash')
-var log = require('./log')
+const loggly = require('loggly')
+const _ = require('lodash')
+const log = require('./log')
+const config = require('./config')
 
 exports = module.exports = {
   // TODO(daneroo): add tests
@@ -29,9 +29,6 @@ exports = module.exports = {
   parseCheckpointEvents: parseCheckpointEvents
 
 }
-
-var config = JSON.parse(fs.readFileSync('credentials.loggly.json').toString())
-var client = loggly.createClient(config)
 
 //  return an array of {}
 async function getCheckpointRecords () {
@@ -188,6 +185,7 @@ function parseCheckpointEvents (events) {
 // This makes this module more independant.
 async function queryLoggly (searchOptions) {
   return new Promise(function (resolve, reject) {
+    const client = loggly.createClient(config.loggly)
     client.search(searchOptions)
       .run(function (err, results) {
         if (err) {

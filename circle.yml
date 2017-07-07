@@ -1,6 +1,6 @@
 machine:
   node:
-    version: 8.1.2
+    version: 8
 
 general:
   build_dir: js

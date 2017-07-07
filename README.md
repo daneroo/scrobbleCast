@@ -6,6 +6,10 @@
 - Travis:
   - master: [![Build Status](https://travis-ci.org/daneroo/scrobbleCast.svg?branch=master)](https://travis-ci.org/daneroo/scrobbleCast)
   - develop: [![Build Status](https://travis-ci.org/daneroo/scrobbleCast.svg?branch=develop)](https://travis-ci.org/daneroo/scrobbleCast)
+- CircleCI:
+  - master: [![Build Status](https://circleci.com/gh/daneroo/scrobbleCast.svg?&style=shield)](https://circleci.com/gh/daneroo/scrobbleCast)
+  - develop: [![Build Status](https://circleci.com/gh/daneroo/scrobbleCast/tree/develop.svg?style=shield)](https://circleci.com/gh/daneroo/scrobbleCast)
+
 
 
 * __Idea__: capture and present podcast metadata about *listening events*, as well as *rating* and *categorization*. This can extend to a social network of participants' influence stream.

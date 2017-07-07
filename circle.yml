@@ -1,0 +1,14 @@
+machine:
+  node:
+    version: 8
+
+general:
+  build_dir: js
+
+dependencies:
+  override:
+    - npm install
+
+test:
+  override:
+    - npm test

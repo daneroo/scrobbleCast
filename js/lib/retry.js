@@ -8,7 +8,6 @@
 
 // dependencies - core-public-internal
 
-// var Promise = require('bluebird');
 var rp = require('request-promise')
 
 // good place to figure out logging: config,category,level (fatal..debug), args

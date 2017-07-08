@@ -1,6 +1,6 @@
 {
   "name": "pocketscrape",
-  "version": "4.0.2",
+  "version": "4.0.3",
   "description": "Fetch Pocketcast feed",
   "main": "index.js",
   "scripts": {
@@ -38,7 +38,7 @@
     "morgan": "^1.8.2",
     "pg": "^6.4.0",
     "pg-hstore": "^2.3.2",
-    "request-promise": "^0.2.4",
+    "request-promise": "^4.2.1",
     "s3-cli": "^0.13.0",
     "sequelize": "^4.2.1",
     "sqlite3": "^3.1.8",
@@ -47,12 +47,11 @@
     "winston-loggly": "^1.2.0"
   },
   "devDependencies": {
-    "chai": "^3.0.0",
-    "chai-as-promised": "^5.1.0",
+    "chai": "^4.0.2",
+    "chai-as-promised": "^7.1.1",
     "istanbul": "^1.1.0-alpha.1",
     "mocha": "^3.2.0",
     "nsp": "^2.6.3",
-    "should": "^5.0.1",
     "sinon": "^2.3.6",
     "standard": "^10.0.2"
   },

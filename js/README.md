@@ -25,9 +25,7 @@ DB_LOG=1 DB_DIALECT=postgres npm run unit
   - Prune and move evernote to .
   - npm outdated
     - bluebird
-    - chai, chai-as-promised,should
     - lodash
-    - request-promise
   - ~~mkdir data/sqlite~~
 - logcheck (separate not responding from mismatch)
 - refactor tasks: composable, adjust perUser, dedup vs checkpoint

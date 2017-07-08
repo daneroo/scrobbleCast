@@ -6,9 +6,6 @@ var Promise = require('bluebird')
 var _ = require('lodash')
 var RateLimiter = require('limiter').RateLimiter
 
-// We wrapped rp (request-promise)
-// - in order to encapsulate logging, error handling and eventually retry behavior
-// var rp = require('request-promise');
 var retry = require('./retry')
 var Session = require('./session')
 var log = require('./log')

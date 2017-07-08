@@ -1,12 +1,8 @@
 'use strict'
 
-// This utility will read all source files: extra=''
-// and dunp them into postgres
-// Object keys: user/type/uuid/stamp/
-
 // dependencies - core-public-internal
 var bluebird = require('bluebird')
-var _ = require('lodash')
+var _ = require('lodash') // for _.isEqual
 var rp = require('request-promise')
 var log = require('./log')
 var store = require('./store')

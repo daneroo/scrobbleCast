@@ -7,7 +7,6 @@
 
 // dependencies - core-public-internal
 var log = require('./log')
-var Promise = require('bluebird')
 // -- Implementation functions
 var store = require('./store')
 var delta = require('./delta')

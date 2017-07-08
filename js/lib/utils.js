@@ -113,16 +113,22 @@ function digest (str, algorithm, prependAlgorithm) {
   return hash
 }
 
+async function memoryUsageInMB () {
+  const mu = process.memoryUsage()
+  const inMB = {
+    mem: {
+      rss: (mu.rss / 1024 / 1024).toFixed(2),
+      heapTotal: (mu.heapTotal / 1024 / 1024).toFixed(2),
+      heapUsed: (mu.heapUsed / 1024 / 1024).toFixed(2)
+    }
+  }
+  return inMB
+}
+
 async function logMemAfterGC () {
-  function showMem (pfx) {
+  async function showMem (pfx) {
     var msg = `${pfx}Mem after GC (MB)`
-    log.verbose(msg, {
-      mem: {
-        rss: (process.memoryUsage().rss / 1024 / 1024).toFixed(2),
-        heapTotal: (process.memoryUsage().heapTotal / 1024 / 1024).toFixed(2),
-        heapUsed: (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)
-      }
-    })
+    log.verbose(msg, await memoryUsageInMB())
   }
   showMem('-')
   if (global.gc) {
@@ -146,5 +152,6 @@ exports = module.exports = {
   hasSameContent: hasSameContent,
   digest: digest,
   md5: md5,
-  logMemAfterGC: logMemAfterGC
+  logMemAfterGC: logMemAfterGC,
+  memoryUsageInMB: memoryUsageInMB
 }

@@ -26,8 +26,6 @@ DB_LOG=1 DB_DIALECT=postgres npm run unit
   - npm outdated
     - bluebird
     - lodash
-  - ~~mkdir data/sqlite~~
-- logcheck (separate not responding from mismatch)
 - refactor tasks: composable, adjust perUser, dedup vs checkpoint
 - refactor store.file (sink|source/file)
 - sync: discovery (ipfs / socket.io / socket.io-p2p?)

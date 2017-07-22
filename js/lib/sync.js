@@ -12,22 +12,19 @@ exports = module.exports = {
 }
 
 function sync (baseURI, syncParams) {
-  log.verbose(`Sync started from ${baseURI}`, syncParams)
+  // log.verbose(`Sync started from ${baseURI}`, syncParams)
   let remoteDigests
   let localDigests
 
   return loadFromURL(baseURI, syncParams)
     .then(function (items) {
       remoteDigests = items
-      log.verbose('|remoteDigests|', remoteDigests.size)
-      // logMemAfterGC();
+      // log.verbose('|remoteDigests|', remoteDigests.size)
       return loadFromDB(syncParams)
     })
     .then(function (items) {
       localDigests = items
-      log.verbose('|localDigests|', localDigests.size)
-      // logMemAfterGC();
-      log.verbose('Comparing digests')
+      // log.verbose('|localDigests|', localDigests.size)
       return compare(baseURI, remoteDigests, localDigests)
     })
     .catch(error => {
@@ -36,9 +33,6 @@ function sync (baseURI, syncParams) {
 }
 
 function compare (baseURI, remoteDigests, localDigests) {
-  log.verbose('loaded %d remote items', remoteDigests.size)
-  log.verbose('loaded %d local  items', localDigests.size)
-
   const missingLocal = []
   remoteDigests.forEach(function (acc, digest) {
     if (!localDigests.has(digest)) {

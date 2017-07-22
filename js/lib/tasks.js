@@ -36,21 +36,27 @@ function logcheck () {
     })
 }
 
-function sync () {
+async function sync () {
   // poor man's discovery, default euler...
-  const shortHost = config.hostname.split('.')[0]
-  const otherHost = (shortHost === 'euler') ? 'dirac' : 'euler'
-  const baseURI = `http://${otherHost}.imetrical.com:8000/api`
+  const hosts = ['euler', 'dirac', 'darwin', 'newton']
+  const thisHost = config.hostname.split('.')[0]
   const syncParams = {
     since: utils.ago(24 * 3600),
     before: utils.stamp('10minutes')
   }
 
   lifecycle('sync', 'start', 'admin')
-  return syncTask(baseURI, syncParams)
-    .then(function () {
-      lifecycle('sync', 'done', 'admin')
-    })
+  for (let host of hosts) {
+    if (thisHost === host) {
+      lifecycle(`sync:${host}`, 'skip', 'admin')
+      continue
+    }
+    const baseURI = `http://${host}.imetrical.com:8000/api`
+    lifecycle(`sync:${host}`, 'start', 'admin')
+    await syncTask(baseURI, syncParams)
+    lifecycle(`sync:${host}`, 'done', 'admin')
+  }
+  lifecycle('sync', 'done', 'admin')
 }
 
 function dedup (credentials) {

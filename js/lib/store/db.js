@@ -255,7 +255,7 @@ async function load (opts, itemHandler) {
     where: {
       '__user': opts.filter.__user
     },
-    order: ['__user', '__stamp', '__type', 'uuid', '__sourceType']
+    order: ['__user', '__stamp', '__type', 'uuid', '__sourceType', 'digest']
   })
 
   const results = []

@@ -21,6 +21,8 @@ DB_LOG=1 DB_DIALECT=postgres npm run unit
 
 ## TODO
 
+- integrate [debug](https://www.npmjs.com/package/debug) into logging
+- try pull-streams
 - cleanup
   - Prune and move evernote to .
   - npm outdated

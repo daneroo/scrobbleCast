@@ -45,8 +45,10 @@ async function sync () {
     before: utils.stamp('10minutes')
   }
 
+  const start = +new Date()
   lifecycle('sync', 'start', 'admin')
   for (let host of hosts) {
+    const startHost = +new Date()
     if (thisHost === host) {
       lifecycle(`sync:${host}`, 'skip', 'admin')
       continue
@@ -54,9 +56,11 @@ async function sync () {
     const baseURI = `http://${host}.imetrical.com:8000/api`
     lifecycle(`sync:${host}`, 'start', 'admin')
     await syncTask(baseURI, syncParams)
-    lifecycle(`sync:${host}`, 'done', 'admin')
+    const elapsedHost = Number(((+new Date() - startHost) / 1000).toFixed(1))
+    lifecycle(`sync:${host}`, 'done', 'admin', elapsedHost)
   }
-  lifecycle('sync', 'done', 'admin')
+  const elapsed = Number(((+new Date() - start) / 1000).toFixed(1))
+  lifecycle('sync', 'done', 'admin', elapsed)
 }
 
 function dedup (credentials) {

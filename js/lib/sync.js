@@ -148,7 +148,7 @@ function loadFromURL (baseURI, syncParams) {
     })
 }
 function loadFromDB (syncParams) {
-  log.debug('loadFromDB')
+  // log.debug('loadFromDB')
   return store.db.digests(syncParams)
     .then(function (digests) {
       return new Set(digests)

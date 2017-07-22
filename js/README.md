@@ -21,13 +21,13 @@ DB_LOG=1 DB_DIALECT=postgres npm run unit
 
 ## TODO
 
+- integrate [debug](https://www.npmjs.com/package/debug) into logging
+- try pull-streams
 - cleanup
   - Prune and move evernote to .
   - npm outdated
     - bluebird
     - lodash
-  - ~~mkdir data/sqlite~~
-- logcheck (separate not responding from mismatch)
 - refactor tasks: composable, adjust perUser, dedup vs checkpoint
 - refactor store.file (sink|source/file)
 - sync: discovery (ipfs / socket.io / socket.io-p2p?)

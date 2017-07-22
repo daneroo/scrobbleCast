@@ -1,6 +1,6 @@
 {
   "name": "pocketscrape",
-  "version": "5.0.3",
+  "version": "5.0.4",
   "description": "Fetch Pocketcast feed",
   "main": "index.js",
   "scripts": {

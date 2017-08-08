@@ -1,9 +1,12 @@
 {
   "dependencies": {
     "material-ui": "^0.18.0",
+    "moment": "^2.18.1",
+    "moment-timezone": "^0.5.13",
     "next": "latest",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
+    "react-moment": "^0.6.1",
     "react-tap-event-plugin": "^2.0.1"
   },
   "scripts": {

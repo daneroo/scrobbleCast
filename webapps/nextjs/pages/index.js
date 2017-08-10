@@ -15,7 +15,7 @@ import { CommunicationRssFeed } from 'material-ui/svg-icons';
 import Moment from 'react-moment';
 import 'moment-timezone';
 import { grey400, darkBlack, lightBlack } from 'material-ui/styles/colors';
-
+import myHistory from '../data/history-daniel.json';
 
 
 // Make sure react-tap-event-plugin only gets injected once
@@ -46,7 +46,7 @@ const played = item => {
   const pct = (item.playedProportion * 100).toFixed(0)
   return `-- (${pct}%)`
 }
-const historyItems = history().map(item =>
+const historyItems = (h) => h.map(item =>
   <ListItem
     leftAvatar={<Avatar src={item.thumbnail_url} />}
     primaryText={item.title}
@@ -55,16 +55,16 @@ const historyItems = history().map(item =>
       <p>
         <span style={{ color: darkBlack }}>{item.podcast_title}</span> <br />
         <Moment fromNow>{item.lastPlayed}</Moment> {played(item)}
-        </p>
+      </p>
     }
   />
 
 );
-const ListEpisodes = () => (
+const ListEpisodes = (history) => (
   <div>
     <List>
       <Subheader>Recent episodes</Subheader>
-      {historyItems}
+      {historyItems(history)}
     </List>
     {/* <Divider />
     <List>
@@ -76,7 +76,7 @@ const ListEpisodes = () => (
 
 
 class Main extends Component {
-  static getInitialProps({ req }) {
+  static async getInitialProps({ req }) {
     // Ensures material-ui renders the correct css prefixes server-side
     let userAgent
     if (process.browser) {
@@ -85,7 +85,8 @@ class Main extends Component {
       userAgent = req.headers['user-agent']
     }
 
-    return { userAgent }
+    const history = await getHistory(req)
+    return { userAgent, history }
   }
 
   constructor(props, context) {
@@ -109,7 +110,7 @@ class Main extends Component {
   }
 
   render() {
-    const { userAgent } = this.props
+    const { userAgent, history } = this.props
 
     const standardActions = (
       <FlatButton
@@ -139,14 +140,17 @@ class Main extends Component {
               onTouchTap={this.handleTouchTap}
             />
           </div>
-          {ListEpisodes()}
+          {ListEpisodes(history)}
         </div>
       </MuiThemeProvider>
     )
   }
 }
 
-function history() {
+async function getHistory() {
+  // this is from import...
+  return myHistory
+
   return [
     {
       "playedTime": 1204,

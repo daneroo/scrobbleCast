@@ -153,9 +153,13 @@ export HOSTNAME; docker-compose run --rm scrape node dedup.js
 docker-compose exec postgres psql -U postgres scrobblecast
 scrobblecast=# delete from items where encode(digest(item::text, 'sha256'), 'hex')='3fef8c3a1f5808d2938e06fa9e5cb419fe6d7fe9d10e56f59ddb87a5245d7211';
 
-# check sums after restore/snapshots...
-docker-compose run --rm scrape bash -c 'md5sum $(find data/snapshots -type f)|cut -d \  -f 1|sort|md5sum'
+# check monthly sums after restore/snapshots...
+```
+md5sum $(find data/snapshots -type f -not -name current\*)|cut -d \  -f 1|sort|md5sum
 
+docker exec -it js_scrape_1 bash -c 'md5sum $(find data/snapshots -type f -not -name current\*)|cut -d \  -f 1|sort|md5sum'
+
+docker-compose run --rm scrape bash -c 'md5sum $(find data/snapshots -type f -not -name current\*)|cut -d \  -f 1|sort|md5sum'
 ```
 
 ## Deployment: Zeit Now / Docker Cloud / k8s

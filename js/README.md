@@ -128,7 +128,7 @@ docker-compose build
 docker-compose up -d
 docker-compose logs -f scrape
 
-# restore from s3 -> data/snapshots -> pg
+# restore from s3 -> data/snapshots -> DB
 docker-compose run --rm scrape npm run restore
 docker-compose run --rm scrape node restore.js
 
@@ -136,7 +136,7 @@ docker-compose run --rm scrape node restore.js
 # -optionally, to avoid pushing other hosts 'current'
 #  rm -rf data/snapshots/current/
 export HOSTNAME; docker-compose run --rm scrape node snapshots.js
-docker-compose run --rm scrape npm run snapshot
+docker-compose run --rm -it scrape npm run snapshot
 
 # to run a single sync run
 docker-compose run --rm scrape node sync.js http://euler.imetrical.com:8000/api

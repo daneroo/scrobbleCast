@@ -1,8 +1,10 @@
 # implement the feed fetch in node.js
 
-_Note on `screen`:_
+_ dirac running fast in docker: _
 ```
-screen -q -R
+date;docker exec -it js_scrape_1 date; date
+docker run --rm --privileged alpine hwclock -s
+date;docker exec -it js_scrape_1 date; date
 ```
 
 ## Test 

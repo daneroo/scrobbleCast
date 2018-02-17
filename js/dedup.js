@@ -1,11 +1,11 @@
 'use strict'
 
-var tasks = require('./lib/tasks')
-var store = require('./lib/store')
-var log = require('./lib/log')
+const tasks = require('./lib/tasks')
+const store = require('./lib/store')
+const log = require('./lib/log')
 
 // globals
-var allCredentials = require('./credentials.json')
+const allCredentials = require('./credentials.json')
 
 main()
 async function main () {
@@ -13,5 +13,6 @@ async function main () {
     await tasks.dedup(credentials)
   }
   const dod = await store.db.digestOfDigests()
-  log.info('checkpoint', { digest: dod })
+  // info/verbose don't log for logcheck
+  log.verbose('checkpoint', { digest: dod })
 }

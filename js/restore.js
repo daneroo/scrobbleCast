@@ -59,27 +59,26 @@ async function restore (credentials) {
 
 async function digestOfDigests () {
   const dod = await store.db.digestOfDigests()
-  log.info('checkpoint', { digest: dod })
+  // info/verbose don't log for logcheck
+  log.verbose('checkpoint', { digest: dod })
 }
 
 async function accumulateItems (credentials) {
-  const __user = credentials.name
+  const user = credentials.name
   const historyByType = new delta.AccumulatorByTypeByUuid()
+  let mergedItemCount = 0
 
-  log.debug('accumulateItems', { user: __user })
-
-  const opts = { filter: { __user: __user } }
-
-  async function itemHandler (item) {
-    var changeCount = historyByType.merge(item)
+  async function itemHandler ({item}) {
+    let changeCount = historyByType.merge(item)
     if (changeCount === 0) {
       // throw new Error(`Item Not deduped: |Δ|:${changeCount} ${JSON.stringify(item)}`);
       log.verbose(`Item Not deduped: |Δ|:${changeCount}  ${item.__sourceType} ${item.title}`)
     }
-    return true
   }
 
-  const results = await store.db.load(opts, itemHandler)
-  log.verbose('Merged', results.length)
-  historyByType.sortAndSave(__user)
+  await store.db.load({user}, itemHandler)
+  log.verbose('restore:counts', {
+    user,
+    merged: mergedItemCount
+  })
 }

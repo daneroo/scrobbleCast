@@ -67,9 +67,40 @@ function defineModels () {
       // beforeCreate: injectKeys
     },
     indexes: [{
-      fields: ['__user', '__type', 'uuid', '__sourceType', '__stamp']
-    }]
+      name: 'items_dedup_load_order',
+      fields: ['__user', '__type', 'uuid', '__stamp', '__sourceType', 'digest']
+    },
+    {
+      name: 'items_digest_order',
+      fields: ['__stamp', 'digest']
+    }
+    // {
+    //   name: 'old_unique_order',
+    //   fields: ['__user', '__type', 'uuid', '__sourceType', '__stamp'] // old unique index order
+    // }
+    ]
   })
+
+  /// ClassLevel extra finder methods
+
+  Item.findAllByPage = async function (options, itemHandler, pageSize = 10000) {
+    const limit = pageSize
+    let offset = 0
+    while (true) {
+      const pagedOptions = {...options, offset, limit}
+      // console.log(new Date(), {offset, limit})
+      const items = await Item.findAll(pagedOptions)
+      for (let item of items) {
+        await itemHandler(item)
+      }
+
+      if (items.length < limit) {
+        break
+      } else {
+        offset += limit
+      }
+    }
+  }
 
   async function init () {
     if (config.sequelize.settings.dialect === 'sqlite') {

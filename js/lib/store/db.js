@@ -4,6 +4,7 @@
 // pg implementation (save only)
 
 // dependencies - core-public-internal
+var crypto = require('crypto')
 var log = require('../log')
 var utils = require('../utils')
 const orm = require('../model/orm')
@@ -27,9 +28,15 @@ exports = module.exports = {
   saveAll: saveAll,
 
   // load: (opts, handler) => {} // foreach item, cb(item);
+  fieldOrders: {
+    dedup: 'dedup', // default
+    snapshot: 'snapshot'
+  },
+  loadQy: loadQy,
   load: load,
   getByDigest: getByDigest,
 
+  digestsQy: digestsQy,
   digests: digests,
   digestOfDigests: digestOfDigests,
 
@@ -240,29 +247,49 @@ async function saveAll (items) {
   return true
 }
 
-// TODO(daneroo): but might better return map[Series] or spex, or streaming query
-async function load (opts, itemHandler) {
-  opts = opts || {}
+// order must be one of dedup, or snapshot
+function loadQy ({user, order = 'dedup'}) {
+  if (!user) {
+    throw (new Error('db:loadQy missing required user'))
+  }
+  const fieldOrders = {
+    dedup: ['__user', '__type', 'uuid', '__stamp', '__sourceType', 'digest'], // snapshot,file order
+    snapshot: ['__user', '__stamp', '__type', 'uuid', '__sourceType', 'digest'] // dedup order
+  }
+  if (!order || !exports.fieldOrders[order] || !fieldOrders[order]) {
+    throw (new Error('db:loadQy unknown field order error: ' + order))
+  }
+
+  return {
+    attributes: ['item'],
+    where: {
+      '__user': user
+    },
+    order: fieldOrders[order]
+    // order: ['__user', '__type', 'uuid', '__stamp', '__sourceType', 'digest'] // dedup load order
+
+  }
+}
+
+// pass each item in the database to the itemhandler
+// there are 2 load orders:
+//   dedup: suitable for smaller accumulator (grouped by uuid)
+//   snapshot: suitable for snapshot file order
+// -No longer returns anything, acumulate your values in the itemHandler
+// -itemHandler should be an async/promise function (it's resolved return value is ignored)
+async function load ({user, order = 'dedup', pageSize = 10000}, itemHandler) {
   const noop = async () => true // default handler (async)
   itemHandler = itemHandler || noop
   // opts.prefix = opts.prefix || ''
-  if (!opts.filter || !opts.filter.__user) {
-    throw (new Error('file:load missing required opt filter.__user'))
+  if (!user) {
+    throw (new Error('db:load missing required user property'))
+  }
+  if (!order || !exports.fieldOrders[order]) {
+    throw (new Error('db:load unknown field order error: ' + order))
   }
 
-  const items = await orm.Item.findAll({
-    attributes: ['item'],
-    where: {
-      '__user': opts.filter.__user
-    },
-    order: ['__user', '__stamp', '__type', 'uuid', '__sourceType', 'digest']
-  })
-
-  const results = []
-  for (let item of items) {
-    results.push(await itemHandler(item.item))
-  }
-  return results
+  const qy = loadQy({user, order})
+  await orm.Item.findAllByPage(qy, itemHandler, pageSize)
 }
 
 async function getByDigest (digest) {
@@ -275,31 +302,55 @@ async function getByDigest (digest) {
   return wrapped ? wrapped.item : null
 }
 
-async function digests (syncParams) {
-  syncParams = syncParams || {}
-  const nmParams = {
-    since: syncParams.since || '1970-01-01T00:00:00Z',   // >= (inclusive)
-    before: syncParams.before || '2040-01-01T00:00:00Z' // < (strict)
-  }
-
-  const items = await orm.Item.findAll({
+function digestsQy ({since = '1970-01-01T00:00:00Z', before = '2040-01-01T00:00:00Z'} = {}) {
+  return {
     raw: true,
     attributes: ['digest', '__stamp'],
     where: {
       '__stamp': {
-        $gte: nmParams.since,  // >= since (inclusive)
-        $lt: nmParams.before // < before (strict)
+        $gte: since,  // >= since (inclusive)
+        $lt: before // < before (strict)
       }
     },
     order: [['__stamp', 'DESC'], 'digest']
-  }).map(r => r.digest)
+  }
+}
 
+async function digests (syncParams = {}) {
+  const qy = digestsQy(syncParams)
+  const items = await orm.Item.findAll(qy).map(r => r.digest)
   return items
 }
 
 async function digestOfDigests () {
-  const d = await digests()
-  return utils.digest(JSON.stringify(d), 'sha256', false)
+  // Fast implementation, unbouded memory use
+  // const d = (await digests())
+  // return utils.digest(JSON.stringify(d), 'sha256', false)
+
+  const pageSize = 100000
+  const algorithm = 'sha256'
+  // Paged implementation
+  // A little slower, but capped on memory
+  // time  pageSize heapUsed  (benchmarked with 255k items 2018-02-15)
+  // 1.050s  ALL      120MB  - fast method above hash(digests())
+  // 3.657s  10k      37.22
+  // 2.407s  20k      43.89
+  // 1.865s  40k      35.33
+  // 1.675s  80k      42.97
+  // 1.500s  100k     55.97 <<-- Chosen
+  // 1.389s  160k     78.08
+  // 1.349s  320k     92.42
+
+  const hash = crypto.createHash(algorithm)
+  let isFirst = true
+  async function handler (item) {
+    const str = ((isFirst) ? '[' : ',') + JSON.stringify(item.digest)
+    hash.update(str)
+    isFirst = false
+  }
+  await orm.Item.findAllByPage(digestsQy(), handler, pageSize)
+  hash.update(']')
+  return hash.digest('hex')
 }
 
 // Delete by digest
@@ -308,7 +359,7 @@ async function digestOfDigests () {
 async function remove (item) {
   const digest = _digest(item)
   const rowCount = await orm.Item.destroy({
-    attributes: ['item'],
+    attributes: ['item'], // TODO, don't think this is used!!
     where: {
       digest: digest
     }
@@ -323,13 +374,13 @@ async function remove (item) {
 async function removeAll (items) {
   const digests = items.map(_digest)
   const rowCount = await orm.Item.destroy({
-    attributes: ['item'],
+    attributes: ['item'], // TODO, don't think this is used!!
     where: {
       digest: digests
     }
   })
   if (rowCount !== items.length) {
-    log.warn('removeAll unexpected rowCount!', {rowCount: rowCount, items: items.length})
+    log.warn('removeAll unexpected rowCount!=items', {rowCount: rowCount, items: items.length})
   }
   return rowCount
 }

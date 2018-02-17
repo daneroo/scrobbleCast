@@ -17,23 +17,17 @@ exports = module.exports = {
 }
 
 function dedupTask (credentials) {
-  var historyByType = new delta.AccumulatorByTypeByUuid()
-  var __user = credentials.name
+  const historyByType = new delta.AccumulatorByTypeByUuid()
+  const user = credentials.name
   return Promise.resolve(true)
     .then(function () {
-      const opts = {
-        filter: {
-          __user: __user
-        }
-      }
-
       var counts = {
         total: 0,
         duplicates: 0,
         keepers: 0
       }
       var duplicates = []
-      function itemHandler (item) {
+      async function itemHandler ({item}) {
         counts.total++
         var changeCount = historyByType.merge(item)
 
@@ -47,18 +41,16 @@ function dedupTask (credentials) {
           // log.verbose(`Mark as keeper:    |Δ|:${changeCount} ${JSON.stringify(item)}`);
           // log.verbose(`Mark as keeper:    |Δ|:${changeCount} ${item.__sourceType} ${item.title}`);
         }
-        return Promise.resolve(true)
       }
 
-      return store.db.load(opts, itemHandler)
+      return store.db.load({user}, itemHandler)
         .then((/* items */) => {
           log.verbose('Deduped', counts)
           return deleteDuplicates(duplicates)
         })
     })
     .then(() => {
-      historyByType.sortAndSave(__user)
-      return true
+      historyByType.sortAndSave(user)
     })
     .catch(function (error) { // TODO: might remove this altogether
       log.error('Dedup ', {
@@ -68,7 +60,7 @@ function dedupTask (credentials) {
     })
 }
 
-// move this into db.removeAll, does batch logic
+// TODO: move this into db.removeAll, does batch logic
 async function deleteDuplicates (duplicates) {
   // shallow copy of duplicates because batching process is destructive
   duplicates = duplicates.slice()

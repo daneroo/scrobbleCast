@@ -1,8 +1,10 @@
 # implement the feed fetch in node.js
 
-_Note on `screen`:_
+_ dirac running fast in docker: _
 ```
-screen -q -R
+date;docker exec -it js_scrape_1 date; date
+docker run --rm --privileged alpine hwclock -s
+date;docker exec -it js_scrape_1 date; date
 ```
 
 ## Test 
@@ -128,7 +130,7 @@ docker-compose build
 docker-compose up -d
 docker-compose logs -f scrape
 
-# restore from s3 -> data/snapshots -> pg
+# restore from s3 -> data/snapshots -> DB
 docker-compose run --rm scrape npm run restore
 docker-compose run --rm scrape node restore.js
 
@@ -136,7 +138,7 @@ docker-compose run --rm scrape node restore.js
 # -optionally, to avoid pushing other hosts 'current'
 #  rm -rf data/snapshots/current/
 export HOSTNAME; docker-compose run --rm scrape node snapshots.js
-docker-compose run --rm scrape npm run snapshot
+docker-compose run --rm -it scrape npm run snapshot
 
 # to run a single sync run
 docker-compose run --rm scrape node sync.js http://euler.imetrical.com:8000/api
@@ -153,9 +155,13 @@ export HOSTNAME; docker-compose run --rm scrape node dedup.js
 docker-compose exec postgres psql -U postgres scrobblecast
 scrobblecast=# delete from items where encode(digest(item::text, 'sha256'), 'hex')='3fef8c3a1f5808d2938e06fa9e5cb419fe6d7fe9d10e56f59ddb87a5245d7211';
 
-# check sums after restore/snapshots...
-docker-compose run --rm scrape bash -c 'md5sum $(find data/snapshots -type f)|cut -d \  -f 1|sort|md5sum'
+# check monthly sums after restore/snapshots...
+```
+md5sum $(find data/snapshots -type f -not -name current\*)|cut -d \  -f 1|sort|md5sum
 
+docker exec -it js_scrape_1 bash -c 'md5sum $(find data/snapshots -type f -not -name current\*)|cut -d \  -f 1|sort|md5sum'
+
+docker-compose run --rm scrape bash -c 'md5sum $(find data/snapshots -type f -not -name current\*)|cut -d \  -f 1|sort|md5sum'
 ```
 
 ## Deployment: Zeit Now / Docker Cloud / k8s

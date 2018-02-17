@@ -119,7 +119,7 @@ describe('store', function () {
       expect(saver.callCount, 'saver called 4 times').to.equal(4)
       // TODO(daneroo): This spy is only called once, but the inner flush method is actually called twice
       //   - how can we assert that!
-      expect(saver.flush.callCount, 'flush called twice').to.equal(1)
+      expect(saver.flush.callCount, 'flush called once').to.equal(1)
 
       // remove the spy
       saver.flush.restore()
@@ -133,20 +133,39 @@ describe('store', function () {
       ])
     })
 
-    it('should load and handle each item in the right order', async () => {
+    it('should load and handle each item in the right order (snapshot|file)', async () => {
       // create in invers order as expected to be load'ed
       const items = helpers.makeItems([3, 2, 1])
       const ok = await db.saveAll(items)
       expect(ok).to.equal(true)
 
       const handler = sinon.spy()
-      await db.load({filter: {__user: 'mock'}}, handler)
+      await db.load({user: 'mock', order: db.fieldOrders.snapshot}, handler)
 
-      expect(handler.callCount, 'handler called twice').to.equal(3)
+      expect(handler.callCount, 'handler called thrice').to.equal(3)
       // ensure call order is __stamp ascending
-      expect(handler.getCall(0).args[0], 'handler called first with item 2').to.deep.equal(items[2])
-      expect(handler.getCall(1).args[0], 'handler called first with item 1').to.deep.equal(items[1])
-      expect(handler.getCall(2).args[0], 'handler called first with item 0').to.deep.equal(items[0])
+      expect(handler.getCall(0).args[0].item, 'handler called 1st with item 2').to.deep.equal(items[2])
+      expect(handler.getCall(1).args[0].item, 'handler called 2nd with item 1').to.deep.equal(items[1])
+      expect(handler.getCall(2).args[0].item, 'handler called 3rd with item 0').to.deep.equal(items[0])
+    })
+    it('should load and handle each item in the right order (dedup|default)', async () => {
+      // create in invers order as expected to be load'ed
+      const items = helpers.makeItems([3, 2, 1])
+      // adjust data to show uuid,stamp ordering
+      items[0].uuid = 'episode-0001'
+      items[1].uuid = 'episode-0002'
+      items[2].uuid = 'episode-0001'
+      const ok = await db.saveAll(items)
+      expect(ok).to.equal(true)
+
+      const handler = sinon.spy()
+      await db.load({user: 'mock'}, handler)
+
+      expect(handler.callCount, 'handler called thrice').to.equal(3)
+      // ensure call order is __stamp ascending
+      expect(handler.getCall(0).args[0].item, 'handler called 1st with item 2').to.deep.equal(items[2])
+      expect(handler.getCall(1).args[0].item, 'handler called 2nd with item 0').to.deep.equal(items[0])
+      expect(handler.getCall(2).args[0].item, 'handler called 3rd with item 1').to.deep.equal(items[1])
     })
 
     it('should load with appropriate filter by __user', async () => {
@@ -156,11 +175,11 @@ describe('store', function () {
 
       const handler = sinon.spy()
 
-      await db.load({filter: {__user: 'not-mock'}}, handler)
+      await db.load({user: 'not-mock'}, handler)
       expect(handler.callCount, 'handler not be called').to.equal(0)
     })
 
-    it('should throw an error if load has missing filter.__ueser propery', async () => {
+    it('should throw an error if load has missing user property', async () => {
       const items = helpers.makeItems([1, 2])
       const ok = await db.saveAll(items)
       expect(ok).to.equal(true)
@@ -171,7 +190,7 @@ describe('store', function () {
         await db.load({}, handler)
         throw (new Error('should not reach this'))
       } catch (err) {
-        expect(err.message).to.equal('file:load missing required opt filter.__user')
+        expect(err.message).to.equal('db:load missing required user property')
       }
       expect(handler.callCount, 'handler not be called').to.equal(0)
     })

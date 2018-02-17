@@ -1,2339 +1,2230 @@
 [
   {
-    "playedTime": 1593,
-    "firstPlayed": "2017-06-09T03:50:00Z",
-    "lastPlayed": "2017-06-09T04:20:00Z",
-    "playedProportion": 0.48656078191814295,
+    "playedTime": 1204,
+    "firstPlayed": "2017-08-07T23:10:00Z",
+    "lastPlayed": "2017-08-08T00:50:00Z",
+    "playedProportion": 0.4085510688836104,
     "status": {
-      "2017-06-08T19:00:00Z": 0,
-      "2017-06-09T03:50:00Z": 2
+      "2017-08-07T23:00:00Z": 0,
+      "2017-08-07T23:10:00Z": 2
     },
-    "duration": 3274,
+    "duration": "2947",
     "play": {
-      "2017-06-08T19:00:00Z": 0,
-      "2017-06-09T03:50:00Z": 263,
-      "2017-06-09T04:00:00Z": 1163,
-      "2017-06-09T04:20:00Z": 1593
-    },
-    "podcast_uuid": "c3adff20-1b2f-012e-0081-00163e1b201c",
-    "title": "Pushing the Frontiers of Knowledge: The 2017 Killam Prize",
-    "playCount": 4,
-    "uuid": "3fba0380-2eaa-0135-52f9-452518e2d253",
-    "thumbnail_url": "https://www.cbc.ca/radio/podcasts/images/promo-ideas.jpg",
-    "podcast_title": "Ideas from CBC Radio (Highlights)"
-  },
-  {
-    "playedTime": 1032,
-    "firstPlayed": "2017-06-09T01:30:00Z",
-    "lastPlayed": "2017-06-09T01:40:00Z",
-    "playedProportion": 0.3647932131495228,
-    "status": {
-      "2017-06-08T12:00:00Z": 0,
-      "2017-06-09T01:30:00Z": 2,
-      "2017-06-09T04:00:00Z": 3
-    },
-    "duration": "2829",
-    "play": {
-      "2017-06-08T12:00:00Z": 0,
-      "2017-06-09T01:30:00Z": 527,
-      "2017-06-09T01:40:00Z": 1032
-    },
-    "podcast_uuid": "a56c9e00-5332-0132-d11f-5f4c86fd3263",
-    "title": "Creating large training data sets quickly",
-    "playCount": 3,
-    "uuid": "a543bc90-2e69-0135-52f9-452518e2d253",
-    "thumbnail_url": "http://cdn.oreillystatic.com/radar/datashow-podcast/data-podcast-1400x1400.png",
-    "podcast_title": "O'Reilly Data Show - O'Reilly Media Podcast"
-  },
-  {
-    "playedTime": 650,
-    "firstPlayed": "2017-06-09T03:30:00Z",
-    "lastPlayed": "2017-06-09T04:00:00Z",
-    "playedProportion": 0.9938837920489296,
-    "status": {
-      "2017-06-08T22:00:00Z": 0,
-      "2017-06-09T03:30:00Z": 2,
-      "2017-06-09T04:00:00Z": 3
-    },
-    "duration": 654,
-    "play": {
-      "2017-06-08T22:00:00Z": 0,
-      "2017-06-09T03:30:00Z": 179,
-      "2017-06-09T03:40:00Z": 560,
-      "2017-06-09T04:00:00Z": 650
-    },
-    "podcast_uuid": "0cc43410-1d2f-012e-0175-00163e1b201c",
-    "title": "Intro to a new Roman Mars podcast: What Trump Can Teach Us About Con Law",
-    "playCount": 4,
-    "uuid": "7e994510-2ebb-0135-52f9-452518e2d253",
-    "thumbnail_url": "https://f.prxu.org/99pi/images/6a748676-76e8-45fd-8de2-a868a58f6b8b/99-1400.png",
-    "podcast_title": "99% Invisible"
-  },
-  {
-    "playedTime": 3904,
-    "firstPlayed": "2017-06-08T00:00:00Z",
-    "lastPlayed": "2017-06-08T23:00:00Z",
-    "playedProportion": 0.9997439180537772,
-    "status": {
-      "2017-06-01T19:00:00Z": 0,
-      "2017-06-08T00:00:00Z": 2,
-      "2017-06-08T23:00:00Z": 3
-    },
-    "duration": "3905",
-    "play": {
-      "2017-06-08T16:50:00Z": 2823,
-      "2017-06-08T16:40:00Z": 2801,
-      "2017-06-08T17:00:00Z": 3378,
-      "2017-06-08T00:30:00Z": 2420,
-      "2017-06-08T00:20:00Z": 1352,
-      "2017-06-08T00:10:00Z": 1242,
-      "2017-06-08T23:00:00Z": 3904,
-      "2017-06-08T22:00:00Z": 3462,
-      "2017-06-08T00:00:00Z": 510,
-      "2017-06-01T19:00:00Z": 0
-    },
-    "podcast_uuid": "64a62690-dcdd-0134-ebdd-4114446340cb",
-    "title": "12: Using ES6/7, create-react-app, and Electron!",
-    "playCount": 10,
-    "uuid": "0cded4f0-28fd-0135-52f9-452518e2d253",
-    "thumbnail_url": "https://cdn.changelog.com/images/podcasts/jsparty-cover-art-76ff83e543c83d4aeb2263507bdf83f1.png?vsn=d",
-    "podcast_title": "JS Party"
-  },
-  {
-    "playedTime": 763,
-    "firstPlayed": "2017-06-08T16:30:00Z",
-    "lastPlayed": "2017-06-08T17:00:00Z",
-    "playedProportion": 0.4255437813720022,
-    "status": {
-      "2017-06-08T11:00:00Z": 0,
-      "2017-06-08T16:30:00Z": 2,
-      "2017-06-08T17:00:00Z": 3
-    },
-    "duration": "1793",
-    "play": {
-      "2017-06-08T11:00:00Z": 0,
-      "2017-06-08T16:30:00Z": 703,
-      "2017-06-08T17:00:00Z": 763
-    },
-    "podcast_uuid": "b633aa60-0bfe-012e-fb1f-00163e1b201c",
-    "title": "Comey: President Told Me \"I Expect Loyalty\"",
-    "playCount": 3,
-    "uuid": "7fbc7740-2e65-0135-52f9-452518e2d253",
-    "thumbnail_url": "http://ichef.bbci.co.uk/images/ic/3000x3000/p02h1m09.jpg",
-    "podcast_title": "World Update: Daily Commute"
-  },
-  {
-    "playedTime": 2531,
-    "firstPlayed": "2017-06-08T08:00:00Z",
-    "lastPlayed": "2017-06-08T10:00:00Z",
-    "playedProportion": 0.9988161010260458,
-    "status": {
-      "2017-06-08T04:00:00Z": 0,
-      "2017-06-08T08:00:00Z": 2,
-      "2017-06-08T10:00:00Z": 3
-    },
-    "duration": "2534",
-    "play": {
-      "2017-06-08T04:00:00Z": 0,
-      "2017-06-08T08:00:00Z": 3,
-      "2017-06-08T09:10:00Z": 442,
-      "2017-06-08T09:20:00Z": 722,
-      "2017-06-08T09:30:00Z": 971,
-      "2017-06-08T09:40:00Z": 1891,
-      "2017-06-08T10:00:00Z": 2531
-    },
-    "podcast_uuid": "d81fbcb0-0422-012e-f9a0-00163e1b201c",
-    "title": "He’s One of the Most Famous Political Operatives in America. America Just Doesn’t Know It Yet.",
-    "playCount": 7,
-    "uuid": "6e0be8c0-2e26-0135-52f9-452518e2d253",
-    "thumbnail_url": "https://media2.wnyc.org/i/1400/1400/l/80/1/Freakonomics_WNYCStudios_1400_rsAKwzl.png",
-    "podcast_title": "Freakonomics Radio"
-  },
-  {
-    "playedTime": 1601,
-    "firstPlayed": "2017-06-08T06:30:00Z",
-    "lastPlayed": "2017-06-08T09:00:00Z",
-    "playedProportion": 0.9987523393636931,
-    "status": {
-      "2017-06-07T21:00:00Z": 0,
-      "2017-06-08T06:30:00Z": 2,
-      "2017-06-08T09:00:00Z": 3
-    },
-    "duration": 1603,
-    "play": {
-      "2017-06-07T21:00:00Z": 0,
-      "2017-06-08T06:30:00Z": 194,
-      "2017-06-08T06:50:00Z": 854,
-      "2017-06-08T07:00:00Z": 1521,
-      "2017-06-08T09:00:00Z": 1601
-    },
-    "podcast_uuid": "aeddb420-7217-0133-2cee-6dc413d6d41d",
-    "title": "ISIS claims strikes in Iran, expect 'database' for Comey hearing, and the new Museum of Failure",
-    "playCount": 5,
-    "uuid": "bcf7ca10-2ded-0135-52f9-452518e2d253",
-    "thumbnail_url": "http://pg-act-11-o.s3-us-west-2.amazonaws.com/11/artwork/show.4.audioart.original.jpg",
-    "podcast_title": "Amanpour"
-  },
-  {
-    "playedTime": 1437,
-    "firstPlayed": "2017-06-08T06:00:00Z",
-    "lastPlayed": "2017-06-08T07:00:00Z",
-    "playedProportion": 0.9972241498959056,
-    "status": {
-      "2017-06-07T13:00:00Z": 0,
-      "2017-06-08T06:00:00Z": 2,
-      "2017-06-08T07:00:00Z": 3
-    },
-    "duration": "1441",
-    "play": {
-      "2017-06-07T13:00:00Z": 0,
-      "2017-06-08T06:00:00Z": 839,
-      "2017-06-08T06:10:00Z": 337,
-      "2017-06-08T06:20:00Z": 757,
-      "2017-06-08T07:00:00Z": 1437
-    },
-    "podcast_uuid": "359848b0-c0fe-0132-381c-0b39892d38e0",
-    "title": "BONUS - Tyler Cowen and Steve Davies talk Theresa May, Brexit, and Europe",
-    "playCount": 5,
-    "uuid": "0e7b7a60-2da9-0135-52f9-452518e2d253",
-    "thumbnail_url": "http://i1.sndcdn.com/avatars-000202916330-h6nns1-original.jpg",
-    "podcast_title": "Conversations with Tyler"
-  },
-  {
-    "playedTime": 2120,
-    "firstPlayed": "2017-06-07T15:50:00Z",
-    "lastPlayed": "2017-06-08T00:00:00Z",
-    "playedProportion": 0.5656350053361793,
-    "status": {
-      "2017-06-06T14:00:00Z": 0,
-      "2017-06-07T15:50:00Z": 2,
-      "2017-06-08T00:00:00Z": 3
-    },
-    "duration": "3748",
-    "play": {
-      "2017-06-06T14:00:00Z": 0,
-      "2017-06-07T15:50:00Z": 295,
-      "2017-06-07T16:00:00Z": 1158,
-      "2017-06-07T16:20:00Z": 1457,
-      "2017-06-07T16:30:00Z": 2060,
-      "2017-06-07T23:50:00Z": 2076,
-      "2017-06-08T00:00:00Z": 2120
-    },
-    "podcast_uuid": "2743d720-0edf-0133-2204-059c869cc4eb",
-    "title": "DNS with Phil Stanhope",
-    "playCount": 7,
-    "uuid": "df7b75b0-2ceb-0135-52f9-452518e2d253",
-    "thumbnail_url": "http://softwaredaily.wpengine.com/wp-content/uploads/powerpress/SED_square_solid_bg.png",
-    "podcast_title": "Software Engineering Daily"
-  },
-  {
-    "playedTime": 2374,
-    "firstPlayed": "2017-06-07T06:40:00Z",
-    "lastPlayed": "2017-06-07T10:00:00Z",
-    "playedProportion": 0.999578947368421,
-    "status": {
-      "2017-06-07T05:00:00Z": 0,
-      "2017-06-07T06:40:00Z": 2,
-      "2017-06-07T10:00:00Z": 3
-    },
-    "duration": "2375",
-    "play": {
-      "2017-06-07T05:00:00Z": 0,
-      "2017-06-07T06:40:00Z": 179,
-      "2017-06-07T06:50:00Z": 819,
-      "2017-06-07T07:00:00Z": 1719,
-      "2017-06-07T08:50:00Z": 1992,
-      "2017-06-07T10:00:00Z": 2374
-    },
-    "podcast_uuid": "0fb72d80-4c95-0130-e3d5-723c91aeae46",
-    "title": "TYT - 06.06.17: London Mayor, Qatar, War Machine, and Nazi Jewelry",
-    "playCount": 6,
-    "uuid": "234c97c0-2d5c-0135-52f9-452518e2d253",
-    "thumbnail_url": "http://static.libsyn.com/p/assets/0/e/e/1/0ee1b12001e873cb/MS_iTunes-Podcast_FREE-Audio_1024.jpg",
-    "podcast_title": "The Young Turks - FREE (Audio)"
-  },
-  {
-    "playedTime": 1287,
-    "firstPlayed": "2017-06-07T06:20:00Z",
-    "lastPlayed": "2017-06-07T07:00:00Z",
-    "playedProportion": 1,
-    "status": {
-      "2017-06-07T02:00:00Z": 0,
-      "2017-06-07T06:20:00Z": 2,
-      "2017-06-07T07:00:00Z": 3
-    },
-    "duration": 1287,
-    "play": {
-      "2017-06-07T02:00:00Z": 0,
-      "2017-06-07T06:20:00Z": 1095,
-      "2017-06-07T06:30:00Z": 1114,
-      "2017-06-07T07:00:00Z": 1287
-    },
-    "podcast_uuid": "0cc43410-1d2f-012e-0175-00163e1b201c",
-    "title": "199- The Yin and Yang of Basketball",
-    "playCount": 4,
-    "uuid": "88dd2280-2d4c-0135-52f9-452518e2d253",
-    "thumbnail_url": "https://f.prxu.org/99pi/images/6a748676-76e8-45fd-8de2-a868a58f6b8b/99-1400.png",
-    "podcast_title": "99% Invisible"
-  },
-  {
-    "playedTime": 1779,
-    "firstPlayed": "2017-06-07T05:50:00Z",
-    "lastPlayed": "2017-06-07T07:00:00Z",
-    "playedProportion": 0.999438202247191,
-    "status": {
-      "2017-06-06T17:00:00Z": 0,
-      "2017-06-07T05:50:00Z": 2,
-      "2017-06-07T07:00:00Z": 3
-    },
-    "duration": 1780,
-    "play": {
-      "2017-06-06T17:00:00Z": 0,
-      "2017-06-07T05:50:00Z": 739,
-      "2017-06-07T06:00:00Z": 1599,
-      "2017-06-07T07:00:00Z": 1779
-    },
-    "podcast_uuid": "5e0e0e70-0c4f-012e-fb35-00163e1b201c",
-    "title": "Ep. 452: Summer Observing Challenges",
-    "playCount": 4,
-    "uuid": "7224f0e0-2d05-0135-52f9-452518e2d253",
-    "thumbnail_url": "http://is1.mzstatic.com/image/thumb/Features/v4/dd/dd/ad/ddddad15-13df-6813-7d05-d81e45d88d9e/mza_5442136597615139731.jpg/170x170bb-85.jpg",
-    "podcast_title": "Astronomy Cast"
-  },
-  {
-    "playedTime": 2020,
-    "firstPlayed": "2017-06-07T04:40:00Z",
-    "lastPlayed": "2017-06-07T06:00:00Z",
-    "playedProportion": 0.9955643173977329,
-    "status": {
-      "2017-06-06T12:00:00Z": 0,
-      "2017-06-07T04:40:00Z": 2,
-      "2017-06-07T06:00:00Z": 3
-    },
-    "duration": "2029",
-    "play": {
-      "2017-06-06T12:00:00Z": 0,
-      "2017-06-07T04:40:00Z": 170,
-      "2017-06-07T04:50:00Z": 610,
-      "2017-06-07T05:00:00Z": 1520,
-      "2017-06-07T06:00:00Z": 2020
-    },
-    "podcast_uuid": "c0313510-8262-0132-e7ff-5f4c86fd3263",
-    "title": "AaS! 57: What's the matter with dark matter?",
-    "playCount": 5,
-    "uuid": "b8f7bd40-2cd7-0135-52f9-452518e2d253",
-    "thumbnail_url": "http://static.libsyn.com/p/assets/7/a/d/3/7ad3cd5ef13e9139/logo_askaspace_name.jpg",
-    "podcast_title": "Ask a Spaceman!"
-  },
-  {
-    "playedTime": 596,
-    "firstPlayed": "2017-06-07T05:10:00Z",
-    "lastPlayed": "2017-06-07T05:30:00Z",
-    "playedProportion": 0.12354892205638475,
-    "status": {
-      "2017-06-06T07:00:00Z": 0,
-      "2017-06-07T05:10:00Z": 2
-    },
-    "duration": "4824",
-    "play": {
-      "2017-06-06T07:00:00Z": 0,
-      "2017-06-07T05:10:00Z": 3,
-      "2017-06-07T05:30:00Z": 596
-    },
-    "podcast_uuid": "71689990-cba3-0133-2e8b-6dc413d6d41d",
-    "title": "Episode 39: Suzana Herculano provides a new understanding of how our brains became remarkable",
-    "playCount": 3,
-    "uuid": "24fc0430-2cae-0135-52f9-452518e2d253",
-    "thumbnail_url": "https://www.ihmc.us/wp-content/uploads/2016/02/ihmc_podcast_logo_v3.png",
-    "podcast_title": "STEM-Talk"
-  },
-  {
-    "playedTime": 446,
-    "firstPlayed": "2017-06-07T01:40:00Z",
-    "lastPlayed": "2017-06-07T01:40:00Z",
-    "playedProportion": 0.2866323907455013,
-    "status": {
-      "2017-06-06T20:00:00Z": 0,
-      "2017-06-07T01:40:00Z": 2,
-      "2017-06-07T05:00:00Z": 3
-    },
-    "duration": 1556,
-    "play": {
-      "2017-06-06T20:00:00Z": 0,
-      "2017-06-07T01:40:00Z": 446
-    },
-    "podcast_uuid": "aeddb420-7217-0133-2cee-6dc413d6d41d",
-    "title": "Hero MP speaks of huge challenge in tackling extremism.  Exclusive with Victoria Nuland",
-    "playCount": 2,
-    "uuid": "8dd74a00-2d1f-0135-52f9-452518e2d253",
-    "thumbnail_url": "http://pg-act-11-o.s3-us-west-2.amazonaws.com/11/artwork/show.4.audioart.original.jpg",
-    "podcast_title": "Amanpour"
-  },
-  {
-    "playedTime": 332,
-    "firstPlayed": "2017-06-07T02:00:00Z",
-    "lastPlayed": "2017-06-07T02:00:00Z",
-    "playedProportion": 0.10516312955337345,
-    "status": {
-      "2017-06-07T02:00:00Z": 3
-    },
-    "duration": 3157,
-    "play": {
-      "2017-06-07T02:00:00Z": 332
-    },
-    "podcast_uuid": "aeddb420-7217-0133-2cee-6dc413d6d41d",
-    "title": "UK: London Bridge Terror Attack",
-    "playCount": 1,
-    "uuid": "e2dd16f0-2d19-0135-52f9-452518e2d253",
-    "thumbnail_url": "http://pg-act-11-o.s3-us-west-2.amazonaws.com/11/artwork/show.4.audioart.original.jpg",
-    "podcast_title": "Amanpour"
-  },
-  {
-    "playedTime": 4448,
-    "firstPlayed": "2017-06-01T22:10:00Z",
-    "lastPlayed": "2017-06-07T02:00:00Z",
-    "playedProportion": 0.99798070450976,
-    "status": {
-      "2017-05-31T04:00:00Z": 0,
-      "2017-06-01T22:10:00Z": 2,
-      "2017-06-07T02:00:00Z": 3
-    },
-    "duration": "4457",
-    "play": {
-      "2017-06-01T22:50:00Z": 2020,
-      "2017-06-01T22:40:00Z": 1500,
-      "2017-06-01T22:20:00Z": 590,
-      "2017-06-01T22:10:00Z": 231,
-      "2017-06-06T15:20:00Z": 3403,
-      "2017-06-06T15:10:00Z": 3057,
-      "2017-06-06T15:00:00Z": 2187,
-      "2017-06-07T02:00:00Z": 4448,
-      "2017-06-06T23:00:00Z": 4369,
-      "2017-05-31T04:00:00Z": 0
+      "2017-08-07T23:00:00Z": 0,
+      "2017-08-07T23:10:00Z": 19,
+      "2017-08-07T23:30:00Z": 604,
+      "2017-08-08T00:50:00Z": 1204
     },
     "podcast_uuid": "70d13d50-9efe-0130-1b90-723c91aeae46",
-    "title": "251: JAMstack, Netlify CMS, and 10x-ing Smashing Magazine with Matt Biilman and Chris Bach",
-    "playCount": 10,
-    "uuid": "cc1a8c80-27e0-0135-52f9-452518e2d253",
+    "title": "260: You Are Not Google/Amazon/LinkedIn with Ozan Onay",
+    "playCount": 4,
+    "uuid": "8fab00ca-2ae7-4fb4-83fb-ce3f428651fa",
     "thumbnail_url": "https://cdn.changelog.com/images/podcasts/podcast-cover-art-64a3184278271e1751c20f040e3c0055.png?vsn=d",
     "podcast_title": "The Changelog"
   },
   {
-    "playedTime": 3369,
-    "firstPlayed": "2017-06-02T21:40:00Z",
-    "lastPlayed": "2017-06-06T15:00:00Z",
-    "playedProportion": 1.0017841213202499,
+    "playedTime": 3744,
+    "firstPlayed": "2017-08-07T16:50:00Z",
+    "lastPlayed": "2017-08-08T00:00:00Z",
+    "playedProportion": 1.0037533512064343,
     "status": {
-      "2017-06-02T10:00:00Z": 0,
-      "2017-06-02T21:40:00Z": 2,
-      "2017-06-06T15:00:00Z": 3
+      "2017-08-07T10:00:00Z": 0,
+      "2017-08-07T16:50:00Z": 2,
+      "2017-08-08T00:00:00Z": 3
     },
-    "duration": "3363",
+    "duration": "3730",
     "play": {
-      "2017-06-05T16:30:00Z": 2700,
-      "2017-06-02T21:50:00Z": 387,
-      "2017-06-02T21:40:00Z": 177,
-      "2017-06-02T22:30:00Z": 2100,
-      "2017-06-02T22:20:00Z": 1944,
-      "2017-06-02T22:10:00Z": 1550,
-      "2017-06-06T15:00:00Z": 3369,
-      "2017-06-02T22:00:00Z": 566,
-      "2017-06-02T10:00:00Z": 0
+      "2017-08-07T18:10:00Z": 1448,
+      "2017-08-07T19:00:00Z": 2901,
+      "2017-08-07T22:30:00Z": 3562,
+      "2017-08-07T20:30:00Z": 2949,
+      "2017-08-08T00:00:00Z": 3744,
+      "2017-08-07T10:00:00Z": 0,
+      "2017-08-07T17:50:00Z": 1349,
+      "2017-08-07T16:50:00Z": 670,
+      "2017-08-07T18:30:00Z": 1938
     },
     "podcast_uuid": "2743d720-0edf-0133-2204-059c869cc4eb",
-    "title": "GitLab with Pablo Carranza",
+    "title": "Serverless Continuous Delivery with Robin Weston",
     "playCount": 9,
-    "uuid": "7b36d000-29a0-0135-52f9-452518e2d253",
+    "uuid": "94f2f18e-11fa-407e-a6e9-3ff8ecbf1417",
     "thumbnail_url": "http://softwaredaily.wpengine.com/wp-content/uploads/powerpress/SED_square_solid_bg.png",
     "podcast_title": "Software Engineering Daily"
   },
   {
-    "playedTime": 1784,
-    "firstPlayed": "2017-06-06T13:00:00Z",
-    "lastPlayed": "2017-06-06T14:00:00Z",
-    "playedProportion": 0.9972051425377306,
+    "playedTime": 228,
+    "firstPlayed": "2017-08-08T00:00:00Z",
+    "lastPlayed": "2017-08-08T00:00:00Z",
+    "playedProportion": 0.957983193277311,
     "status": {
-      "2017-06-06T11:00:00Z": 0,
-      "2017-06-06T13:00:00Z": 2,
-      "2017-06-06T14:00:00Z": 3
+      "2017-08-07T22:00:00Z": 0,
+      "2017-08-08T00:00:00Z": 3
     },
-    "duration": "1789",
+    "duration": "238",
     "play": {
-      "2017-06-06T11:00:00Z": 0,
-      "2017-06-06T13:00:00Z": 574,
-      "2017-06-06T13:10:00Z": 1394,
-      "2017-06-06T14:00:00Z": 1784
+      "2017-08-07T22:00:00Z": 0,
+      "2017-08-08T00:00:00Z": 228
     },
-    "podcast_uuid": "b633aa60-0bfe-012e-fb1f-00163e1b201c",
-    "title": "London Attack: Met Defends Dropping Inquiry into Attacker",
-    "playCount": 4,
-    "uuid": "68947fb0-2cd4-0135-52f9-452518e2d253",
-    "thumbnail_url": "http://ichef.bbci.co.uk/images/ic/3000x3000/p02h1m09.jpg",
-    "podcast_title": "World Update: Daily Commute"
+    "podcast_uuid": "2433b8f0-0d4c-012e-fb96-00163e1b201c",
+    "title": "Bonus Bill – Ep. #432",
+    "playCount": 2,
+    "uuid": "57871ea6-2caf-41d1-a7ad-edbe74f35d20",
+    "thumbnail_url": "http://static.libsyn.com/p/assets/a/0/6/1/a061ceb8595319af/billmaher_logo1400.jpg",
+    "podcast_title": "Real Time with Bill Maher"
   },
   {
-    "playedTime": 3911,
-    "firstPlayed": "2017-06-06T06:10:00Z",
-    "lastPlayed": "2017-06-06T09:00:00Z",
-    "playedProportion": 1.0023065094823167,
+    "playedTime": 1279,
+    "firstPlayed": "2017-08-07T16:00:00Z",
+    "lastPlayed": "2017-08-07T16:20:00Z",
+    "playedProportion": 0.7193475815523059,
     "status": {
-      "2017-06-06T04:00:00Z": 0,
-      "2017-06-06T06:00:00Z": 2,
-      "2017-06-06T09:00:00Z": 3
+      "2017-08-07T16:00:00Z": 2,
+      "2017-08-07T17:00:00Z": 3
     },
-    "duration": "3902",
+    "duration": "1778",
     "play": {
-      "2017-06-06T04:00:00Z": 0,
-      "2017-06-06T06:10:00Z": 732,
-      "2017-06-06T06:30:00Z": 1442,
-      "2017-06-06T08:10:00Z": 2381,
-      "2017-06-06T08:30:00Z": 3361,
-      "2017-06-06T09:00:00Z": 3911
+      "2017-08-07T16:00:00Z": 450,
+      "2017-08-07T16:20:00Z": 1279
     },
-    "podcast_uuid": "77170eb0-0257-012e-f994-00163e1b201c",
-    "title": "TNT 1782: Pod is Where Your Home Is",
-    "playCount": 6,
-    "uuid": "a7a8a380-2c94-0135-52f9-452518e2d253",
-    "thumbnail_url": "https://elroycdn.twit.tv/sites/default/files/styles/twit_album_art_2048x2048/public/images/shows/tech_news_today/album_art/audio/tnt1400audio.jpg?itok=2woFYgJh",
-    "podcast_title": "Tech News Today (MP3)"
+    "podcast_uuid": "74a35900-0423-012e-f9a0-00163e1b201c",
+    "title": "North Korea Warns US over Sanctions",
+    "playCount": 2,
+    "uuid": "e523b07b-69ed-476f-ad12-b7a59d06bc81",
+    "thumbnail_url": "http://ichef.bbci.co.uk/images/ic/3000x3000/p02h1lpt.jpg",
+    "podcast_title": "Global News Podcast"
   },
   {
-    "playedTime": 1616,
-    "firstPlayed": "2017-06-06T05:50:00Z",
-    "lastPlayed": "2017-06-06T09:00:00Z",
-    "playedProportion": 0.9987639060568603,
+    "playedTime": 10351,
+    "firstPlayed": "2017-08-07T10:30:00Z",
+    "lastPlayed": "2017-08-07T14:00:00Z",
+    "playedProportion": 0.9991312741312741,
     "status": {
-      "2017-06-05T20:00:00Z": 0,
-      "2017-06-06T05:50:00Z": 2,
-      "2017-06-06T09:00:00Z": 3
+      "2017-08-07T10:30:00Z": 2,
+      "2017-08-07T14:00:00Z": 3
     },
-    "duration": "1618",
+    "duration": 10360,
     "play": {
-      "2017-06-05T20:00:00Z": 0,
-      "2017-06-06T05:50:00Z": 386,
-      "2017-06-06T06:00:00Z": 1026,
-      "2017-06-06T08:40:00Z": 1336,
-      "2017-06-06T09:00:00Z": 1616
+      "2017-08-07T12:50:00Z": 9081,
+      "2017-08-07T11:50:00Z": 5421,
+      "2017-08-07T10:50:00Z": 1882,
+      "2017-08-07T12:30:00Z": 8101,
+      "2017-08-07T11:30:00Z": 4501,
+      "2017-08-07T12:20:00Z": 7201,
+      "2017-08-07T14:00:00Z": 10351,
+      "2017-08-07T10:30:00Z": 882,
+      "2017-08-07T11:20:00Z": 3582,
+      "2017-08-07T13:00:00Z": 9961,
+      "2017-08-07T12:00:00Z": 6301,
+      "2017-08-07T11:00:00Z": 2682
     },
-    "podcast_uuid": "421c79d0-0423-012e-f9a0-00163e1b201c",
-    "title": "Can Robots be Truly Intelligent?",
+    "podcast_uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
+    "title": "953: \"His Name is Nimrod\"",
+    "playCount": 12,
+    "uuid": "f7fdf4dc-0696-4d82-ada7-656101cd498a",
+    "thumbnail_url": "http://adam.curry.com/enc/1502050031.525_na-953-art-feed.jpg",
+    "podcast_title": "No Agenda"
+  },
+  {
+    "playedTime": 704,
+    "firstPlayed": "2017-08-07T05:20:00Z",
+    "lastPlayed": "2017-08-07T05:20:00Z",
+    "playedProportion": 0.4433249370277078,
+    "status": {
+      "2017-08-07T05:20:00Z": 2,
+      "2017-08-07T11:00:00Z": 3
+    },
+    "duration": 1588,
+    "play": {
+      "2017-08-07T05:20:00Z": 704
+    },
+    "podcast_uuid": "9f51f2c0-8fbc-0130-1069-723c91aeae46",
+    "title": "Ether Review Legal #4 - MME, the Beating Heart of Crypto Valley",
+    "playCount": 1,
+    "uuid": "1af7841e-4523-4517-8a22-cae846eabf66",
+    "thumbnail_url": "http://letstalkbitcoin.com/resources/files/images/LTBNETWORK-LOGO3.jpg",
+    "podcast_title": "The Let's Talk Bitcoin Network"
+  },
+  {
+    "playedTime": 6699,
+    "firstPlayed": "2017-08-07T05:20:00Z",
+    "lastPlayed": "2017-08-07T05:50:00Z",
+    "playedProportion": 0.7883031301482701,
+    "status": {
+      "2017-08-06T17:00:00Z": 0,
+      "2017-08-07T05:20:00Z": 2,
+      "2017-08-07T10:30:00Z": 1
+    },
+    "duration": 8498,
+    "play": {
+      "2017-08-06T17:00:00Z": 0,
+      "2017-08-07T05:20:00Z": 104,
+      "2017-08-07T05:30:00Z": 983,
+      "2017-08-07T05:40:00Z": 6603,
+      "2017-08-07T05:50:00Z": 6699,
+      "2017-08-07T10:30:00Z": 0
+    },
+    "podcast_uuid": "8d728390-249c-0131-73be-723c91aeae46",
+    "title": "#90 — Living With Violence",
     "playCount": 5,
-    "uuid": "7037c280-2c56-0135-52f9-452518e2d253",
-    "thumbnail_url": "http://ichef.bbci.co.uk/images/ic/3000x3000/p02h1mcg.jpg",
-    "podcast_title": "Discovery"
+    "uuid": "7c2d40e9-9336-4783-8637-b2d877c54730",
+    "thumbnail_url": "http://static.libsyn.com/p/assets/a/6/d/c/a6dc6b89bf98cb96/PodcastImage_smaller.jpg",
+    "podcast_title": "Waking Up with Sam Harris"
   },
   {
-    "playedTime": 576,
-    "firstPlayed": "2017-06-06T04:50:00Z",
-    "lastPlayed": "2017-06-06T06:00:00Z",
-    "playedProportion": 0.18532818532818532,
+    "playedTime": 2562,
+    "firstPlayed": "2017-08-07T05:50:00Z",
+    "lastPlayed": "2017-08-07T09:00:00Z",
+    "playedProportion": 0.999219968798752,
     "status": {
-      "2017-06-05T19:00:00Z": 0,
-      "2017-06-06T04:50:00Z": 2,
-      "2017-06-06T06:00:00Z": 3
+      "2017-08-07T05:00:00Z": 0,
+      "2017-08-07T05:50:00Z": 2,
+      "2017-08-07T09:00:00Z": 3
     },
-    "duration": 3108,
+    "duration": "2564",
     "play": {
-      "2017-06-05T19:00:00Z": 0,
-      "2017-06-06T04:50:00Z": 562,
-      "2017-06-06T06:00:00Z": 576
-    },
-    "podcast_uuid": "32923e10-fac6-0132-17f2-059c869cc4eb",
-    "title": "EP. 93 VERY BAD ETHICS",
-    "playCount": 3,
-    "uuid": "57a7d820-2c4e-0135-52f9-452518e2d253",
-    "thumbnail_url": "http://static.megaphone.fm/podcasts/631704f4-0b52-11e7-b31e-e736e00075b3/image/18343616958_f4243669cd_k.jpg",
-    "podcast_title": "#WeThePeople LIVE"
-  },
-  {
-    "playedTime": 559,
-    "firstPlayed": "2017-06-06T03:30:00Z",
-    "lastPlayed": "2017-06-06T03:40:00Z",
-    "playedProportion": 0.14515710205141522,
-    "status": {
-      "2017-06-05T23:00:00Z": 0,
-      "2017-06-06T03:30:00Z": 2,
-      "2017-06-06T05:00:00Z": 3
-    },
-    "duration": 3851,
-    "play": {
-      "2017-06-05T23:00:00Z": 0,
-      "2017-06-06T03:30:00Z": 159,
-      "2017-06-06T03:40:00Z": 559
-    },
-    "podcast_uuid": "8ea0e990-390d-0131-77d4-723c91aeae46",
-    "title": "Episode 69: IO IO",
-    "playCount": 3,
-    "uuid": "c30df130-2c6a-0135-52f9-452518e2d253",
-    "thumbnail_url": "http://storage.googleapis.com/androiddevelopers/android_developers_backstage/adb.png",
-    "podcast_title": "Android Developers Backstage"
-  },
-  {
-    "playedTime": 3265,
-    "firstPlayed": "2017-06-05T08:00:00Z",
-    "lastPlayed": "2017-06-05T17:00:00Z",
-    "playedProportion": 0.9975557592422853,
-    "status": {
-      "2017-06-02T21:00:00Z": 0,
-      "2017-06-05T08:00:00Z": 2,
-      "2017-06-05T17:00:00Z": 3
-    },
-    "duration": 3273,
-    "play": {
-      "2017-06-02T21:00:00Z": 0,
-      "2017-06-05T08:00:00Z": 4,
-      "2017-06-05T08:40:00Z": 413,
-      "2017-06-05T08:50:00Z": 1313,
-      "2017-06-05T09:10:00Z": 2263,
-      "2017-06-05T09:20:00Z": 3142,
-      "2017-06-05T10:40:00Z": 3210,
-      "2017-06-05T17:00:00Z": 3265
-    },
-    "podcast_uuid": "05ccf3c0-1b97-012e-00b7-00163e1b201c",
-    "title": "358: moderation, persuasion, attention",
-    "playCount": 8,
-    "uuid": "a65578a0-29ff-0135-52f9-452518e2d253",
-    "thumbnail_url": "https://www.cbc.ca/radio/podcasts/images/promo-spark.jpg",
-    "podcast_title": "Spark from CBC Radio"
-  },
-  {
-    "playedTime": 2014,
-    "firstPlayed": "2017-06-05T06:50:00Z",
-    "lastPlayed": "2017-06-05T09:00:00Z",
-    "playedProportion": 0.9995037220843672,
-    "status": {
-      "2015-12-06T06:00:00Z": 0,
-      "2015-12-11T08:00:00Z": 3,
-      "2016-06-12T01:00:00Z": 0,
-      "2017-05-08T08:00:00Z": 1,
-      "2017-06-05T06:50:00Z": 2,
-      "2017-06-05T09:00:00Z": 3
-    },
-    "duration": "2015",
-    "play": {
-      "2015-12-06T06:00:00Z": 0,
-      "2017-06-05T06:50:00Z": 475,
-      "2017-06-05T07:10:00Z": 755,
-      "2017-06-05T08:00:00Z": 854,
-      "2017-06-05T08:10:00Z": 1704,
-      "2017-06-05T09:00:00Z": 2014
-    },
-    "podcast_uuid": "b9111820-79bb-0132-e4d9-5f4c86fd3263",
-    "title": "HoP 242 - Therese Cory on Self-Awareness in Albert and Aquinas",
-    "playCount": 6,
-    "uuid": "ba61aa90-7e06-0133-2d47-6dc413d6d41d",
-    "thumbnail_url": "http://deow9bq0xqvbj.cloudfront.net/image-logo/697911/HistoryofPhilosophy.jpg",
-    "podcast_title": "History of Philosophy Without Any Gaps"
-  },
-  {
-    "playedTime": 2044,
-    "firstPlayed": "2017-06-05T07:20:00Z",
-    "lastPlayed": "2017-06-05T08:00:00Z",
-    "playedProportion": 0.9970731707317073,
-    "status": {
-      "2017-05-29T04:00:00Z": 0,
-      "2017-06-05T07:20:00Z": 2,
-      "2017-06-05T08:00:00Z": 3
-    },
-    "duration": "2050",
-    "play": {
-      "2017-05-29T04:00:00Z": 0,
-      "2017-06-05T07:20:00Z": 404,
-      "2017-06-05T07:40:00Z": 1284,
-      "2017-06-05T08:00:00Z": 2044
+      "2017-08-07T05:00:00Z": 0,
+      "2017-08-07T05:50:00Z": 967,
+      "2017-08-07T06:10:00Z": 1752,
+      "2017-08-07T08:10:00Z": 2122,
+      "2017-08-07T09:00:00Z": 2562
     },
     "podcast_uuid": "b1ccb690-fd97-0130-c6ee-723c91aeae46",
-    "title": "6.08e- The June Rebellion",
-    "playCount": 4,
-    "uuid": "a55f60f0-264f-0135-52f9-452518e2d253",
+    "title": "7.04- The Austrian Empire",
+    "playCount": 5,
+    "uuid": "435ff5da-92b6-49f1-a473-413aaa71da15",
     "thumbnail_url": "http://static.libsyn.com/p/assets/3/4/5/f/345fbd6a253649c0/RevolutionsLogo_V2.jpg",
     "podcast_title": "Revolutions"
   },
   {
-    "playedTime": 1228,
-    "firstPlayed": "2017-06-05T07:10:00Z",
-    "lastPlayed": "2017-06-05T08:00:00Z",
-    "playedProportion": 1,
+    "playedTime": 20159,
+    "firstPlayed": "2017-07-10T07:40:00Z",
+    "lastPlayed": "2017-08-07T05:20:00Z",
+    "playedProportion": 0.9509859420700066,
     "status": {
-      "2017-05-23T22:00:00Z": 0,
-      "2017-06-05T07:10:00Z": 2,
-      "2017-06-05T08:00:00Z": 3
+      "2017-01-25T08:00:00Z": 0,
+      "2017-02-15T05:00:00Z": 3,
+      "2017-02-28T09:00:00Z": 1,
+      "2017-04-19T05:00:00Z": 2
     },
-    "duration": 1228,
+    "duration": 21198,
     "play": {
-      "2017-05-23T22:00:00Z": 0,
-      "2017-06-05T07:10:00Z": 668,
-      "2017-06-05T08:00:00Z": 1228
+      "2017-07-16T05:30:00Z": 5829,
+      "2017-07-19T07:40:00Z": 5489,
+      "2017-07-18T07:30:00Z": 6057,
+      "2017-07-18T08:20:00Z": 8316,
+      "2017-07-18T09:10:00Z": 10996,
+      "2017-07-19T07:30:00Z": 4929,
+      "2017-07-16T05:20:00Z": 5589,
+      "2017-07-19T07:20:00Z": 4589,
+      "2017-08-06T23:50:00Z": 6222,
+      "2017-07-18T07:10:00Z": 5868,
+      "2017-07-18T08:00:00Z": 7416,
+      "2017-08-07T05:20:00Z": 7191,
+      "2017-07-16T05:00:00Z": 5116,
+      "2017-08-07T05:00:00Z": 7091,
+      "2017-01-25T08:00:00Z": 0,
+      "2017-07-19T04:20:00Z": 3911,
+      "2017-07-18T10:50:00Z": 17325,
+      "2017-07-18T11:30:00Z": 20159,
+      "2017-07-10T07:40:00Z": 1509,
+      "2017-07-10T08:20:00Z": 1518,
+      "2017-07-14T07:30:00Z": 3967,
+      "2017-07-18T09:50:00Z": 13735,
+      "2017-07-14T05:50:00Z": 3018,
+      "2017-07-14T07:20:00Z": 3927,
+      "2017-07-18T07:50:00Z": 6536,
+      "2017-07-18T09:30:00Z": 12845,
+      "2017-07-14T05:30:00Z": 2128,
+      "2017-07-18T08:30:00Z": 9216,
+      "2017-07-16T04:50:00Z": 4116,
+      "2017-07-18T09:20:00Z": 11935,
+      "2017-07-14T05:20:00Z": 1538,
+      "2017-07-19T07:50:00Z": 5964
+    },
+    "podcast_uuid": "3ec78c50-0d62-012e-fb9c-00163e1b201c",
+    "title": "Show 59 - (Blitz) The Destroyer of Worlds",
+    "playCount": 32,
+    "uuid": "946762a0-c500-0134-10da-25324e2a541d",
+    "thumbnail_url": "http://www.dancarlin.com/graphics/DC_HH_iTunes.jpg",
+    "podcast_title": "Dan Carlin's Hardcore History"
+  },
+  {
+    "playedTime": 1929,
+    "firstPlayed": "2017-08-06T23:00:00Z",
+    "lastPlayed": "2017-08-07T00:00:00Z",
+    "playedProportion": 1.0025987525987525,
+    "status": {
+      "2017-08-06T17:00:00Z": 0,
+      "2017-08-06T23:00:00Z": 2,
+      "2017-08-07T00:00:00Z": 3
+    },
+    "duration": 1924,
+    "play": {
+      "2017-08-06T17:00:00Z": 0,
+      "2017-08-06T23:00:00Z": 695,
+      "2017-08-06T23:10:00Z": 1368,
+      "2017-08-06T23:30:00Z": 1616,
+      "2017-08-07T00:00:00Z": 1929
+    },
+    "podcast_uuid": "9f51f2c0-8fbc-0130-1069-723c91aeae46",
+    "title": "Let's Talk Bitcoin! #340 - Assorted Forks",
+    "playCount": 5,
+    "uuid": "f0887470-6958-45c9-a980-16faf8c957dc",
+    "thumbnail_url": "http://letstalkbitcoin.com/resources/files/images/LTBNETWORK-LOGO3.jpg",
+    "podcast_title": "The Let's Talk Bitcoin Network"
+  },
+  {
+    "playedTime": 2397,
+    "firstPlayed": "2017-08-06T21:50:00Z",
+    "lastPlayed": "2017-08-06T23:00:00Z",
+    "playedProportion": 0.9975031210986267,
+    "status": {
+      "2017-08-02T01:00:00Z": 0,
+      "2017-08-06T21:50:00Z": 2,
+      "2017-08-06T23:00:00Z": 3
+    },
+    "duration": 2403,
+    "play": {
+      "2017-08-02T01:00:00Z": 0,
+      "2017-08-06T21:50:00Z": 809,
+      "2017-08-06T22:00:00Z": 1709,
+      "2017-08-06T22:10:00Z": 520,
+      "2017-08-06T22:20:00Z": 864,
+      "2017-08-06T22:30:00Z": 1807,
+      "2017-08-06T23:00:00Z": 2397
     },
     "podcast_uuid": "0cc43410-1d2f-012e-0175-00163e1b201c",
-    "title": "260- New Jersey",
-    "playCount": 3,
-    "uuid": "58c6bf40-2231-0135-52f8-452518e2d253",
+    "title": "269- Ways of Hearing",
+    "playCount": 7,
+    "uuid": "afc5772f-f24e-4954-8a36-d55486d99352",
     "thumbnail_url": "https://f.prxu.org/99pi/images/6a748676-76e8-45fd-8de2-a868a58f6b8b/99-1400.png",
     "podcast_title": "99% Invisible"
   },
   {
-    "playedTime": 3307,
-    "firstPlayed": "2017-06-04T22:50:00Z",
-    "lastPlayed": "2017-06-05T07:00:00Z",
-    "playedProportion": 0.99879190576865,
+    "playedTime": 2349,
+    "firstPlayed": "2017-08-06T19:40:00Z",
+    "lastPlayed": "2017-08-06T21:00:00Z",
+    "playedProportion": 0.9974522292993631,
     "status": {
-      "2017-06-04T22:50:00Z": 2,
-      "2017-06-05T07:00:00Z": 3
+      "2017-08-06T19:30:00Z": 2,
+      "2017-08-06T21:00:00Z": 3
     },
-    "duration": 3311,
+    "duration": 2355,
     "play": {
-      "2017-06-04T22:50:00Z": 766,
-      "2017-06-04T23:00:00Z": 1456,
-      "2017-06-04T23:10:00Z": 1469,
-      "2017-06-04T23:20:00Z": 2422,
-      "2017-06-04T23:30:00Z": 2978,
-      "2017-06-04T23:50:00Z": 3228,
-      "2017-06-05T07:00:00Z": 3307
-    },
-    "podcast_uuid": "e6eb8660-0425-012e-f9a0-00163e1b201c",
-    "title": "Biology's Biggest Mystery: The Origin of Life",
-    "playCount": 7,
-    "uuid": "e2c112c0-29b2-0135-52f9-452518e2d253",
-    "thumbnail_url": "https://imagecdn.acast.com/naked_scientists_podcast/image.jpg?h=1500&amp;w=1500",
-    "podcast_title": "The Naked Scientists Podcast"
-  },
-  {
-    "playedTime": 4805,
-    "firstPlayed": "2017-06-05T05:50:00Z",
-    "lastPlayed": "2017-06-05T07:00:00Z",
-    "playedProportion": 0.41479627071823205,
-    "status": {
-      "2017-06-05T05:50:00Z": 2,
-      "2017-06-05T07:00:00Z": 3
-    },
-    "duration": 11584,
-    "play": {
-      "2017-06-05T05:50:00Z": 964,
-      "2017-06-05T06:00:00Z": 1515,
-      "2017-06-05T06:10:00Z": 1524,
-      "2017-06-05T06:20:00Z": 1681,
-      "2017-06-05T06:40:00Z": 1750,
-      "2017-06-05T07:00:00Z": 4805
-    },
-    "podcast_uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
-    "title": "935: \"Phallocentric Age\"",
-    "playCount": 6,
-    "uuid": "e2c09a20-2b93-0135-52f9-452518e2d253",
-    "thumbnail_url": "http://adam.curry.com/enc/1496953441.067_na-936-art-big.jpg",
-    "podcast_title": "No Agenda"
-  },
-  {
-    "playedTime": 1028,
-    "firstPlayed": "2017-06-05T06:10:00Z",
-    "lastPlayed": "2017-06-05T07:00:00Z",
-    "playedProportion": 0.995159728944821,
-    "status": {
-      "2017-06-04T17:00:00Z": 0,
-      "2017-06-05T06:10:00Z": 2,
-      "2017-06-05T07:00:00Z": 3
-    },
-    "duration": "1033",
-    "play": {
-      "2017-06-04T17:00:00Z": 0,
-      "2017-06-05T06:10:00Z": 648,
-      "2017-06-05T07:00:00Z": 1028
-    },
-    "podcast_uuid": "7d16cee0-1c1c-0133-28b1-059c869cc4eb",
-    "title": "100: The gauntlet is thrown- explain the ammonia! with Dr. Ehlmann",
-    "playCount": 3,
-    "uuid": "904c2530-2b6e-0135-52f9-452518e2d253",
-    "thumbnail_url": "http://static.libsyn.com/p/assets/e/1/0/b/e10b8841d59396c8/spacepod_logo.jpg",
-    "podcast_title": "Spacepod"
-  },
-  {
-    "playedTime": 3611,
-    "firstPlayed": "2017-06-04T08:00:00Z",
-    "lastPlayed": "2017-06-04T23:00:00Z",
-    "playedProportion": 0.9997231450719822,
-    "status": {
-      "2017-06-04T08:00:00Z": 2,
-      "2017-06-04T07:00:00Z": 0,
-      "2017-06-04T21:40:00Z": 1,
-      "2017-06-04T23:00:00Z": 3,
-      "2017-06-04T22:00:00Z": 2,
-      "2017-06-04T21:00:00Z": 3,
-      "2017-06-04T10:00:00Z": 3,
-      "2017-06-04T19:40:00Z": 2,
-      "2017-06-04T19:10:00Z": 1
-    },
-    "duration": "3612",
-    "play": {
-      "2017-06-04T08:00:00Z": 179,
-      "2017-06-04T07:00:00Z": 0,
-      "2017-06-04T21:40:00Z": 0,
-      "2017-06-04T20:30:00Z": 3311,
-      "2017-06-04T22:10:00Z": 3545,
-      "2017-06-04T23:00:00Z": 3605,
-      "2017-06-04T22:00:00Z": 2711,
-      "2017-06-04T21:00:00Z": 3611,
-      "2017-06-04T10:00:00Z": 3608,
-      "2017-06-04T20:10:00Z": 2531,
-      "2017-06-04T20:00:00Z": 1531,
-      "2017-06-04T08:50:00Z": 2909,
-      "2017-06-04T19:40:00Z": 640,
-      "2017-06-04T08:30:00Z": 1959,
-      "2017-06-04T08:20:00Z": 1069,
-      "2017-06-04T19:10:00Z": 0
-    },
-    "podcast_uuid": "8d728390-249c-0131-73be-723c91aeae46",
-    "title": "#80 — The Unraveling",
-    "playCount": 16,
-    "uuid": "90f6b5c0-2b1e-0135-52f9-452518e2d253",
-    "thumbnail_url": "http://static.libsyn.com/p/assets/a/6/d/c/a6dc6b89bf98cb96/PodcastImage_smaller.jpg",
-    "podcast_title": "Waking Up with Sam Harris"
-  },
-  {
-    "playedTime": 1979,
-    "firstPlayed": "2017-06-04T22:20:00Z",
-    "lastPlayed": "2017-06-04T23:00:00Z",
-    "playedProportion": 0.9994949494949495,
-    "status": {
-      "2017-06-03T16:00:00Z": 0,
-      "2017-06-04T22:20:00Z": 2,
-      "2017-06-04T23:00:00Z": 3
-    },
-    "duration": "1980",
-    "play": {
-      "2017-06-03T16:00:00Z": 0,
-      "2017-06-04T22:20:00Z": 344,
-      "2017-06-04T22:30:00Z": 671,
-      "2017-06-04T22:40:00Z": 1491,
-      "2017-06-04T23:00:00Z": 1979
-    },
-    "podcast_uuid": "d22cc180-0dc1-012e-fbb9-00163e1b201c",
-    "title": "TRC #452: Mount Everest The Tallest Mountain? + Does Music Calm Your Canine? + Avril Lavigne Death Conspiracy",
-    "playCount": 5,
-    "uuid": "33f0e8e0-2aa3-0135-52f9-452518e2d253",
-    "thumbnail_url": "http://static.libsyn.com/p/assets/8/2/4/e/824ee7f0ca827522/TheRealityCheck_1400X1400.jpg",
-    "podcast_title": "The Reality Check"
-  },
-  {
-    "playedTime": 1532,
-    "firstPlayed": "2017-06-04T21:10:00Z",
-    "lastPlayed": "2017-06-04T22:00:00Z",
-    "playedProportion": 0.9980456026058632,
-    "status": {
-      "2017-06-04T14:00:00Z": 0,
-      "2017-06-04T21:10:00Z": 2,
-      "2017-06-04T22:00:00Z": 3
-    },
-    "duration": "1535",
-    "play": {
-      "2017-06-04T14:00:00Z": 0,
-      "2017-06-04T21:10:00Z": 672,
-      "2017-06-04T21:20:00Z": 1002,
-      "2017-06-04T22:00:00Z": 1532
-    },
-    "podcast_uuid": "74a35900-0423-012e-f9a0-00163e1b201c",
-    "title": "London Terror Attacks",
-    "playCount": 4,
-    "uuid": "b0951060-2b54-0135-52f9-452518e2d253",
-    "thumbnail_url": "http://ichef.bbci.co.uk/images/ic/3000x3000/p02h1lpt.jpg",
-    "podcast_title": "Global News Podcast"
-  },
-  {
-    "playedTime": 1166,
-    "firstPlayed": "2017-06-04T21:30:00Z",
-    "lastPlayed": "2017-06-04T22:00:00Z",
-    "playedProportion": 1.0017182130584192,
-    "status": {
-      "2017-06-02T21:00:00Z": 0,
-      "2017-06-04T21:30:00Z": 2,
-      "2017-06-04T22:00:00Z": 3
-    },
-    "duration": "1164",
-    "play": {
-      "2017-06-02T21:00:00Z": 0,
-      "2017-06-04T21:30:00Z": 6,
-      "2017-06-04T21:40:00Z": 936,
-      "2017-06-04T22:00:00Z": 1166
-    },
-    "podcast_uuid": "52905800-287d-012e-0725-00163e1b201c",
-    "title": "We’ve found 50 genes for intelligence. Could that lead to discrimination?",
-    "playCount": 4,
-    "uuid": "5954abb0-29ff-0135-52f9-452518e2d253",
-    "thumbnail_url": "https://www.cbc.ca/radio/podcasts/images/promo-quirks-segments.jpg",
-    "podcast_title": "Quirks and Quarks Segmented Show from CBC Radio"
-  },
-  {
-    "playedTime": 532,
-    "firstPlayed": "2017-06-04T21:00:00Z",
-    "lastPlayed": "2017-06-04T21:00:00Z",
-    "playedProportion": 0.9851851851851852,
-    "status": {
-      "2017-06-04T08:00:00Z": 0,
-      "2017-06-04T21:00:00Z": 3
-    },
-    "duration": "540",
-    "play": {
-      "2017-06-04T08:00:00Z": 0,
-      "2017-06-04T21:00:00Z": 532
-    },
-    "podcast_uuid": "b633aa60-0bfe-012e-fb1f-00163e1b201c",
-    "title": "The Sunday Feature: Who Was Robin Hood?",
-    "playCount": 2,
-    "uuid": "f130cef0-2b25-0135-52f9-452518e2d253",
-    "thumbnail_url": "http://ichef.bbci.co.uk/images/ic/3000x3000/p02h1m09.jpg",
-    "podcast_title": "World Update: Daily Commute"
-  },
-  {
-    "playedTime": 2418,
-    "firstPlayed": "2017-06-04T19:10:00Z",
-    "lastPlayed": "2017-06-04T20:00:00Z",
-    "playedProportion": 0.9983484723369116,
-    "status": {
-      "2017-06-04T17:00:00Z": 0,
-      "2017-06-04T19:10:00Z": 2,
-      "2017-06-04T20:00:00Z": 3
-    },
-    "duration": 2422,
-    "play": {
-      "2017-06-04T17:00:00Z": 0,
-      "2017-06-04T19:10:00Z": 848,
-      "2017-06-04T19:30:00Z": 1748,
-      "2017-06-04T20:00:00Z": 2418
+      "2017-08-06T19:40:00Z": 565,
+      "2017-08-06T20:00:00Z": 1629,
+      "2017-08-06T20:10:00Z": 1839,
+      "2017-08-06T21:00:00Z": 2349
     },
     "podcast_uuid": "85f383f0-1e6a-012e-0210-00163e1b201c",
-    "title": "Fareed digs into President Trump's momentous decision to withdraw from the Paris climate change agreement with an expert panel, including one of the U.S. negotiators on the deal",
+    "title": "Former Vice President Al Gore joins Fareed to share his views, President Trump's decision to withdraw from the Paris agreement,  The broken politics that have become epidemic in Washington",
     "playCount": 4,
-    "uuid": "98c908e0-2b6d-0135-52f9-452518e2d253",
+    "uuid": "b229de62-91c7-4c33-b35a-c78c2bbc1fec",
     "thumbnail_url": "http://pg-act-11-o.s3-us-west-2.amazonaws.com/11/artwork/show.8.audioart.original.jpg",
     "podcast_title": "Fareed Zakaria GPS"
   },
   {
-    "playedTime": 4760,
-    "firstPlayed": "2017-06-02T05:10:00Z",
-    "lastPlayed": "2017-06-04T10:40:00Z",
-    "playedProportion": 0.41470639484230704,
+    "playedTime": 994,
+    "firstPlayed": "2017-08-05T17:10:00Z",
+    "lastPlayed": "2017-08-06T19:30:00Z",
+    "playedProportion": 0.3018524142119648,
     "status": {
-      "2017-06-02T05:10:00Z": 2,
-      "2017-06-04T19:00:00Z": 3
+      "2017-08-05T17:10:00Z": 2,
+      "2017-08-06T20:00:00Z": 3
     },
-    "duration": 11478,
+    "duration": "3293",
     "play": {
-      "2017-06-02T05:10:00Z": 90,
-      "2017-06-02T06:30:00Z": 2178,
-      "2017-06-02T06:40:00Z": 2217,
-      "2017-06-04T10:00:00Z": 2806,
-      "2017-06-04T10:20:00Z": 3696,
-      "2017-06-04T10:30:00Z": 4586,
-      "2017-06-04T10:40:00Z": 4760
+      "2017-08-05T17:10:00Z": 18,
+      "2017-08-06T18:50:00Z": 37,
+      "2017-08-06T19:30:00Z": 994
     },
-    "podcast_uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
-    "title": "934: \"Weaponized Tech!\"",
+    "podcast_uuid": "de5c4480-29f1-012e-07fc-00163e1b201c",
+    "title": "Inside Europe: produced 03.08.17",
+    "playCount": 3,
+    "uuid": "78594f93-1171-4c48-94f7-a0e46e3446ef",
+    "thumbnail_url": "http://www.dw.com/image/2323772_7.jpg",
+    "podcast_title": "Inside Europe | Deutsche Welle"
+  },
+  {
+    "playedTime": 3477,
+    "firstPlayed": "2017-08-06T17:50:00Z",
+    "lastPlayed": "2017-08-06T19:00:00Z",
+    "playedProportion": 1.0002876869965478,
+    "status": {
+      "2017-08-04T10:00:00Z": 0,
+      "2017-08-06T17:50:00Z": 2,
+      "2017-08-06T19:00:00Z": 3
+    },
+    "duration": "3476",
+    "play": {
+      "2017-08-04T10:00:00Z": 0,
+      "2017-08-06T17:50:00Z": 742,
+      "2017-08-06T18:00:00Z": 1232,
+      "2017-08-06T18:10:00Z": 1568,
+      "2017-08-06T18:20:00Z": 1988,
+      "2017-08-06T18:40:00Z": 2887,
+      "2017-08-06T19:00:00Z": 3477
+    },
+    "podcast_uuid": "2743d720-0edf-0133-2204-059c869cc4eb",
+    "title": "Serverless Startup with Yan Cui",
     "playCount": 7,
-    "uuid": "2958e8f0-2936-0135-52f9-452518e2d253",
-    "thumbnail_url": "http://adam.curry.com/enc/1496953441.067_na-936-art-big.jpg",
-    "podcast_title": "No Agenda"
+    "uuid": "07480818-514b-4e05-8a64-d59e69b4f579",
+    "thumbnail_url": "http://softwaredaily.wpengine.com/wp-content/uploads/powerpress/SED_square_solid_bg.png",
+    "podcast_title": "Software Engineering Daily"
   },
   {
-    "playedTime": 3699,
-    "firstPlayed": "2017-06-04T07:50:00Z",
-    "lastPlayed": "2017-06-04T10:00:00Z",
-    "playedProportion": 0.9997297297297297,
+    "playedTime": 3664,
+    "firstPlayed": "2017-08-04T18:50:00Z",
+    "lastPlayed": "2017-08-06T18:00:00Z",
+    "playedProportion": 0.9980931626259875,
     "status": {
-      "2017-05-26T16:00:00Z": 0,
-      "2017-06-04T07:50:00Z": 2,
-      "2017-06-04T10:00:00Z": 3
+      "2017-08-02T22:00:00Z": 0,
+      "2017-08-04T18:50:00Z": 2,
+      "2017-08-06T18:00:00Z": 3
     },
-    "duration": 3700,
+    "duration": "3671",
     "play": {
-      "2017-05-26T16:00:00Z": 0,
-      "2017-06-04T07:50:00Z": 350,
-      "2017-06-04T08:00:00Z": 530,
-      "2017-06-04T09:10:00Z": 789,
-      "2017-06-04T09:20:00Z": 1579,
-      "2017-06-04T09:30:00Z": 2469,
-      "2017-06-04T09:50:00Z": 3459,
-      "2017-06-04T10:00:00Z": 3699
+      "2017-08-06T16:30:00Z": 444,
+      "2017-08-06T17:20:00Z": 2974,
+      "2017-08-06T18:00:00Z": 3664,
+      "2017-08-06T17:00:00Z": 1971,
+      "2017-08-02T22:00:00Z": 0,
+      "2017-08-04T18:50:00Z": 215,
+      "2017-08-05T09:40:00Z": 277,
+      "2017-08-06T16:50:00Z": 1344,
+      "2017-08-06T17:30:00Z": 3484
     },
-    "podcast_uuid": "5bbc3e50-026e-0131-c9c5-723c91aeae46",
-    "title": "Fake News: The Facts",
-    "playCount": 8,
-    "uuid": "1da76560-2459-0135-52f8-452518e2d253",
-    "thumbnail_url": "https://imagecdn.acast.com/intelligencesquared/image.jpg?h=1500&amp;w=1500",
-    "podcast_title": "Intelligence Squared"
-  },
-  {
-    "playedTime": 3183,
-    "firstPlayed": "2017-06-04T01:20:00Z",
-    "lastPlayed": "2017-06-04T08:00:00Z",
-    "playedProportion": 0.9987449011609665,
-    "status": {
-      "2017-06-03T13:00:00Z": 0,
-      "2017-06-04T01:20:00Z": 2,
-      "2017-06-04T08:00:00Z": 3
-    },
-    "duration": "3187",
-    "play": {
-      "2017-06-03T13:00:00Z": 0,
-      "2017-06-04T01:20:00Z": 131,
-      "2017-06-04T05:20:00Z": 380,
-      "2017-06-04T06:10:00Z": 1380,
-      "2017-06-04T06:20:00Z": 1635,
-      "2017-06-04T06:30:00Z": 2366,
-      "2017-06-04T06:40:00Z": 2671,
-      "2017-06-04T08:00:00Z": 3183
-    },
-    "podcast_uuid": "e4ff94b0-8686-0130-0b07-723c91aeae46",
-    "title": "Ultra-Tough Antibiotic to Fight Superbugs",
-    "playCount": 8,
-    "uuid": "a4bb2430-2a86-0135-52f9-452518e2d253",
-    "thumbnail_url": "http://ichef.bbci.co.uk/images/ic/3000x3000/p02h1mkd.jpg",
-    "podcast_title": "The Science Hour"
-  },
-  {
-    "playedTime": 1686,
-    "firstPlayed": "2017-06-03T06:20:00Z",
-    "lastPlayed": "2017-06-04T08:00:00Z",
-    "playedProportion": 0.999407231772377,
-    "status": {
-      "2017-06-03T06:20:00Z": 2,
-      "2017-06-04T08:00:00Z": 3
-    },
-    "duration": 1687,
-    "play": {
-      "2017-06-03T06:20:00Z": 358,
-      "2017-06-03T06:40:00Z": 638,
-      "2017-06-03T08:10:00Z": 707,
-      "2017-06-03T08:20:00Z": 987,
-      "2017-06-04T08:00:00Z": 1686
-    },
-    "podcast_uuid": "3920d880-1b97-012e-00b9-00163e1b201c",
-    "title": "Drunk super powers and riddles from the 80's",
-    "playCount": 5,
-    "uuid": "26f16150-298c-0135-52f9-452518e2d253",
-    "thumbnail_url": "https://www.cbc.ca/radio/podcasts/images/promo-laughoutloud.jpg",
-    "podcast_title": "Laugh Out Loud from CBC Radio"
-  },
-  {
-    "playedTime": 261,
-    "firstPlayed": "2017-06-04T05:10:00Z",
-    "lastPlayed": "2017-06-04T06:00:00Z",
-    "playedProportion": 0.08633807476017201,
-    "status": {
-      "2017-06-03T23:00:00Z": 0,
-      "2017-06-04T05:10:00Z": 2,
-      "2017-06-04T06:00:00Z": 3
-    },
-    "duration": "3023",
-    "play": {
-      "2017-06-03T23:00:00Z": 0,
-      "2017-06-04T05:10:00Z": 211,
-      "2017-06-04T06:00:00Z": 261
-    },
-    "podcast_uuid": "0fb72d80-4c95-0130-e3d5-723c91aeae46",
-    "title": "TYT - 06.02.17: Macron, CA Pass Single-Payer, Opioids, and Ivy League Pizza Essay",
-    "playCount": 3,
-    "uuid": "dc47fed0-2ad7-0135-52f9-452518e2d253",
-    "thumbnail_url": "http://static.libsyn.com/p/assets/0/e/e/1/0ee1b12001e873cb/MS_iTunes-Podcast_FREE-Audio_1024.jpg",
-    "podcast_title": "The Young Turks - FREE (Audio)"
-  },
-  {
-    "playedTime": 1089,
-    "firstPlayed": "2017-06-04T01:00:00Z",
-    "lastPlayed": "2017-06-04T02:00:00Z",
-    "playedProportion": 0.6294797687861272,
-    "status": {
-      "2017-06-04T00:00:00Z": 0,
-      "2017-06-04T01:00:00Z": 2,
-      "2017-06-04T02:00:00Z": 3
-    },
-    "duration": "1730",
-    "play": {
-      "2017-06-04T00:00:00Z": 0,
-      "2017-06-04T01:00:00Z": 959,
-      "2017-06-04T02:00:00Z": 1089
-    },
-    "podcast_uuid": "74a35900-0423-012e-f9a0-00163e1b201c",
-    "title": "Dozens of Iraqi civilians reported killed while fleeing IS",
-    "playCount": 3,
-    "uuid": "2753bbf0-2ae2-0135-52f9-452518e2d253",
-    "thumbnail_url": "http://ichef.bbci.co.uk/images/ic/3000x3000/p02h1lpt.jpg",
-    "podcast_title": "Global News Podcast"
-  },
-  {
-    "playedTime": 60,
-    "firstPlayed": "2017-06-03T06:00:00Z",
-    "lastPlayed": "2017-06-03T06:10:00Z",
-    "playedProportion": 0.023255813953488372,
-    "status": {
-      "2017-06-03T03:00:00Z": 0,
-      "2017-06-03T06:00:00Z": 2,
-      "2017-06-04T01:00:00Z": 3
-    },
-    "duration": "2580",
-    "play": {
-      "2017-06-03T03:00:00Z": 0,
-      "2017-06-03T06:00:00Z": 40,
-      "2017-06-03T06:10:00Z": 60
-    },
-    "podcast_uuid": "0fb72d80-4c95-0130-e3d5-723c91aeae46",
-    "title": "TYT - 06.01.17: Paris, Trump Ethics, LeBron, and Lesbians in Tennis",
-    "playCount": 3,
-    "uuid": "d6a70de0-2a2e-0135-52f9-452518e2d253",
-    "thumbnail_url": "http://static.libsyn.com/p/assets/0/e/e/1/0ee1b12001e873cb/MS_iTunes-Podcast_FREE-Audio_1024.jpg",
-    "podcast_title": "The Young Turks - FREE (Audio)"
-  },
-  {
-    "playedTime": 73,
-    "firstPlayed": "2017-06-03T15:50:00Z",
-    "lastPlayed": "2017-06-03T15:50:00Z",
-    "playedProportion": 0.038933333333333334,
-    "status": {
-      "2017-06-03T08:00:00Z": 0,
-      "2017-06-03T15:50:00Z": 2,
-      "2017-06-04T01:00:00Z": 3
-    },
-    "duration": "1875",
-    "play": {
-      "2017-06-03T08:00:00Z": 0,
-      "2017-06-03T15:50:00Z": 73
-    },
-    "podcast_uuid": "b633aa60-0bfe-012e-fb1f-00163e1b201c",
-    "title": "Weekend Extra",
-    "playCount": 2,
-    "uuid": "7016ad00-2a5d-0135-52f9-452518e2d253",
-    "thumbnail_url": "http://ichef.bbci.co.uk/images/ic/3000x3000/p02h1m09.jpg",
-    "podcast_title": "World Update: Daily Commute"
-  },
-  {
-    "playedTime": 2503,
-    "firstPlayed": "2017-05-23T04:40:00Z",
-    "lastPlayed": "2017-06-03T09:00:00Z",
-    "playedProportion": 0.9988028731045491,
-    "status": {
-      "2017-05-22T05:00:00Z": 0,
-      "2017-05-23T04:40:00Z": 2,
-      "2017-06-03T09:00:00Z": 3
-    },
-    "duration": "2506",
-    "play": {
-      "2017-05-22T05:00:00Z": 0,
-      "2017-05-23T06:50:00Z": 2290,
-      "2017-06-03T06:50:00Z": 1641,
-      "2017-05-23T06:40:00Z": 1585,
-      "2017-06-03T06:40:00Z": 767,
-      "2017-05-23T04:40:00Z": 327,
-      "2017-05-23T06:20:00Z": 675,
-      "2017-06-03T09:00:00Z": 2503,
-      "2017-05-23T07:00:00Z": 489
-    },
-    "podcast_uuid": "b1ccb690-fd97-0130-c6ee-723c91aeae46",
-    "title": "6.08d- The Carbonari",
+    "podcast_uuid": "278554c0-0bef-012e-fb16-00163e1b201c",
+    "title": "FLOSS Weekly 444: Containership",
     "playCount": 9,
-    "uuid": "5f139db0-20d9-0135-52f8-452518e2d253",
-    "thumbnail_url": "http://static.libsyn.com/p/assets/3/4/5/f/345fbd6a253649c0/RevolutionsLogo_V2.jpg",
-    "podcast_title": "Revolutions"
+    "uuid": "8e596446-1860-49f4-a17c-e5ae7ad71691",
+    "thumbnail_url": "https://elroycdn.twit.tv/sites/default/files/styles/twit_album_art_2048x2048/public/images/shows/floss_weekly/album_art/audio/floss1400audio.jpg?itok=bQyTXyOk",
+    "podcast_title": "FLOSS Weekly (MP3)"
   },
   {
-    "playedTime": 482,
-    "firstPlayed": "2017-06-03T07:00:00Z",
-    "lastPlayed": "2017-06-03T07:00:00Z",
-    "playedProportion": 1.0168776371308017,
+    "playedTime": 4009,
+    "firstPlayed": "2017-08-06T07:50:00Z",
+    "lastPlayed": "2017-08-06T10:00:00Z",
+    "playedProportion": 0.9992522432701895,
     "status": {
-      "2017-06-02T21:00:00Z": 0,
-      "2017-06-03T07:00:00Z": 3
+      "2017-08-04T14:00:00Z": 0,
+      "2017-08-06T07:50:00Z": 2,
+      "2017-08-06T10:00:00Z": 3
     },
-    "duration": "474",
+    "duration": 4012,
     "play": {
-      "2017-06-02T21:00:00Z": 0,
-      "2017-06-03T07:00:00Z": 482
+      "2017-08-04T14:00:00Z": 0,
+      "2017-08-06T07:50:00Z": 182,
+      "2017-08-06T08:00:00Z": 1111,
+      "2017-08-06T08:40:00Z": 1748,
+      "2017-08-06T09:20:00Z": 2439,
+      "2017-08-06T09:30:00Z": 3329,
+      "2017-08-06T10:00:00Z": 4009
     },
-    "podcast_uuid": "52905800-287d-012e-0725-00163e1b201c",
-    "title": "Scientists using CRISPR discover hundreds of unintended mutations",
-    "playCount": 2,
-    "uuid": "59571020-29ff-0135-52f9-452518e2d253",
-    "thumbnail_url": "https://www.cbc.ca/radio/podcasts/images/promo-quirks-segments.jpg",
-    "podcast_title": "Quirks and Quarks Segmented Show from CBC Radio"
+    "podcast_uuid": "df86cd70-5e91-0133-cd9f-0d11918ab357",
+    "title": "Katie Hopkins on Identity Politics, Islam, and Hate Speech",
+    "playCount": 7,
+    "uuid": "4f82ce44-a34b-420b-b3cb-460e98763124",
+    "thumbnail_url": "https://dfkfj8j276wwv.cloudfront.net/images/3f/35/7d/ea/3f357dea-b013-4239-9149-86b336fc573c/d57a5eaac6a533f124fb041c52398b794ba3632aef1298c349ca1ab58bed3d98c76f501ed020696dd25c126a760777d8a5cc1cb6f3bdd6f3ab27debbb5635b0a.jpeg",
+    "podcast_title": "The Rubin Report"
   },
   {
-    "playedTime": 3390,
-    "firstPlayed": "2017-06-03T04:20:00Z",
-    "lastPlayed": "2017-06-03T06:00:00Z",
-    "playedProportion": 0.9997051017398997,
+    "playedTime": 1057,
+    "firstPlayed": "2017-08-05T16:20:00Z",
+    "lastPlayed": "2017-08-06T08:00:00Z",
+    "playedProportion": 0.995291902071563,
     "status": {
-      "2017-06-03T04:00:00Z": 0,
-      "2017-06-03T04:20:00Z": 2,
-      "2017-06-03T06:00:00Z": 3
+      "2017-08-04T16:00:00Z": 0,
+      "2017-08-05T16:20:00Z": 2,
+      "2017-08-06T08:00:00Z": 3
     },
-    "duration": "3391",
+    "duration": 1062,
     "play": {
-      "2017-06-03T04:00:00Z": 0,
-      "2017-06-03T04:20:00Z": 659,
-      "2017-06-03T04:40:00Z": 2191,
-      "2017-06-03T04:50:00Z": 2370,
-      "2017-06-03T06:00:00Z": 3390
-    },
-    "podcast_uuid": "2433b8f0-0d4c-012e-fb96-00163e1b201c",
-    "title": "Ep. #427: Sen. Ben Sasse (R-NE), Tristan Harris",
-    "playCount": 5,
-    "uuid": "c73a3160-2a3b-0135-52f9-452518e2d253",
-    "thumbnail_url": "http://static.libsyn.com/p/assets/a/0/6/1/a061ceb8595319af/billmaher_logo1400.jpg",
-    "podcast_title": "Real Time with Bill Maher"
-  },
-  {
-    "playedTime": 529,
-    "firstPlayed": "2017-06-03T05:50:00Z",
-    "lastPlayed": "2017-06-03T06:00:00Z",
-    "playedProportion": 0.9814471243042672,
-    "status": {
-      "2017-06-03T04:00:00Z": 0,
-      "2017-06-03T05:50:00Z": 2,
-      "2017-06-03T06:00:00Z": 3
-    },
-    "duration": "539",
-    "play": {
-      "2017-06-03T04:00:00Z": 0,
-      "2017-06-03T05:50:00Z": 9,
-      "2017-06-03T06:00:00Z": 529
-    },
-    "podcast_uuid": "2433b8f0-0d4c-012e-fb96-00163e1b201c",
-    "title": "Overtime - Episode #427: Tech Addiction, 3rd Parties, Global Leadership",
-    "playCount": 3,
-    "uuid": "b0224a70-2a3e-0135-52f9-452518e2d253",
-    "thumbnail_url": "http://static.libsyn.com/p/assets/a/0/6/1/a061ceb8595319af/billmaher_logo1400.jpg",
-    "podcast_title": "Real Time with Bill Maher"
-  },
-  {
-    "playedTime": 3380,
-    "firstPlayed": "2017-06-02T13:30:00Z",
-    "lastPlayed": "2017-06-02T22:00:00Z",
-    "playedProportion": 1.002967359050445,
-    "status": {
-      "2017-06-01T20:00:00Z": 0,
-      "2017-06-02T13:30:00Z": 2,
-      "2017-06-02T22:00:00Z": 3
-    },
-    "duration": "3370",
-    "play": {
-      "2017-06-01T20:00:00Z": 0,
-      "2017-06-02T13:30:00Z": 859,
-      "2017-06-02T13:40:00Z": 1084,
-      "2017-06-02T13:50:00Z": 1184,
-      "2017-06-02T14:00:00Z": 1870,
-      "2017-06-02T18:30:00Z": 2529,
-      "2017-06-02T19:20:00Z": 2831,
-      "2017-06-02T22:00:00Z": 3380
-    },
-    "podcast_uuid": "489621e0-00c8-0134-9c92-59d98c6b72b8",
-    "title": "48: Restic and Backups (Done Right) with Alexander Neumann",
-    "playCount": 8,
-    "uuid": "ea204ab0-2930-0135-52f9-452518e2d253",
-    "thumbnail_url": "https://cdn.changelog.com/images/podcasts/gotime-cover-art-2f51f845f9ffc5a946394231c4b41c21.png?vsn=d",
-    "podcast_title": "Go Time"
-  },
-  {
-    "playedTime": 2908,
-    "firstPlayed": "2017-06-02T06:40:00Z",
-    "lastPlayed": "2017-06-02T10:00:00Z",
-    "playedProportion": 0.9972565157750343,
-    "status": {
-      "2017-06-01T11:00:00Z": 0,
-      "2017-06-02T06:40:00Z": 2,
-      "2017-06-02T10:00:00Z": 3
-    },
-    "duration": "2916",
-    "play": {
-      "2017-06-01T11:00:00Z": 0,
-      "2017-06-02T06:40:00Z": 240,
-      "2017-06-02T06:50:00Z": 565,
-      "2017-06-02T07:40:00Z": 874,
-      "2017-06-02T09:20:00Z": 879,
-      "2017-06-02T09:30:00Z": 1409,
-      "2017-06-02T09:50:00Z": 2328,
-      "2017-06-02T10:00:00Z": 2908
-    },
-    "podcast_uuid": "5e6125f0-0424-012e-f9a0-00163e1b201c",
-    "title": "Enzymes",
-    "playCount": 8,
-    "uuid": "3d878320-28e0-0135-52f9-452518e2d253",
-    "thumbnail_url": "http://ichef.bbci.co.uk/images/ic/3000x3000/p03xq2kz.jpg",
-    "podcast_title": "In Our Time"
-  },
-  {
-    "playedTime": 326,
-    "firstPlayed": "2017-06-02T07:00:00Z",
-    "lastPlayed": "2017-06-02T07:00:00Z",
-    "playedProportion": 0.10105393676379418,
-    "status": {
-      "2017-06-02T07:00:00Z": 3
-    },
-    "duration": 3226,
-    "play": {
-      "2017-06-02T07:00:00Z": 326
-    },
-    "podcast_uuid": "220196b0-5d6e-012e-2467-00163e1b201c",
-    "title": "Jose Cordeiro on Longevity and Cryonics Summit: The World Will Be A Better Place Tomorrow",
-    "playCount": 1,
-    "uuid": "d7fc6220-2902-0135-52f9-452518e2d253",
-    "thumbnail_url": "https://www.singularityweblog.com/wp-content/uploads/2016/10/Singularity.FM-iTunes-Cover.png",
-    "podcast_title": "Singularity.FM"
-  },
-  {
-    "playedTime": 800,
-    "firstPlayed": "2017-06-02T07:00:00Z",
-    "lastPlayed": "2017-06-02T07:00:00Z",
-    "playedProportion": 0.44667783361250696,
-    "status": {
-      "2017-06-01T19:00:00Z": 0,
-      "2017-06-02T07:00:00Z": 3
-    },
-    "duration": "1791",
-    "play": {
-      "2017-06-01T19:00:00Z": 0,
-      "2017-06-02T07:00:00Z": 800
-    },
-    "podcast_uuid": "74a35900-0423-012e-f9a0-00163e1b201c",
-    "title": "Last-minute plea to Trump on climate deal",
-    "playCount": 2,
-    "uuid": "c8ef4730-2910-0135-52f9-452518e2d253",
-    "thumbnail_url": "http://ichef.bbci.co.uk/images/ic/3000x3000/p02h1lpt.jpg",
-    "podcast_title": "Global News Podcast"
-  },
-  {
-    "playedTime": 889,
-    "firstPlayed": "2017-06-02T05:00:00Z",
-    "lastPlayed": "2017-06-02T07:00:00Z",
-    "playedProportion": 0.9899777282850779,
-    "status": {
-      "2017-06-02T05:00:00Z": 2,
-      "2017-06-02T07:00:00Z": 3
-    },
-    "duration": 898,
-    "play": {
-      "2017-06-02T05:00:00Z": 519,
-      "2017-06-02T07:00:00Z": 889
+      "2017-08-04T16:00:00Z": 0,
+      "2017-08-05T16:20:00Z": 9,
+      "2017-08-06T05:30:00Z": 828,
+      "2017-08-06T08:00:00Z": 1057
     },
     "podcast_uuid": "262069e0-e7df-0132-0ef7-059c869cc4eb",
-    "title": "The Economist asks: Are we too dependent on big data?",
-    "playCount": 2,
-    "uuid": "912f3400-2902-0135-52f9-452518e2d253",
+    "title": "The week ahead: Billionaires and generals",
+    "playCount": 4,
+    "uuid": "5b650943-f823-41eb-8e60-d746b408bd3d",
     "thumbnail_url": "https://imagecdn.acast.com/theeconomistallaudio/image.jpg?h=1500&amp;w=1500",
     "podcast_title": "The Economist Radio (All audio)"
   },
   {
-    "playedTime": 1410,
-    "firstPlayed": "2017-06-01T06:00:00Z",
-    "lastPlayed": "2017-06-01T06:20:00Z",
-    "playedProportion": 0.29411764705882354,
+    "playedTime": 3041,
+    "firstPlayed": "2017-08-06T04:30:00Z",
+    "lastPlayed": "2017-08-06T06:00:00Z",
+    "playedProportion": 1.0006581112207964,
     "status": {
-      "2017-06-01T06:00:00Z": 2,
-      "2017-06-02T05:00:00Z": 3
+      "2017-08-05T13:00:00Z": 0,
+      "2017-08-06T04:30:00Z": 2,
+      "2017-08-06T06:00:00Z": 3
     },
-    "duration": 4794,
+    "duration": "3039",
     "play": {
-      "2017-06-01T06:00:00Z": 461,
-      "2017-06-01T06:10:00Z": 630,
-      "2017-06-01T06:20:00Z": 1410
+      "2017-08-05T13:00:00Z": 0,
+      "2017-08-06T04:30:00Z": 19,
+      "2017-08-06T04:40:00Z": 709,
+      "2017-08-06T04:50:00Z": 909,
+      "2017-08-06T05:00:00Z": 1458,
+      "2017-08-06T05:10:00Z": 2611,
+      "2017-08-06T05:20:00Z": 2981,
+      "2017-08-06T06:00:00Z": 3041
     },
-    "podcast_uuid": "32923e10-fac6-0132-17f2-059c869cc4eb",
-    "title": "EP. 92 THE VERY BAD WIZARDS",
-    "playCount": 3,
-    "uuid": "82cfa380-28b5-0135-52f9-452518e2d253",
-    "thumbnail_url": "http://static.megaphone.fm/podcasts/631704f4-0b52-11e7-b31e-e736e00075b3/image/18343616958_f4243669cd_k.jpg",
-    "podcast_title": "#WeThePeople LIVE"
-  },
-  {
-    "playedTime": 4193,
-    "firstPlayed": "2017-05-31T04:30:00Z",
-    "lastPlayed": "2017-06-01T23:00:00Z",
-    "playedProportion": 0.9990469382892543,
-    "status": {
-      "2017-05-25T22:00:00Z": 0,
-      "2017-05-31T04:30:00Z": 2,
-      "2017-06-01T23:00:00Z": 3
-    },
-    "duration": "4197",
-    "play": {
-      "2017-06-01T20:30:00Z": 4074,
-      "2017-06-01T23:00:00Z": 4193,
-      "2017-05-25T22:00:00Z": 0,
-      "2017-06-01T16:50:00Z": 3253,
-      "2017-05-31T13:50:00Z": 1329,
-      "2017-05-31T04:30:00Z": 141,
-      "2017-06-01T17:10:00Z": 4071,
-      "2017-06-01T16:10:00Z": 2209,
-      "2017-05-31T13:20:00Z": 220,
-      "2017-05-31T14:10:00Z": 2147
-    },
-    "podcast_uuid": "489621e0-00c8-0134-9c92-59d98c6b72b8",
-    "title": "47: Docker, Moby, and Containers with Solomon Hykes",
-    "playCount": 10,
-    "uuid": "2c4b3ee0-23c3-0135-52f8-452518e2d253",
-    "thumbnail_url": "https://cdn.changelog.com/images/podcasts/gotime-cover-art-2f51f845f9ffc5a946394231c4b41c21.png?vsn=d",
-    "podcast_title": "Go Time"
-  },
-  {
-    "playedTime": 1762,
-    "firstPlayed": "2017-06-01T06:40:00Z",
-    "lastPlayed": "2017-06-01T08:00:00Z",
-    "playedProportion": 0.9977349943374858,
-    "status": {
-      "2017-05-31T11:00:00Z": 0,
-      "2017-06-01T06:40:00Z": 2,
-      "2017-06-01T08:00:00Z": 3
-    },
-    "duration": "1766",
-    "play": {
-      "2017-05-31T11:00:00Z": 0,
-      "2017-06-01T06:40:00Z": 803,
-      "2017-06-01T06:50:00Z": 1712,
-      "2017-06-01T08:00:00Z": 1762
-    },
-    "podcast_uuid": "b633aa60-0bfe-012e-fb1f-00163e1b201c",
-    "title": "Dozens Dead in Kabul Blast",
-    "playCount": 4,
-    "uuid": "50f63fc0-281c-0135-52f9-452518e2d253",
-    "thumbnail_url": "http://ichef.bbci.co.uk/images/ic/3000x3000/p02h1m09.jpg",
-    "podcast_title": "World Update: Daily Commute"
-  },
-  {
-    "playedTime": 5800,
-    "firstPlayed": "2017-06-01T06:20:00Z",
-    "lastPlayed": "2017-06-01T07:00:00Z",
-    "playedProportion": 0.5081924121615702,
-    "status": {
-      "2017-06-01T01:00:00Z": 0,
-      "2017-06-01T06:20:00Z": 2,
-      "2017-06-01T07:00:00Z": 3
-    },
-    "duration": "11413",
-    "play": {
-      "2017-06-01T01:00:00Z": 0,
-      "2017-06-01T06:20:00Z": 5582,
-      "2017-06-01T07:00:00Z": 5800
-    },
-    "podcast_uuid": "873e7420-042d-012e-f9a4-00163e1b201c",
-    "title": "#968 - Kelly Brogan",
-    "playCount": 3,
-    "uuid": "1da8f2b0-2890-0135-52f9-452518e2d253",
-    "thumbnail_url": "http://static.libsyn.com/p/assets/7/1/f/3/71f3014e14ef2722/JREiTunesImage2.jpg",
-    "podcast_title": "The Joe Rogan Experience"
-  },
-  {
-    "playedTime": 2887,
-    "firstPlayed": "2017-06-01T05:20:00Z",
-    "lastPlayed": "2017-06-01T06:00:00Z",
-    "playedProportion": 0.9979260283442793,
-    "status": {
-      "2017-06-01T05:00:00Z": 0,
-      "2017-06-01T05:20:00Z": 2,
-      "2017-06-01T06:00:00Z": 3
-    },
-    "duration": "2893",
-    "play": {
-      "2017-06-01T05:00:00Z": 0,
-      "2017-06-01T05:20:00Z": 560,
-      "2017-06-01T05:40:00Z": 1490,
-      "2017-06-01T05:50:00Z": 2447,
-      "2017-06-01T06:00:00Z": 2887
-    },
-    "podcast_uuid": "0fb72d80-4c95-0130-e3d5-723c91aeae46",
-    "title": "TYT - 05.31.17: Covfefe, Paris Climate Change Deal, Portland, and Kathy Griffin Fired",
-    "playCount": 5,
-    "uuid": "9aff9410-28a6-0135-52f9-452518e2d253",
-    "thumbnail_url": "http://static.libsyn.com/p/assets/0/e/e/1/0ee1b12001e873cb/MS_iTunes-Podcast_FREE-Audio_1024.jpg",
-    "podcast_title": "The Young Turks - FREE (Audio)"
-  },
-  {
-    "playedTime": 3625,
-    "firstPlayed": "2017-06-01T03:40:00Z",
-    "lastPlayed": "2017-06-01T06:00:00Z",
-    "playedProportion": 0.9975233902036323,
-    "status": {
-      "2017-06-01T03:40:00Z": 2,
-      "2017-06-01T06:00:00Z": 3
-    },
-    "duration": 3634,
-    "play": {
-      "2017-06-01T03:40:00Z": 19,
-      "2017-06-01T04:00:00Z": 928,
-      "2017-06-01T04:10:00Z": 1022,
-      "2017-06-01T04:40:00Z": 1806,
-      "2017-06-01T04:50:00Z": 2336,
-      "2017-06-01T05:00:00Z": 2716,
-      "2017-06-01T06:00:00Z": 3625
-    },
-    "podcast_uuid": "53678a10-bc45-0134-10a8-25324e2a541d",
-    "title": "There's Something About Jared",
-    "playCount": 7,
-    "uuid": "85fa6050-281a-0135-52f9-452518e2d253",
-    "thumbnail_url": "http://static.megaphone.fm/podcasts/d5735a50-d904-11e6-8532-73c7de466ea6/image/uploads_2F1484252190700-qhn5krasklbce3dh-a797539282700ea0298a3a26f7e49b0b_2FIntercepted_COVER%2B_281_29.png",
-    "podcast_title": "Intercepted with Jeremy Scahill"
-  },
-  {
-    "playedTime": 2570,
-    "firstPlayed": "2017-05-31T04:30:00Z",
-    "lastPlayed": "2017-05-31T12:00:00Z",
-    "playedProportion": 0.999611046285492,
-    "status": {
-      "2017-05-31T04:30:00Z": 2,
-      "2017-05-31T12:00:00Z": 3
-    },
-    "duration": 2571,
-    "play": {
-      "2017-05-31T04:30:00Z": 69,
-      "2017-05-31T04:40:00Z": 861,
-      "2017-05-31T10:50:00Z": 1250,
-      "2017-05-31T11:00:00Z": 2000,
-      "2017-05-31T12:00:00Z": 2570
-    },
-    "podcast_uuid": "f5b97290-0422-012e-f9a0-00163e1b201c",
-    "title": "The Radio Lab",
-    "playCount": 5,
-    "uuid": "0f77f100-23f1-0135-52f8-452518e2d253",
-    "thumbnail_url": "https://media2.wnyc.org/i/1400/1400/80/1/Radiolab_WNYCStudios_1400.png",
-    "podcast_title": "Radiolab"
-  },
-  {
-    "playedTime": 6649,
-    "firstPlayed": "2017-05-31T04:40:00Z",
-    "lastPlayed": "2017-05-31T11:00:00Z",
-    "playedProportion": 0.9993987674733203,
-    "status": {
-      "2017-05-31T00:00:00Z": 0,
-      "2017-05-31T04:40:00Z": 2,
-      "2017-05-31T11:00:00Z": 3
-    },
-    "duration": "6653",
-    "play": {
-      "2017-05-31T10:40:00Z": 5999,
-      "2017-05-31T10:10:00Z": 5129,
-      "2017-05-31T11:00:00Z": 6649,
-      "2017-05-31T00:00:00Z": 0,
-      "2017-05-31T10:00:00Z": 4189,
-      "2017-05-31T06:50:00Z": 3243,
-      "2017-05-31T04:40:00Z": 293,
-      "2017-05-31T05:30:00Z": 2993,
-      "2017-05-31T07:00:00Z": 3870,
-      "2017-05-31T05:10:00Z": 2133,
-      "2017-05-31T05:00:00Z": 1183
-    },
-    "podcast_uuid": "873e7420-042d-012e-f9a4-00163e1b201c",
-    "title": "#967 - Bill Burr",
-    "playCount": 11,
-    "uuid": "df1d8e50-27bb-0135-52f9-452518e2d253",
-    "thumbnail_url": "http://static.libsyn.com/p/assets/7/1/f/3/71f3014e14ef2722/JREiTunesImage2.jpg",
-    "podcast_title": "The Joe Rogan Experience"
-  },
-  {
-    "playedTime": 2923,
-    "firstPlayed": "2017-05-31T02:00:00Z",
-    "lastPlayed": "2017-05-31T05:00:00Z",
-    "playedProportion": 1.0017135023989034,
-    "status": {
-      "2017-05-25T12:00:00Z": 0,
-      "2017-05-31T02:00:00Z": 2,
-      "2017-05-31T05:00:00Z": 3
-    },
-    "duration": "2918",
-    "play": {
-      "2017-05-25T12:00:00Z": 0,
-      "2017-05-31T02:00:00Z": 789,
-      "2017-05-31T02:20:00Z": 1469,
-      "2017-05-31T03:50:00Z": 2058,
-      "2017-05-31T04:00:00Z": 2553,
-      "2017-05-31T05:00:00Z": 2923
-    },
-    "podcast_uuid": "5e6125f0-0424-012e-f9a0-00163e1b201c",
-    "title": "Purgatory",
-    "playCount": 6,
-    "uuid": "c3e72250-2367-0135-52f8-452518e2d253",
-    "thumbnail_url": "http://ichef.bbci.co.uk/images/ic/3000x3000/p03xq2kz.jpg",
-    "podcast_title": "In Our Time"
-  },
-  {
-    "playedTime": 3806,
-    "firstPlayed": "2017-05-30T22:10:00Z",
-    "lastPlayed": "2017-05-31T05:00:00Z",
-    "playedProportion": 0.9979024646040902,
-    "status": {
-      "2017-05-27T05:00:00Z": 0,
-      "2017-05-30T22:10:00Z": 2,
-      "2017-05-31T05:00:00Z": 3
-    },
-    "duration": "3814",
-    "play": {
-      "2017-05-27T05:00:00Z": 0,
-      "2017-05-30T22:10:00Z": 1033,
-      "2017-05-30T22:30:00Z": 1966,
-      "2017-05-30T22:40:00Z": 2487,
-      "2017-05-30T22:50:00Z": 2966,
-      "2017-05-31T04:20:00Z": 3456,
-      "2017-05-31T05:00:00Z": 3806
-    },
-    "podcast_uuid": "64a62690-dcdd-0134-ebdd-4114446340cb",
-    "title": "11: Web Standards, ECMAScript Modules in Browsers, and Learning JS",
-    "playCount": 7,
-    "uuid": "0ffde430-24c6-0135-52f8-452518e2d253",
-    "thumbnail_url": "https://cdn.changelog.com/images/podcasts/jsparty-cover-art-76ff83e543c83d4aeb2263507bdf83f1.png?vsn=d",
-    "podcast_title": "JS Party"
-  },
-  {
-    "playedTime": 6262,
-    "firstPlayed": "2017-05-29T15:00:00Z",
-    "lastPlayed": "2017-05-30T23:00:00Z",
-    "playedProportion": 0.999361634216406,
-    "status": {
-      "2017-05-27T02:00:00Z": 0,
-      "2017-05-29T15:00:00Z": 2,
-      "2017-05-30T23:00:00Z": 3
-    },
-    "duration": "6266",
-    "play": {
-      "2017-05-30T23:00:00Z": 6262,
-      "2017-05-29T15:30:00Z": 950,
-      "2017-05-29T15:10:00Z": 845,
-      "2017-05-27T02:00:00Z": 0,
-      "2017-05-29T15:00:00Z": 9,
-      "2017-05-29T22:30:00Z": 2410,
-      "2017-05-29T22:20:00Z": 1880,
-      "2017-05-30T07:30:00Z": 4124,
-      "2017-05-30T07:20:00Z": 3488,
-      "2017-05-30T13:40:00Z": 5648,
-      "2017-05-30T21:50:00Z": 6165,
-      "2017-05-30T00:40:00Z": 3059,
-      "2017-05-30T13:20:00Z": 4763,
-      "2017-05-30T00:30:00Z": 2532
-    },
-    "podcast_uuid": "25ca21a0-85c2-012e-3eb7-00163e1b201c",
-    "title": "116 - Distribution Deep Dive",
-    "playCount": 14,
-    "uuid": "f37988f0-24a8-0135-52f8-452518e2d253",
-    "thumbnail_url": "http://nodeup.com/logo2.jpg",
-    "podcast_title": "NodeUp"
-  },
-  {
-    "playedTime": 505,
-    "firstPlayed": "2017-05-30T13:20:00Z",
-    "lastPlayed": "2017-05-30T14:00:00Z",
-    "playedProportion": 0.18648449039881831,
-    "status": {
-      "2017-05-27T07:00:00Z": 0,
-      "2017-05-30T13:20:00Z": 2,
-      "2017-05-30T14:00:00Z": 3
-    },
-    "duration": "2708",
-    "play": {
-      "2017-05-27T07:00:00Z": 0,
-      "2017-05-30T13:20:00Z": 276,
-      "2017-05-30T14:00:00Z": 505
-    },
-    "podcast_uuid": "58b79440-1f1f-0131-6ebd-723c91aeae46",
-    "title": "JSJ 263 Moving from Node.js to .NET and Raygun.io with John-Daniel Trask",
-    "playCount": 3,
-    "uuid": "3b1195f0-24d1-0135-52f8-452518e2d253",
-    "thumbnail_url": "https://s3.amazonaws.com/devchat.tv/MasterJSFeed.jpg",
-    "podcast_title": "All JavaScript Podcasts by Devchat.tv"
-  },
-  {
-    "playedTime": 3275,
-    "firstPlayed": "2017-05-30T06:20:00Z",
-    "lastPlayed": "2017-05-30T08:00:00Z",
-    "playedProportion": 0.9993896856881294,
-    "status": {
-      "2017-05-29T17:00:00Z": 0,
-      "2017-05-30T06:20:00Z": 2,
-      "2017-05-30T08:00:00Z": 3
-    },
-    "duration": 3277,
-    "play": {
-      "2017-05-29T17:00:00Z": 0,
-      "2017-05-30T06:20:00Z": 96,
-      "2017-05-30T06:30:00Z": 955,
-      "2017-05-30T06:50:00Z": 1905,
-      "2017-05-30T07:00:00Z": 2765,
-      "2017-05-30T08:00:00Z": 3275
-    },
-    "podcast_uuid": "c3adff20-1b2f-012e-0081-00163e1b201c",
-    "title": "History Derailed: Understanding the Messy Middle East",
-    "playCount": 6,
-    "uuid": "f0596050-26bb-0135-52f9-452518e2d253",
-    "thumbnail_url": "https://www.cbc.ca/radio/podcasts/images/promo-ideas.jpg",
-    "podcast_title": "Ideas from CBC Radio (Highlights)"
-  },
-  {
-    "playedTime": 1601,
-    "firstPlayed": "2017-05-30T07:30:00Z",
-    "lastPlayed": "2017-05-30T08:00:00Z",
-    "playedProportion": 0.9968866749688667,
-    "status": {
-      "2017-05-30T02:00:00Z": 0,
-      "2017-05-30T07:30:00Z": 2,
-      "2017-05-30T08:00:00Z": 3
-    },
-    "duration": 1606,
-    "play": {
-      "2017-05-30T02:00:00Z": 0,
-      "2017-05-30T07:30:00Z": 261,
-      "2017-05-30T07:50:00Z": 1131,
-      "2017-05-30T08:00:00Z": 1601
-    },
-    "podcast_uuid": "5e0e0e70-0c4f-012e-fb35-00163e1b201c",
-    "title": "Ep. 451: When Can I Buy My Ticket To Space?",
-    "playCount": 4,
-    "uuid": "6f7a4490-2701-0135-52f9-452518e2d253",
-    "thumbnail_url": "http://is1.mzstatic.com/image/thumb/Features/v4/dd/dd/ad/ddddad15-13df-6813-7d05-d81e45d88d9e/mza_5442136597615139731.jpg/170x170bb-85.jpg",
-    "podcast_title": "Astronomy Cast"
-  },
-  {
-    "playedTime": 3911,
-    "firstPlayed": "2017-05-30T05:20:00Z",
-    "lastPlayed": "2017-05-30T07:00:00Z",
-    "playedProportion": 1,
-    "status": {
-      "2017-05-30T03:00:00Z": 0,
-      "2017-05-30T05:20:00Z": 2,
-      "2017-05-30T07:00:00Z": 3
-    },
-    "duration": 3911,
-    "play": {
-      "2017-05-30T03:00:00Z": 0,
-      "2017-05-30T05:20:00Z": 181,
-      "2017-05-30T05:30:00Z": 1100,
-      "2017-05-30T05:50:00Z": 1970,
-      "2017-05-30T06:00:00Z": 3048,
-      "2017-05-30T07:00:00Z": 3911
-    },
-    "podcast_uuid": "32923e10-fac6-0132-17f2-059c869cc4eb",
-    "title": "EP. 91 AMERICA NEEDS A STORY",
-    "playCount": 6,
-    "uuid": "f4763320-270f-0135-52f9-452518e2d253",
-    "thumbnail_url": "http://static.megaphone.fm/podcasts/631704f4-0b52-11e7-b31e-e736e00075b3/image/18343616958_f4243669cd_k.jpg",
-    "podcast_title": "#WeThePeople LIVE"
-  },
-  {
-    "playedTime": 4773,
-    "firstPlayed": "2017-05-30T04:00:00Z",
-    "lastPlayed": "2017-05-30T06:00:00Z",
-    "playedProportion": 0.9985355648535564,
-    "status": {
-      "2017-05-30T00:00:00Z": 0,
-      "2017-05-30T04:00:00Z": 2,
-      "2017-05-30T06:00:00Z": 3
-    },
-    "duration": "4780",
-    "play": {
-      "2017-05-30T00:00:00Z": 0,
-      "2017-05-30T04:00:00Z": 806,
-      "2017-05-30T04:20:00Z": 1686,
-      "2017-05-30T04:30:00Z": 2616,
-      "2017-05-30T04:50:00Z": 3475,
-      "2017-05-30T05:00:00Z": 4084,
-      "2017-05-30T05:10:00Z": 4386,
-      "2017-05-30T06:00:00Z": 4773
-    },
-    "podcast_uuid": "8d728390-249c-0131-73be-723c91aeae46",
-    "title": "#79 — The Road to Tyranny",
+    "podcast_uuid": "e4ff94b0-8686-0130-0b07-723c91aeae46",
+    "title": "Gene Editing Human Embryos",
     "playCount": 8,
-    "uuid": "9e8bba90-26f8-0135-52f9-452518e2d253",
-    "thumbnail_url": "http://static.libsyn.com/p/assets/a/6/d/c/a6dc6b89bf98cb96/PodcastImage_smaller.jpg",
-    "podcast_title": "Waking Up with Sam Harris"
+    "uuid": "490abb24-6131-431b-96a9-3ffff20dd488",
+    "thumbnail_url": "http://ichef.bbci.co.uk/images/ic/3000x3000/p02h1mkd.jpg",
+    "podcast_title": "The Science Hour"
   },
   {
-    "playedTime": 959,
-    "firstPlayed": "2017-05-30T03:50:00Z",
-    "lastPlayed": "2017-05-30T04:00:00Z",
-    "playedProportion": 0.6288524590163934,
+    "playedTime": 1683,
+    "firstPlayed": "2017-08-04T08:40:00Z",
+    "lastPlayed": "2017-08-06T05:00:00Z",
+    "playedProportion": 0.998813056379822,
     "status": {
-      "2017-05-29T20:00:00Z": 0,
-      "2017-05-30T03:50:00Z": 2,
-      "2017-05-30T06:00:00Z": 3
+      "2017-08-04T08:40:00Z": 2,
+      "2017-08-06T05:00:00Z": 3
     },
-    "duration": 1525,
+    "duration": 1685,
     "play": {
-      "2017-05-29T20:00:00Z": 0,
-      "2017-05-30T03:50:00Z": 849,
-      "2017-05-30T04:00:00Z": 959
-    },
-    "podcast_uuid": "aeddb420-7217-0133-2cee-6dc413d6d41d",
-    "title": "Merkel disses Trump, how much did MI5 know about the Manchester bomber and JFK's 100th Birthday",
-    "playCount": 3,
-    "uuid": "88083dd0-26d6-0135-52f9-452518e2d253",
-    "thumbnail_url": "http://pg-act-11-o.s3-us-west-2.amazonaws.com/11/artwork/show.4.audioart.original.jpg",
-    "podcast_title": "Amanpour"
-  },
-  {
-    "playedTime": 582,
-    "firstPlayed": "2017-05-29T00:30:00Z",
-    "lastPlayed": "2017-05-29T00:30:00Z",
-    "playedProportion": 0.3856858846918489,
-    "status": {
-      "2017-05-27T20:00:00Z": 0,
-      "2017-05-29T00:30:00Z": 2,
-      "2017-05-30T04:00:00Z": 3
-    },
-    "duration": "1509",
-    "play": {
-      "2017-05-27T20:00:00Z": 0,
-      "2017-05-29T00:30:00Z": 582
-    },
-    "podcast_uuid": "d22cc180-0dc1-012e-fbb9-00163e1b201c",
-    "title": "TRC #451: Does Paper Burn at 451 Degrees Fahrenheit? + Did Humans Migrate To The Americas 130K Years Ago? + Does Wearing Red Make You More Attractive?",
-    "playCount": 2,
-    "uuid": "181e6770-2540-0135-52f8-452518e2d253",
-    "thumbnail_url": "http://static.libsyn.com/p/assets/8/2/4/e/824ee7f0ca827522/TheRealityCheck_1400X1400.jpg",
-    "podcast_title": "The Reality Check"
-  },
-  {
-    "playedTime": 1269,
-    "firstPlayed": "2017-05-29T14:40:00Z",
-    "lastPlayed": "2017-05-29T15:00:00Z",
-    "playedProportion": 0.9952941176470588,
-    "status": {
-      "2017-05-26T18:00:00Z": 0,
-      "2017-05-29T14:40:00Z": 2,
-      "2017-05-29T15:00:00Z": 3
-    },
-    "duration": "1275",
-    "play": {
-      "2017-05-26T18:00:00Z": 0,
-      "2017-05-29T14:40:00Z": 699,
-      "2017-05-29T15:00:00Z": 1269
-    },
-    "podcast_uuid": "b4eb8a20-5ec6-012e-25a0-00163e1b201c",
-    "title": "The Cloudcast #299 - The Discipline of Chaos Engineering",
-    "playCount": 3,
-    "uuid": "4295ac60-2467-0135-52f8-452518e2d253",
-    "thumbnail_url": "http://www.buzzsprout.com/podcasts/3195/artworks_large.jpg?1496301134",
-    "podcast_title": "The Cloudcast (.net) - Weekly Cloud Computing Podcast"
-  },
-  {
-    "playedTime": 945,
-    "firstPlayed": "2017-05-29T04:30:00Z",
-    "lastPlayed": "2017-05-29T05:10:00Z",
-    "playedProportion": 0.08475336322869956,
-    "status": {
-      "2017-05-29T04:30:00Z": 2,
-      "2017-05-29T14:00:00Z": 3
-    },
-    "duration": 11150,
-    "play": {
-      "2017-05-29T04:30:00Z": 462,
-      "2017-05-29T05:10:00Z": 945
-    },
-    "podcast_uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
-    "title": "933: \"Learn Russian!\"",
-    "playCount": 2,
-    "uuid": "36502600-2628-0135-52f9-452518e2d253",
-    "thumbnail_url": "http://adam.curry.com/enc/1496953441.067_na-936-art-big.jpg",
-    "podcast_title": "No Agenda"
-  },
-  {
-    "playedTime": 2471,
-    "firstPlayed": "2017-05-29T05:10:00Z",
-    "lastPlayed": "2017-05-29T06:00:00Z",
-    "playedProportion": 0.9967728922952803,
-    "status": {
-      "2017-05-29T05:10:00Z": 2,
-      "2017-05-29T06:00:00Z": 3
-    },
-    "duration": 2479,
-    "play": {
-      "2017-05-29T05:10:00Z": 101,
-      "2017-05-29T05:20:00Z": 374,
-      "2017-05-29T05:30:00Z": 511,
-      "2017-05-29T05:50:00Z": 1421,
-      "2017-05-29T06:00:00Z": 2471
-    },
-    "podcast_uuid": "85f383f0-1e6a-012e-0210-00163e1b201c",
-    "title": "Fareed asks an expert panel what to make of President's whirlwind overseas trip. Who did he cozy up to, and who got the cold shoulder?",
-    "playCount": 5,
-    "uuid": "021c44e0-2628-0135-52f9-452518e2d253",
-    "thumbnail_url": "http://pg-act-11-o.s3-us-west-2.amazonaws.com/11/artwork/show.8.audioart.original.jpg",
-    "podcast_title": "Fareed Zakaria GPS"
-  },
-  {
-    "playedTime": 1193,
-    "firstPlayed": "2017-05-29T04:30:00Z",
-    "lastPlayed": "2017-05-29T05:00:00Z",
-    "playedProportion": 0.9991624790619765,
-    "status": {
-      "2017-05-29T01:00:00Z": 0,
-      "2017-05-29T04:30:00Z": 2,
-      "2017-05-29T05:00:00Z": 3
-    },
-    "duration": "1194",
-    "play": {
-      "2017-05-29T01:00:00Z": 0,
-      "2017-05-29T04:30:00Z": 193,
-      "2017-05-29T04:40:00Z": 317,
-      "2017-05-29T05:00:00Z": 1193
-    },
-    "podcast_uuid": "7d16cee0-1c1c-0133-28b1-059c869cc4eb",
-    "title": "99: Photons from exoplanets with Dr. Meshkat",
-    "playCount": 4,
-    "uuid": "41074230-2628-0135-52f9-452518e2d253",
-    "thumbnail_url": "http://static.libsyn.com/p/assets/e/1/0/b/e10b8841d59396c8/spacepod_logo.jpg",
-    "podcast_title": "Spacepod"
-  },
-  {
-    "playedTime": 11696,
-    "firstPlayed": "2017-05-28T07:50:00Z",
-    "lastPlayed": "2017-05-28T17:00:00Z",
-    "playedProportion": 0.9993164730006835,
-    "status": {
-      "2017-05-27T02:00:00Z": 0,
-      "2017-05-28T07:50:00Z": 2,
-      "2017-05-28T17:00:00Z": 3
-    },
-    "duration": "11704",
-    "play": {
-      "2017-05-28T08:30:00Z": 1635,
-      "2017-05-28T09:10:00Z": 1895,
-      "2017-05-28T08:10:00Z": 1443,
-      "2017-05-28T15:50:00Z": 10732,
-      "2017-05-28T08:00:00Z": 861,
-      "2017-05-28T16:30:00Z": 10951,
-      "2017-05-28T17:00:00Z": 11696,
-      "2017-05-28T16:00:00Z": 10811,
-      "2017-05-28T11:40:00Z": 9623,
-      "2017-05-27T02:00:00Z": 0,
-      "2017-05-28T10:40:00Z": 6044,
-      "2017-05-28T11:30:00Z": 8753,
-      "2017-05-28T10:30:00Z": 5124,
-      "2017-05-28T11:10:00Z": 7824,
-      "2017-05-28T12:00:00Z": 10361,
-      "2017-05-28T10:10:00Z": 4224,
-      "2017-05-28T11:00:00Z": 6934,
-      "2017-05-28T10:00:00Z": 3324,
-      "2017-05-28T09:40:00Z": 2484,
-      "2017-05-28T07:50:00Z": 331
-    },
-    "podcast_uuid": "873e7420-042d-012e-f9a4-00163e1b201c",
-    "title": "#966 - Tom Papa",
-    "playCount": 20,
-    "uuid": "fccfe070-24aa-0135-52f8-452518e2d253",
-    "thumbnail_url": "http://static.libsyn.com/p/assets/7/1/f/3/71f3014e14ef2722/JREiTunesImage2.jpg",
-    "podcast_title": "The Joe Rogan Experience"
-  },
-  {
-    "playedTime": 144,
-    "firstPlayed": "2017-05-28T16:00:00Z",
-    "lastPlayed": "2017-05-28T17:00:00Z",
-    "playedProportion": 1.0285714285714285,
-    "status": {
-      "2017-05-26T20:00:00Z": 0,
-      "2017-05-28T16:00:00Z": 2,
-      "2017-05-28T17:00:00Z": 3
-    },
-    "duration": "140",
-    "play": {
-      "2017-05-26T20:00:00Z": 0,
-      "2017-05-28T16:00:00Z": 43,
-      "2017-05-28T17:00:00Z": 144
-    },
-    "podcast_uuid": "52905800-287d-012e-0725-00163e1b201c",
-    "title": "Quirks & Questions:  Are humans the only mammals with different blood types?",
-    "playCount": 3,
-    "uuid": "6765b320-247a-0135-52f8-452518e2d253",
-    "thumbnail_url": "https://www.cbc.ca/radio/podcasts/images/promo-quirks-segments.jpg",
-    "podcast_title": "Quirks and Quarks Segmented Show from CBC Radio"
-  },
-  {
-    "playedTime": 634,
-    "firstPlayed": "2017-05-28T17:00:00Z",
-    "lastPlayed": "2017-05-28T17:00:00Z",
-    "playedProportion": 1.0095541401273886,
-    "status": {
-      "2017-05-26T21:00:00Z": 0,
-      "2017-05-28T17:00:00Z": 3
-    },
-    "duration": "628",
-    "play": {
-      "2017-05-26T21:00:00Z": 0,
-      "2017-05-28T17:00:00Z": 634
-    },
-    "podcast_uuid": "52905800-287d-012e-0725-00163e1b201c",
-    "title": "The Sherpas' super-power",
-    "playCount": 2,
-    "uuid": "4d336430-247d-0135-52f8-452518e2d253",
-    "thumbnail_url": "https://www.cbc.ca/radio/podcasts/images/promo-quirks-segments.jpg",
-    "podcast_title": "Quirks and Quarks Segmented Show from CBC Radio"
-  },
-  {
-    "playedTime": 476,
-    "firstPlayed": "2017-05-28T16:20:00Z",
-    "lastPlayed": "2017-05-28T17:00:00Z",
-    "playedProportion": 1.0042194092827004,
-    "status": {
-      "2017-05-26T21:00:00Z": 0,
-      "2017-05-28T16:20:00Z": 2,
-      "2017-05-28T17:00:00Z": 3
-    },
-    "duration": "474",
-    "play": {
-      "2017-05-26T21:00:00Z": 0,
-      "2017-05-28T16:20:00Z": 36,
-      "2017-05-28T17:00:00Z": 476
-    },
-    "podcast_uuid": "52905800-287d-012e-0725-00163e1b201c",
-    "title": "When did whales get super-sized?",
-    "playCount": 3,
-    "uuid": "4d2ebee0-247d-0135-52f8-452518e2d253",
-    "thumbnail_url": "https://www.cbc.ca/radio/podcasts/images/promo-quirks-segments.jpg",
-    "podcast_title": "Quirks and Quarks Segmented Show from CBC Radio"
-  },
-  {
-    "playedTime": 436,
-    "firstPlayed": "2017-05-28T16:00:00Z",
-    "lastPlayed": "2017-05-28T16:00:00Z",
-    "playedProportion": 1.011600928074246,
-    "status": {
-      "2017-05-26T20:00:00Z": 0,
-      "2017-05-28T16:00:00Z": 3
-    },
-    "duration": "431",
-    "play": {
-      "2017-05-26T20:00:00Z": 0,
-      "2017-05-28T16:00:00Z": 436
-    },
-    "podcast_uuid": "52905800-287d-012e-0725-00163e1b201c",
-    "title": "Out of Africa, or maybe Europe?",
-    "playCount": 2,
-    "uuid": "67672f80-247a-0135-52f8-452518e2d253",
-    "thumbnail_url": "https://www.cbc.ca/radio/podcasts/images/promo-quirks-segments.jpg",
-    "podcast_title": "Quirks and Quarks Segmented Show from CBC Radio"
-  },
-  {
-    "playedTime": 2862,
-    "firstPlayed": "2017-05-28T08:30:00Z",
-    "lastPlayed": "2017-05-28T10:00:00Z",
-    "playedProportion": 0.997212543554007,
-    "status": {
-      "2017-05-27T03:00:00Z": 0,
-      "2017-05-28T08:30:00Z": 2,
-      "2017-05-28T10:00:00Z": 3
-    },
-    "duration": "2870",
-    "play": {
-      "2017-05-27T03:00:00Z": 0,
-      "2017-05-28T08:30:00Z": 795,
-      "2017-05-28T08:40:00Z": 1722,
-      "2017-05-28T09:00:00Z": 2632,
-      "2017-05-28T10:00:00Z": 2862
-    },
-    "podcast_uuid": "0fb72d80-4c95-0130-e3d5-723c91aeae46",
-    "title": "TYT - 05.25.17: Body Slamming, Mulvaney & Sanders, Betsey DeVos, and Playboy Model",
-    "playCount": 5,
-    "uuid": "b67caa00-24ae-0135-52f8-452518e2d253",
-    "thumbnail_url": "http://static.libsyn.com/p/assets/0/e/e/1/0ee1b12001e873cb/MS_iTunes-Podcast_FREE-Audio_1024.jpg",
-    "podcast_title": "The Young Turks - FREE (Audio)"
-  },
-  {
-    "playedTime": 1686,
-    "firstPlayed": "2017-05-28T09:10:00Z",
-    "lastPlayed": "2017-05-28T10:00:00Z",
-    "playedProportion": 0.999407231772377,
-    "status": {
-      "2017-05-26T07:00:00Z": 0,
-      "2017-05-28T09:10:00Z": 2,
-      "2017-05-28T10:00:00Z": 3
-    },
-    "duration": 1687,
-    "play": {
-      "2017-05-26T07:00:00Z": 0,
-      "2017-05-28T09:10:00Z": 417,
-      "2017-05-28T09:30:00Z": 1316,
-      "2017-05-28T10:00:00Z": 1686
+      "2017-08-04T08:40:00Z": 252,
+      "2017-08-04T09:00:00Z": 536,
+      "2017-08-05T09:50:00Z": 605,
+      "2017-08-05T10:00:00Z": 1535,
+      "2017-08-05T11:40:00Z": 1588,
+      "2017-08-06T05:00:00Z": 1683
     },
     "podcast_uuid": "3920d880-1b97-012e-00b9-00163e1b201c",
-    "title": "Immigrating to Canada? No weather wimps allowed!",
-    "playCount": 4,
-    "uuid": "4f92aab0-240b-0135-52f8-452518e2d253",
+    "title": "Big girls, little boys and...bees?",
+    "playCount": 6,
+    "uuid": "f53a58c5-0d0c-4dec-8831-dda86c6910ab",
     "thumbnail_url": "https://www.cbc.ca/radio/podcasts/images/promo-laughoutloud.jpg",
     "podcast_title": "Laugh Out Loud from CBC Radio"
   },
   {
-    "playedTime": 1419,
-    "firstPlayed": "2017-05-28T07:40:00Z",
-    "lastPlayed": "2017-05-28T08:00:00Z",
-    "playedProportion": 0.6976401179941003,
+    "playedTime": 223,
+    "firstPlayed": "2017-08-06T02:20:00Z",
+    "lastPlayed": "2017-08-06T05:00:00Z",
+    "playedProportion": 0.4207547169811321,
     "status": {
-      "2017-05-28T00:00:00Z": 0,
-      "2017-05-28T07:40:00Z": 2,
-      "2017-05-28T08:00:00Z": 3
+      "2017-08-05T18:00:00Z": 0,
+      "2017-08-06T02:20:00Z": 2,
+      "2017-08-06T05:00:00Z": 3
     },
-    "duration": "2034",
+    "duration": "530",
     "play": {
-      "2017-05-28T00:00:00Z": 0,
-      "2017-05-28T07:40:00Z": 1169,
-      "2017-05-28T07:50:00Z": 454,
-      "2017-05-28T08:00:00Z": 1419
+      "2017-08-05T18:00:00Z": 0,
+      "2017-08-06T02:20:00Z": 34,
+      "2017-08-06T05:00:00Z": 223
+    },
+    "podcast_uuid": "1abbf4d0-25b5-012e-057d-00163e1b201c",
+    "title": "05.08.2017 – Langsam gesprochene Nachrichten",
+    "playCount": 3,
+    "uuid": "61341dcd-21af-4f6e-8fb7-77377a569d0c",
+    "thumbnail_url": "http://www.dw.com/image/18800113_7.jpg",
+    "podcast_title": "Langsam gesprochene Nachrichten | Deutsch lernen | Deutsche Welle"
+  },
+  {
+    "playedTime": 223,
+    "firstPlayed": "2017-08-06T05:00:00Z",
+    "lastPlayed": "2017-08-06T05:00:00Z",
+    "playedProportion": 0.07778165329612836,
+    "status": {
+      "2017-08-05T00:00:00Z": 0,
+      "2017-08-06T05:00:00Z": 3
+    },
+    "duration": 2867,
+    "play": {
+      "2017-08-05T00:00:00Z": 0,
+      "2017-08-06T05:00:00Z": 223
+    },
+    "podcast_uuid": "52b13ce0-0d7b-012e-fba4-00163e1b201c",
+    "title": "Hr1: News Roundup, Eclipse Special",
+    "playCount": 2,
+    "uuid": "146cc5e7-4fba-432a-b185-214ddc283d98",
+    "thumbnail_url": "http://www.sciencefriday.com/wp-content/uploads/2017/06/SciFri_avatar_1400x.png",
+    "podcast_title": "Science Friday"
+  },
+  {
+    "playedTime": 983,
+    "firstPlayed": "2017-08-05T10:00:00Z",
+    "lastPlayed": "2017-08-05T10:00:00Z",
+    "playedProportion": 0.9929292929292929,
+    "status": {
+      "2017-08-05T05:00:00Z": 0,
+      "2017-08-05T10:00:00Z": 3
+    },
+    "duration": "990",
+    "play": {
+      "2017-08-05T05:00:00Z": 0,
+      "2017-08-05T10:00:00Z": 983
+    },
+    "podcast_uuid": "2433b8f0-0d4c-012e-fb96-00163e1b201c",
+    "title": "Overtime - Episode #432: Leakers, Bible Study, Trump Polls",
+    "playCount": 2,
+    "uuid": "0b1eac99-fa7c-41ab-a815-82ac8d41e983",
+    "thumbnail_url": "http://static.libsyn.com/p/assets/a/0/6/1/a061ceb8595319af/billmaher_logo1400.jpg",
+    "podcast_title": "Real Time with Bill Maher"
+  },
+  {
+    "playedTime": 5,
+    "firstPlayed": "2017-08-05T09:40:00Z",
+    "lastPlayed": "2017-08-05T09:40:00Z",
+    "playedProportion": 0.0029655990510083037,
+    "status": {
+      "2017-08-05T09:40:00Z": 2
+    },
+    "duration": 1686,
+    "play": {
+      "2017-08-05T09:40:00Z": 5
+    },
+    "podcast_uuid": "3920d880-1b97-012e-00b9-00163e1b201c",
+    "title": "How not to insult your audience and other Italian stories.",
+    "playCount": 1,
+    "uuid": "81edbee3-7c4d-4a82-b02f-1a5060f12438",
+    "thumbnail_url": "https://www.cbc.ca/radio/podcasts/images/promo-laughoutloud.jpg",
+    "podcast_title": "Laugh Out Loud from CBC Radio"
+  },
+  {
+    "playedTime": 3340,
+    "firstPlayed": "2017-08-04T17:40:00Z",
+    "lastPlayed": "2017-08-04T19:00:00Z",
+    "playedProportion": 0.9997006884166417,
+    "status": {
+      "2017-08-03T10:00:00Z": 0,
+      "2017-08-04T17:40:00Z": 2,
+      "2017-08-04T19:00:00Z": 3
+    },
+    "duration": "3341",
+    "play": {
+      "2017-08-03T10:00:00Z": 0,
+      "2017-08-04T17:40:00Z": 779,
+      "2017-08-04T17:50:00Z": 1659,
+      "2017-08-04T18:10:00Z": 2117,
+      "2017-08-04T18:30:00Z": 3096,
+      "2017-08-04T19:00:00Z": 3340
+    },
+    "podcast_uuid": "2743d720-0edf-0133-2204-059c869cc4eb",
+    "title": "Quantum Computing with Vijay Pande",
+    "playCount": 6,
+    "uuid": "a436a6d5-f389-4549-9126-74b4baf8ce4a",
+    "thumbnail_url": "http://softwaredaily.wpengine.com/wp-content/uploads/powerpress/SED_square_solid_bg.png",
+    "podcast_title": "Software Engineering Daily"
+  },
+  {
+    "playedTime": 3107,
+    "firstPlayed": "2017-08-04T16:40:00Z",
+    "lastPlayed": "2017-08-04T18:00:00Z",
+    "playedProportion": 0.9119459935427062,
+    "status": {
+      "2017-08-01T22:00:00Z": 0,
+      "2017-08-04T16:40:00Z": 2,
+      "2017-08-04T18:00:00Z": 3
+    },
+    "duration": "3407",
+    "play": {
+      "2017-08-01T22:00:00Z": 0,
+      "2017-08-04T16:40:00Z": 669,
+      "2017-08-04T16:50:00Z": 1573,
+      "2017-08-04T17:10:00Z": 2171,
+      "2017-08-04T17:20:00Z": 2861,
+      "2017-08-04T18:00:00Z": 3107
+    },
+    "podcast_uuid": "70d13d50-9efe-0130-1b90-723c91aeae46",
+    "title": "259: ANTHOLOGY — The Future of Open Source at OSCON 2017",
+    "playCount": 6,
+    "uuid": "b58104a8-1f1b-416d-89ee-8e8049888c58",
+    "thumbnail_url": "https://cdn.changelog.com/images/podcasts/podcast-cover-art-64a3184278271e1751c20f040e3c0055.png?vsn=d",
+    "podcast_title": "The Changelog"
+  },
+  {
+    "playedTime": 1345,
+    "firstPlayed": "2017-08-03T18:20:00Z",
+    "lastPlayed": "2017-08-03T20:30:00Z",
+    "playedProportion": 0.39745862884160754,
+    "status": {
+      "2017-08-02T13:00:00Z": 0,
+      "2017-08-03T18:20:00Z": 2,
+      "2017-08-04T09:00:00Z": 3
+    },
+    "duration": "3384",
+    "play": {
+      "2017-08-02T13:00:00Z": 0,
+      "2017-08-03T18:20:00Z": 421,
+      "2017-08-03T19:50:00Z": 441,
+      "2017-08-03T20:00:00Z": 870,
+      "2017-08-03T20:30:00Z": 1345
+    },
+    "podcast_uuid": "2743d720-0edf-0133-2204-059c869cc4eb",
+    "title": "Platform Continuous Delivery with Andy Appleton",
+    "playCount": 5,
+    "uuid": "f1af9621-2f92-4fa4-b536-fb2be8da0478",
+    "thumbnail_url": "http://softwaredaily.wpengine.com/wp-content/uploads/powerpress/SED_square_solid_bg.png",
+    "podcast_title": "Software Engineering Daily"
+  },
+  {
+    "playedTime": 4105,
+    "firstPlayed": "2017-08-04T06:20:00Z",
+    "lastPlayed": "2017-08-04T09:00:00Z",
+    "playedProportion": 1,
+    "status": {
+      "2017-08-04T06:20:00Z": 2,
+      "2017-08-04T09:00:00Z": 3
+    },
+    "duration": 4105,
+    "play": {
+      "2017-08-04T06:20:00Z": 919,
+      "2017-08-04T06:30:00Z": 1788,
+      "2017-08-04T06:40:00Z": 2309,
+      "2017-08-04T06:50:00Z": 2483,
+      "2017-08-04T08:20:00Z": 3202,
+      "2017-08-04T08:30:00Z": 3802,
+      "2017-08-04T09:00:00Z": 4105
+    },
+    "podcast_uuid": "df86cd70-5e91-0133-cd9f-0d11918ab357",
+    "title": "Patreon CEO Jack Conte: Lauren Southern, IGD, and Free Speech",
+    "playCount": 7,
+    "uuid": "3c123c38-1650-427a-a6e6-60528f2ddbf3",
+    "thumbnail_url": "https://dfkfj8j276wwv.cloudfront.net/images/3f/35/7d/ea/3f357dea-b013-4239-9149-86b336fc573c/d57a5eaac6a533f124fb041c52398b794ba3632aef1298c349ca1ab58bed3d98c76f501ed020696dd25c126a760777d8a5cc1cb6f3bdd6f3ab27debbb5635b0a.jpeg",
+    "podcast_title": "The Rubin Report"
+  },
+  {
+    "playedTime": 971,
+    "firstPlayed": "2017-08-04T06:00:00Z",
+    "lastPlayed": "2017-08-04T06:00:00Z",
+    "playedProportion": 0.9979445015416238,
+    "status": {
+      "2017-08-03T16:00:00Z": 0,
+      "2017-08-04T06:00:00Z": 3
+    },
+    "duration": 973,
+    "play": {
+      "2017-08-03T16:00:00Z": 0,
+      "2017-08-04T06:00:00Z": 971
+    },
+    "podcast_uuid": "262069e0-e7df-0132-0ef7-059c869cc4eb",
+    "title": "The Economist asks: How do you win the AI race?",
+    "playCount": 2,
+    "uuid": "859c7428-e851-4ce3-90a5-bfd1f2a7366e",
+    "thumbnail_url": "https://imagecdn.acast.com/theeconomistallaudio/image.jpg?h=1500&amp;w=1500",
+    "podcast_title": "The Economist Radio (All audio)"
+  },
+  {
+    "playedTime": 3635,
+    "firstPlayed": "2017-08-04T04:00:00Z",
+    "lastPlayed": "2017-08-04T06:00:00Z",
+    "playedProportion": 0.9994500962331592,
+    "status": {
+      "2017-08-02T11:00:00Z": 0,
+      "2017-08-04T04:00:00Z": 2,
+      "2017-08-04T06:00:00Z": 3
+    },
+    "duration": 3637,
+    "play": {
+      "2017-08-02T11:00:00Z": 0,
+      "2017-08-04T04:00:00Z": 124,
+      "2017-08-04T04:30:00Z": 915,
+      "2017-08-04T04:40:00Z": 1824,
+      "2017-08-04T05:00:00Z": 2897,
+      "2017-08-04T05:10:00Z": 3463,
+      "2017-08-04T06:00:00Z": 3635
+    },
+    "podcast_uuid": "53678a10-bc45-0134-10a8-25324e2a541d",
+    "title": "Pyongyang and the White House Gang",
+    "playCount": 7,
+    "uuid": "5b31146a-f3d5-4e99-ad16-03099c46e53f",
+    "thumbnail_url": "http://static.megaphone.fm/podcasts/d5735a50-d904-11e6-8532-73c7de466ea6/image/uploads_2F1484252190700-qhn5krasklbce3dh-a797539282700ea0298a3a26f7e49b0b_2FIntercepted_COVER%2B_281_29.png",
+    "podcast_title": "Intercepted with Jeremy Scahill"
+  },
+  {
+    "playedTime": 1956,
+    "firstPlayed": "2017-08-04T05:20:00Z",
+    "lastPlayed": "2017-08-04T06:00:00Z",
+    "playedProportion": 0.9959266802443992,
+    "status": {
+      "2017-08-02T13:00:00Z": 0,
+      "2017-08-04T05:20:00Z": 2,
+      "2017-08-04T06:00:00Z": 3
+    },
+    "duration": "1964",
+    "play": {
+      "2017-08-02T13:00:00Z": 0,
+      "2017-08-04T05:20:00Z": 346,
+      "2017-08-04T05:30:00Z": 776,
+      "2017-08-04T05:40:00Z": 1616,
+      "2017-08-04T06:00:00Z": 1956
+    },
+    "podcast_uuid": "359848b0-c0fe-0132-381c-0b39892d38e0",
+    "title": "BONUS - Dave Rubin on Digital Media, Crowdfunding, and Comedy",
+    "playCount": 5,
+    "uuid": "59d47bb9-e46f-4225-a6a8-c6aa5b52e6d9",
+    "thumbnail_url": "http://i1.sndcdn.com/avatars-000202916330-h6nns1-original.jpg",
+    "podcast_title": "Conversations with Tyler"
+  },
+  {
+    "playedTime": 469,
+    "firstPlayed": "2017-08-04T02:40:00Z",
+    "lastPlayed": "2017-08-04T02:40:00Z",
+    "playedProportion": 0.24880636604774536,
+    "status": {
+      "2017-08-04T00:00:00Z": 0,
+      "2017-08-04T02:40:00Z": 2,
+      "2017-08-04T04:00:00Z": 3
+    },
+    "duration": "1885",
+    "play": {
+      "2017-08-04T00:00:00Z": 0,
+      "2017-08-04T02:40:00Z": 469
     },
     "podcast_uuid": "74a35900-0423-012e-f9a0-00163e1b201c",
-    "title": "Trump isolated at G7 talks over climate",
-    "playCount": 4,
-    "uuid": "6df22c20-2562-0135-52f8-452518e2d253",
+    "title": "Grand Jury Assembled in Trump-Russia Investigation",
+    "playCount": 2,
+    "uuid": "a9e1ea8b-70a7-4ac4-88f3-043a8f876afa",
     "thumbnail_url": "http://ichef.bbci.co.uk/images/ic/3000x3000/p02h1lpt.jpg",
     "podcast_title": "Global News Podcast"
   },
   {
-    "playedTime": 2961,
-    "firstPlayed": "2017-05-27T01:10:00Z",
-    "lastPlayed": "2017-05-27T10:00:00Z",
-    "playedProportion": 0.99966239027684,
+    "playedTime": 6261,
+    "firstPlayed": "2017-08-03T06:00:00Z",
+    "lastPlayed": "2017-08-03T08:00:00Z",
+    "playedProportion": 0.6074512467255263,
     "status": {
-      "2017-05-27T01:10:00Z": 2,
-      "2017-05-27T10:00:00Z": 3
+      "2017-08-03T01:00:00Z": 0,
+      "2017-08-03T06:00:00Z": 2,
+      "2017-08-04T04:00:00Z": 3
     },
-    "duration": 2962,
+    "duration": "10307",
     "play": {
-      "2017-05-27T01:10:00Z": 61,
-      "2017-05-27T01:20:00Z": 590,
-      "2017-05-27T03:00:00Z": 258,
-      "2017-05-27T06:40:00Z": 267,
-      "2017-05-27T06:50:00Z": 1197,
-      "2017-05-27T07:00:00Z": 1941,
-      "2017-05-27T07:20:00Z": 2401,
-      "2017-05-27T10:00:00Z": 2961
-    },
-    "podcast_uuid": "52b13ce0-0d7b-012e-fba4-00163e1b201c",
-    "title": "Hr2: Jupiter, Useless Research, Leland Melvin",
-    "playCount": 8,
-    "uuid": "d0455980-2497-0135-52f8-452518e2d253",
-    "thumbnail_url": "http://live-sciencefriday.pantheon.io/wp-content/uploads/2015/10/SciFri_avatar_1400x.png",
-    "podcast_title": "Science Friday"
-  },
-  {
-    "playedTime": 3472,
-    "firstPlayed": "2017-05-27T08:50:00Z",
-    "lastPlayed": "2017-05-27T10:00:00Z",
-    "playedProportion": 0.998561978717285,
-    "status": {
-      "2017-05-27T00:00:00Z": 0,
-      "2017-05-27T08:50:00Z": 2,
-      "2017-05-27T10:00:00Z": 3
-    },
-    "duration": "3477",
-    "play": {
-      "2017-05-27T00:00:00Z": 0,
-      "2017-05-27T08:50:00Z": 323,
-      "2017-05-27T09:00:00Z": 1223,
-      "2017-05-27T09:20:00Z": 2123,
-      "2017-05-27T09:30:00Z": 3023,
-      "2017-05-27T10:00:00Z": 3472
-    },
-    "podcast_uuid": "ede41160-9eeb-012f-3e7d-525400c11844",
-    "title": "Cosmic Queries: Potpourri Vol. 2",
-    "playCount": 6,
-    "uuid": "1f9b4cf0-2495-0135-52f8-452518e2d253",
-    "thumbnail_url": "http://i1.sndcdn.com/avatars-000100403534-873grd-original.jpg",
-    "podcast_title": "StarTalk Radio"
-  },
-  {
-    "playedTime": 5388,
-    "firstPlayed": "2017-05-27T07:20:00Z",
-    "lastPlayed": "2017-05-27T09:00:00Z",
-    "playedProportion": 0.9996289424860854,
-    "status": {
-      "2017-05-26T18:00:00Z": 0,
-      "2017-05-27T07:20:00Z": 2,
-      "2017-05-27T09:00:00Z": 3
-    },
-    "duration": "5390",
-    "play": {
-      "2017-05-27T07:30:00Z": 1655,
-      "2017-05-27T08:20:00Z": 3978,
-      "2017-05-27T07:20:00Z": 775,
-      "2017-05-27T09:00:00Z": 5388,
-      "2017-05-27T08:00:00Z": 3018,
-      "2017-05-26T18:00:00Z": 0,
-      "2017-05-27T08:40:00Z": 4878,
-      "2017-05-27T07:50:00Z": 2118,
-      "2017-05-27T07:40:00Z": 1909
-    },
-    "podcast_uuid": "8d728390-249c-0131-73be-723c91aeae46",
-    "title": "#78 — Persuasion and Control",
-    "playCount": 9,
-    "uuid": "367842a0-246a-0135-52f8-452518e2d253",
-    "thumbnail_url": "http://static.libsyn.com/p/assets/a/6/d/c/a6dc6b89bf98cb96/PodcastImage_smaller.jpg",
-    "podcast_title": "Waking Up with Sam Harris"
-  },
-  {
-    "playedTime": 2658,
-    "firstPlayed": "2017-05-26T22:20:00Z",
-    "lastPlayed": "2017-05-27T00:00:00Z",
-    "playedProportion": 0.9969992498124531,
-    "status": {
-      "2017-05-26T22:20:00Z": 2,
-      "2017-05-27T00:00:00Z": 3
-    },
-    "duration": 2666,
-    "play": {
-      "2017-05-26T22:20:00Z": 175,
-      "2017-05-26T22:50:00Z": 766,
-      "2017-05-26T23:00:00Z": 1407,
-      "2017-05-26T23:20:00Z": 1990,
-      "2017-05-27T00:00:00Z": 2658
-    },
-    "podcast_uuid": "d81fbcb0-0422-012e-f9a0-00163e1b201c",
-    "title": "Are the Rich Really Less Generous Than the Poor?",
-    "playCount": 5,
-    "uuid": "f993eed0-2325-0135-52f8-452518e2d253",
-    "thumbnail_url": "https://media2.wnyc.org/i/1400/1400/l/80/1/Freakonomics_WNYCStudios_1400_rsAKwzl.png",
-    "podcast_title": "Freakonomics Radio"
-  },
-  {
-    "playedTime": 4055,
-    "firstPlayed": "2017-05-26T04:40:00Z",
-    "lastPlayed": "2017-05-26T15:00:00Z",
-    "playedProportion": 0.9972946384653222,
-    "status": {
-      "2017-05-26T04:40:00Z": 2,
-      "2017-05-26T15:00:00Z": 3
-    },
-    "duration": "4066",
-    "play": {
-      "2017-05-26T04:40:00Z": 153,
-      "2017-05-26T04:50:00Z": 479,
-      "2017-05-26T07:20:00Z": 597,
-      "2017-05-26T07:30:00Z": 606,
-      "2017-05-26T14:00:00Z": 1516,
-      "2017-05-26T14:20:00Z": 2345,
-      "2017-05-26T14:30:00Z": 3195,
-      "2017-05-26T15:00:00Z": 4055
+      "2017-08-03T01:00:00Z": 0,
+      "2017-08-03T06:50:00Z": 3793,
+      "2017-08-03T07:30:00Z": 6143,
+      "2017-08-03T06:30:00Z": 2813,
+      "2017-08-03T07:20:00Z": 5493,
+      "2017-08-03T06:20:00Z": 1884,
+      "2017-08-03T08:00:00Z": 6261,
+      "2017-08-03T07:00:00Z": 4624,
+      "2017-08-03T06:00:00Z": 1014
     },
     "podcast_uuid": "873e7420-042d-012e-f9a4-00163e1b201c",
-    "title": "#965 - Robert Sapolsky",
-    "playCount": 8,
-    "uuid": "993d6980-23f6-0135-52f8-452518e2d253",
+    "title": "#993 - Ben Shapiro",
+    "playCount": 9,
+    "uuid": "a1e41e5f-3e3a-43f2-9f5a-ca438d4c08cf",
     "thumbnail_url": "http://static.libsyn.com/p/assets/7/1/f/3/71f3014e14ef2722/JREiTunesImage2.jpg",
     "podcast_title": "The Joe Rogan Experience"
   },
   {
-    "playedTime": 11014,
-    "firstPlayed": "2017-05-26T08:50:00Z",
-    "lastPlayed": "2017-05-26T12:00:00Z",
-    "playedProportion": 0.99936484892478,
+    "playedTime": 764,
+    "firstPlayed": "2017-08-04T04:00:00Z",
+    "lastPlayed": "2017-08-04T04:00:00Z",
+    "playedProportion": 0.5029624753127058,
     "status": {
-      "2017-05-25T22:00:00Z": 0,
-      "2017-05-26T08:50:00Z": 2,
-      "2017-05-26T12:00:00Z": 3
+      "2017-08-04T04:00:00Z": 3
     },
-    "duration": 11021,
+    "duration": 1519,
     "play": {
-      "2017-05-26T09:00:00Z": 2775,
-      "2017-05-26T10:50:00Z": 9044,
-      "2017-05-26T10:30:00Z": 8144,
-      "2017-05-26T11:20:00Z": 10844,
-      "2017-05-26T10:20:00Z": 7304,
-      "2017-05-26T12:00:00Z": 11014,
-      "2017-05-25T22:00:00Z": 0,
-      "2017-05-26T10:10:00Z": 6504,
-      "2017-05-26T11:00:00Z": 9944,
-      "2017-05-26T09:50:00Z": 5444,
-      "2017-05-26T08:50:00Z": 1343,
-      "2017-05-26T09:30:00Z": 4544,
-      "2017-05-26T09:20:00Z": 3695
+      "2017-08-04T04:00:00Z": 764
     },
-    "podcast_uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
-    "title": "932: \"Roundly Debunked\"",
-    "playCount": 13,
-    "uuid": "55d31530-23be-0135-52f8-452518e2d253",
-    "thumbnail_url": "http://adam.curry.com/enc/1496953441.067_na-936-art-big.jpg",
-    "podcast_title": "No Agenda"
+    "podcast_uuid": "aeddb420-7217-0133-2cee-6dc413d6d41d",
+    "title": "The Republican revolt and democracy in Pakistan",
+    "playCount": 1,
+    "uuid": "2df33579-f135-4109-873d-278c7c3503ba",
+    "thumbnail_url": "http://pg-act-11-o.s3-us-west-2.amazonaws.com/11/artwork/show.4.audioart.original.jpg",
+    "podcast_title": "Amanpour"
   },
   {
-    "playedTime": 1953,
-    "firstPlayed": "2017-05-26T08:00:00Z",
-    "lastPlayed": "2017-05-26T09:00:00Z",
-    "playedProportion": 0.9964285714285714,
+    "playedTime": 3250,
+    "firstPlayed": "2017-08-03T02:20:00Z",
+    "lastPlayed": "2017-08-03T19:00:00Z",
+    "playedProportion": 1.0003077870113881,
     "status": {
-      "2017-05-25T17:00:00Z": 0,
-      "2017-05-26T08:00:00Z": 2,
-      "2017-05-26T09:00:00Z": 3
+      "2017-08-01T11:00:00Z": 0,
+      "2017-08-03T02:20:00Z": 2,
+      "2017-08-03T19:00:00Z": 3
     },
-    "duration": "1960",
+    "duration": "3249",
     "play": {
-      "2017-05-25T17:00:00Z": 0,
-      "2017-05-26T08:00:00Z": 1233,
-      "2017-05-26T09:00:00Z": 1953
+      "2017-08-01T11:00:00Z": 0,
+      "2017-08-03T02:20:00Z": 496,
+      "2017-08-03T04:30:00Z": 1445,
+      "2017-08-03T05:30:00Z": 1602,
+      "2017-08-03T17:00:00Z": 2445,
+      "2017-08-03T17:20:00Z": 2521,
+      "2017-08-03T17:50:00Z": 2920,
+      "2017-08-03T19:00:00Z": 3250
     },
-    "podcast_uuid": "66084f00-c6b1-0130-34d2-723c91aeae46",
-    "title": "Sherpas - dolphin rescue - quantum computing - hot lavas",
+    "podcast_uuid": "40d36c30-5580-0131-828c-723c91aeae46",
+    "title": "Functional Geekery Episode 102 – Brian Hicks",
+    "playCount": 8,
+    "uuid": "4fcbec6a-1b43-48b3-b939-ee5dce53fa5c",
+    "thumbnail_url": "https://www.functionalgeekery.com/wp-content/cache/podlove/02/531ee088f7bf3317a94b498831307c/functional-geekery_original.jpg",
+    "podcast_title": "Functional Geekery"
+  },
+  {
+    "playedTime": 2086,
+    "firstPlayed": "2017-08-02T20:50:00Z",
+    "lastPlayed": "2017-08-02T22:00:00Z",
+    "playedProportion": 0.9990421455938697,
+    "status": {
+      "2017-08-02T11:00:00Z": 0,
+      "2017-08-02T20:50:00Z": 2,
+      "2017-08-02T22:00:00Z": 3
+    },
+    "duration": "2088",
+    "play": {
+      "2017-08-02T11:00:00Z": 0,
+      "2017-08-02T20:50:00Z": 224,
+      "2017-08-02T21:00:00Z": 803,
+      "2017-08-02T21:20:00Z": 1706,
+      "2017-08-02T22:00:00Z": 2086
+    },
+    "podcast_uuid": "58b79440-1f1f-0131-6ebd-723c91aeae46",
+    "title": "MJS #028 Zach Kessin",
+    "playCount": 5,
+    "uuid": "cf612ba8-b04d-42e1-831c-b25927fe6907",
+    "thumbnail_url": "https://s3.amazonaws.com/devchat.tv/MasterJSFeed.jpg",
+    "podcast_title": "All JavaScript Podcasts by Devchat.tv"
+  },
+  {
+    "playedTime": 763,
+    "firstPlayed": "2017-08-02T21:50:00Z",
+    "lastPlayed": "2017-08-02T22:00:00Z",
+    "playedProportion": 0.27386934673366836,
+    "status": {
+      "2017-08-01T14:00:00Z": 0,
+      "2017-08-02T21:50:00Z": 2,
+      "2017-08-02T22:00:00Z": 3
+    },
+    "duration": "2786",
+    "play": {
+      "2017-08-01T14:00:00Z": 0,
+      "2017-08-02T21:50:00Z": 543,
+      "2017-08-02T22:00:00Z": 763
+    },
+    "podcast_uuid": "80931490-01be-0132-a0fb-5f4c86fd3263",
+    "title": "AiA 150: What's New with Ionic with Mike Hartington",
     "playCount": 3,
-    "uuid": "2ed54e60-2394-0135-52f8-452518e2d253",
-    "thumbnail_url": "http://ichef.bbci.co.uk/images/ic/3000x3000/p02r4yjj.jpg",
-    "podcast_title": "BBC Inside Science"
+    "uuid": "00fc0205-2b22-4531-8231-ae55bfa8cabe",
+    "thumbnail_url": "https://s3.amazonaws.com/devchat.tv/MasterAngularFeed.jpg",
+    "podcast_title": "All Angular Podcasts by Devchat.tv"
   },
   {
-    "playedTime": 3062,
-    "firstPlayed": "2017-05-26T07:30:00Z",
-    "lastPlayed": "2017-05-26T09:00:00Z",
-    "playedProportion": 0.8814047207829592,
+    "playedTime": 2903,
+    "firstPlayed": "2017-08-01T15:30:00Z",
+    "lastPlayed": "2017-08-02T21:00:00Z",
+    "playedProportion": 0.9996556473829201,
     "status": {
-      "2017-05-25T16:00:00Z": 0,
-      "2017-05-26T07:30:00Z": 2,
-      "2017-05-26T09:00:00Z": 3
+      "2017-08-01T15:30:00Z": 2,
+      "2017-08-02T21:00:00Z": 3
     },
-    "duration": "3474",
+    "duration": "2904",
     "play": {
-      "2017-05-25T16:00:00Z": 0,
-      "2017-05-26T07:30:00Z": 83,
-      "2017-05-26T07:40:00Z": 603,
-      "2017-05-26T07:50:00Z": 993,
-      "2017-05-26T08:00:00Z": 1822,
-      "2017-05-26T08:20:00Z": 2012,
-      "2017-05-26T08:30:00Z": 2862,
-      "2017-05-26T09:00:00Z": 3062
+      "2017-08-02T21:00:00Z": 2903,
+      "2017-08-01T15:40:00Z": 332,
+      "2017-08-02T14:50:00Z": 3,
+      "2017-08-02T15:40:00Z": 679,
+      "2017-08-02T16:30:00Z": 2853,
+      "2017-08-01T15:30:00Z": 12,
+      "2017-08-02T16:10:00Z": 1957,
+      "2017-08-02T16:00:00Z": 1551,
+      "2017-08-02T05:00:00Z": 361
+    },
+    "podcast_uuid": "58b79440-1f1f-0131-6ebd-723c91aeae46",
+    "title": "JSJ 272: Functional Programming and ClojureScript with Eric Normand",
+    "playCount": 9,
+    "uuid": "abf247ed-db9c-4788-9a35-0bcb39c4c562",
+    "thumbnail_url": "https://s3.amazonaws.com/devchat.tv/MasterJSFeed.jpg",
+    "podcast_title": "All JavaScript Podcasts by Devchat.tv"
+  },
+  {
+    "playedTime": 1612,
+    "firstPlayed": "2017-08-02T09:10:00Z",
+    "lastPlayed": "2017-08-02T11:00:00Z",
+    "playedProportion": 0.9969078540507111,
+    "status": {
+      "2017-08-01T11:00:00Z": 0,
+      "2017-08-02T09:10:00Z": 2,
+      "2017-08-02T11:00:00Z": 3
+    },
+    "duration": "1617",
+    "play": {
+      "2017-08-01T11:00:00Z": 0,
+      "2017-08-02T09:10:00Z": 602,
+      "2017-08-02T11:00:00Z": 1612
+    },
+    "podcast_uuid": "421c79d0-0423-012e-f9a0-00163e1b201c",
+    "title": "Oxygen: The breath of Life",
+    "playCount": 3,
+    "uuid": "cab26199-3a35-4ccb-808a-ed76dc2ccc73",
+    "thumbnail_url": "http://ichef.bbci.co.uk/images/ic/3000x3000/p02h1mcg.jpg",
+    "podcast_title": "Discovery"
+  },
+  {
+    "playedTime": 1698,
+    "firstPlayed": "2017-08-02T05:00:00Z",
+    "lastPlayed": "2017-08-02T10:00:00Z",
+    "playedProportion": 0.9970640046975925,
+    "status": {
+      "2017-08-01T11:00:00Z": 0,
+      "2017-08-02T05:00:00Z": 2,
+      "2017-08-02T10:00:00Z": 3
+    },
+    "duration": "1703",
+    "play": {
+      "2017-08-01T11:00:00Z": 0,
+      "2017-08-02T05:00:00Z": 359,
+      "2017-08-02T05:10:00Z": 559,
+      "2017-08-02T07:40:00Z": 569,
+      "2017-08-02T08:50:00Z": 1418,
+      "2017-08-02T10:00:00Z": 1698
+    },
+    "podcast_uuid": "b633aa60-0bfe-012e-fb1f-00163e1b201c",
+    "title": "Anthony Scaramucci Removed as Trump Media Chief",
+    "playCount": 6,
+    "uuid": "65cddd63-67d1-4bd8-a7b1-996893a296c0",
+    "thumbnail_url": "http://ichef.bbci.co.uk/images/ic/3000x3000/p02h1m09.jpg",
+    "podcast_title": "World Update: Daily Commute"
+  },
+  {
+    "playedTime": 2274,
+    "firstPlayed": "2017-08-02T07:40:00Z",
+    "lastPlayed": "2017-08-02T09:00:00Z",
+    "playedProportion": 0.9964943032427696,
+    "status": {
+      "2017-08-02T04:00:00Z": 0,
+      "2017-08-02T07:40:00Z": 2,
+      "2017-08-02T09:00:00Z": 3
+    },
+    "duration": "2282",
+    "play": {
+      "2017-08-02T04:00:00Z": 0,
+      "2017-08-02T07:40:00Z": 304,
+      "2017-08-02T07:50:00Z": 745,
+      "2017-08-02T09:00:00Z": 2274
     },
     "podcast_uuid": "0fb72d80-4c95-0130-e3d5-723c91aeae46",
-    "title": "TYT - 05.24.17: Sheriff Clarke, Pope, New Orleans Mayor, and Star Trek",
-    "playCount": 8,
-    "uuid": "12572360-238f-0135-52f8-452518e2d253",
+    "title": "TYT - 08.01.17: Jeff Flake, Corey Lewandowski, Venezuela, and Lil Duval",
+    "playCount": 4,
+    "uuid": "00924fe9-a8aa-4c99-9e64-29b696c4f539",
     "thumbnail_url": "http://static.libsyn.com/p/assets/0/e/e/1/0ee1b12001e873cb/MS_iTunes-Podcast_FREE-Audio_1024.jpg",
     "podcast_title": "The Young Turks - FREE (Audio)"
   },
   {
-    "playedTime": 165,
-    "firstPlayed": "2017-05-26T08:00:00Z",
-    "lastPlayed": "2017-05-26T08:00:00Z",
-    "playedProportion": 0.9763313609467456,
+    "playedTime": 1933,
+    "firstPlayed": "2017-08-02T05:40:00Z",
+    "lastPlayed": "2017-08-02T08:00:00Z",
+    "playedProportion": 0.9963917525773196,
     "status": {
-      "2017-05-26T05:00:00Z": 0,
-      "2017-05-26T08:00:00Z": 3
+      "2017-07-31T05:00:00Z": 0,
+      "2017-08-02T05:40:00Z": 2,
+      "2017-08-02T08:00:00Z": 3
     },
-    "duration": "169",
+    "duration": "1940",
     "play": {
-      "2017-05-26T05:00:00Z": 0,
-      "2017-05-26T08:00:00Z": 165
+      "2017-07-31T05:00:00Z": 0,
+      "2017-08-02T05:40:00Z": 799,
+      "2017-08-02T05:50:00Z": 1334,
+      "2017-08-02T07:30:00Z": 1363,
+      "2017-08-02T08:00:00Z": 1933
+    },
+    "podcast_uuid": "b1ccb690-fd97-0130-c6ee-723c91aeae46",
+    "title": "7.03- The German Confederation",
+    "playCount": 5,
+    "uuid": "64092ef5-746f-4a3d-b233-494f42bf4168",
+    "thumbnail_url": "http://static.libsyn.com/p/assets/3/4/5/f/345fbd6a253649c0/RevolutionsLogo_V2.jpg",
+    "podcast_title": "Revolutions"
+  },
+  {
+    "playedTime": 1768,
+    "firstPlayed": "2017-08-02T05:10:00Z",
+    "lastPlayed": "2017-08-02T06:00:00Z",
+    "playedProportion": 0.9971799210377891,
+    "status": {
+      "2017-08-01T12:00:00Z": 0,
+      "2017-08-02T05:10:00Z": 2,
+      "2017-08-02T06:00:00Z": 3
+    },
+    "duration": "1773",
+    "play": {
+      "2017-08-01T12:00:00Z": 0,
+      "2017-08-02T05:10:00Z": 688,
+      "2017-08-02T05:30:00Z": 1548,
+      "2017-08-02T06:00:00Z": 1768
+    },
+    "podcast_uuid": "c0313510-8262-0132-e7ff-5f4c86fd3263",
+    "title": "AaS! 61: Where do giant magnetic fields come from?",
+    "playCount": 4,
+    "uuid": "6b30746d-54ff-47e7-9f7e-f3965dba3b26",
+    "thumbnail_url": "http://static.libsyn.com/p/assets/7/a/d/3/7ad3cd5ef13e9139/logo_askaspace_name.jpg",
+    "podcast_title": "Ask a Spaceman!"
+  },
+  {
+    "playedTime": 3434,
+    "firstPlayed": "2017-08-01T09:20:00Z",
+    "lastPlayed": "2017-08-01T11:00:00Z",
+    "playedProportion": 0.9968069666182874,
+    "status": {
+      "2017-07-31T18:00:00Z": 0,
+      "2017-08-01T09:20:00Z": 2,
+      "2017-08-01T11:00:00Z": 3
+    },
+    "duration": "3445",
+    "play": {
+      "2017-07-31T18:00:00Z": 0,
+      "2017-08-01T09:20:00Z": 245,
+      "2017-08-01T09:40:00Z": 1155,
+      "2017-08-01T09:50:00Z": 2045,
+      "2017-08-01T10:10:00Z": 2945,
+      "2017-08-01T11:00:00Z": 3434
+    },
+    "podcast_uuid": "e0b82010-83df-012e-3c4d-00163e1b201c",
+    "title": "Monday Morning Podcast 7-31-17",
+    "playCount": 6,
+    "uuid": "31d92ff8-ca52-45d5-8d4d-2f42b76dde03",
+    "thumbnail_url": "http://static.libsyn.com/p/assets/4/7/9/b/479b005a1d9a6fe6/Burr_image-062.jpg",
+    "podcast_title": "Monday Morning Podcast"
+  },
+  {
+    "playedTime": 1511,
+    "firstPlayed": "2017-08-01T09:00:00Z",
+    "lastPlayed": "2017-08-01T10:00:00Z",
+    "playedProportion": 0.9967018469656992,
+    "status": {
+      "2017-07-31T19:00:00Z": 0,
+      "2017-08-01T09:00:00Z": 2,
+      "2017-08-01T10:00:00Z": 3
+    },
+    "duration": 1516,
+    "play": {
+      "2017-07-31T19:00:00Z": 0,
+      "2017-08-01T09:00:00Z": 329,
+      "2017-08-01T09:10:00Z": 1021,
+      "2017-08-01T10:00:00Z": 1511
+    },
+    "podcast_uuid": "aeddb420-7217-0133-2cee-6dc413d6d41d",
+    "title": "Venezuela's controversial election and the Kurds push for independence",
+    "playCount": 4,
+    "uuid": "ab114392-a62b-4eef-9f3d-96adfe223b5e",
+    "thumbnail_url": "http://pg-act-11-o.s3-us-west-2.amazonaws.com/11/artwork/show.4.audioart.original.jpg",
+    "podcast_title": "Amanpour"
+  },
+  {
+    "playedTime": 2598,
+    "firstPlayed": "2017-08-01T05:50:00Z",
+    "lastPlayed": "2017-08-01T09:00:00Z",
+    "playedProportion": 0.9984627209838586,
+    "status": {
+      "2017-08-01T03:00:00Z": 0,
+      "2017-08-01T05:50:00Z": 2,
+      "2017-08-01T09:00:00Z": 3
+    },
+    "duration": "2602",
+    "play": {
+      "2017-08-01T03:00:00Z": 0,
+      "2017-08-01T05:50:00Z": 919,
+      "2017-08-01T06:10:00Z": 1028,
+      "2017-08-01T08:40:00Z": 1588,
+      "2017-08-01T08:50:00Z": 2508,
+      "2017-08-01T09:00:00Z": 2598
+    },
+    "podcast_uuid": "0fb72d80-4c95-0130-e3d5-723c91aeae46",
+    "title": "TYT - 07.31.17: Scaramucci Out, Adam Carolla, Venezuela, and Chris Christie",
+    "playCount": 6,
+    "uuid": "238f57b5-8573-403a-8ebb-abe79f9fbfd9",
+    "thumbnail_url": "http://static.libsyn.com/p/assets/0/e/e/1/0ee1b12001e873cb/MS_iTunes-Podcast_FREE-Audio_1024.jpg",
+    "podcast_title": "The Young Turks - FREE (Audio)"
+  },
+  {
+    "playedTime": 1617,
+    "firstPlayed": "2017-08-01T06:40:00Z",
+    "lastPlayed": "2017-08-01T09:00:00Z",
+    "playedProportion": 0.9956896551724138,
+    "status": {
+      "2017-07-30T17:00:00Z": 0,
+      "2017-08-01T06:40:00Z": 2,
+      "2017-08-01T09:00:00Z": 3
+    },
+    "duration": "1624",
+    "play": {
+      "2017-07-30T17:00:00Z": 0,
+      "2017-08-01T06:40:00Z": 368,
+      "2017-08-01T06:50:00Z": 998,
+      "2017-08-01T08:20:00Z": 1287,
+      "2017-08-01T09:00:00Z": 1617
+    },
+    "podcast_uuid": "7d16cee0-1c1c-0133-28b1-059c869cc4eb",
+    "title": "104: Occultation vacation with Dr. Kramer",
+    "playCount": 5,
+    "uuid": "1e5105b6-c303-47fc-87dc-a41696f9b85c",
+    "thumbnail_url": "http://static.libsyn.com/p/assets/e/1/0/b/e10b8841d59396c8/spacepod_logo.jpg",
+    "podcast_title": "Spacepod"
+  },
+  {
+    "playedTime": 2288,
+    "firstPlayed": "2017-08-01T06:10:00Z",
+    "lastPlayed": "2017-08-01T07:00:00Z",
+    "playedProportion": 0.999563128003495,
+    "status": {
+      "2017-07-31T16:00:00Z": 0,
+      "2017-08-01T06:10:00Z": 2,
+      "2017-08-01T07:00:00Z": 3
+    },
+    "duration": "2289",
+    "play": {
+      "2017-07-31T16:00:00Z": 0,
+      "2017-08-01T06:10:00Z": 796,
+      "2017-08-01T06:20:00Z": 1708,
+      "2017-08-01T07:00:00Z": 2288
+    },
+    "podcast_uuid": "958b1150-0429-012e-f9a0-00163e1b201c",
+    "title": "Are We Living in a Simulation?",
+    "playCount": 4,
+    "uuid": "91026928-a42b-43bc-8727-2048f1a65f7b",
+    "thumbnail_url": "http://ichef.bbci.co.uk/images/ic/3000x3000/p02r4y1k.jpg",
+    "podcast_title": "The Infinite Monkey Cage"
+  },
+  {
+    "playedTime": 650,
+    "firstPlayed": "2017-08-01T02:40:00Z",
+    "lastPlayed": "2017-08-01T02:40:00Z",
+    "playedProportion": 0.2567140600315956,
+    "status": {
+      "2017-08-01T02:40:00Z": 2,
+      "2017-08-01T07:00:00Z": 3
+    },
+    "duration": 2532,
+    "play": {
+      "2017-08-01T02:40:00Z": 650
+    },
+    "podcast_uuid": "9f51f2c0-8fbc-0130-1069-723c91aeae46",
+    "title": "Let's Talk Bitcoin! #339 - Smart Contracts and the Pinata Problem",
+    "playCount": 1,
+    "uuid": "2366b001-4778-48ad-9ccc-22ac20733dff",
+    "thumbnail_url": "http://letstalkbitcoin.com/resources/files/images/LTBNETWORK-LOGO3.jpg",
+    "podcast_title": "The Let's Talk Bitcoin Network"
+  },
+  {
+    "playedTime": 427,
+    "firstPlayed": "2017-08-01T00:30:00Z",
+    "lastPlayed": "2017-08-01T03:00:00Z",
+    "playedProportion": 0.23908174692049272,
+    "status": {
+      "2017-08-01T00:00:00Z": 0,
+      "2017-08-01T00:30:00Z": 2,
+      "2017-08-01T03:00:00Z": 3
+    },
+    "duration": "1786",
+    "play": {
+      "2017-08-01T00:00:00Z": 0,
+      "2017-08-01T00:30:00Z": 377,
+      "2017-08-01T03:00:00Z": 427
+    },
+    "podcast_uuid": "74a35900-0423-012e-f9a0-00163e1b201c",
+    "title": "Scaramucci sacked as Trump media chief",
+    "playCount": 3,
+    "uuid": "c89ee492-3de8-48fd-873a-663e4c149552",
+    "thumbnail_url": "http://ichef.bbci.co.uk/images/ic/3000x3000/p02h1lpt.jpg",
+    "podcast_title": "Global News Podcast"
+  },
+  {
+    "playedTime": 11252,
+    "firstPlayed": "2017-07-31T05:20:00Z",
+    "lastPlayed": "2017-07-31T08:00:00Z",
+    "playedProportion": 0.9992007814581298,
+    "status": {
+      "2017-07-30T21:00:00Z": 0,
+      "2017-07-31T05:20:00Z": 2,
+      "2017-07-31T08:00:00Z": 3
+    },
+    "duration": 11261,
+    "play": {
+      "2017-07-30T21:00:00Z": 0,
+      "2017-07-31T06:50:00Z": 8223,
+      "2017-07-31T05:50:00Z": 2286,
+      "2017-07-31T06:40:00Z": 7373,
+      "2017-07-31T05:40:00Z": 1417,
+      "2017-07-31T07:20:00Z": 10022,
+      "2017-07-31T06:20:00Z": 6406,
+      "2017-07-31T07:10:00Z": 9123,
+      "2017-07-31T08:00:00Z": 11252,
+      "2017-07-31T05:20:00Z": 369,
+      "2017-07-31T06:10:00Z": 4028
+    },
+    "podcast_uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
+    "title": "951: \"Hard Forking\"",
+    "playCount": 11,
+    "uuid": "a2ac67eb-e39f-4eb9-8dd0-f1d17f7a4c24",
+    "thumbnail_url": "http://adam.curry.com/enc/1502050031.525_na-953-art-feed.jpg",
+    "podcast_title": "No Agenda"
+  },
+  {
+    "playedTime": 2485,
+    "firstPlayed": "2017-07-31T03:50:00Z",
+    "lastPlayed": "2017-07-31T06:00:00Z",
+    "playedProportion": 1.000805477245268,
+    "status": {
+      "2017-07-31T03:50:00Z": 2,
+      "2017-07-31T06:00:00Z": 3
+    },
+    "duration": 2483,
+    "play": {
+      "2017-07-31T03:50:00Z": 909,
+      "2017-07-31T04:00:00Z": 1566,
+      "2017-07-31T05:00:00Z": 1575,
+      "2017-07-31T05:10:00Z": 1885,
+      "2017-07-31T06:00:00Z": 2485
+    },
+    "podcast_uuid": "85f383f0-1e6a-012e-0210-00163e1b201c",
+    "title": "Fareed's take on the White House chaos, China taking advantage of America receding from the world stage, How did Steve Bannon come to his dark world view?",
+    "playCount": 5,
+    "uuid": "fd89aad2-4525-45d7-a96b-da401c1453fa",
+    "thumbnail_url": "http://pg-act-11-o.s3-us-west-2.amazonaws.com/11/artwork/show.8.audioart.original.jpg",
+    "podcast_title": "Fareed Zakaria GPS"
+  },
+  {
+    "playedTime": 251,
+    "firstPlayed": "2017-07-30T19:00:00Z",
+    "lastPlayed": "2017-07-30T19:00:00Z",
+    "playedProportion": 0.16351791530944626,
+    "status": {
+      "2017-07-29T04:00:00Z": 0,
+      "2017-07-30T19:00:00Z": 2,
+      "2017-07-31T04:00:00Z": 3
+    },
+    "duration": "1535",
+    "play": {
+      "2017-07-29T04:00:00Z": 0,
+      "2017-07-30T19:00:00Z": 251
+    },
+    "podcast_uuid": "b4eb8a20-5ec6-012e-25a0-00163e1b201c",
+    "title": "The ServerlessCast #8 - Managing Serverless Performance",
+    "playCount": 2,
+    "uuid": "b1eab1a9-aba2-443c-9d2d-9c07d0bc8c1f",
+    "thumbnail_url": "http://www.buzzsprout.com/podcasts/3195/artworks_large.jpg?1501866550",
+    "podcast_title": "The Cloudcast (.net) - Weekly Cloud Computing Podcast"
+  },
+  {
+    "playedTime": 4395,
+    "firstPlayed": "2017-07-25T09:40:00Z",
+    "lastPlayed": "2017-07-30T18:00:00Z",
+    "playedProportion": 1.0002275830678198,
+    "status": {
+      "2017-07-25T04:00:00Z": 0,
+      "2017-07-25T09:40:00Z": 2,
+      "2017-07-25T12:00:00Z": 3,
+      "2017-07-30T16:30:00Z": 2,
+      "2017-07-30T18:00:00Z": 3
+    },
+    "duration": "4394",
+    "play": {
+      "2017-07-25T04:00:00Z": 0,
+      "2017-07-25T10:30:00Z": 3077,
+      "2017-07-25T12:00:00Z": 4387,
+      "2017-07-25T10:10:00Z": 2168,
+      "2017-07-25T10:00:00Z": 1248,
+      "2017-07-30T16:40:00Z": 1568,
+      "2017-07-30T16:30:00Z": 689,
+      "2017-07-30T17:20:00Z": 3856,
+      "2017-07-30T17:10:00Z": 3388,
+      "2017-07-30T18:00:00Z": 4395,
+      "2017-07-25T09:40:00Z": 378,
+      "2017-07-30T17:00:00Z": 2468
+    },
+    "podcast_uuid": "70d13d50-9efe-0130-1b90-723c91aeae46",
+    "title": "258: 10 Years of RabbitMQ with Karl Nilsson & Michael Klishin",
+    "playCount": 12,
+    "uuid": "0e933dd0-531c-0135-902b-63f4b61a9224",
+    "thumbnail_url": "https://cdn.changelog.com/images/podcasts/podcast-cover-art-64a3184278271e1751c20f040e3c0055.png?vsn=d",
+    "podcast_title": "The Changelog"
+  },
+  {
+    "playedTime": 3331,
+    "firstPlayed": "2017-07-30T09:20:00Z",
+    "lastPlayed": "2017-07-30T13:00:00Z",
+    "playedProportion": 0.9970068841664173,
+    "status": {
+      "2017-07-27T12:00:00Z": 0,
+      "2017-07-30T09:20:00Z": 2,
+      "2017-07-30T13:00:00Z": 3
+    },
+    "duration": "3341",
+    "play": {
+      "2017-07-27T12:00:00Z": 0,
+      "2017-07-30T09:20:00Z": 102,
+      "2017-07-30T11:30:00Z": 121,
+      "2017-07-30T11:40:00Z": 841,
+      "2017-07-30T11:50:00Z": 1781,
+      "2017-07-30T12:10:00Z": 2661,
+      "2017-07-30T13:00:00Z": 3331
+    },
+    "podcast_uuid": "e4b6efd0-0424-012e-f9a0-00163e1b201c",
+    "title": "The Storm Before The Storm: Chapter 1- The Beasts of Italy",
+    "playCount": 7,
+    "uuid": "3548704a-36ad-43a9-b82f-b49c1498df48",
+    "thumbnail_url": "http://static.libsyn.com/p/assets/6/9/d/b/69db669268a7bb37/THoR_Logo_1500x1500_BO2015.jpg",
+    "podcast_title": "The History of Rome"
+  },
+  {
+    "playedTime": 1617,
+    "firstPlayed": "2017-07-30T08:00:00Z",
+    "lastPlayed": "2017-07-30T10:00:00Z",
+    "playedProportion": 0.9981481481481481,
+    "status": {
+      "2017-07-30T00:00:00Z": 0,
+      "2017-07-30T08:00:00Z": 2,
+      "2017-07-30T10:00:00Z": 3
+    },
+    "duration": "1620",
+    "play": {
+      "2017-07-30T00:00:00Z": 0,
+      "2017-07-30T08:00:00Z": 810,
+      "2017-07-30T08:30:00Z": 879,
+      "2017-07-30T08:50:00Z": 1368,
+      "2017-07-30T10:00:00Z": 1617
+    },
+    "podcast_uuid": "74a35900-0423-012e-f9a0-00163e1b201c",
+    "title": "Hamburg Attacker 'Was Known Islamist'",
+    "playCount": 5,
+    "uuid": "324b3603-0677-4a68-973e-2f493e9692f3",
+    "thumbnail_url": "http://ichef.bbci.co.uk/images/ic/3000x3000/p02h1lpt.jpg",
+    "podcast_title": "Global News Podcast"
+  },
+  {
+    "playedTime": 3498,
+    "firstPlayed": "2017-07-29T04:40:00Z",
+    "lastPlayed": "2017-07-29T06:00:00Z",
+    "playedProportion": 1.000285959393766,
+    "status": {
+      "2017-07-25T18:00:00Z": 0,
+      "2017-07-29T04:40:00Z": 2,
+      "2017-07-29T06:00:00Z": 3,
+      "2017-07-30T01:30:00Z": 1,
+      "2017-07-30T09:00:00Z": 3
+    },
+    "duration": "3497",
+    "play": {
+      "2017-07-25T18:00:00Z": 0,
+      "2017-07-29T04:40:00Z": 104,
+      "2017-07-29T05:00:00Z": 1014,
+      "2017-07-29T05:10:00Z": 1908,
+      "2017-07-29T05:30:00Z": 2788,
+      "2017-07-29T06:00:00Z": 3498,
+      "2017-07-30T01:30:00Z": 0
+    },
+    "podcast_uuid": "8d728390-249c-0131-73be-723c91aeae46",
+    "title": "#89 — On Becoming a Better Person",
+    "playCount": 6,
+    "uuid": "0f356880-538f-0135-902b-63f4b61a9224",
+    "thumbnail_url": "http://static.libsyn.com/p/assets/a/6/d/c/a6dc6b89bf98cb96/PodcastImage_smaller.jpg",
+    "podcast_title": "Waking Up with Sam Harris"
+  },
+  {
+    "playedTime": 2436,
+    "firstPlayed": "2017-07-30T07:10:00Z",
+    "lastPlayed": "2017-07-30T08:00:00Z",
+    "playedProportion": 0.9967266775777414,
+    "status": {
+      "2017-07-29T15:00:00Z": 0,
+      "2017-07-30T07:10:00Z": 2,
+      "2017-07-30T08:00:00Z": 3
+    },
+    "duration": "2444",
+    "play": {
+      "2017-07-29T15:00:00Z": 0,
+      "2017-07-30T07:10:00Z": 586,
+      "2017-07-30T07:20:00Z": 1526,
+      "2017-07-30T08:00:00Z": 2436
+    },
+    "podcast_uuid": "d22cc180-0dc1-012e-fbb9-00163e1b201c",
+    "title": "TRC #460: Sam Harris vs Scott Adams On Trump + Highway Signs + Consequences Of Animal Activism",
+    "playCount": 4,
+    "uuid": "c437ba75-f99c-4f81-ac28-96e4d7d0370a",
+    "thumbnail_url": "http://static.libsyn.com/p/assets/8/2/4/e/824ee7f0ca827522/TheRealityCheck_1400X1400.jpg",
+    "podcast_title": "The Reality Check"
+  },
+  {
+    "playedTime": 2518,
+    "firstPlayed": "2017-07-28T05:40:00Z",
+    "lastPlayed": "2017-07-30T08:00:00Z",
+    "playedProportion": 0.9984139571768438,
+    "status": {
+      "2017-07-27T18:00:00Z": 0,
+      "2017-07-28T05:40:00Z": 2,
+      "2017-07-30T08:00:00Z": 3
+    },
+    "duration": "2522",
+    "play": {
+      "2017-07-27T18:00:00Z": 0,
+      "2017-07-28T05:40:00Z": 379,
+      "2017-07-28T05:50:00Z": 839,
+      "2017-07-28T06:00:00Z": 1135,
+      "2017-07-28T08:20:00Z": 2029,
+      "2017-07-30T06:50:00Z": 2258,
+      "2017-07-30T08:00:00Z": 2518
+    },
+    "podcast_uuid": "5e27c480-3fcb-0133-be19-0d11918ab357",
+    "title": "Gina Hall and the battle of the billionaires.",
+    "playCount": 7,
+    "uuid": "c34e30c2-4404-460d-b2bd-152237d7186c",
+    "thumbnail_url": "http://i1.sndcdn.com/avatars-000228646234-uh8yzb-original.jpg",
+    "podcast_title": "Surely You're Joking"
+  },
+  {
+    "playedTime": 2935,
+    "firstPlayed": "2017-07-30T05:10:00Z",
+    "lastPlayed": "2017-07-30T07:00:00Z",
+    "playedProportion": 0.9979598775926556,
+    "status": {
+      "2017-07-29T13:00:00Z": 0,
+      "2017-07-30T05:10:00Z": 2,
+      "2017-07-30T07:00:00Z": 3
+    },
+    "duration": "2941",
+    "play": {
+      "2017-07-29T13:00:00Z": 0,
+      "2017-07-30T05:10:00Z": 333,
+      "2017-07-30T05:30:00Z": 0,
+      "2017-07-30T06:10:00Z": 629,
+      "2017-07-30T06:20:00Z": 1486,
+      "2017-07-30T06:40:00Z": 2225,
+      "2017-07-30T07:00:00Z": 2935
+    },
+    "podcast_uuid": "e4ff94b0-8686-0130-0b07-723c91aeae46",
+    "title": "Biggest Explosions in the Universe",
+    "playCount": 7,
+    "uuid": "c7cf6d3d-bced-48b3-87bb-778459e796d5",
+    "thumbnail_url": "http://ichef.bbci.co.uk/images/ic/3000x3000/p02h1mkd.jpg",
+    "podcast_title": "The Science Hour"
+  },
+  {
+    "playedTime": 454,
+    "firstPlayed": "2017-07-30T04:50:00Z",
+    "lastPlayed": "2017-07-30T07:00:00Z",
+    "playedProportion": 1.0133928571428572,
+    "status": {
+      "2017-07-28T19:00:00Z": 0,
+      "2017-07-30T04:50:00Z": 2,
+      "2017-07-30T07:00:00Z": 3
+    },
+    "duration": "448",
+    "play": {
+      "2017-07-28T19:00:00Z": 0,
+      "2017-07-30T04:50:00Z": 414,
+      "2017-07-30T07:00:00Z": 454
+    },
+    "podcast_uuid": "52905800-287d-012e-0725-00163e1b201c",
+    "title": "Scientists figure out how to wipe out all life on Earth",
+    "playCount": 3,
+    "uuid": "537cfd29-aa80-4ecd-9d12-7270100974b1",
+    "thumbnail_url": "https://www.cbc.ca/radio/podcasts/images/promo-quirks-segments.jpg",
+    "podcast_title": "Quirks and Quarks Segmented Show from CBC Radio"
+  },
+  {
+    "playedTime": 516,
+    "firstPlayed": "2017-07-30T07:00:00Z",
+    "lastPlayed": "2017-07-30T07:00:00Z",
+    "playedProportion": 1.0058479532163742,
+    "status": {
+      "2017-07-28T19:00:00Z": 0,
+      "2017-07-30T07:00:00Z": 3
+    },
+    "duration": "513",
+    "play": {
+      "2017-07-28T19:00:00Z": 0,
+      "2017-07-30T07:00:00Z": 516
+    },
+    "podcast_uuid": "52905800-287d-012e-0725-00163e1b201c",
+    "title": "A game-changing blood test for concussion diagnosis",
+    "playCount": 2,
+    "uuid": "0add32e4-ce48-4f7d-8451-ff4c4a079ea2",
+    "thumbnail_url": "https://www.cbc.ca/radio/podcasts/images/promo-quirks-segments.jpg",
+    "podcast_title": "Quirks and Quarks Segmented Show from CBC Radio"
+  },
+  {
+    "playedTime": 3208,
+    "firstPlayed": "2017-07-30T01:30:00Z",
+    "lastPlayed": "2017-07-30T05:00:00Z",
+    "playedProportion": 0.9984438219732338,
+    "status": {
+      "2017-07-27T10:00:00Z": 0,
+      "2017-07-30T01:30:00Z": 2,
+      "2017-07-30T05:00:00Z": 3
+    },
+    "duration": "3213",
+    "play": {
+      "2017-07-27T10:00:00Z": 0,
+      "2017-07-30T01:30:00Z": 517,
+      "2017-07-30T01:40:00Z": 1017,
+      "2017-07-30T03:10:00Z": 1317,
+      "2017-07-30T03:20:00Z": 2149,
+      "2017-07-30T03:40:00Z": 2475,
+      "2017-07-30T04:40:00Z": 3088,
+      "2017-07-30T05:00:00Z": 3208
+    },
+    "podcast_uuid": "2743d720-0edf-0133-2204-059c869cc4eb",
+    "title": "Microsoft Developers with Jason Young and Carl Schweitzer",
+    "playCount": 8,
+    "uuid": "9b54b28a-33d5-457f-95a9-a2deab4fc859",
+    "thumbnail_url": "http://softwaredaily.wpengine.com/wp-content/uploads/powerpress/SED_square_solid_bg.png",
+    "podcast_title": "Software Engineering Daily"
+  },
+  {
+    "playedTime": 154,
+    "firstPlayed": "2017-07-29T10:00:00Z",
+    "lastPlayed": "2017-07-29T10:00:00Z",
+    "playedProportion": 0.06820194862710363,
+    "status": {
+      "2017-07-29T08:00:00Z": 0,
+      "2017-07-29T10:00:00Z": 2,
+      "2017-07-30T02:00:00Z": 3
+    },
+    "duration": "2258",
+    "play": {
+      "2017-07-29T08:00:00Z": 0,
+      "2017-07-29T10:00:00Z": 154
+    },
+    "podcast_uuid": "b633aa60-0bfe-012e-fb1f-00163e1b201c",
+    "title": "Weekend Extra",
+    "playCount": 2,
+    "uuid": "f53deacb-0b22-493c-93e2-73561604843c",
+    "thumbnail_url": "http://ichef.bbci.co.uk/images/ic/3000x3000/p02h1m09.jpg",
+    "podcast_title": "World Update: Daily Commute"
+  },
+  {
+    "playedTime": 2098,
+    "firstPlayed": "2017-07-29T20:30:00Z",
+    "lastPlayed": "2017-07-29T21:50:00Z",
+    "playedProportion": 0.5697990222705052,
+    "status": {
+      "2017-07-26T21:00:00Z": 0,
+      "2017-07-29T20:30:00Z": 2,
+      "2017-07-30T02:00:00Z": 3
+    },
+    "duration": "3682",
+    "play": {
+      "2017-07-26T21:00:00Z": 0,
+      "2017-07-29T20:30:00Z": 142,
+      "2017-07-29T20:40:00Z": 698,
+      "2017-07-29T21:00:00Z": 1467,
+      "2017-07-29T21:10:00Z": 1814,
+      "2017-07-29T21:30:00Z": 1952,
+      "2017-07-29T21:50:00Z": 2098
+    },
+    "podcast_uuid": "278554c0-0bef-012e-fb16-00163e1b201c",
+    "title": "FLOSS Weekly 443: Jenkins",
+    "playCount": 7,
+    "uuid": "d13de3f0-5472-0135-902b-63f4b61a9224",
+    "thumbnail_url": "https://elroycdn.twit.tv/sites/default/files/styles/twit_album_art_2048x2048/public/images/shows/floss_weekly/album_art/audio/floss1400audio.jpg?itok=bQyTXyOk",
+    "podcast_title": "FLOSS Weekly (MP3)"
+  },
+  {
+    "playedTime": 2499,
+    "firstPlayed": "2017-07-29T17:30:00Z",
+    "lastPlayed": "2017-07-29T21:00:00Z",
+    "playedProportion": 0.9948248407643312,
+    "status": {
+      "2017-07-28T06:00:00Z": 0,
+      "2017-07-29T17:30:00Z": 2,
+      "2017-07-29T21:00:00Z": 3
+    },
+    "duration": "2512",
+    "play": {
+      "2017-07-28T06:00:00Z": 0,
+      "2017-07-29T17:30:00Z": 932,
+      "2017-07-29T17:40:00Z": 1602,
+      "2017-07-29T20:10:00Z": 2110,
+      "2017-07-29T21:00:00Z": 2499
+    },
+    "podcast_uuid": "80931490-01be-0132-a0fb-5f4c86fd3263",
+    "title": "AiA 149: Angular, Web Bluetooth, and IoT with Uri Shaked",
+    "playCount": 5,
+    "uuid": "3ba7c08c-0cae-4a7b-bb69-416253d2ef7a",
+    "thumbnail_url": "https://s3.amazonaws.com/devchat.tv/MasterAngularFeed.jpg",
+    "podcast_title": "All Angular Podcasts by Devchat.tv"
+  },
+  {
+    "playedTime": 11221,
+    "firstPlayed": "2017-07-29T10:00:00Z",
+    "lastPlayed": "2017-07-29T13:00:00Z",
+    "playedProportion": 0.999821794529092,
+    "status": {
+      "2017-07-29T10:00:00Z": 2,
+      "2017-07-29T13:00:00Z": 3
+    },
+    "duration": 11223,
+    "play": {
+      "2017-07-29T11:50:00Z": 8032,
+      "2017-07-29T10:50:00Z": 4402,
+      "2017-07-29T12:30:00Z": 10761,
+      "2017-07-29T11:30:00Z": 7152,
+      "2017-07-29T12:20:00Z": 9802,
+      "2017-07-29T10:30:00Z": 3502,
+      "2017-07-29T11:20:00Z": 6232,
+      "2017-07-29T13:00:00Z": 11221,
+      "2017-07-29T12:00:00Z": 8902,
+      "2017-07-29T10:20:00Z": 2603,
+      "2017-07-29T11:00:00Z": 5352,
+      "2017-07-29T10:00:00Z": 1703
+    },
+    "podcast_uuid": "8c4c6bd0-a696-012f-4480-525400c11844",
+    "title": "950: \"RACE: other\"",
+    "playCount": 12,
+    "uuid": "f48c6c9e-8a2b-4dfb-9ab6-00ca3dcfebd9",
+    "thumbnail_url": "http://adam.curry.com/enc/1502050031.525_na-953-art-feed.jpg",
+    "podcast_title": "No Agenda"
+  },
+  {
+    "playedTime": 2823,
+    "firstPlayed": "2017-07-29T07:30:00Z",
+    "lastPlayed": "2017-07-29T10:00:00Z",
+    "playedProportion": 0.9978791092258749,
+    "status": {
+      "2017-07-29T04:00:00Z": 0,
+      "2017-07-29T07:30:00Z": 2,
+      "2017-07-29T10:00:00Z": 3
+    },
+    "duration": "2829",
+    "play": {
+      "2017-07-29T04:00:00Z": 0,
+      "2017-07-29T07:30:00Z": 888,
+      "2017-07-29T08:00:00Z": 2192,
+      "2017-07-29T09:00:00Z": 2291,
+      "2017-07-29T09:30:00Z": 2443,
+      "2017-07-29T10:00:00Z": 2823
+    },
+    "podcast_uuid": "0fb72d80-4c95-0130-e3d5-723c91aeae46",
+    "title": "TYT - 07.28.17: Trump Fires Priebus, Skinny Repeal Dies, Scaramucci’s Wife, and Angelina Jolie Child Exploitation",
+    "playCount": 6,
+    "uuid": "9c654697-05c5-4d6e-9bbc-3a6868ddb87d",
+    "thumbnail_url": "http://static.libsyn.com/p/assets/0/e/e/1/0ee1b12001e873cb/MS_iTunes-Podcast_FREE-Audio_1024.jpg",
+    "podcast_title": "The Young Turks - FREE (Audio)"
+  },
+  {
+    "playedTime": 1309,
+    "firstPlayed": "2017-07-29T04:30:00Z",
+    "lastPlayed": "2017-07-29T05:00:00Z",
+    "playedProportion": 0.7745562130177515,
+    "status": {
+      "2017-07-29T00:00:00Z": 0,
+      "2017-07-29T04:30:00Z": 2,
+      "2017-07-29T05:00:00Z": 3
+    },
+    "duration": "1690",
+    "play": {
+      "2017-07-29T00:00:00Z": 0,
+      "2017-07-29T04:30:00Z": 599,
+      "2017-07-29T05:00:00Z": 1309
+    },
+    "podcast_uuid": "74a35900-0423-012e-f9a0-00163e1b201c",
+    "title": "White House Chief of Staff Out",
+    "playCount": 3,
+    "uuid": "85ea4781-3b56-4dcf-ab1e-03c1029d653b",
+    "thumbnail_url": "http://ichef.bbci.co.uk/images/ic/3000x3000/p02h1lpt.jpg",
+    "podcast_title": "Global News Podcast"
+  },
+  {
+    "playedTime": 2871,
+    "firstPlayed": "2017-07-28T08:00:00Z",
+    "lastPlayed": "2017-07-28T08:20:00Z",
+    "playedProportion": 0.6948209099709584,
+    "status": {
+      "2017-07-27T23:00:00Z": 0,
+      "2017-07-28T08:00:00Z": 2,
+      "2017-07-29T04:00:00Z": 3
+    },
+    "duration": "4132",
+    "play": {
+      "2017-07-27T23:00:00Z": 0,
+      "2017-07-28T08:00:00Z": 1216,
+      "2017-07-28T08:10:00Z": 2822,
+      "2017-07-28T08:20:00Z": 2871
+    },
+    "podcast_uuid": "873e7420-042d-012e-f9a4-00163e1b201c",
+    "title": "#990 - Jamie Foxx",
+    "playCount": 4,
+    "uuid": "5a8fb448-4fb2-428d-8c7f-b00f0e1b7b3d",
+    "thumbnail_url": "http://static.libsyn.com/p/assets/7/1/f/3/71f3014e14ef2722/JREiTunesImage2.jpg",
+    "podcast_title": "The Joe Rogan Experience"
+  },
+  {
+    "playedTime": 3924,
+    "firstPlayed": "2017-07-28T17:40:00Z",
+    "lastPlayed": "2017-07-28T23:00:00Z",
+    "playedProportion": 1.0020429009193055,
+    "status": {
+      "2017-07-25T11:00:00Z": 0,
+      "2017-07-28T17:40:00Z": 2,
+      "2017-07-28T23:00:00Z": 3
+    },
+    "duration": "3916",
+    "play": {
+      "2017-07-28T19:10:00Z": 1752,
+      "2017-07-25T11:00:00Z": 0,
+      "2017-07-28T20:50:00Z": 2991,
+      "2017-07-28T20:40:00Z": 2169,
+      "2017-07-28T22:20:00Z": 3667,
+      "2017-07-28T22:10:00Z": 3337,
+      "2017-07-28T23:00:00Z": 3924,
+      "2017-07-28T17:50:00Z": 1332,
+      "2017-07-28T17:40:00Z": 1128,
+      "2017-07-28T19:20:00Z": 2099
+    },
+    "podcast_uuid": "40d36c30-5580-0131-828c-723c91aeae46",
+    "title": "Functional Geekery Episode 101 – Adam Chlipala",
+    "playCount": 10,
+    "uuid": "852c51f0-534e-0135-902b-63f4b61a9224",
+    "thumbnail_url": "https://www.functionalgeekery.com/wp-content/cache/podlove/02/531ee088f7bf3317a94b498831307c/functional-geekery_original.jpg",
+    "podcast_title": "Functional Geekery"
+  },
+  {
+    "playedTime": 4173,
+    "firstPlayed": "2017-07-27T16:40:00Z",
+    "lastPlayed": "2017-07-27T22:00:00Z",
+    "playedProportion": 1.0011996161228407,
+    "status": {
+      "2017-07-27T04:00:00Z": 0,
+      "2017-07-27T16:40:00Z": 2,
+      "2017-07-27T22:00:00Z": 3
+    },
+    "duration": "4168",
+    "play": {
+      "2017-07-27T19:00:00Z": 1781,
+      "2017-07-27T04:00:00Z": 0,
+      "2017-07-27T20:40:00Z": 2834,
+      "2017-07-27T20:30:00Z": 2409,
+      "2017-07-27T20:20:00Z": 2400,
+      "2017-07-27T21:10:00Z": 3863,
+      "2017-07-27T22:00:00Z": 4173,
+      "2017-07-27T21:00:00Z": 3674,
+      "2017-07-27T16:40:00Z": 73
+    },
+    "podcast_uuid": "64a62690-dcdd-0134-ebdd-4114446340cb",
+    "title": "16: ES Modules and ESM Loader with John-David Dalton",
+    "playCount": 9,
+    "uuid": "c9787180-54a7-0135-902b-63f4b61a9224",
+    "thumbnail_url": "https://cdn.changelog.com/images/podcasts/jsparty-cover-art-76ff83e543c83d4aeb2263507bdf83f1.png?vsn=d",
+    "podcast_title": "JS Party"
+  },
+  {
+    "playedTime": 3346,
+    "firstPlayed": "2017-07-27T07:50:00Z",
+    "lastPlayed": "2017-07-27T08:50:00Z",
+    "playedProportion": 0.41070332637780776,
+    "status": {
+      "2017-07-27T04:00:00Z": 0,
+      "2017-07-27T07:50:00Z": 2,
+      "2017-07-27T17:00:00Z": 3
+    },
+    "duration": "8147",
+    "play": {
+      "2017-07-27T04:00:00Z": 0,
+      "2017-07-27T07:50:00Z": 79,
+      "2017-07-27T08:00:00Z": 929,
+      "2017-07-27T08:20:00Z": 1936,
+      "2017-07-27T08:30:00Z": 2816,
+      "2017-07-27T08:40:00Z": 3336,
+      "2017-07-27T08:50:00Z": 3346
+    },
+    "podcast_uuid": "dde6abe0-04fe-012e-f9d3-00163e1b201c",
+    "title": "TWiG 415: Sinkhole Ahead!",
+    "playCount": 7,
+    "uuid": "6d6b5b90-54a9-0135-902b-63f4b61a9224",
+    "thumbnail_url": "https://elroycdn.twit.tv/sites/default/files/styles/twit_album_art_2048x2048/public/twig1400audio.jpg?itok=oJjRJmXV",
+    "podcast_title": "This Week in Google (MP3)"
+  },
+  {
+    "playedTime": 2641,
+    "firstPlayed": "2017-07-27T08:50:00Z",
+    "lastPlayed": "2017-07-27T10:00:00Z",
+    "playedProportion": 0.99622783855149,
+    "status": {
+      "2017-07-26T20:00:00Z": 0,
+      "2017-07-27T08:50:00Z": 2,
+      "2017-07-27T10:00:00Z": 3
+    },
+    "duration": "2651",
+    "play": {
+      "2017-07-26T20:00:00Z": 0,
+      "2017-07-27T08:50:00Z": 372,
+      "2017-07-27T09:00:00Z": 1232,
+      "2017-07-27T09:20:00Z": 2132,
+      "2017-07-27T10:00:00Z": 2641
+    },
+    "podcast_uuid": "0fb72d80-4c95-0130-e3d5-723c91aeae46",
+    "title": "TYT - 07.25.17: Senate Votes On Trumpcare, Collins vs Farenthold, CTE, and Slave Labor",
+    "playCount": 5,
+    "uuid": "5165cfc0-5463-0135-902b-63f4b61a9224",
+    "thumbnail_url": "http://static.libsyn.com/p/assets/0/e/e/1/0ee1b12001e873cb/MS_iTunes-Podcast_FREE-Audio_1024.jpg",
+    "podcast_title": "The Young Turks - FREE (Audio)"
+  },
+  {
+    "playedTime": 3370,
+    "firstPlayed": "2017-07-27T06:10:00Z",
+    "lastPlayed": "2017-07-27T08:00:00Z",
+    "playedProportion": 1,
+    "status": {
+      "2017-07-26T11:00:00Z": 0,
+      "2017-07-27T06:10:00Z": 2,
+      "2017-07-27T08:00:00Z": 3
+    },
+    "duration": "3370",
+    "play": {
+      "2017-07-26T11:00:00Z": 0,
+      "2017-07-27T06:10:00Z": 188,
+      "2017-07-27T06:20:00Z": 1118,
+      "2017-07-27T06:30:00Z": 1491,
+      "2017-07-27T07:20:00Z": 1601,
+      "2017-07-27T07:30:00Z": 2501,
+      "2017-07-27T08:00:00Z": 3370
+    },
+    "podcast_uuid": "53678a10-bc45-0134-10a8-25324e2a541d",
+    "title": "Glenn Greenwald on the New Cold War",
+    "playCount": 7,
+    "uuid": "3f5398a0-541b-0135-902b-63f4b61a9224",
+    "thumbnail_url": "http://static.megaphone.fm/podcasts/d5735a50-d904-11e6-8532-73c7de466ea6/image/uploads_2F1484252190700-qhn5krasklbce3dh-a797539282700ea0298a3a26f7e49b0b_2FIntercepted_COVER%2B_281_29.png",
+    "podcast_title": "Intercepted with Jeremy Scahill"
+  },
+  {
+    "playedTime": 2715,
+    "firstPlayed": "2017-07-27T05:30:00Z",
+    "lastPlayed": "2017-07-27T07:00:00Z",
+    "playedProportion": 0.9992638940007361,
+    "status": {
+      "2017-07-27T05:30:00Z": 2,
+      "2017-07-27T07:00:00Z": 3
+    },
+    "duration": 2717,
+    "play": {
+      "2017-07-27T05:30:00Z": 914,
+      "2017-07-27T05:50:00Z": 1844,
+      "2017-07-27T07:00:00Z": 2715
     },
     "podcast_uuid": "ac371bd0-094f-0134-9ce1-59d98c6b72b8",
-    "title": "Introducing Revisionist History Season Two",
-    "playCount": 2,
-    "uuid": "cdad5190-23f9-0135-52f8-452518e2d253",
+    "title": "The King of Tears",
+    "playCount": 3,
+    "uuid": "aa602bf0-4f2f-0135-902b-63f4b61a9224",
     "thumbnail_url": "http://static.megaphone.fm/podcasts/1427a2f4-2674-11e6-a3d7-cf7ee2a2c03c/image/uploads_2F1482446939047-8xkz61rh3k6t5hke-1d3a74b59a8aa1c724e95f8e00fae249_2FRevisionistHistory_1400x1400.jpg",
     "podcast_title": "Revisionist History"
   },
   {
-    "playedTime": 1502,
-    "firstPlayed": "2017-05-26T07:20:00Z",
-    "lastPlayed": "2017-05-26T08:00:00Z",
-    "playedProportion": 0.9993346640053227,
+    "playedTime": 1759,
+    "firstPlayed": "2017-07-26T13:00:00Z",
+    "lastPlayed": "2017-07-26T14:00:00Z",
+    "playedProportion": 0.9949095022624435,
     "status": {
-      "2017-05-25T22:00:00Z": 0,
-      "2017-05-26T07:20:00Z": 2,
-      "2017-05-26T08:00:00Z": 3
+      "2017-07-26T11:00:00Z": 0,
+      "2017-07-26T13:00:00Z": 2,
+      "2017-07-26T14:00:00Z": 3
     },
-    "duration": 1503,
+    "duration": "1768",
     "play": {
-      "2017-05-25T22:00:00Z": 0,
-      "2017-05-26T07:20:00Z": 595,
-      "2017-05-26T08:00:00Z": 1502
+      "2017-07-26T11:00:00Z": 0,
+      "2017-07-26T13:00:00Z": 889,
+      "2017-07-26T14:00:00Z": 1759
+    },
+    "podcast_uuid": "b633aa60-0bfe-012e-fb1f-00163e1b201c",
+    "title": "UK to Ban Diesel and Petrol Cars in 2040",
+    "playCount": 3,
+    "uuid": "2c5c8220-541d-0135-902b-63f4b61a9224",
+    "thumbnail_url": "http://ichef.bbci.co.uk/images/ic/3000x3000/p02h1m09.jpg",
+    "podcast_title": "World Update: Daily Commute"
+  },
+  {
+    "playedTime": 2763,
+    "firstPlayed": "2017-07-26T07:10:00Z",
+    "lastPlayed": "2017-07-26T08:00:00Z",
+    "playedProportion": 1.001086956521739,
+    "status": {
+      "2017-07-26T03:00:00Z": 0,
+      "2017-07-26T07:10:00Z": 2,
+      "2017-07-26T08:00:00Z": 3
+    },
+    "duration": "2760",
+    "play": {
+      "2017-07-26T03:00:00Z": 0,
+      "2017-07-26T07:10:00Z": 923,
+      "2017-07-26T07:30:00Z": 1803,
+      "2017-07-26T07:40:00Z": 2722,
+      "2017-07-26T08:00:00Z": 2763
+    },
+    "podcast_uuid": "77170eb0-0257-012e-f994-00163e1b201c",
+    "title": "TNT 1817: Chip 'n Skin",
+    "playCount": 5,
+    "uuid": "42473dd0-53d8-0135-902b-63f4b61a9224",
+    "thumbnail_url": "https://elroycdn.twit.tv/sites/default/files/styles/twit_album_art_2048x2048/public/images/shows/tech_news_today/album_art/audio/tnt1400audio.jpg?itok=2woFYgJh",
+    "podcast_title": "Tech News Today (MP3)"
+  },
+  {
+    "playedTime": 1592,
+    "firstPlayed": "2017-07-26T05:00:00Z",
+    "lastPlayed": "2017-07-26T07:00:00Z",
+    "playedProportion": 1.0025188916876575,
+    "status": {
+      "2017-07-26T05:00:00Z": 2,
+      "2017-07-26T07:00:00Z": 3
+    },
+    "duration": 1588,
+    "play": {
+      "2017-07-26T05:00:00Z": 127,
+      "2017-07-26T05:30:00Z": 366,
+      "2017-07-26T05:40:00Z": 406,
+      "2017-07-26T06:10:00Z": 1105,
+      "2017-07-26T07:00:00Z": 1592
+    },
+    "podcast_uuid": "0cc43410-1d2f-012e-0175-00163e1b201c",
+    "title": "268- El Gordo",
+    "playCount": 5,
+    "uuid": "ca3d8a10-5393-0135-902b-63f4b61a9224",
+    "thumbnail_url": "https://f.prxu.org/99pi/images/6a748676-76e8-45fd-8de2-a868a58f6b8b/99-1400.png",
+    "podcast_title": "99% Invisible"
+  },
+  {
+    "playedTime": 2342,
+    "firstPlayed": "2017-07-26T06:20:00Z",
+    "lastPlayed": "2017-07-26T07:00:00Z",
+    "playedProportion": 0.9965957446808511,
+    "status": {
+      "2017-07-24T05:00:00Z": 0,
+      "2017-07-26T06:20:00Z": 2,
+      "2017-07-26T07:00:00Z": 3
+    },
+    "duration": "2350",
+    "play": {
+      "2017-07-24T05:00:00Z": 0,
+      "2017-07-26T06:20:00Z": 512,
+      "2017-07-26T06:40:00Z": 1442,
+      "2017-07-26T07:00:00Z": 2342
+    },
+    "podcast_uuid": "b1ccb690-fd97-0130-c6ee-723c91aeae46",
+    "title": "7.02- Order and Liberty",
+    "playCount": 4,
+    "uuid": "3e5027b0-5259-0135-902b-63f4b61a9224",
+    "thumbnail_url": "http://static.libsyn.com/p/assets/3/4/5/f/345fbd6a253649c0/RevolutionsLogo_V2.jpg",
+    "podcast_title": "Revolutions"
+  },
+  {
+    "playedTime": 3614,
+    "firstPlayed": "2017-07-26T04:00:00Z",
+    "lastPlayed": "2017-07-26T05:00:00Z",
+    "playedProportion": 0.9988944168048646,
+    "status": {
+      "2017-07-25T20:00:00Z": 0,
+      "2017-07-26T04:00:00Z": 2,
+      "2017-07-26T05:00:00Z": 3
+    },
+    "duration": "3618",
+    "play": {
+      "2017-07-25T20:00:00Z": 0,
+      "2017-07-26T04:00:00Z": 590,
+      "2017-07-26T04:20:00Z": 2290,
+      "2017-07-26T04:40:00Z": 3204,
+      "2017-07-26T04:50:00Z": 3474,
+      "2017-07-26T05:00:00Z": 3614
+    },
+    "podcast_uuid": "a2de39a0-7660-0130-ffe2-723c91aeae46",
+    "title": "EP 25 David Letterman - Norm Macdonald Live",
+    "playCount": 6,
+    "uuid": "6b092ea0-539a-0135-902b-63f4b61a9224",
+    "thumbnail_url": "http://static.libsyn.com/p/assets/9/0/2/2/9022db2a1073abfe/NM_Logo_1400x1400.jpg",
+    "podcast_title": "Norm Macdonald Live"
+  },
+  {
+    "playedTime": 659,
+    "firstPlayed": "2017-07-26T03:10:00Z",
+    "lastPlayed": "2017-07-26T03:20:00Z",
+    "playedProportion": 0.36550194120909596,
+    "status": {
+      "2017-07-26T00:00:00Z": 0,
+      "2017-07-26T03:10:00Z": 2,
+      "2017-07-26T04:00:00Z": 3
+    },
+    "duration": "1803",
+    "play": {
+      "2017-07-26T00:00:00Z": 0,
+      "2017-07-26T03:10:00Z": 319,
+      "2017-07-26T03:20:00Z": 659
+    },
+    "podcast_uuid": "74a35900-0423-012e-f9a0-00163e1b201c",
+    "title": "Obamacare repeal wins key vote in US Senate",
+    "playCount": 3,
+    "uuid": "279e7f80-53be-0135-902b-63f4b61a9224",
+    "thumbnail_url": "http://ichef.bbci.co.uk/images/ic/3000x3000/p02h1lpt.jpg",
+    "podcast_title": "Global News Podcast"
+  },
+  {
+    "playedTime": 1591,
+    "firstPlayed": "2017-07-26T03:30:00Z",
+    "lastPlayed": "2017-07-26T04:00:00Z",
+    "playedProportion": 0.994375,
+    "status": {
+      "2017-07-25T20:00:00Z": 0,
+      "2017-07-26T03:30:00Z": 2,
+      "2017-07-26T04:00:00Z": 3
+    },
+    "duration": 1600,
+    "play": {
+      "2017-07-25T20:00:00Z": 0,
+      "2017-07-26T03:30:00Z": 551,
+      "2017-07-26T03:40:00Z": 1411,
+      "2017-07-26T04:00:00Z": 1591
     },
     "podcast_uuid": "aeddb420-7217-0133-2cee-6dc413d6d41d",
-    "title": "UK 'irritated' by US on intelligence leaks but how damaging can it be?",
-    "playCount": 3,
-    "uuid": "60afe160-23be-0135-52f8-452518e2d253",
+    "title": "Brexit, fakes news and Nasa's New Astronaut",
+    "playCount": 4,
+    "uuid": "186d1540-539f-0135-902b-63f4b61a9224",
     "thumbnail_url": "http://pg-act-11-o.s3-us-west-2.amazonaws.com/11/artwork/show.4.audioart.original.jpg",
     "podcast_title": "Amanpour"
+  },
+  {
+    "playedTime": 2535,
+    "firstPlayed": "2017-07-25T09:00:00Z",
+    "lastPlayed": "2017-07-25T10:00:00Z",
+    "playedProportion": 1.0015804030027657,
+    "status": {
+      "2017-07-25T02:00:00Z": 0,
+      "2017-07-25T06:00:00Z": 3,
+      "2017-07-25T09:00:00Z": 2,
+      "2017-07-25T10:00:00Z": 3
+    },
+    "duration": "2531",
+    "play": {
+      "2017-07-25T02:00:00Z": 0,
+      "2017-07-25T09:00:00Z": 253,
+      "2017-07-25T09:10:00Z": 1143,
+      "2017-07-25T09:30:00Z": 1993,
+      "2017-07-25T10:00:00Z": 2535
+    },
+    "podcast_uuid": "77170eb0-0257-012e-f994-00163e1b201c",
+    "title": "TNT 1816: Phelps' Faux Shark Foe",
+    "playCount": 5,
+    "uuid": "e1196710-5306-0135-902b-63f4b61a9224",
+    "thumbnail_url": "https://elroycdn.twit.tv/sites/default/files/styles/twit_album_art_2048x2048/public/images/shows/tech_news_today/album_art/audio/tnt1400audio.jpg?itok=2woFYgJh",
+    "podcast_title": "Tech News Today (MP3)"
+  },
+  {
+    "playedTime": 1678,
+    "firstPlayed": "2017-07-25T08:10:00Z",
+    "lastPlayed": "2017-07-25T09:00:00Z",
+    "playedProportion": 0.9958456973293769,
+    "status": {
+      "2017-07-21T07:00:00Z": 0,
+      "2017-07-25T08:10:00Z": 2,
+      "2017-07-25T09:00:00Z": 3
+    },
+    "duration": 1685,
+    "play": {
+      "2017-07-21T07:00:00Z": 0,
+      "2017-07-25T08:10:00Z": 478,
+      "2017-07-25T09:00:00Z": 1678
+    },
+    "podcast_uuid": "3920d880-1b97-012e-00b9-00163e1b201c",
+    "title": "Action stories and heroe's explained",
+    "playCount": 3,
+    "uuid": "0bc8fab0-500f-0135-902b-63f4b61a9224",
+    "thumbnail_url": "https://www.cbc.ca/radio/podcasts/images/promo-laughoutloud.jpg",
+    "podcast_title": "Laugh Out Loud from CBC Radio"
+  },
+  {
+    "playedTime": 2677,
+    "firstPlayed": "2017-07-25T06:10:00Z",
+    "lastPlayed": "2017-07-25T08:00:00Z",
+    "playedProportion": 0.9959077380952381,
+    "status": {
+      "2017-07-25T02:00:00Z": 0,
+      "2017-07-25T06:10:00Z": 2,
+      "2017-07-25T08:00:00Z": 3
+    },
+    "duration": "2688",
+    "play": {
+      "2017-07-25T02:00:00Z": 0,
+      "2017-07-25T06:10:00Z": 827,
+      "2017-07-25T06:20:00Z": 830,
+      "2017-07-25T06:30:00Z": 1550,
+      "2017-07-25T07:10:00Z": 1609,
+      "2017-07-25T07:20:00Z": 2079,
+      "2017-07-25T08:00:00Z": 2677
+    },
+    "podcast_uuid": "0fb72d80-4c95-0130-e3d5-723c91aeae46",
+    "title": "TYT - 07.24.17: Pence Loves Trump, Scaramucci Deletes Old Tweets, “Aaron Burr Style”, and Marijuana Crackdown",
+    "playCount": 7,
+    "uuid": "9d4e8c30-530a-0135-902b-63f4b61a9224",
+    "thumbnail_url": "http://static.libsyn.com/p/assets/0/e/e/1/0ee1b12001e873cb/MS_iTunes-Podcast_FREE-Audio_1024.jpg",
+    "podcast_title": "The Young Turks - FREE (Audio)"
+  },
+  {
+    "playedTime": 1322,
+    "firstPlayed": "2017-07-25T07:20:00Z",
+    "lastPlayed": "2017-07-25T08:00:00Z",
+    "playedProportion": 0.8345959595959596,
+    "status": {
+      "2017-07-24T16:00:00Z": 0,
+      "2017-07-25T07:20:00Z": 2,
+      "2017-07-25T08:00:00Z": 3
+    },
+    "duration": "1584",
+    "play": {
+      "2017-07-24T16:00:00Z": 0,
+      "2017-07-25T07:20:00Z": 117,
+      "2017-07-25T07:30:00Z": 520,
+      "2017-07-25T07:40:00Z": 824,
+      "2017-07-25T08:00:00Z": 1322
+    },
+    "podcast_uuid": "74a35900-0423-012e-f9a0-00163e1b201c",
+    "title": "Trump son-in-law denies Russia collusion",
+    "playCount": 5,
+    "uuid": "83203870-52b3-0135-902b-63f4b61a9224",
+    "thumbnail_url": "http://ichef.bbci.co.uk/images/ic/3000x3000/p02h1lpt.jpg",
+    "podcast_title": "Global News Podcast"
+  },
+  {
+    "playedTime": 1613,
+    "firstPlayed": "2017-07-25T05:40:00Z",
+    "lastPlayed": "2017-07-25T07:00:00Z",
+    "playedProportion": 0.8804585152838428,
+    "status": {
+      "2017-07-24T21:00:00Z": 0,
+      "2017-07-25T05:40:00Z": 2,
+      "2017-07-25T07:00:00Z": 3
+    },
+    "duration": "1832",
+    "play": {
+      "2017-07-24T21:00:00Z": 0,
+      "2017-07-25T05:40:00Z": 3,
+      "2017-07-25T06:00:00Z": 893,
+      "2017-07-25T07:00:00Z": 1613
+    },
+    "podcast_uuid": "421c79d0-0423-012e-f9a0-00163e1b201c",
+    "title": "Mercury - Chemistry's Jekyll and Hyde",
+    "playCount": 4,
+    "uuid": "bf679950-52db-0135-902b-63f4b61a9224",
+    "thumbnail_url": "http://ichef.bbci.co.uk/images/ic/3000x3000/p02h1mcg.jpg",
+    "podcast_title": "Discovery"
+  },
+  {
+    "playedTime": 2582,
+    "firstPlayed": "2017-07-24T23:30:00Z",
+    "lastPlayed": "2017-07-25T06:00:00Z",
+    "playedProportion": 0.9984532095901005,
+    "status": {
+      "2017-07-24T16:00:00Z": 0,
+      "2017-07-24T23:30:00Z": 2,
+      "2017-07-25T06:00:00Z": 3
+    },
+    "duration": "2586",
+    "play": {
+      "2017-07-24T16:00:00Z": 0,
+      "2017-07-24T23:30:00Z": 803,
+      "2017-07-25T05:30:00Z": 1653,
+      "2017-07-25T06:00:00Z": 2582
+    },
+    "podcast_uuid": "958b1150-0429-012e-f9a0-00163e1b201c",
+    "title": "Will insects inherit the earth?",
+    "playCount": 4,
+    "uuid": "9fb9b230-52b6-0135-902b-63f4b61a9224",
+    "thumbnail_url": "http://ichef.bbci.co.uk/images/ic/3000x3000/p02r4y1k.jpg",
+    "podcast_title": "The Infinite Monkey Cage"
   }
 ]

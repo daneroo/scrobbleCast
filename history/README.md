@@ -9,6 +9,7 @@ npm start
 
 # move to static webapp assets.. (until  service)
 scp -p data/history-* ../webapps/ionic-v3/src/assets/data/
+scp -p data/history-* ../webapps/nextjs/data/
 ```
 
 ## TODO

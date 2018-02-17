@@ -47,7 +47,8 @@ function forEachUser (task) {
       })
       .then(async () => {
         const dod = await store.db.digestOfDigests()
-        log.info('checkpoint', { digest: dod })
+        // info/verbose don't log for logcheck
+        log.verbose('checkpoint', { digest: dod })
       })
       .catch(function (error) {
         // TODO, might want to catch before tasks.dedup is called, to make sure dedup always runs...

@@ -42,25 +42,20 @@ async function main () {
 async function snapshotForUser (credentials) {
   const writerCtx = newWriterCtx() //
 
-  const loadOpts = {
-    filter: {
-      __user: credentials.name
-    }
-  }
+  const user = credentials.name
 
-  const items = await store.db.load(loadOpts, writerCtx.handler)
+  // use special order to match file writing..
+  await store.db.load({user, order: store.db.fieldOrders.snapshot}, writerCtx.handler)
 
   await writerCtx.flush() // ok, cause it's synchronous (for now)
-  log.verbose('Snapshot:counts', {
-    user: credentials.name,
-    items: items.length
+  log.verbose('snapshot:counts', {
+    user,
+    items: writerCtx.count()
   })
-
-  writerCtx.historyByType.sortAndSave(credentials.name)
 }
 
 // return an object with these functions: {
-//   handler: item handler for store.db.load which:
+//   handler: item handler for store.db.load
 //   historyByType: accumulated stae for deduping on the fly
 //   flush: function for writing the last pendin month
 // The handler
@@ -71,7 +66,7 @@ async function snapshotForUser (credentials) {
 
 function newWriterCtx () {
   // throw error if item.__stamp's are non-increasing
-  var maxStamp = '1970-01-01T00:00:00Z' // to track increasing'ness
+  let maxStamp = '1970-01-01T00:00:00Z' // to track increasing'ness
 
   function checkStampOrdering (item) {
     var stamp = item.__stamp
@@ -85,7 +80,7 @@ function newWriterCtx () {
     maxStamp = stamp
   }
 
-  var singleUser // used to validate that all items have same user
+  let singleUser // used to validate that all items have same user
   // validates that we are always called with a single user, throws on violation
   function checkUser (item) {
     // validate that all items are for same user
@@ -166,8 +161,9 @@ function newWriterCtx () {
     }
   }
 
+  let itemCount = 0
   // the actual itemHandler being returned
-  async function handler (item) {
+  async function handler ({item}) {
     // console.log('..stamp',stamp);
     // throw error if item.__stamp's are non-increasing
     checkStampOrdering(item)
@@ -178,11 +174,13 @@ function newWriterCtx () {
 
     // buffered - write
     writeByMonth(item)
+    itemCount++
   }
 
   return {
-    handler: handler,
-    historyByType: historyByType,
-    flush: flush
+    handler,
+    historyByType,
+    flush,
+    count: () => itemCount
   }
 }

@@ -59,11 +59,11 @@ function isEqualWithoutPrototypes (a, b) {
 // tentative set comparison, for relaxed overwrite rule
 function hasSameContent (a, b) {
   // must be an array
-  log.verbose('array check:', { a: Array.isArray(a), b: Array.isArray(b) })
+  log.verbose('hasSameContent:array check:', { a: Array.isArray(a), b: Array.isArray(b) })
   if (!Array.isArray(a) || !Array.isArray(b)) {
     return false
   }
-  log.verbose('counts check:', { a: a.length, b: b.length })
+  log.verbose('hasSameContent:array counts check:', { a: a.length, b: b.length })
   if (a.length !== b.length) {
     return false
   }
@@ -125,6 +125,18 @@ async function memoryUsageInMB () {
   return inMB
 }
 
+// Pass --expose-gc when launching node to enable forced garbage collection.
+async function collectGC () {
+  if (global.gc) {
+    global.gc()
+    global.gc()
+    global.gc()
+    global.gc()
+  } else {
+    // log.debug('Garbage collection unavailable.  Pass --expose-gc when launching node to enable forced garbage collection.')
+  }
+}
+
 async function logMemAfterGC () {
   async function showMem (pfx) {
     var msg = `${pfx}Mem after GC (MB)`
@@ -132,14 +144,8 @@ async function logMemAfterGC () {
   }
   showMem('-')
   if (global.gc) {
-    global.gc()
-    global.gc()
-    global.gc()
-    global.gc()
-
+    await collectGC()
     showMem('+')
-  } else {
-    // log.debug('Garbage collection unavailable.  Pass --expose-gc when launching node to enable forced garbage collection.')
   }
 }
 
@@ -153,5 +159,6 @@ exports = module.exports = {
   digest: digest,
   md5: md5,
   logMemAfterGC: logMemAfterGC,
+  collectGC: collectGC,
   memoryUsageInMB: memoryUsageInMB
 }

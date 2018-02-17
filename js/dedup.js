@@ -13,6 +13,6 @@ async function main () {
     await tasks.dedup(credentials)
   }
   const dod = await store.db.digestOfDigests()
-  // info/verbose don't log for logcheck
+  // verbose NOT for logcheck
   log.verbose('checkpoint', { digest: dod })
 }

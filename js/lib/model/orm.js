@@ -114,6 +114,7 @@ function defineModels () {
   return {
     init: init,
     sequelize: sequelize,
+    Op: Sequelize.Op,
     Item: Item
   }
 }

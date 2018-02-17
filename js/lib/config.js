@@ -26,6 +26,8 @@ module.exports = {
         min: 0,
         idle: 10000
       },
+      // Symbol based operators for better security, read more at http://docs.sequelizejs.com/manual/tutorial/querying.html#operators
+      operatorsAliases: false,
       // logging: () => {},
       logging: process.env.DB_LOG ? console.log : () => {},
       // SQLite only

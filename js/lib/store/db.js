@@ -8,6 +8,7 @@ var crypto = require('crypto')
 var log = require('../log')
 var utils = require('../utils')
 const orm = require('../model/orm')
+const Op = orm.Op
 // these might be moved or exposed
 
 // var sinkFile = require('../sink/file');
@@ -193,7 +194,7 @@ async function _filterExisting (wrappedItemsWithDigests) {
     attibutes: ['digest'],
     where: {
       digest: {
-        $in: digests
+        [Op.in]: digests
       }
     }
   }).map(i => i.digest)
@@ -308,8 +309,8 @@ function digestsQy ({since = '1970-01-01T00:00:00Z', before = '2040-01-01T00:00:
     attributes: ['digest', '__stamp'],
     where: {
       '__stamp': {
-        $gte: since,  // >= since (inclusive)
-        $lt: before // < before (strict)
+        [Op.gte]: since,  // >= since (inclusive)
+        [Op.lt]: before // < before (strict)
       }
     },
     order: [['__stamp', 'DESC'], 'digest']

@@ -37,41 +37,36 @@ var paths = {
 }
 
 // JSON post with param (requires prior login)
-PocketAPI.prototype._fetch = function (path, params) {
-  var self = this
-  var verbose = false
+PocketAPI.prototype._fetch = async function (path, params) {
+  const verbose = false
   if (verbose && params && params.page) {
-    log.debug('fetching', {
-      page: params.page
-    })
+    log.debug('fetching', { page: params.page })
   }
-  return speedLimit()
-    .then(function () {
-      return retry(self.session.reqJSON(path, params))
-        .then(function (response) {
-          if (verbose) {
-            console.log('* path', path)
-            if (response.episodes) {
-              console.log('    * episodes', response.episodes.length)
-            }
-            if (response.podcasts) {
-              console.log('    * podcasts', response.podcasts.length)
-            }
-            if (response.result && response.result.episodes) {
-              console.log('    * podcasts.page len,total:', response.result.episodes.length, response.result.total)
-            }
-          }
-          return response
-        })
-    })
+  await speedLimit()
+  const response = await retry(this.session.reqJSON(path, params))
+  if (verbose) {
+    const meta = {path}
+    if (response.episodes) {
+      meta.episodes = response.episodes.length
+    }
+    if (response.podcasts) {
+      meta.podcasts = response.podcasts.length
+    }
+    if (response.result && response.result.episodes) {
+      meta.page = params.page
+      meta.episodes = response.result.episodes.length
+      meta.total = response.result.total
+    }
+    log.debug('_fetch', meta)
+  }
+
+  return response
 }
 
 // promise token.
 function speedLimit (input) {
   return new Promise(function (resolve /*, reject */) {
-    // console.log(new Date().toJSON().substr(0, 19), 'YELLOW');
     limiter.removeTokens(1, function () {
-      // console.log(new Date().toJSON().substr(0, 19), 'GREEN');
       return resolve(input)
     })
   })
@@ -101,18 +96,13 @@ function extractMember (sourceType, response) {
 
 // Use this function to normalize output
 // -remove response top level member: {podcasts:[..]} => [..]
-// -inject __type/__sourceType: 01-podcasts|02-podcasts|03-new_releases|04-in_progress
-// -inject __stamp, __podcast_uuid
-// -inject __page,__totalPages if sourceType==02-podcasts
+// -inject __type, __sourceType: 01-podcasts|02-podcasts|03-new_releases|04-in_progress
+// -inject __user, __stamp (from (self==PocketAPI instance))
+// -inject extra, e.g. {podcast_uuid}
 function normalize (sourceType, self, extra) {
   return function (response) {
-    var items = extractMember(sourceType, response)
+    const items = extractMember(sourceType, response)
 
-    // inject __totalPages
-    if (sourceType === '02-podcasts') {
-      var perPage = 12
-      extra.__totalPages = Math.ceil(response.result.total / perPage)
-    }
     // prepend our extra descriptor fields (to optionally passed in values)
     extra = _.merge({
       __type: (sourceType === '01-podcasts') ? 'podcast' : 'episode',
@@ -121,9 +111,9 @@ function normalize (sourceType, self, extra) {
       __stamp: self.stamp
     }, extra || {})
 
-    // prepend extra descriptor fiels to each item
-    return _.map(items, function (item) {
-      return _.merge({}, extra, item)
+    // prepend extra descriptor fields to each item
+    return items.map(function (item) {
+      return {...extra, ...item}
     })
   }
 }
@@ -147,92 +137,55 @@ PocketAPI.prototype.in_progress = function () {
     return self._fetch(paths.in_progress_episodes).then(normalize('04-in_progress', self))
   }
 }
-PocketAPI.prototype.podcastPage = function (params) {
-  var self = this
-  if (!params.uuid) {
-    throw new Error('podcastPage::missing podcast uuid')
-  }
-  if (!params.page) { // starts at page 1
-    throw new Error('podcastPage::missing podcast page')
-  }
-  return function () {
-    return self._fetch(paths.find_by_podcast, params).then(normalize('02-podcasts', self, {
-      podcast_uuid: params.uuid,
-      __page: params.page
-    }))
-  }
-}
 
 // fetch first or all pages, (or max pages)
 // params.uuid: podcast_uuid
-// params.maxPage: optional (all)
-PocketAPI.prototype.podcastPages = function (params) {
+// params.maxPage: optional (<=0, default means allPages)
+PocketAPI.prototype.podcastPages = function ({uuid, maxPage = 0}) {
   var self = this
-  if (!params.uuid) {
-    throw new Error('podcastPage::missing podcast uuid')
+  if (!uuid) {
+    throw new Error('podcastPages::missing podcast uuid')
+  }
+  const maxPageSafety = 100 // prevent runaway paging 100 seems safe (10k episodes)
+  if (maxPage <= 0 || maxPage > maxPageSafety) {
+    maxPage = maxPageSafety // safety limit on number of pages
   }
 
-  // utility function (wrap and invoke)
-  function fetchPage (page) {
-    return self.podcastPage({
-      uuid: params.uuid,
-      page: page
-    })()
-      .then(function (result) {
-        // console.log('|fetchPage-%d|: %d', page, result.length);
-        return result
-      })
-  }
-
-  function cleanup (items) {
-    // remove the __page and __totalPages attributes, now that we are done
-    items.forEach(function (item) {
-      delete item.__page
-      delete item.__totalPages
+  //  sould return {allItems,done}
+  async function appendItems (prevItems, page) {
+    const response = await self._fetch(paths.find_by_podcast, {
+      uuid,
+      page
     })
-    return items
+    const expectedItemCount = response.result.total
+
+    const items = await (normalize('02-podcasts', self, {
+      podcast_uuid: uuid
+    })(response))
+    // console.log('|fetchPage-%d|: %d of %d', page, items.length, expectedItemCount)
+
+    // return items
+    const allItems = prevItems.concat(items)
+
+    // we are done when:
+    // - a particular page returns no items
+    // - we have reached the expected total
+    const done = items.length === 0 || allItems.length >= expectedItemCount
+
+    // console.log('|allItems|: added %d in %d (expected:%d done:%j)', items.length, allItems.length, expectedItemCount, done)
+    return {allItems, done}
   }
 
-  return function () {
-    var allItems = []
-    return fetchPage(1).then(function (result) {
-      // turns out this is possible...
-      if (result.length === 0) {
-        return result
+  return async function () {
+    let allItems = [] // holds concatenated pages of items
+    let done = false
+    for (let page = 1; /* page <= totalPages */; page++) {
+      ({allItems, done} = await appendItems(allItems, page))
+      if (done || page >= maxPage) { // >= because page numbering starts at 1
+        break
       }
-      if (!result[0].__totalPages) {
-        throw new Error('podcastPages::missing total pages in result')
-      }
-
-      var totalPages = result[0].__totalPages
-      allItems = result
-
-      if (totalPages === 1 || params.maxPage === 1) {
-        return cleanup(allItems)
-      }
-
-      if (params.maxPage) {
-        totalPages = Math.min(totalPages, params.maxPage)
-      }
-      log.debug('Fetching', {
-        pages: [2, totalPages]
-      })
-
-      // otherwise append the other pages
-      // [2..totalPages]
-      var restOfPages = _.times(totalPages - 1, function (page) {
-        return page + 2
-      })
-
-      return Promise.map(restOfPages, fetchPage, {
-        concurrency: 2
-      })
-        .then(function (pages) {
-          // pages is an array of results: flatten and concat.
-          allItems = allItems.concat(_.flatten(pages))
-          return cleanup(allItems)
-        })
-    })
+    }
+    return allItems
   }
 }
 

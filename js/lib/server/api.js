@@ -41,7 +41,8 @@ router.get('/status', function (req, res) {
   res.json({
     stamp: new Date().toISOString(), // for checking clock sync
     tasks: { // active, and recently completed...
-    }
+    },
+    sync: { } // checkpoints for peers with stamps (+ recent if not synch'd)
   })
 })
 

@@ -94,7 +94,7 @@ function _isErrorDuplicateDigest (error) {
         !error.errors.length > 0 ||
         error.errors[0].message !== 'digest must be unique' ||
         error.errors[0].path !== 'digest'
-        ) {
+    ) {
       log.error('_isErrorDuplicateDigest', {message: error.message, name: error.name, errors: error.errors})
     }
     return true
@@ -309,7 +309,7 @@ function digestsQy ({since = '1970-01-01T00:00:00Z', before = '2040-01-01T00:00:
     attributes: ['digest', '__stamp'],
     where: {
       '__stamp': {
-        [Op.gte]: since,  // >= since (inclusive)
+        [Op.gte]: since, // >= since (inclusive)
         [Op.lt]: before // < before (strict)
       }
     },

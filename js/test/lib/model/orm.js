@@ -42,7 +42,7 @@ describe('sequelize/orm', function () {
     it('should create another item', async () => {
       const want = helpers.makeItem(1)
       const item = await create(helpers.makeItem(1))
-          // assert stuff
+      // assert stuff
       expect(item).to.not.equal(null)
       expect(item.item).to.deep.equal(want)
     })
@@ -120,7 +120,7 @@ describe('sequelize/orm', function () {
       expect(digests).to.deep.equal(want)
     })
 
-    it('should delete an item', async() => {
+    it('should delete an item', async () => {
       const toDelete = helpers.makeItem(0)
       const digest = utils.digest(JSON.stringify(toDelete))
       const affectedRows = await orm.Item.destroy({
@@ -130,7 +130,7 @@ describe('sequelize/orm', function () {
       })
       expect(affectedRows).to.equal(1)
     })
-    it('should delete multiple items', async() => {
+    it('should delete multiple items', async () => {
       const affectedRows = await orm.Item.destroy({
         where: {
           '__user': 'mock'

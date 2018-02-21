@@ -1,6 +1,6 @@
 # implement the feed fetch in node.js
 
-_ dirac running fast in docker: _
+_ dirac clock running fast in docker: _
 ```
 date;docker exec -it js_scrape_1 date; date
 docker run --rm --privileged alpine hwclock -s
@@ -20,17 +20,18 @@ DB_DIALECT=postgres npm run unit
 DB_LOG=1 DB_DIALECT=postgres npm run unit
 ```
 
-
 ## TODO
 
-- integrate [debug](https://www.npmjs.com/package/debug) into logging
-- try pull-streams
 - cleanup
   - Prune and move evernote to .
   - npm outdated
     - bluebird
     - lodash
-- refactor tasks: composable, adjust perUser, dedup vs checkpoint
+    - mocha / (jest, replace istanbul?)
+    - pg (jsut pass tests)
+- log (and check) scrape calculations)
+- consolidate top level commands (dedup, sync, checkpoint, logcheck sync,scrape)
+- refactor tasks: composable, adjust perUser, scrape, dedup vs checkpoint
 - refactor store.file (sink|source/file)
 - sync: discovery (ipfs / socket.io / socket.io-p2p?)
 - sync: recent (day,..)
@@ -127,7 +128,7 @@ docker volume rm js_scrbl_pgdata
 # build and run
 export HOSTNAME
 docker-compose build
-docker-compose up -d
+export HOSTNAME; docker-compose up -d
 docker-compose logs -f scrape
 
 # restore from s3 -> data/snapshots -> DB

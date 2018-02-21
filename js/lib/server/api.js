@@ -6,6 +6,7 @@ const express = require('express')
 const cors = require('cors')
 const log = require('../log')
 const store = require('../store')
+const config = require('../config')
 
 const router = express.Router()
 
@@ -29,6 +30,19 @@ router.use(function authMiddleware (req, res, next) {
 // define the home page route
 router.get('/', function (req, res) {
   res.send('API Home')
+})
+
+router.get('/version', function (req, res) {
+  res.json(config.version)
+})
+
+// expose /status, possible to aid in synch'ing, or even peer checkpionting
+router.get('/status', function (req, res) {
+  res.json({
+    stamp: new Date().toISOString(), // for checking clock sync
+    tasks: { // active, and recently completed...
+    }
+  })
 })
 
 // define the digests route

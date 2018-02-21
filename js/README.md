@@ -30,6 +30,7 @@ DB_LOG=1 DB_DIALECT=postgres npm run unit
     - mocha / (jest, replace istanbul?)
     - pg (jsut pass tests)
 - log (and check) scrape calculations)
+- expose status for tasks (recently completed too)
 - consolidate top level commands (dedup, sync, checkpoint, logcheck sync,scrape)
 - refactor tasks: composable, adjust perUser, scrape, dedup vs checkpoint
 - refactor store.file (sink|source/file)

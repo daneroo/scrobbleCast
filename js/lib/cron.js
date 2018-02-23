@@ -24,10 +24,11 @@ var allCredentials = [] // injected in start(injectedCredentials) below
 //   cronTime: '0 */10 * * * *', // seconds included 6 params - standard 5 params supported
 // Every recurrence pattern is offset by 10 seconds to avoid timestamping in previous minute!
 var recurrence = {
-  everyDayAtMidnight: '10 0 0 * * *',
-  everyHourExceptMidnight: '10 0 1-23/1 * * *',
-  everyTenExceptOnTheHour: '10 10-59/10 * * * *',
+  // everyDayAtMidnight: '10 0 0 * * *',
+  // everyHourExceptMidnight: '10 0 1-23/1 * * *',
+  // everyTenExceptOnTheHour: '10 10-59/10 * * * *',
   // everyHourOnTheHour: '10 0 * * * *',
+  everyTenMinutes: '10 */10 * * * *',
   // everyTenMinutesOffsetByThree: '10 3-59/10 * * * *',
   everyTenMinutesOffsetByFour: '10 4-59/10 * * * *',
   everyTenMinutesOffsetByFive: '10 5-59/10 * * * *'
@@ -85,9 +86,7 @@ function start (injectedCredentials) {
 
   log.info('Starting Cron')
   // auto-start all three
-  runJob(tasks.deep, recurrence.everyDayAtMidnight, true) // var deep = ...
-  runJob(tasks.shallow, recurrence.everyHourExceptMidnight, true) // var shallow =
-  runJob(tasks.quick, recurrence.everyTenExceptOnTheHour, true) // var quick =
+  runJob(tasks.scrape, recurrence.everyTenMinutes, true) // var scrape = ...
   runJob(tasks.logcheck, recurrence.everyTenMinutesOffsetByFour, false) // var logcheck =
   runJob(tasks.sync, recurrence.everyTenMinutesOffsetByFive, false) // var sync =
 }

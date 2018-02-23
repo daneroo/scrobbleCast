@@ -142,6 +142,9 @@ docker-compose run --rm scrape node restore.js
 export HOSTNAME; docker-compose run --rm scrape node snapshots.js
 docker-compose run --rm -it scrape npm run snapshot
 
+# curl digests:
+for h in darwin dirac euler newton; do echo $h `curl -s http://$h.imetrical.com:8000/api/digests|shasum -a 256`; done
+
 # to run a single sync run
 docker-compose run --rm scrape node sync.js http://euler.imetrical.com:8000/api
 docker-compose run --rm scrape node sync.js http://dirac.imetrical.com:8000/api

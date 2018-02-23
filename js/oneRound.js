@@ -12,10 +12,11 @@ const allCredentials = require('./credentials.json')
 main()
 async function main () {
   for (let credentials of allCredentials) {
-    // await tasks.shallow(credentials)
-    await tasks.deep(credentials)
-    // await tasks.quick(credentials)
+    await tasks.scrape(credentials)
     // await tasks.dedup(credentials)
   }
+  // for (let credentials of allCredentials) {
+  //   await tasks.dedup(credentials)
+  // }
   log.info('Done all')
 }

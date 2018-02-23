@@ -7,8 +7,8 @@ var log = require('./log')
 
 // expect to be called with '10minutes','minute','second' or no param (millis)
 // return an iso-8601 string
-function stamp (grain) {
-  var now = new Date()
+function stamp (grain, nowStamp) {
+  const now = nowStamp ? new Date(nowStamp) : new Date()
   if (grain === 'minute') {
     now.setSeconds(0)
   }
@@ -150,15 +150,15 @@ async function logMemAfterGC () {
 }
 
 exports = module.exports = {
-  stamp: stamp,
-  ago: ago,
-  logStamp: logStamp,
-  stampFromFile: stampFromFile,
-  isEqualWithoutPrototypes: isEqualWithoutPrototypes,
-  hasSameContent: hasSameContent,
-  digest: digest,
-  md5: md5,
-  logMemAfterGC: logMemAfterGC,
-  collectGC: collectGC,
-  memoryUsageInMB: memoryUsageInMB
+  stamp,
+  ago,
+  logStamp,
+  stampFromFile,
+  isEqualWithoutPrototypes,
+  hasSameContent,
+  digest,
+  md5,
+  logMemAfterGC,
+  collectGC,
+  memoryUsageInMB
 }

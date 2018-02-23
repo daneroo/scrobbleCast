@@ -35,7 +35,7 @@ winston.add(winston.transports.Console, {
 // http://tostring.it/2014/06/23/advanced-logging-with-nodejs/
 const morganStream = {
   write: function (message /*, encoding */) {
-      // trim to remove new line
+    // trim to remove new line
     winston.info(message.trim())
   }
 }

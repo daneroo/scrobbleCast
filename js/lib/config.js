@@ -4,6 +4,10 @@ const fs = require('fs')
 
 module.exports = {
   hostname: process.env.HOSTNAME || os.hostname(),
+  version: { // also exposed as API /version
+    pocketscrape: require('../package').version,
+    node: process.versions.node
+  },
   loggly: getConfig('credentials.loggly.json', null),
   express: {
     port: process.env.PORT || 8000

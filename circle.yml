@@ -1,6 +1,6 @@
 machine:
   node:
-    version: 9
+    version: 8 # breaks on v9?
 
 general:
   build_dir: js

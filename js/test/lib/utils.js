@@ -10,7 +10,9 @@ describe('utils', function () {
       const expectedNoGrain = new Date().toISOString()
       const roundedNoGrain = utils.stamp()
       expect(roundedNoGrain).to.have.length(24)
-      expect(roundedNoGrain).to.equal(expectedNoGrain)
+      // To prevent this: AssertionError: expected '2018-02-23T08:57:20.562Z' to equal '2018-02-23T08:57:20.561Z'
+      // we trim off the last three chars (:20.5|62Z) to compare to tehnth of second
+      expect(roundedNoGrain.slice(0, -3)).to.equal(expectedNoGrain.slice(0, -3))
     })
     it(`should verify minute, no stamp`, () => {
       const now = new Date().toISOString()

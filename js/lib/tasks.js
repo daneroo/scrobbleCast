@@ -92,8 +92,8 @@ async function scrape (credentials) {
     for (let uuid of _.pluck(podcasts, 'uuid')) {
       // Scrape scheduling
       // -1,0,1: skip,deep,shallow
-      // const select = spread.select(apiSession.stamp, uuid) // new schedule method
-      const select = spread.select(apiSession.stamp, spread.zeroOffsetUUID) // Old cron style
+      // const select = spread.select(apiSession.stamp, spread.zeroOffsetUUID) // Old cron style
+      const select = spread.select(apiSession.stamp, uuid) // new schedule method
 
       if (select >= 0) { // deep, shallow i.e. not skip
         const episodes = await apiSession.podcastPages({

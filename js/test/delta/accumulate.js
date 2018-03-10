@@ -220,6 +220,7 @@ describe('delta', function () {
               'meta': {
                 '__changeCount': 1,
                 '__firstSeen': '2015-01-01T01:23:45Z',
+                '__lastPlayed': '2015-01-01T01:23:45Z',
                 '__lastUpdated': '2015-01-01T01:23:45Z',
                 '__type': 'episode',
                 '__user': 'listener'

@@ -142,6 +142,13 @@ Accumulator.prototype.appendHistory = function (changes, __stamp, __sourceType) 
       self.meta.__lastUpdated = __stamp
     }
 
+    // we only record __lastPlayed if:...
+    if (change.key === 'played_up_to' && change.to > 0) {
+      if (!self.meta.__lastPlayed || __stamp > self.meta.__lastPlayed) {
+        self.meta.__lastPlayed = __stamp
+      }
+    }
+
     // log the sourceType for the change
     h.__sourceType = h.__sourceType || {}
     h.__sourceType[__stamp] = __sourceType

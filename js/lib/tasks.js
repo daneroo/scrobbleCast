@@ -138,7 +138,7 @@ function lifecycle (task, verb, user, elapsed) {
 
 function progress (msg, response, meta) {
   meta = meta || {}
-  log.verbose('|%s|', msg, {items: response.length, ...meta})
+  log.info('|%s|', msg, {items: response.length, ...meta})
 }
 
 // Called only once, replaces self with noop.

@@ -102,6 +102,56 @@ function defineModels () {
     }
   }
 
+  const History = sequelize.define('history', {
+    // digest: {type: Sequelize.STRING, primaryKey: true, allowNull: false},
+    __user: {type: Sequelize.STRING, allowNull: false, primaryKey: true},
+    __type: {type: Sequelize.STRING, allowNull: false, primaryKey: true},
+    uuid: {type: Sequelize.STRING, allowNull: false, primaryKey: true},
+    __firstSeen: {type: Sequelize.STRING, allowNull: false},
+    __lastUpdated: {type: Sequelize.STRING, allowNull: false},
+    __lastPlayed: {type: Sequelize.STRING, allowNull: true},
+    history: {
+      type: Sequelize.TEXT,
+      get: function () {
+        var currentValue = this.getDataValue('history')
+        if (typeof currentValue === 'string') {
+          this.dataValues['history'] = JSON.parse(currentValue)
+        }
+        return this.dataValues['history']
+      },
+      // JSON.stringify item and inject outer keys
+      set: function (value) {
+        // console.log('set item')
+        const str = JSON.stringify(value)
+        this.setDataValue('history', str)
+        // inject outer keys
+
+        // could be conditional if already set...
+        // this.setDataValue('digest', utils.digest(str))
+        // console.log('VALUE::meta', value.meta)
+        this.setDataValue('__user', value.meta.__user)
+        this.setDataValue('__type', value.meta.__type)
+        this.setDataValue('uuid', value.uuid)
+        this.setDataValue('__firstSeen', value.meta.__firstSeen)
+        this.setDataValue('__lastUpdated', value.meta.__lastUpdated)
+        this.setDataValue('__lastPlayed', value.meta.__lastPlayed)
+      }
+    }
+  }, {
+    createdAt: false,
+    updatedAt: false,
+    hooks: {
+      // beforeBulkCreate: instances => instances.forEach(injectKeys),
+      // beforeValidate: injectKeys
+      // beforeCreate: injectKeys
+    }
+    // indexes: [{
+    //   unique: true,
+    //   // name: 'history_primary',
+    //   fields: ['__user', '__type', 'uuid']
+    // } ]
+  })
+
   async function init () {
     if (config.sequelize.settings.dialect === 'sqlite') {
       const dir = path.dirname(config.sequelize.settings.storage)
@@ -112,9 +162,10 @@ function defineModels () {
   }
 
   return {
-    init: init,
-    sequelize: sequelize,
-    Op: Sequelize.Op,
-    Item: Item
+    init,
+    sequelize,
+    Item,
+    History,
+    Op: Sequelize.Op
   }
 }

@@ -13,6 +13,9 @@ module.exports = {
     port: process.env.PORT || 8000
   },
 
+  dedup: {
+    history_upsert: process.env.DEDUP_HISTORY_UPSERT || 'spread' // can be set to 'full'
+  },
   // TODO(daneroo): Need a strategy for running tests (NODE_ENV==test)
   sequelize: {
     credentials: {

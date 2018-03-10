@@ -4,7 +4,13 @@ _ dirac clock running fast in docker: _
 ```
 date;docker exec -it js_scrape_1 date; date
 docker run --rm --privileged alpine hwclock -s
-date;docker exec -it js_scrape_1 date; date
+date +%Y-%m-%dT%H:%M:%S%z ;docker exec -it js_scrape_1 date -Isec; date +%Y-%m-%dT%H:%M:%S%z
+
+# while true; do sleep 600; done
+AHEAD=$(expr $(docker run --rm alpine date +%s) - $(date +%s)); echo $(date +%Y-%m-%dT%H:%M:%S) Docker clock is ahead by ${AHEAD}
+docker run --rm  alpine date +%s; date +%s
+
+docker run --rm --net=host --pid=host --privileged -it justincormack/nsenter1 /bin/sh -c 'tail -2000 /var/log/ntpd.err.log'
 ```
 
 ## Test 
@@ -129,7 +135,7 @@ docker volume rm js_scrbl_pgdata
 
 # build and run
 export HOSTNAME
-docker-compose build
+docker-compose build --pull
 export HOSTNAME; docker-compose up -d
 docker-compose logs -f scrape
 
@@ -155,7 +161,7 @@ docker-compose run --rm scrape node sync.js http://192.168.3.131:8000/api
 docker-compose run --rm scrape node sync.js http://192.168.5.144:8000/api
 
 # dedup as needed
-export HOSTNAME; docker-compose run --rm scrape node dedup.js
+export HOSTNAME; docker-compose run --rm scrape node dedup.js # --full
 
 # delete for extraordinary reconcile
 docker-compose exec postgres psql -U postgres scrobblecast

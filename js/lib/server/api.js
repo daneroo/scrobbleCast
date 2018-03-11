@@ -23,7 +23,7 @@ router.use(cors())
 
 // TODO(daneroo): authentication
 router.use(function authMiddleware (req, res, next) {
-  log.verbose('-api: should be auth\'d')
+  // log.verbose('-api: should be auth\'d')
   next()
 })
 
@@ -74,7 +74,6 @@ router.route('/digest/:digest')
   // })
   .get(function (req, res) {
     const digest = req.params.digest
-    log.verbose('/api/digest/', digest)
     store.db.getByDigest(digest)
       .then((item) => {
         res.json(item)

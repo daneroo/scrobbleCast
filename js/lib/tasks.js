@@ -155,6 +155,8 @@ var initDB = function () {
 function saver (items) {
   return initDB()
     .then(function () {
-      return store.db.saveAll(items)
+      log.verbose('Would have saved', {items: items.length})
+      return Promise.resolve()
+      // return store.db.saveAll(items)
     })
 }

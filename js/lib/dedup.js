@@ -59,7 +59,9 @@ async function dedupTask (credentials) {
 
     counts.total++
 
-    var changeCount = historyForSingleUuid.merge(item)
+    // Take the merge().length, because is a single Accumualator now.
+    // The return signatures are different between Accumulator.merge() and AccumulatorByXX.merge()
+    var changeCount = historyForSingleUuid.merge(item).length
 
     if (changeCount === 0) {
       counts.duplicates++

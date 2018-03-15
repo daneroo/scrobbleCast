@@ -7,15 +7,13 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          working_directory: ~/daneroo/scrobbleCast
-          key: dependency-cache-{{ checksum "package.json" }}
+          key: dependency-cache-{{ checksum "js/package.json" }}
       - run:
           working_directory: ~/daneroo/scrobbleCast
           name: npm-install
           command: npm install
       - save_cache:
-          working_directory: ~/daneroo/scrobbleCast
-          key: dependency-cache-{{ checksum "package.json" }}
+          key: dependency-cache-{{ checksum "js/package.json" }}
           paths:
             - ./node_modules
       - run:

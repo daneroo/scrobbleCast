@@ -135,6 +135,7 @@ async function upsertHistory (history) {
   }
 }
 
+// TODO:daneroo temporarily removes __lastPlayed for now (so md5 matches)
 async function sortAndSaveFromDB (user) {
   const historyByType = new delta.AccumulatorByTypeByUuid()
   const histories = await orm.History.findAll({

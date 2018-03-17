@@ -79,13 +79,14 @@ async function dedupTask (credentials) {
 
   try {
     await store.db.load({user}, itemHandler)
-    log.verbose('Deduped', counts)
+    // log.verbose('Deduped', counts)
     await deleteDuplicates(duplicates)
 
     // last flush
     await conditionalUpsertHistory(historyForSingleUuid, stamp)
 
     await sortAndSaveFromDB(user)
+    return counts
   } catch (error) { // TODO: might remove this altogether
     log.error('Dedup', {
       error: error
@@ -145,6 +146,7 @@ async function sortAndSaveFromDB (user) {
     where: { __user: user }
   }).map(h => h.history)
   for (const h of histories) {
+    // TODO:daneroo temporarily removes __lastPlayed for now (so md5 matches)
     delete h.meta.__lastPlayed
     const byUuid = historyByType.getAccumulatorByUuidForType(h.meta.__type)
     const acc = byUuid.getAccumulator(h.uuid)

@@ -1,7 +1,6 @@
 'use strict'
 
 // dependencies - core-public-internal
-var bluebird = require('bluebird')
 var rp = require('request-promise')
 var log = require('./log')
 var store = require('./store')
@@ -11,28 +10,14 @@ exports = module.exports = {
   sync: sync
 }
 
-function sync (baseURI, syncParams) {
-  // log.verbose(`Sync started from ${baseURI}`, syncParams)
-  let remoteDigests
-  let localDigests
-
-  return loadFromURL(baseURI, syncParams)
-    .then(function (items) {
-      remoteDigests = items
-      // log.verbose('|remoteDigests|', remoteDigests.size)
-      return loadFromDB(syncParams)
-    })
-    .then(function (items) {
-      localDigests = items
-      // log.verbose('|localDigests|', localDigests.size)
-      return compare(baseURI, remoteDigests, localDigests)
-    })
-    .catch(error => {
-      log.error('Sync error', error)
-    })
+async function sync (baseURI, syncParams) {
+  const remoteDigests = await loadFromURL(baseURI, syncParams)
+  const localDigests = await loadFromDB(syncParams)
+  const counts = compare(baseURI, remoteDigests, localDigests)
+  return counts
 }
 
-function compare (baseURI, remoteDigests, localDigests) {
+async function compare (baseURI, remoteDigests, localDigests) {
   const missingLocal = []
   remoteDigests.forEach(function (acc, digest) {
     if (!localDigests.has(digest)) {
@@ -47,48 +32,44 @@ function compare (baseURI, remoteDigests, localDigests) {
       missingRemote.push(digest)
     }
   })
-  log.info('Sync missing', { from: baseURI, local: missingLocal.length, remote: missingRemote.length })
-  return fetchMissingFromRemote(baseURI, missingLocal)
+  log.verbose('Sync missing', { from: baseURI, local: missingLocal.length, remote: missingRemote.length })
+  const counts = await fetchMissingFromRemote(baseURI, missingLocal)
+  return counts
 }
 
-function fetchMissingFromRemote (baseURI, missingLocal) {
-  return bluebird.each(missingLocal, (digest) => {
+async function fetchMissingFromRemote (baseURI, missingLocal) {
+  const fetchedItems = []
+  for (const digest of missingLocal) {
     const options = {
       uri: `${baseURI}/digest/${digest}`,
       gzip: true, // for compression
       json: true // Automatically parses the JSON string in the response
     }
-
-    // log.verbose(`--fetching ${options.uri}`)
-    return rp(options)
-      // .then(store.db.save)
-      .then(item => insertDedup([item]))
-      .then(() => {
-        log.verbose(`--persist:  ${options.uri}`)
-      })
-      .catch((/* err */) => {
-        log.verbose(`--failed:   ${options.uri}`)
-      })
-  })
+    try {
+      const item = await rp(options)
+      fetchedItems.push(item)
+      log.verbose(`--fetched:  ${options.uri}`)
+    } catch (error) {
+      log.verbose(`--failed to fetch: ${options.uri}`)
+    }
+  }
+  const counts = await insertDedup(fetchedItems) // wrap as array..
+  return counts
 }
 
-function loadFromURL (baseURI, syncParams) {
+async function loadFromURL (baseURI, syncParams) {
   const options = {
     uri: `${baseURI}/digests`,
     qs: syncParams,
     gzip: true, // for compression
     json: true // Automatically parses the JSON string in the response
   }
-
-  return rp(options)
-    .then(function (digests) {
-      return new Set(digests)
-    })
+  const digests = await rp(options)
+  return new Set(digests)
 }
-function loadFromDB (syncParams) {
+
+async function loadFromDB (syncParams) {
   // log.debug('loadFromDB')
-  return store.db.digests(syncParams)
-    .then(function (digests) {
-      return new Set(digests)
-    })
+  const digests = await store.db.digests(syncParams)
+  return new Set(digests)
 }

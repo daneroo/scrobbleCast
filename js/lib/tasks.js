@@ -52,21 +52,24 @@ async function sync () {
       lifecycle(`sync:${host}`, 'skip')
       continue
     }
-    const baseURI = `http://${host}.imetrical.com:8000/api`
-    lifecycle(`sync:${host}`, 'start')
-    await syncTask(baseURI, syncParams)
-    lifecycle(`sync:${host}`, 'done', { elapsed: elapsedSince(startHost) })
+    try {
+      const baseURI = `http://${host}.imetrical.com:8000/api`
+      lifecycle(`sync:${host}`, 'start')
+      const counts = await syncTask(baseURI, syncParams)
+      lifecycle(`sync:host`, 'done', { host, ...counts, elapsed: elapsedSince(startHost) })
+    } catch (error) {
+      log.error('tasks.sync:host:error:', error)
+      lifecycle('sync:host', 'done with error', { host })
+    }
   }
   lifecycle('sync', 'done', {elapsed: elapsedSince(start)})
 }
 
-function dedup (credentials) {
+async function dedup (credentials) {
   var start = +new Date()
   lifecycle('dedup', 'start', { user: credentials.name })
-  return dedupTask(credentials)
-    .then(function () {
-      lifecycle('dedup', 'done', { user: credentials.name, elapsed: elapsedSince(start) })
-    })
+  const counts = await dedupTask(credentials)
+  lifecycle('dedup', 'done', { user: credentials.name, ...counts, elapsed: elapsedSince(start) })
 }
 
 // get podcasts then foreach: podcastPages->file

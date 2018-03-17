@@ -18,34 +18,35 @@ const DIGEST_ALGORITHM = 'sha256'
 
 // Exported API
 exports = module.exports = {
-  init: init, // setup the database pool, ddl...
-  end: end,
+  init, // setup the database pool, ddl...
+  end,
 
   // save: (item) => {}, // should return (Promise)(status in insert,duplicate,error)
-  save: save,
+  save,
 
   // saveByBatch(batchSize) // accumulates writes, must be flushed at end
-  saveByBatch: saveByBatch,
-  saveAll: saveAll,
+  saveByBatch,
+  saveAll,
 
   // load: (opts, handler) => {} // foreach item, cb(item);
   fieldOrders: {
     dedup: 'dedup', // default
     snapshot: 'snapshot'
   },
-  loadQy: loadQy,
+  loadQy,
   load: load,
-  getByDigest: getByDigest,
+  loadHistoryForItem,
+  getByDigest,
 
-  digestsQy: digestsQy,
-  digests: digests,
-  digestOfDigests: digestOfDigests,
+  digestsQy,
+  digests,
+  digestOfDigests,
 
-  remove: remove,
-  removeAll: removeAll,
+  remove,
+  removeAll,
 
   // Deprecated: for sync reconciliation
-  getByKey: getByKey
+  getByKey
 
 }
 
@@ -254,8 +255,8 @@ function loadQy ({user, order = 'dedup'}) {
     throw (new Error('db:loadQy missing required user'))
   }
   const fieldOrders = {
-    dedup: ['__user', '__type', 'uuid', '__stamp', '__sourceType', 'digest'], // snapshot,file order
-    snapshot: ['__user', '__stamp', '__type', 'uuid', '__sourceType', 'digest'] // dedup order
+    dedup: ['__user', '__type', 'uuid', '__stamp', '__sourceType', 'digest'], // dedup order
+    snapshot: ['__user', '__stamp', '__type', 'uuid', '__sourceType', 'digest'] // snapshot,file order
   }
   if (!order || !exports.fieldOrders[order] || !fieldOrders[order]) {
     throw (new Error('db:loadQy unknown field order error: ' + order))
@@ -278,7 +279,7 @@ function loadQy ({user, order = 'dedup'}) {
 //   snapshot: suitable for snapshot file order
 // -No longer returns anything, acumulate your values in the itemHandler
 // -itemHandler should be an async/promise function (it's resolved return value is ignored)
-async function load ({user, order = 'dedup', pageSize = 10000}, itemHandler) {
+async function load ({user, order = 'dedup', pageSize = 10000, where = {}}, itemHandler) {
   const noop = async () => true // default handler (async)
   itemHandler = itemHandler || noop
   // opts.prefix = opts.prefix || ''
@@ -290,7 +291,23 @@ async function load ({user, order = 'dedup', pageSize = 10000}, itemHandler) {
   }
 
   const qy = loadQy({user, order})
+  if (Object.keys(where).length > 0) {
+    qy.where = {...qy.where, ...where}
+    // console.log('Qualified load:', {qy})
+  }
   await orm.Item.findAllByPage(qy, itemHandler, pageSize)
+}
+
+// fetch all items with same __user,__type,uuid
+async function loadHistoryForItem (item) {
+  const items = []
+  await load({
+    user: item.__user,
+    where: {__type: item.__type, uuid: item.uuid}
+  }, async function (fetched) {
+    items.push(fetched.item)
+  })
+  return items
 }
 
 async function getByDigest (digest) {

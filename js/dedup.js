@@ -16,7 +16,7 @@ async function main () {
   if (config.dedup.history_upsert === 'full') {
     log.verbose('dedup.history_upsert set to full, forcing all history to be updated')
   }
-  await require('./lib/model/orm').init()
+  await store.db.init()
   for (let credentials of allCredentials) {
     await tasks.dedup(credentials)
   }

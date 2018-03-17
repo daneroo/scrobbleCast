@@ -13,6 +13,11 @@ docker run --rm  alpine date +%s; date +%s
 docker run --rm --net=host --pid=host --privileged -it justincormack/nsenter1 /bin/sh -c 'tail -2000 /var/log/ntpd.err.log'
 ```
 
+## Nats
+```
+docker run -d --name nats -p 4222:4222 -p 6222:6222 -p 8222:8222 nats
+npx natsboard --nats-mon-url http://demo.nats.io:8222
+```
 ## Test 
 Until npm run sescan passes!
 ```

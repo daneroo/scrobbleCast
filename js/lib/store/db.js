@@ -374,9 +374,7 @@ async function digestOfDigests () {
 }
 
 function historyQy ({user, type, uuid, since = '1970-01-01T00:00:00Z', before = '2040-01-01T00:00:00Z'} = {}) {
-  console.log({user, type, uuid, since, before})
   const qy = {
-    // raw: true,
     attributes: ['history', '__lastUpdated'],
     where: {
       '__lastUpdated': {
@@ -400,9 +398,7 @@ function historyQy ({user, type, uuid, since = '1970-01-01T00:00:00Z', before = 
 
 async function history (params) {
   const qy = historyQy(params)
-  console.log({params, qy})
   const histories = await orm.History.findAll(qy).map(r => r.history)
-  console.log('|h|', histories.length)
   return histories
 }
 // Delete by digest

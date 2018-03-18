@@ -35,12 +35,14 @@ exports = module.exports = {
   },
   loadQy,
   load: load,
-  loadHistoryForItem,
+  loadItemsForHistory,
   getByDigest,
 
   digestsQy,
   digests,
   digestOfDigests,
+
+  history,
 
   remove,
   removeAll,
@@ -299,7 +301,7 @@ async function load ({user, order = 'dedup', pageSize = 10000, where = {}}, item
 }
 
 // fetch all items with same __user,__type,uuid
-async function loadHistoryForItem (item) {
+async function loadItemsForHistory (item) {
   const items = []
   await load({
     user: item.__user,
@@ -371,6 +373,38 @@ async function digestOfDigests () {
   return hash.digest('hex')
 }
 
+function historyQy ({user, type, uuid, since = '1970-01-01T00:00:00Z', before = '2040-01-01T00:00:00Z'} = {}) {
+  console.log({user, type, uuid, since, before})
+  const qy = {
+    // raw: true,
+    attributes: ['history', '__lastUpdated'],
+    where: {
+      '__lastUpdated': {
+        [Op.gte]: since, // >= since (inclusive)
+        [Op.lt]: before // < before (strict)
+      }
+    },
+    order: [['__lastUpdated', 'DESC'], '__user', '__type', 'uuid']
+  }
+  if (user) {
+    qy.where.__user = user
+  }
+  if (type) {
+    qy.where.__type = type
+  }
+  if (uuid) {
+    qy.where.uuid = uuid
+  }
+  return qy
+}
+
+async function history (params) {
+  const qy = historyQy(params)
+  console.log({params, qy})
+  const histories = await orm.History.findAll(qy).map(r => r.history)
+  console.log('|h|', histories.length)
+  return histories
+}
 // Delete by digest
 // log.warn if item not found
 // returns: The number of destroyed rows

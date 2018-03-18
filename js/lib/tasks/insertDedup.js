@@ -16,13 +16,14 @@ exports = module.exports = {
   dedupWithNewItem
 }
 
+// TODO:daneroo
 async function insertDedup (items) {
   // sort items in dedup order, group by {__user, __type, uuid}
   // dedup order: db.
   const allInserts = []
   const allDuplicates = []
   for (const item of items) {
-    const hitems = await db.loadHistoryForItem(item)
+    const hitems = await db.loadItemsForHistory(item)
     const {toInsert, duplicates, history} = await dedupWithNewItem(item, hitems)
     allInserts.push(...toInsert)
     allDuplicates.push(...duplicates)

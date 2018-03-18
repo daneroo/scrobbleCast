@@ -1,13 +1,17 @@
-FROM node:9-onbuild
+FROM node:9
 
 # this must have been why my docker instance was diverging (node's cron module on localtime)
 # should be /usr/share/zoneinfo/Canada/Eastern not /usr/share/zoneinfo/EST
 RUN ln -sf /usr/share/zoneinfo/Canada/Eastern /etc/localtime
 
-# No longer necessary, goedel is no more....
-# Run as daniel.daniel (1000.1000) to match cantors ids
-# RUN groupadd -r -g 1000 daniel && useradd -r -g daniel -u 1000 daniel
-# USER daniel
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
+
+COPY package.json package-lock*.json npm-shrinkwrap*.json /usr/src/app/
+RUN npm install && npm cache clean --force
+COPY . /usr/src/app
+
+# TODO:daneroo run as non root user
 
 # Default port
 EXPOSE 8000

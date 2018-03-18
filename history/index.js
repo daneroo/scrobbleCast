@@ -1,34 +1,65 @@
 
 const fs = require('fs')
+const rp = require('request-promise-native')
+
 const immutable = require('immutable')
 const moment = require('moment')
 const Map = immutable.Map
 const List = immutable.List
 
-all()
+const argv = require('yargs')
+    .usage('Usage: $0 [options]')
+    .help('h')
+    .alias('h', 'help')
+    .options({
+      u: {
+        alias: 'user',
+        default: ['daniel', 'stephane'],
+        describe: 'Specify a user',
+        array: true
+      },
+      d: {
+        alias: 'days',
+        default: 30,
+        describe: 'Number of days to fetch'
+      },
+      s: {
+        alias: 'host',
+        default: 'dirac.imetrical.com',
+        describe: 'Host to fetch from (http://<host>:8000/api/history)'
+      }
+    })
+    .argv
 
-function all () {
+// console.log({argv})
+const users = argv.user
+const host = argv.host
+const days = argv.days
+
+console.log(`Fetching ${days} days of history from ${host} for user:${users}`)
+
+all()
+async function all () {
   // ['daniel'].forEach(u => {
-  ['daniel', 'stephane'].forEach(u => {
+  for (const u of users) {
     console.log(`\n- For ${u}`)
-    history({
-      h: 'dirac.imetrical.com',
+    await history({
+      h: host,
       u: u
     })
-  })
+  }
 }
 
-function history (src) {
-  const f = (src, t) => `${src.h}/history-${src.u}-${t}.json`
-
+async function history (src) {
   // get the podcast title
-  const podcastTitlesAndThumb = mapBy(loadHistoryAsList(f(src, 'podcast')), 'uuid')
+  const podcasts = await loadHistoryAsList(src, 'podcast')
+  const podcastTitlesAndThumb = mapBy(podcasts, 'uuid')
     .map(p => {
       return Map({ title: p.get('title'), thumbnail_url: p.get('thumbnail_url') })
     })
   // console.log(JSON.stringify(podcastTitlesAndThumb, null, 2))
 
-  const episodes = loadHistoryAsList(f(src, 'episode'))
+  const episodes = (await loadHistoryAsList(src, 'episode'))
     // .slice(2).toMap()
     .map(curriedEpisodeProjection(podcastTitlesAndThumb))
     .map(playCounts)
@@ -145,11 +176,34 @@ function curriedEpisodeProjection (podcastTitlesAndThumb) {
 function mapBy (list, field) { // e.g. 'uuid'
   return Map(list.map(h => [h.get(field), h]))
 }
+
 // load a  History file (list of maps(all have uuid))
-function loadHistoryAsList (f) {
-  // console.log('loading', f)
-  // const o = [{a:1,b:[2,22]},{a:3,b:[4,44]}]
-  const o = JSON.parse(fs.readFileSync('data/' + f, 'utf8'))
-  const list = immutable.fromJS(o)
+async function loadHistoryAsList (src, type) {
+  // const object = await fromFile(src, type)
+  const object = await fromHost(src, type)
+
+  const list = immutable.fromJS(object)
   return list
 }
+
+async function fromHost (src, type) {
+  const since = (type === 'podcast')
+                    ? '1970-01-01T00:00:00Z'
+                    : new Date(+new Date() - (days * 24 * 60 * 60 * 1000)).toISOString()
+
+  var options = {
+    uri: `http://${src.h}:8000/api/history`,
+    qs: { user: src.u, type, since },
+    json: true // Automatically parses the JSON string in the response
+  }
+  const object = await rp(options)
+  return object
+}
+
+// // how we use to load files
+// async function fromFile (src, type) {
+//   const filename = `data/${src.h}/history-${src.u}-${type}.json`
+//   const content = fs.readFileSync(filename, 'utf8')
+//   const object = JSON.parse(content)
+//   return object
+// }

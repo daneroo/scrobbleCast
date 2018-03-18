@@ -2,7 +2,7 @@
 
 // dependencies - core-public-internal
 const express = require('express')
-// // const compression = require('compression')
+// const compression = require('compression')
 const cors = require('cors')
 const log = require('../log')
 const store = require('../store')
@@ -22,10 +22,10 @@ router.use(cors())
 // router.use(compression())
 
 // TODO(daneroo): authentication
-router.use(function authMiddleware (req, res, next) {
-  // log.verbose('-api: should be auth\'d')
-  next()
-})
+// router.use(function authMiddleware (req, res, next) {
+//   log.verbose('-api: should be auth\'d')
+//   next()
+// })
 
 // define the home page route
 router.get('/', function (req, res) {
@@ -86,6 +86,26 @@ router.route('/digest/:digest')
           message: 'The item could not be found',
           statusCode: 404,
           errorCode: 404 // could be app specific
+        })
+      })
+  })
+
+  // define the histories route
+router.route('/history')
+  .get(function (req, res) {
+    let params = req.query // pass on the query params to store.db.histories
+    store.db.history(params)
+      .then((rows) => {
+        res.json(rows)
+      })
+      .catch((err) => {
+        log.info('digests error', err)
+        // TODO(daneroo): Errors: https://kostasbariotis.com/rest-api-error-handling-with-express-js/
+        res.status(500).json({
+          name: 'Error',
+          message: 'The digests could not be listed',
+          statusCode: 500,
+          errorCode: 500 // could be app specific
         })
       })
   })

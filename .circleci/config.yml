@@ -1,0 +1,23 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/daneroo/scrobbleCast
+    parallelism: 1
+    docker:
+      - image: circleci/node:9
+    steps:
+      - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "js/package.json" }}
+      - run:
+          working_directory: ~/daneroo/scrobbleCast/js
+          name: npm-install
+          command: npm install
+      - save_cache:
+          key: dependency-cache-{{ checksum "js/package.json" }}
+          paths:
+            - ./js/node_modules
+      - run:
+          working_directory: ~/daneroo/scrobbleCast/js
+          name: test
+          command: npm test

@@ -22,7 +22,9 @@ const spread = require('./tasks/spread') // for spread.select(stamp,uuid)==deep
 
 // Exported API
 exports = module.exports = {
-  dedupTask: dedupTask
+  dedupTask,
+  upsertHistory,
+  deleteDuplicates
 }
 
 async function dedupTask (credentials) {
@@ -61,7 +63,7 @@ async function dedupTask (credentials) {
 
     // Take the merge().length, because is a single Accumualator now.
     // The return signatures are different between Accumulator.merge() and AccumulatorByXX.merge()
-    var changeCount = historyForSingleUuid.merge(item).length
+    const changeCount = historyForSingleUuid.merge(item).length
 
     if (changeCount === 0) {
       counts.duplicates++
@@ -77,13 +79,14 @@ async function dedupTask (credentials) {
 
   try {
     await store.db.load({user}, itemHandler)
-    log.verbose('Deduped', counts)
+    // log.verbose('Deduped', counts)
     await deleteDuplicates(duplicates)
 
     // last flush
     await conditionalUpsertHistory(historyForSingleUuid, stamp)
 
     await sortAndSaveFromDB(user)
+    return counts
   } catch (error) { // TODO: might remove this altogether
     log.error('Dedup', {
       error: error
@@ -135,6 +138,7 @@ async function upsertHistory (history) {
   }
 }
 
+// TODO:daneroo temporarily removes __lastPlayed for now (so md5 matches)
 async function sortAndSaveFromDB (user) {
   const historyByType = new delta.AccumulatorByTypeByUuid()
   const histories = await orm.History.findAll({
@@ -142,6 +146,7 @@ async function sortAndSaveFromDB (user) {
     where: { __user: user }
   }).map(h => h.history)
   for (const h of histories) {
+    // TODO:daneroo temporarily removes __lastPlayed for now (so md5 matches)
     delete h.meta.__lastPlayed
     const byUuid = historyByType.getAccumulatorByUuidForType(h.meta.__type)
     const acc = byUuid.getAccumulator(h.uuid)

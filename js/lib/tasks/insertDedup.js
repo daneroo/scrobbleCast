@@ -59,7 +59,7 @@ async function dedupWithNewItem (item, hitems) {
     // console.log(flag, JSON.stringify(dedupOrderComparator(hi)))
     const changeCount = history.merge(hi).length
     if ((changeCount === 0) && !isNewItem) { // duplicate (not new), should delete
-      duplicates.push(item)
+      duplicates.push(hi)
     }
     if ((changeCount !== 0) && isNewItem) { // not a duplicate, should insert
       toInsert.push(hi)

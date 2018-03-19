@@ -20,7 +20,20 @@ async function main () {
   for (let credentials of allCredentials) {
     await tasks.dedup(credentials)
   }
-  const dod = await store.db.digestOfDigests()
-  // verbose NOT for logcheck
-  log.verbose('checkpoint', { digest: dod })
+
+  {
+    const {digest, elapsed} = await digestTimer(store.db.digestOfDigests)
+    log.verbose('checkpoint:item', { digest: digest, elapsed })
+  }
+  {
+    const {digest, elapsed} = await digestTimer(store.db.digestOfDigestsHistory)
+    log.verbose('checkpoint:history', { digest: digest, elapsed })
+  }
+}
+
+async function digestTimer (digester) {
+  const start = +new Date()
+  const digest = await digester()
+  const elapsed = (+new Date() - start) / 1000
+  return {digest, elapsed}
 }

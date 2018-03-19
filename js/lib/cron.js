@@ -39,10 +39,12 @@ async function scrapeDedupDigest () {
     }
     { // digest of items
       const {digest, elapsed} = await digestTimer(store.db.digestOfDigests)
+      // checkpoint: Stash this as verbose for dev
       log.info('checkpoint', { digest, scope: 'item', elapsed })
     }
     { // digest of histories
       const {digest, elapsed} = await digestTimer(store.db.digestOfDigestsHistory)
+      // checkpoint: Stash this as verbose for dev
       log.info('checkpoint', { digest, scope: 'history', elapsed })
     }
   } catch (error) {

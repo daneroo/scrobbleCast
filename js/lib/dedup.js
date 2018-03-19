@@ -10,7 +10,6 @@
 //   DEDUP_HISTORY_UPSERT=full  node dedup.js
 
 // dependencies - core-public-internal
-const _ = require('lodash') // only for sortAndSave
 const log = require('./log')
 const utils = require('./utils')
 const config = require('./config')
@@ -85,7 +84,6 @@ async function dedupTask (credentials) {
     // last flush
     await conditionalUpsertHistory(historyForSingleUuid, stamp)
 
-    await sortAndSaveFromDB(user)
     return counts
   } catch (error) { // TODO: might remove this altogether
     log.error('Dedup', {
@@ -135,26 +133,6 @@ async function upsertHistory (history) {
   } catch (error) {
     log.error('history::upsert', error)
   }
-}
-
-// TODO:daneroo temporarily removes __lastPlayed for now (so md5 matches)
-async function sortAndSaveFromDB (user) {
-  const historyByType = new delta.AccumulatorByTypeByUuid()
-  const histories = await orm.History.findAll({
-    attributes: ['history'],
-    where: { __user: user }
-  }).map(h => h.history)
-  for (const h of histories) {
-    // TODO:daneroo temporarily removes __lastPlayed for now (so md5 matches)
-    delete h.meta.__lastPlayed
-    const byUuid = historyByType.getAccumulatorByUuidForType(h.meta.__type)
-    const acc = byUuid.getAccumulator(h.uuid)
-    // to preserve attribute ordering,..
-    delete acc.meta
-    delete acc.history
-    _.merge(acc, h)
-  }
-  await historyByType.sortAndSave(user)
 }
 
 // TODO: move this into db.removeAll, does batch logic

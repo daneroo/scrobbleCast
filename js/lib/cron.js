@@ -39,11 +39,11 @@ async function scrapeDedupDigest () {
     }
     { // digest of items
       const {digest, elapsed} = await digestTimer(store.db.digestOfDigests)
-      log.info('checkpoint:item', { digest: digest, elapsed })
+      log.verbose('checkpoint:item', { digest, scope: 'item', elapsed })
     }
     { // digest of histories
       const {digest, elapsed} = await digestTimer(store.db.digestOfDigestsHistory)
-      log.info('checkpoint:history', { digest: digest, elapsed })
+      log.verbose('checkpoint:history', { digest, scope: 'history', elapsed })
     }
   } catch (error) {
     // TODO, might want to catch before tasks.dedup is called, to make sure dedup always runs...

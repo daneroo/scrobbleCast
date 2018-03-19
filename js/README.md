@@ -157,6 +157,8 @@ docker-compose run --rm -it scrape npm run snapshot
 for h in darwin dirac euler newton; do echo $h `curl -s http://$h.imetrical.com:8000/api/digests|shasum -a 256`; done
 # curl version:
 for h in darwin dirac euler newton; do echo $h `curl -s http://$h.imetrical.com:8000/api/version`; done
+# curl status:
+for h in darwin dirac euler newton; do echo $h `curl -s http://$h.imetrical.com:8000/api/status`; done
 
 # to run a single sync run
 docker-compose run --rm scrape node sync.js http://euler.imetrical.com:8000/api

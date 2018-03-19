@@ -99,12 +99,11 @@ async function dedupTask (credentials) {
 // We will conservatively call upsert only for
 // - any history who's h.meta.__lastUpdated is in a recent window from stamp (__lastUpdated>stamp-window)
 // - or which responds to the same spread behaviour as scrape (for podcast_uuid)
-// - in which case spread.select(stamp, uuid) >=0 guarantees upsert of all items every hour
-// - or spread.select(stamp, uuid) >0 guarantees upsert of all items every day
+// - so: spread.select(stamp, uuid) === 0 guarantees upsert of all items every day
 // You can force full hist table update with
 //   DEDUP_HISTORY_UPSERT=full  node dedup.js
 async function conditionalUpsertHistory (history, stamp) {
-  const window = 24 * 3600000 // 86400000 // __lastUpdated in the last 24 hours
+  const window = 1 * 3600000 // 86400000 // __lastUpdated in the last 1 hours
   const ago = new Date(stamp).getTime() - new Date(history.meta.__lastUpdated)
 
   const forceAll = config.dedup.history_upsert === 'full' // default is 'spread'
@@ -157,6 +156,7 @@ async function sortAndSaveFromDB (user) {
   }
   await historyByType.sortAndSave(user)
 }
+
 // TODO: move this into db.removeAll, does batch logic
 async function deleteDuplicates (duplicates) {
   // shallow copy of duplicates because batching process is destructive

@@ -47,8 +47,6 @@ function defineModels () {
         this.setDataValue('item', str)
         // inject outer keys
 
-        // could be conditional if already set...
-        // if (!this.dataValues['digest']) { ..set.. }
         this.setDataValue('digest', utils.digest(str))
         this.setDataValue('__user', value.__user)
         this.setDataValue('__type', value.__type)
@@ -72,7 +70,7 @@ function defineModels () {
     },
     {
       name: 'items_digest_order',
-      fields: ['__stamp', 'digest']
+      fields: ['__stamp', 'digest'] // might add _stamp DESC
     }
     // {
     //   name: 'old_unique_order',
@@ -82,24 +80,8 @@ function defineModels () {
   })
 
   /// ClassLevel extra finder methods
-
   Item.findAllByPage = async function (options, itemHandler, pageSize = 10000) {
-    const limit = pageSize
-    let offset = 0
-    while (true) {
-      const pagedOptions = {...options, offset, limit}
-      // console.log(new Date(), {offset, limit})
-      const items = await Item.findAll(pagedOptions)
-      for (let item of items) {
-        await itemHandler(item)
-      }
-
-      if (items.length < limit) {
-        break
-      } else {
-        offset += limit
-      }
-    }
+    return findAllByPage(Item, options, itemHandler, pageSize)
   }
 
   const History = sequelize.define('history', {
@@ -107,6 +89,7 @@ function defineModels () {
     __user: {type: Sequelize.STRING, allowNull: false, primaryKey: true},
     __type: {type: Sequelize.STRING, allowNull: false, primaryKey: true},
     uuid: {type: Sequelize.STRING, allowNull: false, primaryKey: true},
+    digest: {type: Sequelize.STRING, allowNull: false},
     __firstSeen: {type: Sequelize.STRING, allowNull: false},
     __lastUpdated: {type: Sequelize.STRING, allowNull: false},
     __lastPlayed: {type: Sequelize.STRING, allowNull: true},
@@ -127,11 +110,10 @@ function defineModels () {
         // inject outer keys
 
         // could be conditional if already set...
-        // this.setDataValue('digest', utils.digest(str))
-        // console.log('VALUE::meta', value.meta)
         this.setDataValue('__user', value.meta.__user)
         this.setDataValue('__type', value.meta.__type)
         this.setDataValue('uuid', value.uuid)
+        this.setDataValue('digest', utils.digest(str))
         this.setDataValue('__firstSeen', value.meta.__firstSeen)
         this.setDataValue('__lastUpdated', value.meta.__lastUpdated)
         this.setDataValue('__lastPlayed', value.meta.__lastPlayed)
@@ -152,6 +134,11 @@ function defineModels () {
     // } ]
   })
 
+  /// ClassLevel extra finder methods
+  History.findAllByPage = async function (options, itemHandler, pageSize = 10000) {
+    return findAllByPage(History, options, itemHandler, pageSize)
+  }
+
   async function init () {
     if (config.sequelize.settings.dialect === 'sqlite') {
       const dir = path.dirname(config.sequelize.settings.storage)
@@ -167,5 +154,25 @@ function defineModels () {
     Item,
     History,
     Op: Sequelize.Op
+  }
+}
+
+// Utility: refactored model neutral helper
+// Model can be Item, History, ...
+async function findAllByPage (Model, options, itemHandler, pageSize = 10000) {
+  const limit = pageSize
+  let offset = 0
+  while (true) {
+    const pagedOptions = {...options, offset, limit}
+    const items = await Model.findAll(pagedOptions)
+    for (let item of items) {
+      await itemHandler(item)
+    }
+
+    if (items.length < limit) {
+      break
+    } else {
+      offset += limit
+    }
   }
 }

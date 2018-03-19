@@ -41,6 +41,7 @@ exports = module.exports = {
   digestsQy,
   digests,
   digestOfDigests,
+  digestOfDigestsHistory,
 
   history,
 
@@ -332,7 +333,7 @@ function digestsQy ({since = '1970-01-01T00:00:00Z', before = '2040-01-01T00:00:
         [Op.lt]: before // < before (strict)
       }
     },
-    order: [['__stamp', 'DESC'], 'digest']
+    order: [['__stamp', 'DESC'], 'digest'] // __stamp DESC is causing extra time, even with index
   }
 }
 
@@ -342,39 +343,44 @@ async function digests (syncParams = {}) {
   return items
 }
 
-async function digestOfDigests () {
-  // Fast implementation, unbouded memory use
-  // const d = (await digests())
-  // return utils.digest(JSON.stringify(d), 'sha256', false)
-
-  const pageSize = 100000
+// Refactored to work with Item and History
+// itemDigester takes the "item" return from query (qy) and produces the digest string
+async function digester (Model, qy, itemDigester, pageSize = 100000) { // for Item and History
   const algorithm = 'sha256'
-  // Paged implementation
-  // A little slower, but capped on memory
-  // time  pageSize heapUsed  (benchmarked with 255k items 2018-02-15)
-  // 1.050s  ALL      120MB  - fast method above hash(digests())
-  // 3.657s  10k      37.22
-  // 2.407s  20k      43.89
-  // 1.865s  40k      35.33
-  // 1.675s  80k      42.97
-  // 1.500s  100k     55.97 <<-- Chosen
-  // 1.389s  160k     78.08
-  // 1.349s  320k     92.42
 
   const hash = crypto.createHash(algorithm)
   let isFirst = true
   async function handler (item) {
-    const str = ((isFirst) ? '[' : ',') + JSON.stringify(item.digest)
+    const digest = itemDigester(item)
+    const str = ((isFirst) ? '[' : ',') + JSON.stringify(digest)
     hash.update(str)
     isFirst = false
   }
-  await orm.Item.findAllByPage(digestsQy(), handler, pageSize)
+  await Model.findAllByPage(qy, handler, pageSize)
   hash.update(']')
   return hash.digest('hex')
 }
 
+async function digestOfDigests () {
+  const pageSize = 100000 // tradeoff speed/memory
+  const qy = digestsQy()
+  const itemDigester = item => item.digest
+  return digester(orm.Item, qy, itemDigester, pageSize)
+}
+
+async function digestOfDigestsHistory () {
+  const pageSize = 10000 // tradeoff speed/memory
+  const qy = {
+    attributes: ['digest'],
+    order: ['__user', '__type', 'uuid']
+  }
+  const itemDigester = item => item.digest
+  return digester(orm.History, qy, itemDigester, pageSize)
+}
+
 function historyQy ({user, type, uuid, since = '1970-01-01T00:00:00Z', before = '2040-01-01T00:00:00Z'} = {}) {
   const qy = {
+    raw: true,
     attributes: ['history', '__lastUpdated'],
     where: {
       '__lastUpdated': {

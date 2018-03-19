@@ -1,29 +1,20 @@
 'use strict'
 
 // dependencies - core-public-internal
-var Promise = require('bluebird')
-var cron = require('cron')
-var CronJob = cron.CronJob
-var log = require('./log')
-var tasks = require('./tasks')
-var store = require('./store') // just for checkpoint
+const cron = require('cron')
+const CronJob = cron.CronJob
+const log = require('./log')
+const tasks = require('./tasks')
+const store = require('./store') // just for checkpoint
 
 // globals
-var allCredentials = [] // injected in start(injectedCredentials) below
-
-// TODO: this should become cronRunner, move to lib, receive/inject config
-// e.g. fomr index.js:
-//   require('./lib/cronRunner').run(config)
+const allCredentials = [] // injected in start(injectedCredentials) below
 
 // cron crash course:
 //  */5 :== 0-59/5, and
-//  1-59/5 :== 1,6,11,16,21
 //  4-59/10 :== 4,14,24,34
-// example
-// every 10 minutes
-//   cronTime: '0 */10 * * * *', // seconds included 6 params - standard 5 params supported
 // Every recurrence pattern is offset by 10 seconds to avoid timestamping in previous minute!
-var recurrence = {
+const recurrence = {
   // everyDayAtMidnight: '10 0 0 * * *',
   // everyHourExceptMidnight: '10 0 1-23/1 * * *',
   // everyTenExceptOnTheHour: '10 10-59/10 * * * *',
@@ -38,37 +29,38 @@ var recurrence = {
 // serial execution of <task> for each credentialed user
 // perform dedup task on all users, after main tasks are completed
 // then perform a checkpoint
-// TODO(daneroo) move checkpoint into composed or separate task
-// returns a function
-function forEachUser (task) {
-  return function () {
-    return Promise.each(allCredentials, task)
-      .then(function () {
-        return Promise.each(allCredentials, tasks.dedup)
-      })
-      .then(async () => {
-        const dod = await store.db.digestOfDigests()
-        // This one if for logcheck: verbose in dev!
-        log.info('checkpoint', { digest: dod })
-      })
-      .catch(function (error) {
-        // TODO, might want to catch before tasks.dedup is called, to make sure dedup always runs...
-        console.error('cron:error', error)
-      })
+async function scrapeDedupDigest () {
+  try {
+    for (const credentials of allCredentials) {
+      await tasks.scrape(credentials)
+    }
+    for (const credentials of allCredentials) {
+      await tasks.dedup(credentials)
+    }
+    { // digest of items
+      const {digest, elapsed} = await digestTimer(store.db.digestOfDigests)
+      log.info('checkpoint:item', { digest: digest, elapsed })
+    }
+    { // digest of histories
+      const {digest, elapsed} = await digestTimer(store.db.digestOfDigestsHistory)
+      log.info('checkpoint:history', { digest: digest, elapsed })
+    }
+  } catch (error) {
+    // TODO, might want to catch before tasks.dedup is called, to make sure dedup always runs...
+    console.error('cron:error', error)
+  }
+  // local timer utility..
+  async function digestTimer (digester) {
+    const start = +new Date()
+    const digest = await digester()
+    const elapsed = (+new Date() - start) / 1000
+    return {digest, elapsed}
   }
 }
-// auto-starts
-function runJob (task, when, perUser) {
-  var message = 'Starting CronJob:'
-  if (task.name) { // depends on the finction having been defined non-anonymously
-    message += ' ' + task.name
-  }
-  if (perUser) { // depends on the finction having been defined non-anonymously
-    message += ' ' + '(user)'
-    task = forEachUser(task)
-  }
-  message += ' ' + when
 
+// auto-starts
+function runJob (task, when) {
+  const message = `Starting CronJob: ${task.name ? task.name : 'anonymous'} ${when}`
   log.info(message)
 
   var job = new CronJob({
@@ -82,13 +74,14 @@ function runJob (task, when, perUser) {
 
 function start (injectedCredentials) {
   // set the module golbal variable
-  allCredentials = injectedCredentials
+  allCredentials.length = 0 // (const so empty and push)
+  allCredentials.push(...injectedCredentials)
 
   log.info('Starting Cron')
   // auto-start all three
-  runJob(tasks.scrape, recurrence.everyTenMinutes, true) // var scrape = ...
-  runJob(tasks.logcheck, recurrence.everyTenMinutesOffsetByFour, false) // var logcheck =
-  runJob(tasks.sync, recurrence.everyTenMinutesOffsetByFive, false) // var sync =
+  runJob(scrapeDedupDigest, recurrence.everyTenMinutes) // var scrape = ...
+  runJob(tasks.logcheck, recurrence.everyTenMinutesOffsetByFour) // var logcheck =
+  runJob(tasks.sync, recurrence.everyTenMinutesOffsetByFive) // var sync =
 }
 exports = module.exports = {
   start: start

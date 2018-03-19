@@ -371,6 +371,7 @@ async function digestOfDigests () {
 async function digestOfDigestsHistory () {
   const pageSize = 10000 // tradeoff speed/memory
   const qy = {
+    raw: true,
     attributes: ['digest'],
     order: ['__user', '__type', 'uuid']
   }
@@ -380,7 +381,6 @@ async function digestOfDigestsHistory () {
 
 function historyQy ({user, type, uuid, since = '1970-01-01T00:00:00Z', before = '2040-01-01T00:00:00Z'} = {}) {
   const qy = {
-    raw: true,
     attributes: ['history', '__lastUpdated'],
     where: {
       '__lastUpdated': {

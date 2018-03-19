@@ -34,7 +34,7 @@ exports = module.exports = {
 async function getCheckpointRecords () {
   // The search options can be parametrized later (hours,runs...)
   var searchOptions = {
-    query: 'tag:pocketscrape AND json.message:checkpoint AND json.digest:*',
+    query: 'tag:pocketscrape AND json.message:checkpoint AND json.scope:item AND json.digest:*',
     from: '-24h',
     until: 'now',
     order: 'desc', // which is the default

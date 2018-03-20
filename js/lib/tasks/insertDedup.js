@@ -28,8 +28,7 @@ async function insertDedup (items) {
     allInserts.push(...toInsert)
     allDuplicates.push(...duplicates)
     if (toInsert.length > 0 || duplicates.length > 0) {
-      // console.log({toInsert, duplicates, history})
-      await dedup.upsertHistory(history)
+      await dedup.upsertHistories([history])
     }
   }
   const counts = {items: items.length, inserted: allInserts.length, deleted: allDuplicates.length}

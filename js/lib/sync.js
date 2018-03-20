@@ -53,7 +53,7 @@ async function fetchMissingFromRemote (baseURI, missingLocal) {
       log.verbose(`--failed to fetch: ${options.uri}`)
     }
   }
-  const counts = await insertDedup(fetchedItems) // wrap as array..
+  const counts = await insertDedup(fetchedItems)
   return counts
 }
 

@@ -6,23 +6,20 @@
 // only write (upsert history) if:
 //   --lastUpdated is in a time window (24hrs)
 //   --podcast uuid is in scrape.spread deep (once every 24hrs)
-// You can force full hist table update with
-//   DEDUP_HISTORY_UPSERT=full  node dedup.js
 
 // dependencies - core-public-internal
 const log = require('./log')
 const utils = require('./utils')
-const config = require('./config')
 // -- Implementation functions
 const store = require('./store')
 const delta = require('./delta')
 const orm = require('./model/orm')
-const spread = require('./tasks/spread') // for spread.select(stamp,uuid)==deep
+const Op = orm.Op
 
 // Exported API
 exports = module.exports = {
   dedupTask,
-  upsertHistory,
+  upsertHistories,
   deleteDuplicates
 }
 
@@ -35,11 +32,15 @@ async function dedupTask (credentials) {
   var counts = {
     total: 0,
     duplicates: 0,
-    keepers: 0
+    keepers: 0,
+    insertH: 0, // history inserts
+    updateH: 0 // history upserts
   }
 
   // to accumulate duplicates
-  var duplicates = []
+  const duplicates = []
+  const historyBatchSize = 1000
+  let historiesToUpsert = [] // batch them up
 
   // to break items on uuid boundaries
   let lastSeen = '' // composite key: {__user, __type, uuid}
@@ -53,7 +54,14 @@ async function dedupTask (credentials) {
       lastSeen = seeing
       if (historyForSingleUuid !== null) {
         // insert prev accumulated history into store
-        await conditionalUpsertHistory(historyForSingleUuid, stamp)
+        historiesToUpsert.push(historyForSingleUuid)
+
+        if (historiesToUpsert.length >= historyBatchSize) {
+          const batchCounts = await batchUpsertHistory(historiesToUpsert, stamp)
+          counts.insertH += batchCounts.insert
+          counts.updateH += batchCounts.update
+          historiesToUpsert.length = 0 // empty
+        }
       }
       historyForSingleUuid = new delta.Accumulator()
     }
@@ -78,11 +86,16 @@ async function dedupTask (credentials) {
 
   try {
     await store.db.load({user}, itemHandler)
-    // log.verbose('Deduped', counts)
-    await deleteDuplicates(duplicates)
 
-    // last flush
-    await conditionalUpsertHistory(historyForSingleUuid, stamp)
+    // last flush of Accumulator
+    historiesToUpsert.push(historyForSingleUuid)
+    // last flush of historyBatch
+    const batchCounts = await batchUpsertHistory(historiesToUpsert, stamp)
+    counts.insertH += batchCounts.insert
+    counts.updateH += batchCounts.update
+    historiesToUpsert.length = 0 // empty
+
+    await deleteDuplicates(duplicates)
 
     return counts
   } catch (error) { // TODO: might remove this altogether
@@ -93,50 +106,98 @@ async function dedupTask (credentials) {
   }
 }
 
-// Because upsert history is rather slow (batching could be done as in item.SaveByBatch, but...)
-// We will conservatively call upsert only for
-// - any history who's h.meta.__lastUpdated is in a recent window from stamp (__lastUpdated>stamp-window)
-// - or which responds to the same spread behaviour as scrape (for podcast_uuid)
-// - so: spread.select(stamp, uuid) === 0 guarantees upsert of all items every day
-// You can force full hist table update with
-//   DEDUP_HISTORY_UPSERT=full  node dedup.js
-async function conditionalUpsertHistory (history, stamp) {
-  const window = 1 * 3600000 // 86400000 // __lastUpdated in the last 1 hours
-  const ago = new Date(stamp).getTime() - new Date(history.meta.__lastUpdated)
+function _digest (item) {
+  return utils.digest(JSON.stringify(item))
+}
 
-  const forceAll = config.dedup.history_upsert === 'full' // default is 'spread'
-  const inTimeWindow = ago <= window
-  const podcastUuid = (history.meta.__type === 'podcast') ? history.uuid : history.podcast_uuid
+async function _filterExisting (Model, wrappedItemsWithDigests) {
+  const digests = wrappedItemsWithDigests.map(i => i.digest)
 
-  const selected = spread.select(stamp, podcastUuid) === 0 // === deep
-  if (!forceAll && !inTimeWindow && !selected) {
-    return
+  const existingDigests = await Model.findAll({
+    raw: true,
+    attibutes: ['digest'],
+    where: {
+      digest: {
+        [Op.in]: digests
+      }
+    }
+  }).map(i => i.digest)
+  // if no existing digests, return original array
+  if (existingDigests.length === 0) {
+    return wrappedItemsWithDigests
   }
-  await upsertHistory(history)
+  // console.log('existing digests', existingDigests.length)
+
+  // make a lookup for filtering
+  const exists = {}
+  existingDigests.forEach(digest => {
+    exists[digest] = true
+  })
+
+  const filtered = wrappedItemsWithDigests.filter(item => !exists[item.digest])
+
+  return filtered
+}
+
+async function batchUpsertHistory (histories, stamp) {
+  // remove existing
+  const wrapped = histories.map(h => ({history: h, digest: _digest(h)}))
+  const needSaving = await _filterExisting(orm.History, wrapped)
+
+  const counts = await upsertHistories(needSaving.map(h => h.history))
+  return counts
 }
 
 // TODO:daneroo should move to some class akin to store.*, perhaps history.(mem|db)
-async function upsertHistory (history) {
-  // log.verbose('saving history', JSON.stringify(history, null, 2))
-  const h = {
-    __user: history.meta.__user,
-    _type: history.meta.__type,
-    uuid: history.uuid,
-    __firstSeen: history.meta.__firstSeen,
-    __lastUpdated: history.meta.__lastUpdated,
-    __lastPlayed: history.meta.__lastPlayed,
-    history
+async function upsertHistories (histories) {
+  const counts = {insert: 0, update: 0}
+  if (histories.length === 0) {
+    return counts
+  }
+  const bulkInserts = []
+  for (const history of histories) {
+    const key = {
+      __user: history.meta.__user,
+      __type: history.meta.__type,
+      uuid: history.uuid
+    }
+    const digest = utils.digest(JSON.stringify(history))
+    const dbDigest = await orm.History.findOne({
+      raw: true,
+      attributes: ['digest'],
+      where: key
+    })
+    // duplicate means history is present and matches digest
+    const duplicate = dbDigest && (dbDigest.digest === digest)
+    if (duplicate) {
+      continue
+    }
+    try {
+      if (dbDigest) { // and not duplicate
+        counts.update++
+        await orm.History.upsert({...key, history})
+      } else {
+        // await orm.History.create({...key, history})
+        bulkInserts.push({...key, history})
+      }
+    } catch (error) {
+      log.error('history::upsert', error)
+    }
   }
   try {
-    await orm.History.upsert(h)
-    // console.log('upsert', ret)
+    counts.insert += bulkInserts.length
+    await orm.History.bulkCreate(bulkInserts)
   } catch (error) {
-    log.error('history::upsert', error)
+    log.error('history::bulkCreate', error)
   }
+  return counts
 }
 
 // TODO: move this into db.removeAll, does batch logic
 async function deleteDuplicates (duplicates) {
+  if (duplicates.length === 0) {
+    return
+  }
   // shallow copy of duplicates because batching process is destructive
   duplicates = duplicates.slice()
 

@@ -168,8 +168,8 @@ docker-compose run --rm scrape node sync.js http://newton.imetrical.com:8000/api
 docker-compose run --rm scrape node sync.js http://192.168.3.131:8000/api
 docker-compose run --rm scrape node sync.js http://192.168.5.144:8000/api
 
-# dedup as needed
-export HOSTNAME; docker-compose run --rm scrape node dedup.js # --full
+# dedup as needed - also upserts all history
+export HOSTNAME; docker-compose run --rm scrape node dedup.js
 
 # delete for extraordinary reconcile
 docker-compose exec postgres psql -U postgres scrobblecast

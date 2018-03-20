@@ -126,12 +126,12 @@ function defineModels () {
       // beforeBulkCreate: instances => instances.forEach(injectKeys),
       // beforeValidate: injectKeys
       // beforeCreate: injectKeys
-    }
-    // indexes: [{
-    //   unique: true,
-    //   // name: 'history_primary',
-    //   fields: ['__user', '__type', 'uuid']
-    // } ]
+    },
+    indexes: [{
+      unique: true,
+      name: 'history_digest',
+      fields: ['digest']
+    } ]
   })
 
   /// ClassLevel extra finder methods

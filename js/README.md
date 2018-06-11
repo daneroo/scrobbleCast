@@ -143,6 +143,10 @@ docker-compose build --pull
 export HOSTNAME; docker-compose up -d
 docker-compose logs -f scrape
 
+# clear screen:
+/usr/bin/osascript -e 'tell application "System Events" to tell process "Terminal" to keystroke "k" using command down'
+
+
 # restore from s3 -> data/snapshots -> DB
 docker-compose run --rm scrape npm run restore
 docker-compose run --rm scrape node restore.js

@@ -156,7 +156,7 @@ docker-compose run --rm scrape node restore.js
 # -optionally, to avoid pushing other hosts 'current'
 #  rm -rf data/snapshots/current/
 export HOSTNAME; docker-compose run --rm scrape node snapshots.js
-docker-compose run --rm -it scrape npm run snapshot
+docker-compose run --rm scrape npm run snapshot
 
 # curl digests:
 for h in darwin dirac euler newton; do echo $h `curl -s http://$h.imetrical.com:8000/api/digests|shasum -a 256`; done

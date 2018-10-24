@@ -1,5 +1,16 @@
-# implement the feed fetch in node.js
+# Scobblecast: implement the feed fetch in node.js
 
+## Operation
+Using a `Makefile`, with targets:
+```
+make build
+make start
+make logs
+make snapshot
+make restore
+```
+
+## Clock Drift
 _ dirac clock running fast in docker: _
 ```
 date;docker exec -it js_scrape_1 date; date
@@ -147,7 +158,7 @@ docker-compose logs -f scrape
 docker-compose run --rm scrape npm run restore
 docker-compose run --rm scrape node restore.js
 
-# take a snapshot pg -> data/snapshots -> s3
+# take a snapshot DB -> data/snapshots -> s3
 # -optionally, to avoid pushing other hosts 'current'
 #  rm -rf data/snapshots/current/
 export HOSTNAME; docker-compose run --rm scrape node snapshots.js

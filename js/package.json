@@ -7,7 +7,7 @@
     "start": "node server.js",
     "unit": "NODE_ENV=test mocha --recursive test/",
     "lint": "standard",
-    "secscan": "nsp check",
+    "secscan": "npm audit",
     "coverage": "NODE_ENV=test istanbul cover node_modules/.bin/_mocha -- --recursive test/",
     "test": "npm run lint && npm run secscan && npm run unit",
     "snapshot": "s3-cli --config s3cfg.ini sync data/snapshots/ s3://scrobblecast/snapshots/",
@@ -41,7 +41,7 @@
     "request-promise": "^4.2.2",
     "s3-cli": "^0.13.0",
     "sequelize": "^4.33.4",
-    "sqlite3": "^4.0.0",
+    "sqlite3": "^4.0.4",
     "type-is": "^1.6.16",
     "winston": "^2.4.0",
     "winston-loggly": "^1.2.0"

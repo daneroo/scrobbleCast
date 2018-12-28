@@ -1,12 +1,13 @@
 'use strict'
 
+// Re-implementation of pocket API for v2
 // dependencies - core-public-internal
 
 var Promise = require('bluebird')
 var _ = require('lodash')
 var RateLimiter = require('limiter').RateLimiter
 
-var retry = require('./retry')
+var rp = require('request-promise')
 var Session = require('./session')
 var log = require('./log')
 var utils = require('./utils')
@@ -19,6 +20,7 @@ var limiter = new RateLimiter(5, 1000) // chosen
 function PocketAPI (options) {
   this.session = new Session()
   this.user = null // set by sign_in
+  this.token = null // set by sign_in
   // maybe default stamp should be time of fetch not time of session init...
   this.stamp = (options && options.stamp) ? options.stamp : utils.stamp('minute')
   log.verbose('PocketAPI:Injecting stamp', {
@@ -28,7 +30,7 @@ function PocketAPI (options) {
 
 // the actual endpoints
 var paths = {
-  sign_in: '/users/sign_in',
+  sign_in: '/user/login',
   web: '/web',
   podcasts_all: '/web/podcasts/all.json',
   new_releases_episodes: '/web/episodes/new_releases_episodes.json',
@@ -43,7 +45,7 @@ PocketAPI.prototype._fetch = async function (path, params) {
     log.debug('fetching', { page: params.page })
   }
   await speedLimit()
-  const response = await retry(this.session.reqJSON(path, params))
+  const response = await rp(this.session.reqJSON(path, params))
   if (verbose) {
     const meta = {path}
     if (response.episodes) {
@@ -198,7 +200,7 @@ PocketAPI.prototype.sign_in = function (credentials) {
   //  whereas a faled login returns the login page content again (200)
   //  the 302 response also has a new XSRF-TOKEN cookie
   var self = this
-  return retry(self.session.reqGen(paths.sign_in, {
+  return rp(self.session.reqGen(paths.sign_in, {
     resolveWithFullResponse: true
   }))
     .then(function (/* response */) {
@@ -209,7 +211,7 @@ PocketAPI.prototype.sign_in = function (credentials) {
       // now do a form post for login, expect a 302, which is not followed for POST.
       // unless followAllRedirects: true, but that only follows back to / and causes an extra fetch
       return new Promise(function (resolve, reject) {
-        retry(self.session.reqGenXSRF(paths.sign_in, {
+        rp(self.session.reqGenXSRF(paths.sign_in, {
           form: form
         })).then(function (response) {
           console.log('response OK, expecting 302, reject.', response)
@@ -228,7 +230,7 @@ PocketAPI.prototype.sign_in = function (credentials) {
       })
     })
     .then(function () {
-      return retry(self.session.reqGen(paths.web, {
+      return rp(self.session.reqGen(paths.web, {
         resolveWithFullResponse: true
       }))
     })

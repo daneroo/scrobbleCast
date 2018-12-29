@@ -1,5 +1,7 @@
 'use strict'
 
+// TODO(daneroo): Remove Deprecated
+
 var rp = require('request-promise')
 var _ = require('lodash')
 

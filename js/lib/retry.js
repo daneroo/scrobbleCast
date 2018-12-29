@@ -1,5 +1,7 @@
 'use strict'
 
+// TODO(daneroo): Remove Deprecated
+
 // This script is simple wrapper around `request-promise`
 // It is meant to encapsulate these functionanlities:
 //   -error handling

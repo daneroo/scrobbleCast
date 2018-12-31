@@ -7,8 +7,8 @@ RUN ln -sf /usr/share/zoneinfo/Canada/Eastern /etc/localtime
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
-COPY package.json package-lock*.json npm-shrinkwrap*.json /usr/src/app/
-RUN npm install && npm cache clean --force
+COPY package.json package-lock*.json /usr/src/app/
+RUN npm ci
 COPY . /usr/src/app
 
 # TODO:daneroo run as non root user

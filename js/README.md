@@ -1,8 +1,10 @@
 # Scobblecast: implement the feed fetch in node.js
 
 ## Operation
+
 Using a `Makefile`, with targets:
-```
+
+```bash
 make build
 make start
 make logs
@@ -11,8 +13,10 @@ make restore
 ```
 
 ## Clock Drift
-_ dirac clock running fast in docker: _
-```
+
+_dirac clock running fast in docker:_
+
+```bash
 date;docker exec -it js_scrape_1 date; date
 docker run --rm --privileged alpine hwclock -s
 date +%Y-%m-%dT%H:%M:%S%z ;docker exec -it js_scrape_1 date -Isec; date +%Y-%m-%dT%H:%M:%S%z
@@ -25,13 +29,17 @@ docker run --rm --net=host --pid=host --privileged -it justincormack/nsenter1 /b
 ```
 
 ## Nats
-```
+
+```bash
 docker run -d --name nats -p 4222:4222 -p 6222:6222 -p 8222:8222 nats
 npx natsboard --nats-mon-url http://demo.nats.io:8222
 ```
-## Test 
+
+## Test
+
 Until npm run sescan passes!
-```
+
+```bash
 npm run unit
 
 # - postgres
@@ -52,6 +60,7 @@ DB_LOG=1 DB_DIALECT=postgres npm run unit
     - mocha / (jest, replace istanbul?)
     - pg (jsut pass tests)
 - log (and check) scrape calculations)
+- <https://github.com/JoshuaWise/better-sqlite3>
 - expose status for tasks (recently completed too)
 - consolidate top level commands (dedup, sync, checkpoint, logcheck sync,scrape)
 - refactor tasks: composable, adjust perUser, scrape, dedup vs checkpoint
@@ -66,7 +75,7 @@ DB_LOG=1 DB_DIALECT=postgres npm run unit
 
 Scenario:
 
-- restore from s3: 
+- restore from s3:
   - s3://scrobblecast/snapshots/ -> file:data/snapshots/
   - file:data/snapshots/ -> store
   - dedup
@@ -88,8 +97,6 @@ Scenario:
 ## S3 Bucket and policy
 
 **2016-08-18 Versioning was enabled on s3://scrobblecast/**
-
-
 Objective: snapshots (monthly [/daily/hourly] ) will be saved to an s3 bucket.
 
 This will be used as a seed for any new host, and replaces `data/rollup`.
@@ -101,7 +108,8 @@ However, we might want to consider `sinkFile.write( ,,{overwrite: true})` if we 
 - Bucket Policy: The policiy naming `scrobblecast-s3-rw` is attached to the bucket.
 
 You gotta be kidding, separate statement for list, and put/get/delete
-```
+
+```json
 {
   "Id": "Policy1469750948684",
   "Version": "2012-10-17",
@@ -139,11 +147,13 @@ You gotta be kidding, separate statement for list, and put/get/delete
 ```
 
 ## Operations
+
 ### Local
+
 - clean, restore, scrape, snapshot
 - sqlite/postgres variant
 
-```
+```bash
 # start fresh? cleanup first?
 rm -rf data/
 docker volume rm js_scrbl_pgdata
@@ -153,6 +163,10 @@ export HOSTNAME
 docker-compose build --pull
 export HOSTNAME; docker-compose up -d
 docker-compose logs -f scrape
+
+# clear screen:
+/usr/bin/osascript -e 'tell application "System Events" to tell process "Terminal" to keystroke "k" using command down'
+
 
 # restore from s3 -> data/snapshots -> DB
 docker-compose run --rm scrape npm run restore
@@ -187,7 +201,6 @@ docker-compose exec postgres psql -U postgres scrobblecast
 scrobblecast=# delete from items where encode(digest(item::text, 'sha256'), 'hex')='3fef8c3a1f5808d2938e06fa9e5cb419fe6d7fe9d10e56f59ddb87a5245d7211';
 
 # check monthly sums after restore/snapshots...
-```
 md5sum $(find data/snapshots -type f -not -name current\*)|cut -d \  -f 1|sort|md5sum
 
 docker exec -it js_scrape_1 bash -c 'md5sum $(find data/snapshots -type f -not -name current\*)|cut -d \  -f 1|sort|md5sum'
@@ -196,8 +209,10 @@ docker-compose run --rm scrape bash -c 'md5sum $(find data/snapshots -type f -no
 ```
 
 ## Deployment: Zeit Now / Docker Cloud / k8s
+
 inject credentials somehow:
-```
+
+```bash
 remove .dockerignore for 2 credential json files
 remove user daniel clause causing perm probs.
 How to set HOSTNAME???
@@ -206,7 +221,8 @@ inject data (before synch is possible)
 ```
 
 Build the image locally
-```
+
+```bash
   docker-compose build
   docker tag nodejses6_scrape:latest daneroo/scrobblecast:withcreds
   # Just regenerate if you loose these keys (password is api key)
@@ -218,7 +234,7 @@ Build the image locally
 
 Start a container and connect to it
 
-```
+```bash
 docker-compose up -d postgres
 
 docker-compose exec postgres bash
@@ -244,11 +260,11 @@ select * from pg_stat_activity
 time docker-compose exec postgres psql -U postgres scrobblecast -c "select count(*) from items"
 time docker-compose exec postgres psql -U postgres scrobblecast -q -P pager=off -c "select encode(digest(item::text, 'md5'), 'hex') as digest FROM items"
 time docker-compose exec postgres psql -U postgres scrobblecast -q -P pager=off -c "select encode(digest(item::text, 'md5'), 'hex') as digest FROM items where __stamp>'2016-12-22 17:10'"
-```    
+```
 
 ## Auth Notes
 
-- Auth/Login: 
+- Auth/Login:
   - GET /users/sign_in, to get cookies (XSRF-TOKEN)
   - POST form to /users/sign_in, with authenticity_token and credentials in form  
     Note: the POST returns a 302, which rejects the request-promise,  

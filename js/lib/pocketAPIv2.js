@@ -93,6 +93,20 @@ PocketAPI.prototype.podcasts = async function () {
   return this.normalize(response.podcasts, '01-podcasts')
 }
 
+// TODO(daneroo): decorate
+PocketAPI.prototype.episodes = async function (uuid) {
+  if (!uuid) {
+    throw new Error('episodes::missing podcast uuid')
+  }
+  const response = await this._fetch(paths.episodes, { uuid })
+  if (!response || !response.episodes) {
+    throw new Error('Unexpected or malformed response')
+  }
+  return this.normalize(response.episodes, '02-podcasts', {
+    podcast_uuid: uuid
+  })
+}
+
 PocketAPI.prototype.newReleases = async function () {
   const response = await this._fetch(paths.new_releases, { })
   if (!response || !response.episodes) {
@@ -107,20 +121,6 @@ PocketAPI.prototype.inProgress = async function () {
     throw new Error('Unexpected or malformed response')
   }
   return this.normalize(response.episodes, '04-in_progress')
-}
-
-// TODO(daneroo): decorate
-PocketAPI.prototype.episodes = async function (uuid) {
-  if (!uuid) {
-    throw new Error('episodes::missing podcast uuid')
-  }
-  const response = await this._fetch(paths.episodes, { uuid })
-  if (!response || !response.episodes) {
-    throw new Error('Unexpected or malformed response')
-  }
-  return this.normalize(response.episodes, '02-podcasts', {
-    podcast_uuid: uuid
-  })
 }
 
 // TODO(daneroo): change credential fields to username,password

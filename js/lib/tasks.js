@@ -8,7 +8,7 @@
 // dependencies - core-public-internal
 const _ = require('lodash')
 // mine
-const PocketAPI = require('./pocketAPI')
+const PocketAPI = require('./pocketAPIv2')
 const log = require('./log')
 const config = require('./config')
 const utils = require('./utils')
@@ -84,8 +84,8 @@ async function scrape (credentials) {
 
   try {
     const sums = {} // e.g. {items:3,inserted:1,deleted:2}
-    await apiSession.sign_in(credentials)
-    const podcasts = await apiSession.podcasts()()
+    await apiSession.login(credentials)
+    const podcasts = await apiSession.podcasts()
     const counts01 = await insertDedup(podcasts)
     sumCounts(sums, counts01)
     progress('01-podcasts', counts01)
@@ -98,11 +98,8 @@ async function scrape (credentials) {
       // const select = spread.select(apiSession.stamp, spread.zeroOffsetUUID) // Old cron style
       const select = spread.select(apiSession.stamp, uuid) // new schedule method
 
-      if (select >= 0) { // deep, shallow i.e. not skip
-        const episodes = await apiSession.podcastPages({
-          uuid: uuid,
-          maxPage: select // 0:deep, 1:shallow
-        })()
+      if (select >= 0) { // deep, shallow i.e. not skip, no longer any cocept of shallow
+        const episodes = await apiSession.episodes(uuid)
         const counts02 = await insertDedup(episodes)
         sumCounts(sums, counts02)
         progress('02-podcasts', {
@@ -112,12 +109,12 @@ async function scrape (credentials) {
         })
       }
     }
-    const newReleases = await apiSession.new_releases()()
+    const newReleases = await apiSession.newReleases()
     const counts03 = await insertDedup(newReleases)
     sumCounts(sums, counts03)
     progress('03-new_releases', counts03)
 
-    const inProgress = await apiSession.in_progress()()
+    const inProgress = await apiSession.inProgress()
     const counts04 = await insertDedup(inProgress)
     sumCounts(sums, counts04)
     progress('04-in_progress', counts04)

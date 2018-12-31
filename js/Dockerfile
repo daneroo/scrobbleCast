@@ -1,4 +1,4 @@
-FROM node:9
+FROM node:11
 
 # this must have been why my docker instance was diverging (node's cron module on localtime)
 # should be /usr/share/zoneinfo/Canada/Eastern not /usr/share/zoneinfo/EST

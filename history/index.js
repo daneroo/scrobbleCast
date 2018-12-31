@@ -68,7 +68,7 @@ async function history (src) {
   // console.log(JSON.stringify(episodes, null, 2))
   writeHistory(episodes, 14, src.u)
   summary(episodes)
-  recentList(episodes, 7, 10)
+  recentList(episodes, 14, 50)
 }
 
 function writeHistory (episodes, days, user) {

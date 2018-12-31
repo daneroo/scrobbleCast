@@ -5,7 +5,6 @@
 
 // dependencies - core-public-internal
 const os = require('os')
-const rp = require('request-promise')
 const PocketAPI = require('./lib/pocketAPIv2')
 const utils = require('./lib/utils')
 
@@ -13,8 +12,6 @@ const log = require('./lib/log')
 // var tasks = require('./lib/tasks');
 
 const allCredentials = require('./credentials.json')
-const baseURI = 'https://api.pocketcasts.com'
-const cacheURI = 'https://cache.pocketcasts.com'
 
 main()
 
@@ -36,7 +33,7 @@ async function main () {
 }
 
 async function iteration () {
-  for (let credentials of allCredentials.slice(-1)) {
+  for (let credentials of allCredentials) {
     await tryemall(credentials)
   }
   log.info('Done all')
@@ -63,7 +60,7 @@ async function tryemall (credentials) {
   log.info('  01-podcasts', podcasts.length)
   oneOfEach['01-podcasts'] = podcasts[0]
 
-  for (const podcast of podcasts.slice(-1)) {
+  for (const podcast of podcasts) {
     const {uuid, title} = podcast
     const episodes = await apiSession.episodes(uuid)
     log.info('  02-episodes', episodes.length, {uuid, title})
@@ -87,76 +84,6 @@ async function tryemall (credentials) {
 
   console.log(JSON.stringify(oneOfEach, null, 2))
   log.info('Done', credentials.name)
-}
-
-async function getEpisodes (token, podcastuuid) {
-  // podcastuuid = '70d13d50-9efe-0130-1b90-723c91aeae46'
-  const response = await rp({
-    method: 'POST',
-    uri: `${baseURI}/user/podcast/episodes`,
-    headers: {
-      authorization: `Bearer ${token.token}`
-    },
-    body: {
-      uuid: podcastuuid
-    },
-    json: true // Automatically stringifies the body to JSON
-  })
-
-  // https://cache.pocketcasts.com/podcast/full/70d13d50-9efe-0130-1b90-723c91aeae46/0/3/1000
-  const full = await rp({
-    method: 'GET',
-    uri: `${cacheURI}/podcast/full//${podcastuuid}/0/3/1000`,
-    headers: {
-      authorization: `Bearer ${token.token}`
-    },
-    json: true // Automatically stringifies the body to JSON
-  })
-
-  const episodes = []
-
-  // log.debug('found', {
-  //   ep: response.episodes.length,
-  //   full: full.podcast.episodes ? full.podcast.episodes.length : -1,
-  //   episode_count: full.episode_count,
-  //   title: full.podcast.title
-  // })
-  // if (!full.podcast.episodes) {
-  //   console.log(JSON.stringify({full, response}, null, 2))
-  // }
-  // moved to static: url,title,published was published_at,duration,file_type,file_size was size
-  // duration is copied from static, as it is alway 0 in episode itself
-  // I will use the new names: published was published_at, file_size was size
-  const staticProps = ['url', 'title', 'published', 'duration', 'file_type', 'file_size']
-  let notfound = 0
-  for (const episode of response.episodes) {
-    let found = false
-    for (const fullEpisode of full.podcast.episodes) {
-      if (fullEpisode.uuid === episode.uuid) {
-        found = true
-        // log.info('  -- found', {uuid: episode.uuid, title: fullEpisode.title})
-        // be defensive:
-        for (const prop of staticProps) {
-          if (prop in fullEpisode) {
-            episode[prop] = fullEpisode[prop]
-          } else {
-            log.warn('  -- could not set prop', {prop, uuid: episode.uuid})
-          }
-        }
-        // break
-      }
-    }
-    if (found) {
-      episodes.push(episode)
-    } else {
-      notfound++
-      // log.warn('  -- could not find episode', {uuid: episode.uuid, podcastuuid})
-    }
-  }
-  if (notfound > 0) {
-    log.warn(' notfound', {notfound, ep: response.episodes.length, full: full.podcast.episodes.length, episode_count: full.episode_count, title: full.podcast.title})
-  }
-  return episodes
 }
 
 function samples () {

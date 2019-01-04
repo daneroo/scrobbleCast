@@ -47,6 +47,19 @@ function normalize (thing) {
       delete thing[field]
     }
   })
+
+  // convert size field to Integer (if not null, and parseable as int)
+  // api v2 has size as string for 03-new_releases and 04-in_progress
+  if ('size' in thing && thing.size !== null) {
+    if (!Number.isInteger(thing.size)) {
+      const parsed = parseInt(thing.size, 10)
+      if (!isNaN(parsed)) {
+        thing.size = parsed
+      } else {
+        console.error('Size NaN:', thing.__stamp, thing.__sourceType, thing.size, typeof thing.size)
+      }
+    }
+  }
   // return normalized modified object
   return thing
 }

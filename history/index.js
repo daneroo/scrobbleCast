@@ -64,11 +64,13 @@ async function history (src) {
     .map(curriedEpisodeProjection(podcastTitlesAndThumb))
     .map(playCounts)
     .filter(e => e.get('playedTime') > 0)
+    .sortBy(e => e.get('lastPlayed'))
+    .reverse()
 
   // console.log(JSON.stringify(episodes, null, 2))
   writeHistory(episodes, 14, src.u)
   summary(episodes)
-  recentList(episodes, 14, 50)
+  recentList(episodes, 14, 100)
 }
 
 function writeHistory (episodes, days, user) {
@@ -86,10 +88,10 @@ function recentList (episodes, days = 3, maxEntries = 10) {
       const prop = e.get('playedProportion')
       const f = {
         podcast_title: e.get('podcast_title'),
-        when: moment(e.get('lastPlayed')).fromNow(),
+        when: moment(e.get('lastPlayed')), //.fromNow(),
         percent: (prop < 0.9) ? '(' + (prop * 100).toFixed(0) + '%) ' : ''
       }
-      console.log(`  ${f.when} ${f.percent}: ${f.podcast_title}: - ${e.get('title')}`)
+      console.log(`  ${f.when} ${f.percent}: ${f.podcast_title}: - ${e.get('title')} - ${e.get('uuid')}`)
     })
 }
 
@@ -181,7 +183,7 @@ function mapBy (list, field) { // e.g. 'uuid'
 async function loadHistoryAsList (src, type) {
   // const object = await fromFile(src, type)
   const object = await fromHost(src, type)
-
+  console.log(`read ${object.length} from ${src.h}`)
   const list = immutable.fromJS(object)
   return list
 }

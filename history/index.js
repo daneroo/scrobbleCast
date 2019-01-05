@@ -91,7 +91,7 @@ function recentList (episodes, days = 3, maxEntries = 10) {
         when: moment(e.get('lastPlayed')), //.fromNow(),
         percent: (prop < 0.9) ? '(' + (prop * 100).toFixed(0) + '%) ' : ''
       }
-      console.log(`  ${f.when} ${f.percent}: ${f.podcast_title}: - ${e.get('title')} - ${e.get('uuid')}`)
+      console.log(`  ${f.when} ${f.percent}: ${f.podcast_title}: - ${e.get('title')}`)
     })
 }
 

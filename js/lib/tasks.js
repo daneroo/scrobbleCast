@@ -1,10 +1,5 @@
 'use strict'
 
-// There are three scraping tasks:
-// -quick (only 03-new-releases/04-in_progress)
-// -shallow: implies quick
-// -deep : implies shallow, and threfore quick
-
 // dependencies - core-public-internal
 const _ = require('lodash')
 // mine
@@ -88,15 +83,21 @@ async function scrape (credentials) {
     const podcasts = await apiSession.podcasts()
     const counts01 = await insertDedup(podcasts)
     sumCounts(sums, counts01)
+
+    // get recently played podcasts, to scrape them even if not scheduled
+    const hoursAgo = 4 // which is the default
+    const recentPodcastUuids = await spread.getRecentPodcastUuids(credentials.name, hoursAgo)
+    // just to log in progress(01-)
+    counts01.selectRecent = Object.keys(recentPodcastUuids).length
+
     progress('01-podcasts', counts01)
 
     var podcastByUuid = _.groupBy(podcasts, 'uuid')
 
     for (let uuid of _.pluck(podcasts, 'uuid')) {
-      // Scrape scheduling
-      // -1,0,1: skip,deep,shallow
-      // const select = spread.select(apiSession.stamp, spread.zeroOffsetUUID) // Old cron style
-      const select = spread.select(apiSession.stamp, uuid) // new schedule method
+      // Scrape scheduling: shallow is no longer distinct from deep
+      // -1,0,1,2: skip,deep,shallow,recent
+      const select = spread.select(apiSession.stamp, uuid, recentPodcastUuids) // new schedule method
 
       if (select >= 0) { // deep, shallow i.e. not skip, no longer any cocept of shallow
         const episodes = await apiSession.episodes(uuid)

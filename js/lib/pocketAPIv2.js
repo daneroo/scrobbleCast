@@ -180,7 +180,7 @@ PocketAPI.prototype.decorateEpisodes = async function (uuid, incomingEpisodes) {
     }
   }
   if (notfound > 0) {
-    log.warn('decorate episodes', {returning: episodes.length, notfound, incomingEpisodes: incomingEpisodes.length, full: full.podcast.episodes.length, title: full.podcast.title})
+    // log.debug('decorate episodes', {returning: episodes.length, notfound, incomingEpisodes: incomingEpisodes.length, full: full.podcast.episodes.length, title: full.podcast.title})
   }
   return episodes
 }

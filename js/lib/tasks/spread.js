@@ -1,11 +1,12 @@
 // dependencies - core-public-internal
 const crypto = require('crypto')
 // var log = require('../log')
-// -- Implementation functions
+const store = require('../store')
 
 // Exported API
 exports = module.exports = {
   select,
+  getRecentPodcastUuids,
   selectName,
   selectFromOffsets,
   uuidOffset,
@@ -14,15 +15,40 @@ exports = module.exports = {
 }
 
 function selectName (s) {
-  return (s === 0) ? 'deep' : (s === 1) ? 'shallow' : 'skip'
+  return (s === 0) ? 'deep'
+    : (s === 1) ? 'shallow'
+      : (s === 2) ? 'recent'
+        : 'skip'
 }
+
 // Matches schedule for uuid with stamp, returns:
 //  -1: if we are meant to skip
 //   0: if we are meant to do a deep scan (all pages)
-//   1: if we are meant to do a shallow scan (first page)
-function select (stamp, uuid) {
+//   1: if we are meant to do a shallow scan (first page) (deprected)
+//   2: if we are meant to scan because of being recently played
+function select (stamp, uuid, recentPodcastUuids = {}) {
+  if (uuid in recentPodcastUuids) {
+    return 2
+  }
   return selectFromOffsets(stampOffset(stamp), uuidOffset(uuid))
 }
+
+// return a map of {podcast_uuid:true} for all recently played podcasts
+async function getRecentPodcastUuids (user, hoursAgo = 4) {
+  const params = {
+    user,
+    since: new Date(+new Date() - (hoursAgo * 60 * 60 * 1000)).toISOString()
+  }
+  const rows = await store.db.history(params)
+  const recentlyPlayed = rows.filter(row => '__lastPlayed' in row.meta)
+  const recentPodcastUuids = recentlyPlayed.reduce((acc, cur) => {
+    acc[cur.podcast_uuid] = true // or 'cur' if you want to return the actual row
+    return acc
+  }, {})
+  return recentPodcastUuids
+}
+
+// -- Implementation functions
 
 function selectFromOffsets (stampOffset, uuidOffset) {
   const combinedOffset = (stampOffset + 144 - uuidOffset) % 144

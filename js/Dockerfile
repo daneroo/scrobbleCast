@@ -16,5 +16,5 @@ COPY . /usr/src/app
 # Default port
 EXPOSE 8000
 
-# Repeat thi to assign USER properly
+# Repeat this to assign USER properly
 CMD [ "npm", "start" ]

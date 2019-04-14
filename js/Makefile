@@ -29,3 +29,8 @@ restore:
 	docker-compose run --rm scrape npm run restore
 	docker-compose run --rm scrape node restore.js
 
+sync:
+	@echo "Synching peer -> DB"
+	docker-compose run --rm scrape node sync.js http://euler.imetrical.com:8000/api
+	docker-compose run --rm scrape node sync.js http://newton.imetrical.com:8000/api
+	docker-compose run --rm scrape node sync.js http://darwin.imetrical.com:8000/api

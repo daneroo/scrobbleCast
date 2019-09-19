@@ -30,7 +30,7 @@ async function main () {
 
       // {host:stamp}
       const nonReporting = logcheck.detectNonReporting(checkpointRecords, new Date())
-      for (let host in nonReporting) {
+      for (const host in nonReporting) {
         log.error('logcheck.noreport', { host: host, since: nonReporting[host] })
       }
 
@@ -176,7 +176,7 @@ function newTable (head) {
   var table = new Table({
     head: head || [],
     chars: {
-      'mid': '',
+      mid: '',
       'left-mid': '',
       'mid-mid': '',
       'right-mid': ''

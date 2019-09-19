@@ -10,16 +10,16 @@ const allCredentials = require('./credentials.json')
 main()
 async function main () {
   await store.db.init()
-  for (let credentials of allCredentials) {
+  for (const credentials of allCredentials) {
     await tasks.dedup(credentials)
   }
 
   {
-    const {digest, elapsed} = await digestTimer(store.db.digestOfDigests)
+    const { digest, elapsed } = await digestTimer(store.db.digestOfDigests)
     log.verbose('checkpoint', { digest: digest, scope: 'item', elapsed })
   }
   {
-    const {digest, elapsed} = await digestTimer(store.db.digestOfDigestsHistory)
+    const { digest, elapsed } = await digestTimer(store.db.digestOfDigestsHistory)
     log.verbose('checkpoint', { digest: digest, scope: 'history', elapsed })
   }
 }
@@ -28,5 +28,5 @@ async function digestTimer (digester) {
   const start = +new Date()
   const digest = await digester()
   const elapsed = (+new Date() - start) / 1000
-  return {digest, elapsed}
+  return { digest, elapsed }
 }

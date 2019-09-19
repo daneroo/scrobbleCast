@@ -24,14 +24,14 @@ async function insertDedup (items) {
   const allDuplicates = []
   for (const item of items) {
     const hitems = await db.loadItemsForHistory(item)
-    const {toInsert, duplicates, history} = await dedupWithNewItem(item, hitems)
+    const { toInsert, duplicates, history } = await dedupWithNewItem(item, hitems)
     allInserts.push(...toInsert)
     allDuplicates.push(...duplicates)
     if (toInsert.length > 0 || duplicates.length > 0) {
       await dedup.upsertHistories([history])
     }
   }
-  const counts = {items: items.length, inserted: allInserts.length, deleted: allDuplicates.length}
+  const counts = { items: items.length, inserted: allInserts.length, deleted: allDuplicates.length }
   if (allInserts.length > 0) {
     await db.saveAll(allInserts)
   }
@@ -64,13 +64,13 @@ async function dedupWithNewItem (item, hitems) {
       toInsert.push(hi)
     }
   }
-  return {toInsert, duplicates, history}
+  return { toInsert, duplicates, history }
 }
 
 // comparator which implementes sorting by: db.fieldOrders.dedup
 // must calculate it's own dogest
 function dedupOrderComparator (item) {
-  const {__user, __type, uuid, __stamp, __sourceType} = item
+  const { __user, __type, uuid, __stamp, __sourceType } = item
   const digest = utils.digest(JSON.stringify(item))
   return [__user, __type, uuid, __stamp, __sourceType, digest]
 }

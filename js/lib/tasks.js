@@ -26,13 +26,13 @@ function logcheck () {
   lifecycle('logcheck', 'start')
   return logcheckTask()
     .then(function () {
-      lifecycle('logcheck', 'done', {elapsed: elapsedSince(start)})
+      lifecycle('logcheck', 'done', { elapsed: elapsedSince(start) })
     })
 }
 
 async function sync () {
-  // poor man's discovery, default euler...
-  const hosts = ['euler', 'dirac', 'darwin', 'newton']
+  // poor man's discovery, default dirac...
+  const hosts = ['dirac', 'darwin', 'newton']
   const thisHost = config.hostname.split('.')[0]
   const syncParams = {
     since: utils.ago(24 * 3600),
@@ -41,7 +41,7 @@ async function sync () {
 
   const start = +new Date()
   lifecycle('sync', 'start')
-  for (let host of hosts) {
+  for (const host of hosts) {
     const startHost = +new Date()
     if (thisHost === host) {
       lifecycle(`sync:${host}`, 'skip')
@@ -51,13 +51,13 @@ async function sync () {
       const baseURI = `http://${host}.imetrical.com:8000/api`
       lifecycle(`sync:${host}`, 'start')
       const counts = await syncTask(baseURI, syncParams)
-      lifecycle(`sync:host`, 'done', { host, ...counts, elapsed: elapsedSince(startHost) })
+      lifecycle('sync:host', 'done', { host, ...counts, elapsed: elapsedSince(startHost) })
     } catch (error) {
       log.error('tasks.sync:host:error:', error)
       lifecycle('sync:host', 'done with error', { host })
     }
   }
-  lifecycle('sync', 'done', {elapsed: elapsedSince(start)})
+  lifecycle('sync', 'done', { elapsed: elapsedSince(start) })
 }
 
 async function dedup (credentials) {
@@ -70,7 +70,7 @@ async function dedup (credentials) {
 // get podcasts then foreach: podcastPages->file
 async function scrape (credentials) {
   var start = +new Date()
-  lifecycle('scrape', 'start', {user: credentials.name})
+  lifecycle('scrape', 'start', { user: credentials.name })
 
   // this shoulbe isolated/shared in Session: return by sign_in.
   var apiSession = new PocketAPI({
@@ -94,7 +94,7 @@ async function scrape (credentials) {
 
     var podcastByUuid = _.groupBy(podcasts, 'uuid')
 
-    for (let uuid of _.pluck(podcasts, 'uuid')) {
+    for (const uuid of _.pluck(podcasts, 'uuid')) {
       // Scrape scheduling: shallow is no longer distinct from deep
       // -1,0,1,2: skip,deep,shallow,recent
       const select = spread.select(apiSession.stamp, uuid, recentPodcastUuids) // new schedule method
@@ -120,10 +120,10 @@ async function scrape (credentials) {
     sumCounts(sums, counts04)
     progress('04-in_progress', counts04)
 
-    lifecycle('scrape', 'done', {user: apiSession.user, ...sums, elapsed: elapsedSince(start)})
+    lifecycle('scrape', 'done', { user: apiSession.user, ...sums, elapsed: elapsedSince(start) })
   } catch (error) {
     log.error('tasks.scrape:error:', error)
-    lifecycle('scrape', 'done with error', {user: credentials.name})
+    lifecycle('scrape', 'done with error', { user: credentials.name })
   }
 }
 

@@ -40,14 +40,14 @@ async function dedupTask (credentials) {
   // to accumulate duplicates
   const duplicates = []
   const historyBatchSize = 1000
-  let historiesToUpsert = [] // batch them up
+  const historiesToUpsert = [] // batch them up
 
   // to break items on uuid boundaries
   let lastSeen = '' // composite key: {__user, __type, uuid}
 
-  async function itemHandler ({item}) {
-    const {__user, __type, uuid} = item
-    const seeing = JSON.stringify({__user, __type, uuid})
+  async function itemHandler ({ item }) {
+    const { __user, __type, uuid } = item
+    const seeing = JSON.stringify({ __user, __type, uuid })
 
     // if we have a new episode uuid, flush the old into store
     if (lastSeen !== seeing) {
@@ -85,7 +85,7 @@ async function dedupTask (credentials) {
   }
 
   try {
-    await store.db.load({user}, itemHandler)
+    await store.db.load({ user }, itemHandler)
 
     // last flush of Accumulator
     historiesToUpsert.push(historyForSingleUuid)
@@ -141,7 +141,7 @@ async function _filterExisting (Model, wrappedItemsWithDigests) {
 
 async function batchUpsertHistory (histories, stamp) {
   // remove existing
-  const wrapped = histories.map(h => ({history: h, digest: _digest(h)}))
+  const wrapped = histories.map(h => ({ history: h, digest: _digest(h) }))
   const needSaving = await _filterExisting(orm.History, wrapped)
 
   const counts = await upsertHistories(needSaving.map(h => h.history))
@@ -150,7 +150,7 @@ async function batchUpsertHistory (histories, stamp) {
 
 // TODO:daneroo should move to some class akin to store.*, perhaps history.(mem|db)
 async function upsertHistories (histories) {
-  const counts = {insert: 0, update: 0}
+  const counts = { insert: 0, update: 0 }
   if (histories.length === 0) {
     return counts
   }
@@ -175,10 +175,10 @@ async function upsertHistories (histories) {
     try {
       if (dbDigest) { // and not duplicate
         counts.update++
-        await orm.History.upsert({...key, history})
+        await orm.History.upsert({ ...key, history })
       } else {
         // await orm.History.create({...key, history})
-        bulkInserts.push({...key, history})
+        bulkInserts.push({ ...key, history })
       }
     } catch (error) {
       log.error('history::upsert', error)
@@ -213,6 +213,6 @@ async function deleteDuplicates (duplicates) {
     soFar += actuallyRemoved
     const elapsed = (+new Date() - start) / 1000
     const rate = (soFar / elapsed).toFixed(0) + 'r/s'
-    log.verbose(` .. deleted duplicates`, { deleted: soFar, remaining: duplicates.length, elapsed: elapsed, rate: rate })
+    log.verbose(' .. deleted duplicates', { deleted: soFar, remaining: duplicates.length, elapsed: elapsed, rate: rate })
   }
 }

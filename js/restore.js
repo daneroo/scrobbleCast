@@ -21,7 +21,7 @@ async function main () {
   try {
     await store.db.init()
 
-    for (let credentials of allCredentials) {
+    for (const credentials of allCredentials) {
       log.info('Restore started', { user: credentials.name })
       await restore(credentials)
       await accumulateItems(credentials)
@@ -66,17 +66,17 @@ async function digestOfDigests () {
 async function accumulateItems (credentials) {
   const user = credentials.name
   const historyByType = new delta.AccumulatorByTypeByUuid()
-  let mergedItemCount = 0
+  const mergedItemCount = 0
 
-  async function itemHandler ({item}) {
-    let changeCount = historyByType.merge(item)
+  async function itemHandler ({ item }) {
+    const changeCount = historyByType.merge(item)
     if (changeCount === 0) {
       // throw new Error(`Item Not deduped: |Δ|:${changeCount} ${JSON.stringify(item)}`);
       log.verbose(`Item Not deduped: |Δ|:${changeCount}  ${item.__sourceType} ${item.title}`)
     }
   }
 
-  await store.db.load({user}, itemHandler)
+  await store.db.load({ user }, itemHandler)
   log.verbose('restore:counts', {
     user,
     merged: mergedItemCount

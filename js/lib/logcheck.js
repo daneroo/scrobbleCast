@@ -59,8 +59,8 @@ async function logcheckTask () {
 
     // {host:stamp}
     const nonReporting = detectNonReporting(checkpointRecords, new Date())
-    for (let host in nonReporting) {
-      log.error('logcheck.noreport', {host: host, since: nonReporting[host]})
+    for (const host in nonReporting) {
+      log.error('logcheck.noreport', { host: host, since: nonReporting[host] })
     }
 
     const reportingRecords = removeNonReporting(checkpointRecords, nonReporting)
@@ -80,7 +80,7 @@ function detectMismatch (records) {
   const allMatch = _.uniq(Object.values(lastDigests)).length === 1
   if (!allMatch) {
     const pretty = {}
-    for (let host in lastDigests) {
+    for (const host in lastDigests) {
       const shortHost = host.split('.')[0]
       const shortDigest = lastDigests[host].substr(0, 7)
       pretty[shortHost] = shortDigest
@@ -109,7 +109,7 @@ function detectNonReporting (records, since) {
   // console.log('lastReported', JSON.stringify(last, null, 2))
   const threshhold = new Date(+new Date(since) - howRecentMS).toISOString()
   const nonReporting = {}
-  for (let host in last) {
+  for (const host in last) {
     const lastStamp = last[host]
     if (lastStamp < threshhold) {
       nonReporting[host] = lastStamp
@@ -121,7 +121,7 @@ function detectNonReporting (records, since) {
 function lastReportedStamp (records) {
   const map = lastReportedRecord(records)
   const projected = {}
-  for (let host in map) {
+  for (const host in map) {
     projected[host] = map[host].stamp
   }
   return projected
@@ -130,7 +130,7 @@ function lastReportedStamp (records) {
 function lastReportedDigest (records) {
   const map = lastReportedRecord(records)
   const projected = {}
-  for (let host in map) {
+  for (const host in map) {
     projected[host] = map[host].digest
   }
   return projected

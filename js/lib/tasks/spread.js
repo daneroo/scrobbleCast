@@ -63,7 +63,7 @@ function selectFromOffsets (stampOffset, uuidOffset) {
 
 // uuidOffset returns an offset between [0,144)
 // The offset represents an offset from midnight in (ten minute) units
-function uuidOffset (uuid, {algorithm = 'md5', numBytes = 8} = {}) {
+function uuidOffset (uuid, { algorithm = 'md5', numBytes = 8 } = {}) {
   var h = crypto.createHash(algorithm).update(uuid).digest('hex')
   // first numBytes chars (8x4=32 bits) -> int -> % 144
   const offset = (parseInt(h.slice(0, numBytes), 16)) % 144

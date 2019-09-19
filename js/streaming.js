@@ -45,7 +45,7 @@ function counterHandlerG () {
     counter++
   }
   handler.value = () => {
-    return {counter}
+    return { counter }
   }
   return handler
 }
@@ -61,7 +61,7 @@ function dedupHandlerG () {
   let duplicates = 0
   const handler = async item => {
     if (!item.item) {
-      item = {item}
+      item = { item }
     }
 
     if (item.item.uuid !== uuidPrev) {
@@ -78,13 +78,13 @@ function dedupHandlerG () {
     counter++
   }
   handler.value = () => {
-    return {counter, duplicates, uuidCount}
+    return { counter, duplicates, uuidCount }
   }
   return handler
 }
 
 async function ormByPage (pageSize, handler) {
-  const qy = db.loadQy({user: 'daniel'})
+  const qy = db.loadQy({ user: 'daniel' })
   await orm.Item.findAllByPage(qy, handler, pageSize)
   return handler.value()
 }
@@ -97,5 +97,5 @@ async function dbLoad (pageSize, handler) {
 async function digestOfDigests (pageSize) {
   const digest = (await db.digestOfDigests()).substr(0, 7)
   // counter = (await db.digests()).length
-  return {digest}
+  return { digest }
 }

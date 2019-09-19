@@ -11,7 +11,7 @@ const allCredentials = require('./credentials.json')
 
 main()
 async function main () {
-  for (let credentials of allCredentials) {
+  for (const credentials of allCredentials) {
     await tasks.scrape(credentials)
     // await tasks.dedup(credentials)
   }

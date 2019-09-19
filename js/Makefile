@@ -3,7 +3,7 @@
 export HOSTNAME=$(shell hostname)
 
 all:
-	@echo "Make all the things: suild, start, logs, snapshot, restore"
+	@echo "Make all the things: build, start, logs, snapshot, restore"
 
 build:
 	docker-compose build --pull

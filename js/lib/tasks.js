@@ -26,13 +26,13 @@ function logcheck () {
   lifecycle('logcheck', 'start')
   return logcheckTask()
     .then(function () {
-      lifecycle('logcheck', 'done', {elapsed: elapsedSince(start)})
+      lifecycle('logcheck', 'done', { elapsed: elapsedSince(start) })
     })
 }
 
 async function sync () {
-  // poor man's discovery, default euler...
-  const hosts = ['euler', 'dirac', 'darwin', 'newton']
+  // poor man's discovery, default dirac...
+  const hosts = ['dirac', 'darwin', 'newton']
   const thisHost = config.hostname.split('.')[0]
   const syncParams = {
     since: utils.ago(24 * 3600),
@@ -57,7 +57,7 @@ async function sync () {
       lifecycle('sync:host', 'done with error', { host })
     }
   }
-  lifecycle('sync', 'done', {elapsed: elapsedSince(start)})
+  lifecycle('sync', 'done', { elapsed: elapsedSince(start) })
 }
 
 async function dedup (credentials) {
@@ -70,7 +70,7 @@ async function dedup (credentials) {
 // get podcasts then foreach: podcastPages->file
 async function scrape (credentials) {
   var start = +new Date()
-  lifecycle('scrape', 'start', {user: credentials.name})
+  lifecycle('scrape', 'start', { user: credentials.name })
 
   // this shoulbe isolated/shared in Session: return by sign_in.
   var apiSession = new PocketAPI({
@@ -120,10 +120,10 @@ async function scrape (credentials) {
     sumCounts(sums, counts04)
     progress('04-in_progress', counts04)
 
-    lifecycle('scrape', 'done', {user: apiSession.user, ...sums, elapsed: elapsedSince(start)})
+    lifecycle('scrape', 'done', { user: apiSession.user, ...sums, elapsed: elapsedSince(start) })
   } catch (error) {
     log.error('tasks.scrape:error:', error)
-    lifecycle('scrape', 'done with error', {user: credentials.name})
+    lifecycle('scrape', 'done with error', { user: credentials.name })
   }
 }
 

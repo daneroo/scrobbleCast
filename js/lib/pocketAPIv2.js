@@ -16,7 +16,8 @@ var limiter = new RateLimiter(5, 1000) // chosen
 // var limiter = new RateLimiter(1, 1000)
 
 const baseURI = 'https://api.pocketcasts.com'
-const cacheURI = 'https://cache.pocketcasts.com'
+const cacheURI = 'https://podcast-api.pocketcasts.com'
+
 // the actual endpoints
 const paths = {
   login: '/user/login', // MIGRATED
@@ -78,7 +79,7 @@ PocketAPI.prototype.normalize = function (items, sourceType, extra = {}) {
 
   // prepend extra descriptor fields to each item
   return items.map(function (item) {
-    return {...extra, ...item}
+    return { ...extra, ...item }
   })
 }
 
@@ -138,13 +139,14 @@ PocketAPI.prototype.episodes = async function (uuid) {
 
 // Add missing properties, *in place* in the Object array
 PocketAPI.prototype.decorateEpisodes = async function (uuid, incomingEpisodes) {
-  // https://cache.pocketcasts.com/podcast/full/70d13d50-9efe-0130-1b90-723c91aeae46/0/3/1000
+  // This now redirects, and responses is gzipped
   const full = await rp({
     method: 'GET',
-    uri: `${cacheURI}/podcast/full//${uuid}/0/3/1000`,
+    uri: `${cacheURI}/podcast/full/${uuid}/0/3/2000`,
     headers: {
       authorization: `Bearer ${this.token}`
     },
+    gzip: true,
     json: true
   })
 
@@ -166,7 +168,7 @@ PocketAPI.prototype.decorateEpisodes = async function (uuid, incomingEpisodes) {
           if (prop in fullEpisode) {
             episode[prop] = fullEpisode[prop]
           } else {
-            log.warn('  -- could not set prop', {prop, uuid: episode.uuid})
+            log.warn('  -- could not set prop', { prop, uuid: episode.uuid })
           }
         }
         // break
@@ -186,7 +188,7 @@ PocketAPI.prototype.decorateEpisodes = async function (uuid, incomingEpisodes) {
 }
 
 PocketAPI.prototype.newReleases = async function () {
-  const response = await this._fetch(paths.new_releases, { })
+  const response = await this._fetch(paths.new_releases, {})
   if (!response || !response.episodes) {
     throw new Error('Unexpected or malformed response')
   }
@@ -212,7 +214,7 @@ PocketAPI.prototype.newReleases = async function () {
 }
 
 PocketAPI.prototype.inProgress = async function () {
-  const response = await this._fetch(paths.in_progress, { })
+  const response = await this._fetch(paths.in_progress, {})
   if (!response || !response.episodes) {
     throw new Error('Unexpected or malformed response')
   }

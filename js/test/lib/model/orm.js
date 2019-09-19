@@ -64,11 +64,11 @@ describe('sequelize/orm', function () {
 
     it('should bulk create some items', async () => {
       const items = await orm.Item.bulkCreate([
-        {item: helpers.makeItem(3)},
-        {item: helpers.makeItem(4)}
+        { item: helpers.makeItem(3) },
+        { item: helpers.makeItem(4) }
       ])
       expect(items.length).to.equal(2)
-      expect(items[0].get('item', {plain: true})).to.deep.equal(helpers.makeItem(3))
+      expect(items[0].get('item', { plain: true })).to.deep.equal(helpers.makeItem(3))
     })
 
     it('should find an existing item by digest', async () => {
@@ -93,7 +93,7 @@ describe('sequelize/orm', function () {
     it('should find many items', async () => {
       const all = await orm.Item.findAll({
         where: {
-          '__user': 'mock'
+          __user: 'mock'
         }
       })
       // expect(all.length > 0).to.equal(true)
@@ -107,7 +107,7 @@ describe('sequelize/orm', function () {
         attributes: ['digest'],
         raw: true,
         where: {
-          '__user': 'mock'
+          __user: 'mock'
         },
         order: [['digest', 'DESC']]
       }).map(d => d.digest)
@@ -133,7 +133,7 @@ describe('sequelize/orm', function () {
     it('should delete multiple items', async () => {
       const affectedRows = await orm.Item.destroy({
         where: {
-          '__user': 'mock'
+          __user: 'mock'
         }
       })
       expect(affectedRows).to.equal(4)

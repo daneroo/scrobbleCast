@@ -28,7 +28,7 @@ main()
 
 async function main () {
   try {
-    for (let credentials of allCredentials) {
+    for (const credentials of allCredentials) {
       log.info('Snapshots started', { user: credentials.name })
       await snapshotForUser(credentials)
     }
@@ -45,7 +45,7 @@ async function snapshotForUser (credentials) {
   const user = credentials.name
 
   // use special order to match file writing..
-  await store.db.load({user, order: store.db.fieldOrders.snapshot}, writerCtx.handler)
+  await store.db.load({ user, order: store.db.fieldOrders.snapshot }, writerCtx.handler)
 
   await writerCtx.flush() // ok, cause it's synchronous (for now)
   log.verbose('snapshot:counts', {
@@ -163,7 +163,7 @@ function newWriterCtx () {
 
   let itemCount = 0
   // the actual itemHandler being returned
-  async function handler ({item}) {
+  async function handler ({ item }) {
     // console.log('..stamp',stamp);
     // throw error if item.__stamp's are non-increasing
     checkStampOrdering(item)

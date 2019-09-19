@@ -4,7 +4,7 @@ const spread = require('../../../lib/tasks/spread')
 
 describe('spread', function () {
   describe('stampOffset', function () {
-    it(`should calculate offset (specific stamps)`, async () => {
+    it('should calculate offset (specific stamps)', async () => {
       const test = [
         { stamp: '2018-01-01T00:00:00Z', offset: 0 },
         { stamp: '2018-01-01T00:10:00Z', offset: 1 },
@@ -21,12 +21,12 @@ describe('spread', function () {
         { stamp: '2018-07-01T00:02:01.234Z', offset: 0 },
         { stamp: '2018-07-01T23:59:59.999Z', offset: 143 }
       ]
-      for (let t of test) {
+      for (const t of test) {
         const offset = spread.stampOffset(t.stamp)
         expect(offset).to.equal(t.offset)
       }
     })
-    it(`should calculate all offsets in [0,200)`, async () => {
+    it('should calculate all offsets in [0,200)', async () => {
       for (let off = 0; off < 200; off++) {
         const stamp = new Date(+new Date('2018-07-01T00:00:00Z') + off * 10 * 60 * 1000).toISOString()
         const expected = off % 144
@@ -37,7 +37,7 @@ describe('spread', function () {
   })
 
   describe('uuidOffset', function () {
-    it(`should calculate offset (specific uidds)`, async () => {
+    it('should calculate offset (specific uidds)', async () => {
       const test = [
         { uuid: '00000000-0000-0000-0000-000000000000', offset: 138, alg: 'md5' },
         { uuid: '00000000-0000-0000-0000-000000000000', offset: 28, alg: 'sha256' },
@@ -74,19 +74,19 @@ describe('spread', function () {
         { uuid: '97388eb0-db99-012e-da14-525400c11844', offset: 99, alg: 'md5' },
         { uuid: '97388eb0-db99-012e-da14-525400c11844', offset: 107, alg: 'sha256' },
         { uuid: '8d728390-249c-0131-73be-723c91aeae46', offset: 37, alg: 'md5' },
-        { uuid: '8d728390-249c-0131-73be-723c91aeae46', offset: 34, alg: 'sha256' } ]
-      for (let t of test) {
-        const offset = spread.uuidOffset(t.uuid, {algorithm: t.alg})
+        { uuid: '8d728390-249c-0131-73be-723c91aeae46', offset: 34, alg: 'sha256' }]
+      for (const t of test) {
+        const offset = spread.uuidOffset(t.uuid, { algorithm: t.alg })
         expect(offset).to.equal(t.offset)
         // console.log(`{ uuid: '${t.uuid}', offset: ${offset}, alg:'${t.alg}' },`)
       }
     })
-    it.skip(`(deprecated parameter preModOffset) should calculate all preModOffsets in [0,200)`, async () => {
+    it.skip('(deprecated parameter preModOffset) should calculate all preModOffsets in [0,200)', async () => {
       for (let off = 0; off < 200; off++) {
         // const t = { uuid: '00000000-0000-0000-0000-000000000000', offset: 28, alg: 'sha256' }
         const t = { uuid: '00000000-0000-0000-0000-000000000000', offset: 138, alg: 'md5' }
 
-        const offset = spread.uuidOffset(t.uuid, {algorithm: t.alg, preModOffset: off})
+        const offset = spread.uuidOffset(t.uuid, { algorithm: t.alg, preModOffset: off })
         const expectedOffset = (t.offset + off) % 144
         expect(offset).to.equal(expectedOffset)
       }
@@ -94,13 +94,13 @@ describe('spread', function () {
   })
 
   describe('select (deep,shallow,skip)', () => {
-    it(`should show select name`, function () {
+    it('should show select name', function () {
       expect(spread.selectName(0)).to.equal('deep')
       expect(spread.selectName(1)).to.equal('shallow')
       expect(spread.selectName(-1)).to.equal('skip')
     })
     describe('with offsets', () => {
-      it(`should correctly select with uuidOffset=0`, function () {
+      it('should correctly select with uuidOffset=0', function () {
       // this is the old cron behavior
         for (let stampOffset = 0; stampOffset < 144; stampOffset++) {
           const expected = (stampOffset === 0) ? 0 // deep
@@ -111,7 +111,7 @@ describe('spread', function () {
           expect(selected, `stampOffset ${stampOffset}`).to.equal(expected)
         }
       })
-      it(`should correctly select with uuidOffset=72`, function () {
+      it('should correctly select with uuidOffset=72', function () {
       // this is the old cron behavior
         for (let stampOffset = 0; stampOffset < 144; stampOffset++) {
           const expected = (stampOffset === 72) ? 0 // deep
@@ -131,7 +131,7 @@ describe('spread', function () {
         { uuidOffset: 89, deep: [89], shallow: [5, 11, 17, 23, 29, 35, 41, 47, 53, 59, 65, 71, 77, 83, 95, 101, 107, 113, 119, 125, 131, 137, 143] }
 
       ]
-      for (let t of test) {
+      for (const t of test) {
         it(`should correctly select with uuidOffset=${t.uuidOffset}`, function () {
           const deep = []
           const shallow = []
@@ -151,11 +151,11 @@ describe('spread', function () {
     describe('with stamps, uuids for day of 2018-02-23', () => {
       const test = [
         {
-          'uuid': '00000000-0000-0000-0000-000000000000', // 138
-          'deep': [
+          uuid: '00000000-0000-0000-0000-000000000000', // 138
+          deep: [
             '2018-02-23T23:00:00.000Z'
           ],
-          'shallow': [
+          shallow: [
             '2018-02-23T00:00:00.000Z',
             '2018-02-23T01:00:00.000Z',
             '2018-02-23T02:00:00.000Z',
@@ -181,11 +181,11 @@ describe('spread', function () {
             '2018-02-23T22:00:00.000Z'
           ]
         }, {
-          'uuid': 'e6e92380-2c46-012e-0984-00163e1b201c', // 124
-          'deep': [
+          uuid: 'e6e92380-2c46-012e-0984-00163e1b201c', // 124
+          deep: [
             '2018-02-23T20:40:00.000Z'
           ],
-          'shallow': [
+          shallow: [
             '2018-02-23T00:40:00.000Z',
             '2018-02-23T01:40:00.000Z',
             '2018-02-23T02:40:00.000Z',
@@ -211,11 +211,11 @@ describe('spread', function () {
             '2018-02-23T23:40:00.000Z'
           ]
         }, {
-          'uuid': 'dde6abe0-04fe-012e-f9d3-00163e1b201c', // 11
-          'deep': [
+          uuid: 'dde6abe0-04fe-012e-f9d3-00163e1b201c', // 11
+          deep: [
             '2018-02-23T01:50:00.000Z'
           ],
-          'shallow': [
+          shallow: [
             '2018-02-23T00:50:00.000Z',
             '2018-02-23T02:50:00.000Z',
             '2018-02-23T03:50:00.000Z',
@@ -243,7 +243,7 @@ describe('spread', function () {
         }
 
       ]
-      for (let t of test) {
+      for (const t of test) {
         it(`should correctly select with uuid=${t.uuid}`, function () {
           const deep = []
           const shallow = []
@@ -294,8 +294,8 @@ describe('spread', function () {
           expect(offset).to.be.below(maxRand)
           hh.add(offset)
         }
-        console.log('      ', {offsetCounts: JSON.stringify(hh.offsetCounts)})
-        console.log('      ', {histo: hh.histogram()})
+        console.log('      ', { offsetCounts: JSON.stringify(hh.offsetCounts) })
+        console.log('      ', { histo: hh.histogram() })
       })
     })
 
@@ -306,23 +306,23 @@ describe('spread', function () {
       // takes 3 minutes to run
       // simulation paramters:
       const byteRange = [12, 8, 4]
-      const hashAlgorithms = [ 'sha256', 'md5' ]
+      const hashAlgorithms = ['sha256', 'md5']
       it('shoud spread out scrape offsets with hash salt', function () {
         this.timeout(5 * 60 * 1000) // 5 minutes
         let minPages = 1e9
         let minItems = 1e9
-        for (let numBytes of byteRange) {
-          for (let algorithm of hashAlgorithms) {
+        for (const numBytes of byteRange) {
+          for (const algorithm of hashAlgorithms) {
             for (let iteration = 0; iteration <= 0xffff; iteration++) {
               const salt = iteration.toString(16).padStart(4, '0')
 
               const itz = new Itemizer()
               for (const { user, podcasts } of podcastData) {
                 // console.log({user, podcasts: podcasts.length})
-                for (const {uuid, items} of podcasts) {
+                for (const { uuid, items } of podcasts) {
                   const uuidAndSalt = uuid + salt
                   // console.log('  ', {uuidAndSalt, items})
-                  const offset = spread.uuidOffset(uuidAndSalt + user, {algorithm, numBytes})
+                  const offset = spread.uuidOffset(uuidAndSalt + user, { algorithm, numBytes })
 
                   itz.addDeep(offset, items)
                   for (let secondary = 6; secondary < 144; secondary += 6) {
@@ -332,7 +332,7 @@ describe('spread', function () {
                 }
               }
               const ma = itz.maxAndAverage()
-              const line = JSON.stringify({numBytes, algorithm, salt, ...ma}).replace(/"/g, '')
+              const line = JSON.stringify({ numBytes, algorithm, salt, ...ma }).replace(/"/g, '')
               // console.log(line)
               if (minPages >= ma.pages.max) {
                 minPages = ma.pages.max
@@ -357,12 +357,15 @@ class Itemizer {
     this.itemCounts = array144()
     this.pageCounts = array144()
   }
+
   maxAndAverage () {
-    return {items: maxAndAverage(this.itemCounts), pages: maxAndAverage(this.pageCounts)}
+    return { items: maxAndAverage(this.itemCounts), pages: maxAndAverage(this.pageCounts) }
   }
+
   addDeep (offset, items) {
     this.addItems(offset, items)
   }
+
   addShallow (offset, items) {
     this.addItems(offset, Math.min(items, 100)) // implies only first page
   }
@@ -379,9 +382,11 @@ class Histogram {
   constructor () {
     this.offsetCounts = array144()
   }
+
   add (offset) {
     this.offsetCounts[offset]++
   }
+
   histogram () {
     return histogram(this.offsetCounts)
   }
@@ -409,7 +414,7 @@ function maxAndAverage (counts) {
     }
     ma.avg += count
     return ma
-  }, {max: 0, avg: 0})
+  }, { max: 0, avg: 0 })
   ma.avg /= counts.length
   ma.avg = Math.round(ma.avg)
   return ma
@@ -417,7 +422,8 @@ function maxAndAverage (counts) {
 
 // reference Data
 const podcastData = [
-  { user: 'stephane',
+  {
+    user: 'stephane',
     podcasts: [
       { uuid: '052df5e0-72b8-012f-1d57-525400c11844', items: 150 },
       { uuid: 'f5b97290-0422-012e-f9a0-00163e1b201c', items: 149 },
@@ -472,8 +478,10 @@ const podcastData = [
       { uuid: '18910720-189c-0132-b004-5f4c86fd3263', items: 250 },
       { uuid: '0cc43410-1d2f-012e-0175-00163e1b201c', items: 315 },
       { uuid: '05ccf3c0-1b97-012e-00b7-00163e1b201c', items: 25 }
-    ]},
-  {user: 'daniel',
+    ]
+  },
+  {
+    user: 'daniel',
     podcasts: [
       { uuid: '002e29f0-dc34-0132-080d-059c869cc4eb', items: 29 },
       { uuid: 'f5b97290-0422-012e-f9a0-00163e1b201c', items: 149 },
@@ -581,5 +589,6 @@ const podcastData = [
       { uuid: '0cc43410-1d2f-012e-0175-00163e1b201c', items: 315 },
       { uuid: '07c07770-1727-012e-feea-00163e1b201c', items: 322 },
       { uuid: '05ccf3c0-1b97-012e-00b7-00163e1b201c', items: 25 }
-    ]}
+    ]
+  }
 ]

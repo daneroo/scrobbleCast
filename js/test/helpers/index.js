@@ -14,13 +14,13 @@ function makeItem (i) {
   const hex = Number(mod + i % mod).toString(16).substr(-4)
   const day = `${i}`.padStart(2, '0')
   return {
-    '__type': 'episode',
-    '__sourceType': '02-podcasts',
-    '__user': 'mock',
-    '__stamp': `2017-06-${day}T00:00:00Z`,
-    'podcast_uuid': `podcast-${hex}`,
-    'id': null,
-    'uuid': `episode-${hex}`
+    __type: 'episode',
+    __sourceType: '02-podcasts',
+    __user: 'mock',
+    __stamp: `2017-06-${day}T00:00:00Z`,
+    podcast_uuid: `podcast-${hex}`,
+    id: null,
+    uuid: `episode-${hex}`
     // 'url': 'http://podcast.com/episode.mp3',
     // 'published_at': '2017-05-31 00:00:00',
     // 'duration': '1733',

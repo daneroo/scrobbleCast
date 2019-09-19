@@ -38,12 +38,12 @@ async function scrapeDedupDigest () {
       await tasks.dedup(credentials)
     }
     { // digest of items
-      const {digest, elapsed} = await digestTimer(store.db.digestOfDigests)
+      const { digest, elapsed } = await digestTimer(store.db.digestOfDigests)
       // checkpoint: Stash this as verbose for dev
       log.info('checkpoint', { digest, scope: 'item', elapsed })
     }
     { // digest of histories
-      const {digest, elapsed} = await digestTimer(store.db.digestOfDigestsHistory)
+      const { digest, elapsed } = await digestTimer(store.db.digestOfDigestsHistory)
       // checkpoint: Stash this as verbose for dev
       log.info('checkpoint', { digest, scope: 'history', elapsed })
     }
@@ -56,7 +56,7 @@ async function scrapeDedupDigest () {
     const start = +new Date()
     const digest = await digester()
     const elapsed = (+new Date() - start) / 1000
-    return {digest, elapsed}
+    return { digest, elapsed }
   }
 }
 

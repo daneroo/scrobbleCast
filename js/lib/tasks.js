@@ -41,7 +41,7 @@ async function sync () {
 
   const start = +new Date()
   lifecycle('sync', 'start')
-  for (let host of hosts) {
+  for (const host of hosts) {
     const startHost = +new Date()
     if (thisHost === host) {
       lifecycle(`sync:${host}`, 'skip')
@@ -51,7 +51,7 @@ async function sync () {
       const baseURI = `http://${host}.imetrical.com:8000/api`
       lifecycle(`sync:${host}`, 'start')
       const counts = await syncTask(baseURI, syncParams)
-      lifecycle(`sync:host`, 'done', { host, ...counts, elapsed: elapsedSince(startHost) })
+      lifecycle('sync:host', 'done', { host, ...counts, elapsed: elapsedSince(startHost) })
     } catch (error) {
       log.error('tasks.sync:host:error:', error)
       lifecycle('sync:host', 'done with error', { host })
@@ -94,7 +94,7 @@ async function scrape (credentials) {
 
     var podcastByUuid = _.groupBy(podcasts, 'uuid')
 
-    for (let uuid of _.pluck(podcasts, 'uuid')) {
+    for (const uuid of _.pluck(podcasts, 'uuid')) {
       // Scrape scheduling: shallow is no longer distinct from deep
       // -1,0,1,2: skip,deep,shallow,recent
       const select = spread.select(apiSession.stamp, uuid, recentPodcastUuids) // new schedule method

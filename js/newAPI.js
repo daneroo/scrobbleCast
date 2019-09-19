@@ -30,7 +30,7 @@ async function main () {
 }
 
 async function iteration () {
-  for (let credentials of allCredentials) {
+  for (const credentials of allCredentials) {
     await tryemall(credentials)
   }
   log.info('Done all')
@@ -60,10 +60,10 @@ async function tryemall (credentials) {
   for (const podcast of podcasts) {
     const select = spread.select(apiSession.stamp, podcast.uuid, recentPodcastUuids) // new schedule method
 
-    const {uuid, title} = podcast
+    const { uuid, title } = podcast
     if (select >= 0) { // deep, shallow i.e. not skip, no longer any cocept of shallow
       const episodes = await apiSession.episodes(uuid)
-      log.info('  02-episodes', episodes.length, {uuid, title, select: spread.selectName(select)})
+      log.info('  02-episodes', episodes.length, { uuid, title, select: spread.selectName(select) })
     } else {
       // log.info('  02-episodes', 0, {uuid, title, select: spread.selectName(select)})
     }

@@ -84,7 +84,7 @@ describe('store', function () {
     it('should saveByBatch is correct', async () => {
       const items = helpers.makeItems([1, 2, 3, 4])
       const saver = await db.saveByBatch(3)
-      for (let item of items) {
+      for (const item of items) {
         const ok = await saver(item)
         expect(ok).to.equal(true)
       }
@@ -108,7 +108,7 @@ describe('store', function () {
       const saver = sinon.spy(db.saveByBatch(3))
       sinon.spy(saver, 'flush')
 
-      for (let item of items) {
+      for (const item of items) {
         const ok = await saver(item)
         expect(ok).to.equal(true)
       }
@@ -140,7 +140,7 @@ describe('store', function () {
       expect(ok).to.equal(true)
 
       const handler = sinon.spy()
-      await db.load({user: 'mock', order: db.fieldOrders.snapshot}, handler)
+      await db.load({ user: 'mock', order: db.fieldOrders.snapshot }, handler)
 
       expect(handler.callCount, 'handler called thrice').to.equal(3)
       // ensure call order is __stamp ascending
@@ -159,7 +159,7 @@ describe('store', function () {
       expect(ok).to.equal(true)
 
       const handler = sinon.spy()
-      await db.load({user: 'mock'}, handler)
+      await db.load({ user: 'mock' }, handler)
 
       expect(handler.callCount, 'handler called thrice').to.equal(3)
       // ensure call order is __stamp ascending
@@ -175,7 +175,7 @@ describe('store', function () {
 
       const handler = sinon.spy()
 
-      await db.load({user: 'not-mock'}, handler)
+      await db.load({ user: 'not-mock' }, handler)
       expect(handler.callCount, 'handler not be called').to.equal(0)
     })
 
@@ -267,7 +267,7 @@ describe('store', function () {
         {
           name: 'empty (since > before)',
           args: { since: '2017-06-04T00:00:00Z', before: '2017-06-02T00:00:00Z' },
-          expected: [ ]
+          expected: []
         }
       ]
 
@@ -345,7 +345,7 @@ describe('store', function () {
       count = await db.remove(items[1])
       expect(count).to.equal(1)
 
-      expect(await db.digests()).to.deep.equal([ ])
+      expect(await db.digests()).to.deep.equal([])
     })
 
     it('should remove an multiple items even if some are not present', async () => {

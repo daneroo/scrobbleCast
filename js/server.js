@@ -7,7 +7,7 @@ const cron = require('./lib/cron')
 const server = require('./lib/server')
 const allCredentials = require('./credentials.json')
 
-log.info('Started server', {hostname: config.hostname, dialect: config.sequelize.settings.dialect})
+log.info('Started server', { hostname: config.hostname, dialect: config.sequelize.settings.dialect })
 cron.start(allCredentials)
 server.start()
 

@@ -99,7 +99,7 @@ function _isErrorDuplicateDigest (error) {
         error.errors[0].message !== 'digest must be unique' ||
         error.errors[0].path !== 'digest'
     ) {
-      log.error('_isErrorDuplicateDigest', {message: error.message, name: error.name, errors: error.errors})
+      log.error('_isErrorDuplicateDigest', { message: error.message, name: error.name, errors: error.errors })
     }
     return true
   }
@@ -224,7 +224,7 @@ async function saveAll (items) {
     return true
   }
 
-  const wrapped = items.map(i => ({item: i, digest: _digest(i)}))
+  const wrapped = items.map(i => ({ item: i, digest: _digest(i) }))
 
   const needSaving = await _filterExisting(wrapped)
   // log.verbose('-needSaving', needSaving.length)
@@ -239,21 +239,21 @@ async function saveAll (items) {
   } catch (error) {
     // rethrow unless we know it's a duplicate digest error
     if (!_isErrorDuplicateDigest(error)) {
-      log.error('saveAll:error', {message: error.message, name: error.name, errors: error.errors})
+      log.error('saveAll:error', { message: error.message, name: error.name, errors: error.errors })
       throw error
     }
     // log.debug('saveAll: At least one duplicate digest, save each item')
   }
 
   // If we get here it's because we had a duplicate digest, so save each item
-  for (let item of items) {
+  for (const item of items) {
     await save(item)
   }
   return true
 }
 
 // order must be one of dedup, or snapshot
-function loadQy ({user, order = 'dedup'}) {
+function loadQy ({ user, order = 'dedup' }) {
   if (!user) {
     throw (new Error('db:loadQy missing required user'))
   }
@@ -268,7 +268,7 @@ function loadQy ({user, order = 'dedup'}) {
   return {
     attributes: ['item'],
     where: {
-      '__user': user
+      __user: user
     },
     order: fieldOrders[order]
     // order: ['__user', '__type', 'uuid', '__stamp', '__sourceType', 'digest'] // dedup load order
@@ -282,7 +282,7 @@ function loadQy ({user, order = 'dedup'}) {
 //   snapshot: suitable for snapshot file order
 // -No longer returns anything, acumulate your values in the itemHandler
 // -itemHandler should be an async/promise function (it's resolved return value is ignored)
-async function load ({user, order = 'dedup', pageSize = 10000, where = {}}, itemHandler) {
+async function load ({ user, order = 'dedup', pageSize = 10000, where = {} }, itemHandler) {
   const noop = async () => true // default handler (async)
   itemHandler = itemHandler || noop
   // opts.prefix = opts.prefix || ''
@@ -293,9 +293,9 @@ async function load ({user, order = 'dedup', pageSize = 10000, where = {}}, item
     throw (new Error('db:load unknown field order error: ' + order))
   }
 
-  const qy = loadQy({user, order})
+  const qy = loadQy({ user, order })
   if (Object.keys(where).length > 0) {
-    qy.where = {...qy.where, ...where}
+    qy.where = { ...qy.where, ...where }
     // console.log('Qualified load:', {qy})
   }
   await orm.Item.findAllByPage(qy, itemHandler, pageSize)
@@ -306,7 +306,7 @@ async function loadItemsForHistory (item) {
   const items = []
   await load({
     user: item.__user,
-    where: {__type: item.__type, uuid: item.uuid}
+    where: { __type: item.__type, uuid: item.uuid }
   }, async function (fetched) {
     items.push(fetched.item)
   })
@@ -323,12 +323,12 @@ async function getByDigest (digest) {
   return wrapped ? wrapped.item : null
 }
 
-function digestsQy ({since = '1970-01-01T00:00:00Z', before = '2040-01-01T00:00:00Z'} = {}) {
+function digestsQy ({ since = '1970-01-01T00:00:00Z', before = '2040-01-01T00:00:00Z' } = {}) {
   return {
     raw: true,
     attributes: ['digest', '__stamp'],
     where: {
-      '__stamp': {
+      __stamp: {
         [Op.gte]: since, // >= since (inclusive)
         [Op.lt]: before // < before (strict)
       }
@@ -379,11 +379,11 @@ async function digestOfDigestsHistory () {
   return digester(orm.History, qy, itemDigester, pageSize)
 }
 
-function historyQy ({user, type, uuid, since = '1970-01-01T00:00:00Z', before = '2040-01-01T00:00:00Z'} = {}) {
+function historyQy ({ user, type, uuid, since = '1970-01-01T00:00:00Z', before = '2040-01-01T00:00:00Z' } = {}) {
   const qy = {
     attributes: ['history', '__lastUpdated'],
     where: {
-      '__lastUpdated': {
+      __lastUpdated: {
         [Op.gte]: since, // >= since (inclusive)
         [Op.lt]: before // < before (strict)
       }
@@ -419,7 +419,7 @@ async function remove (item) {
     }
   })
   if (rowCount !== 1) {
-    log.warn('remove unexpected rowCount!=1', {rowCount: rowCount, digest: digest})
+    log.warn('remove unexpected rowCount!=1', { rowCount: rowCount, digest: digest })
   }
   return rowCount
 }
@@ -434,7 +434,7 @@ async function removeAll (items) {
     }
   })
   if (rowCount !== items.length) {
-    log.warn('removeAll unexpected rowCount!=items', {rowCount: rowCount, items: items.length})
+    log.warn('removeAll unexpected rowCount!=items', { rowCount: rowCount, items: items.length })
   }
   return rowCount
 }

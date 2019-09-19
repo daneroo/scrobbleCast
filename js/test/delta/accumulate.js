@@ -50,51 +50,51 @@ describe('delta', function () {
       // strip away two levels of class!
       var noclass = JSON.parse(JSON.stringify(acc.accumulators))
       var expected = {
-        'a': {
-          'history': {
-            '__sourceType': {
+        a: {
+          history: {
+            __sourceType: {
               '2015-01-01T01:23:45Z': 'type.1',
               '2015-01-02T02:34:56Z': 'type.2'
             },
-            'description': {
+            description: {
               '2015-01-01T01:23:45Z': 'Show A',
               '2015-01-02T02:34:56Z': 'Show A.1'
             },
-            'uuid': {
+            uuid: {
               '2015-01-01T01:23:45Z': 'a'
             }
           },
-          'meta': {
-            '__changeCount': 2,
-            '__firstSeen': '2015-01-01T01:23:45Z',
-            '__lastUpdated': '2015-01-02T02:34:56Z',
-            '__type': 'podcast',
-            '__user': 'listener'
+          meta: {
+            __changeCount: 2,
+            __firstSeen: '2015-01-01T01:23:45Z',
+            __lastUpdated: '2015-01-02T02:34:56Z',
+            __type: 'podcast',
+            __user: 'listener'
           },
-          'description': 'Show A.1',
-          'uuid': 'a'
+          description: 'Show A.1',
+          uuid: 'a'
         },
-        'b': {
-          'history': {
-            '__sourceType': {
+        b: {
+          history: {
+            __sourceType: {
               '2015-01-01T01:23:45Z': 'type.1'
             },
-            'description': {
+            description: {
               '2015-01-01T01:23:45Z': 'Show B'
             },
-            'uuid': {
+            uuid: {
               '2015-01-01T01:23:45Z': 'b'
             }
           },
-          'meta': {
-            '__changeCount': 1,
-            '__firstSeen': '2015-01-01T01:23:45Z',
-            '__lastUpdated': '2015-01-01T01:23:45Z',
-            '__type': 'podcast',
-            '__user': 'listener'
+          meta: {
+            __changeCount: 1,
+            __firstSeen: '2015-01-01T01:23:45Z',
+            __lastUpdated: '2015-01-01T01:23:45Z',
+            __type: 'podcast',
+            __user: 'listener'
           },
-          'description': 'Show B',
-          'uuid': 'b'
+          description: 'Show B',
+          uuid: 'b'
         }
       }
       expect(noclass).to.deep.equal(expected)
@@ -106,25 +106,25 @@ describe('delta', function () {
       acc.merge(first)
       var noclass = _.merge({}, acc.accumulators.a)
       var expected = {
-        'history': {
-          '__sourceType': {
+        history: {
+          __sourceType: {
             '2015-01-01T01:23:45Z': 'type.1',
             '2015-01-02T02:34:56Z': 'type.2'
           },
-          'played_up_to': {
+          played_up_to: {
             '2015-01-01T01:23:45Z': 10,
             '2015-01-02T02:34:56Z': 20
           }
         },
-        'meta': {
-          '__changeCount': 2,
-          '__firstSeen': '2015-01-01T01:23:45Z',
-          '__lastUpdated': '2015-01-02T02:34:56Z',
-          '__type': 'podcast',
-          '__user': 'listener'
+        meta: {
+          __changeCount: 2,
+          __firstSeen: '2015-01-01T01:23:45Z',
+          __lastUpdated: '2015-01-02T02:34:56Z',
+          __type: 'podcast',
+          __user: 'listener'
         },
-        'played_up_to': 20,
-        'uuid': 'a'
+        played_up_to: 20,
+        uuid: 'a'
       }
       expect(noclass).to.deep.equal(expected)
     })
@@ -175,59 +175,59 @@ describe('delta', function () {
       // strip away two levels of class!
       var noclass = JSON.parse(JSON.stringify(acc.accumulatorsByType))
       var expected = {
-        'podcast': {
-          'accumulators': {
-            'a': {
-              'history': {
-                '__sourceType': {
+        podcast: {
+          accumulators: {
+            a: {
+              history: {
+                __sourceType: {
                   '2015-01-01T01:23:45Z': 'type.1',
                   '2015-01-02T02:34:56Z': 'type.2'
                 },
-                'description': {
+                description: {
                   '2015-01-01T01:23:45Z': 'Show A',
                   '2015-01-02T02:34:56Z': 'Show A.1'
                 },
-                'uuid': {
+                uuid: {
                   '2015-01-01T01:23:45Z': 'a'
                 }
               },
-              'meta': {
-                '__changeCount': 2,
-                '__firstSeen': '2015-01-01T01:23:45Z',
-                '__lastUpdated': '2015-01-02T02:34:56Z',
-                '__type': 'podcast',
-                '__user': 'listener'
+              meta: {
+                __changeCount: 2,
+                __firstSeen: '2015-01-01T01:23:45Z',
+                __lastUpdated: '2015-01-02T02:34:56Z',
+                __type: 'podcast',
+                __user: 'listener'
               },
-              'description': 'Show A.1',
-              'uuid': 'a'
+              description: 'Show A.1',
+              uuid: 'a'
             }
           }
         },
-        'episode': {
-          'accumulators': {
-            'b': {
-              'history': {
-                '__sourceType': {
+        episode: {
+          accumulators: {
+            b: {
+              history: {
+                __sourceType: {
                   '2015-01-01T01:23:45Z': 'type.1'
                 },
-                'played_up_to': {
+                played_up_to: {
                   '2015-01-01T01:23:45Z': 10
                 },
-                'uuid': {
+                uuid: {
                   '2015-01-01T01:23:45Z': 'b'
                 }
               },
-              'meta': {
-                '__changeCount': 1,
-                '__firstSeen': '2015-01-01T01:23:45Z',
-                '__lastPlayed': '2015-01-01T01:23:45Z',
-                '__lastUpdated': '2015-01-01T01:23:45Z',
-                '__type': 'episode',
-                '__user': 'listener'
+              meta: {
+                __changeCount: 1,
+                __firstSeen: '2015-01-01T01:23:45Z',
+                __lastPlayed: '2015-01-01T01:23:45Z',
+                __lastUpdated: '2015-01-01T01:23:45Z',
+                __type: 'episode',
+                __user: 'listener'
               },
-              'played_up_to': 10,
-              'podcast_uuid': 'a',
-              'uuid': 'b'
+              played_up_to: 10,
+              podcast_uuid: 'a',
+              uuid: 'b'
             }
           }
         }
@@ -241,25 +241,25 @@ describe('delta', function () {
       acc.merge(first)
       var noclass = _.merge({}, acc.accumulators.a)
       var expected = {
-        'history': {
-          '__sourceType': {
+        history: {
+          __sourceType: {
             '2015-01-01T01:23:45Z': 'type.1',
             '2015-01-02T02:34:56Z': 'type.2'
           },
-          'played_up_to': {
+          played_up_to: {
             '2015-01-01T01:23:45Z': 10,
             '2015-01-02T02:34:56Z': 20
           }
         },
-        'meta': {
-          '__changeCount': 2,
-          '__firstSeen': '2015-01-01T01:23:45Z',
-          '__lastUpdated': '2015-01-02T02:34:56Z',
-          '__type': 'podcast',
-          '__user': 'listener'
+        meta: {
+          __changeCount: 2,
+          __firstSeen: '2015-01-01T01:23:45Z',
+          __lastUpdated: '2015-01-02T02:34:56Z',
+          __type: 'podcast',
+          __user: 'listener'
         },
-        'played_up_to': 20,
-        'uuid': 'a'
+        played_up_to: 20,
+        uuid: 'a'
       }
       expect(noclass).to.deep.equal(expected)
     })

@@ -49,7 +49,7 @@ router.get('/status', function (req, res) {
 // define the digests route
 router.route('/digests')
   .get(function (req, res) {
-    let syncParams = req.query // pass on the query params to pg.digests
+    const syncParams = req.query // pass on the query params to pg.digests
     store.db.digests(syncParams)
       .then((rows) => {
         res.json(rows)
@@ -90,10 +90,10 @@ router.route('/digest/:digest')
       })
   })
 
-  // define the histories route
+// define the histories route
 router.route('/history')
   .get(function (req, res) {
-    let params = req.query // pass on the query params to store.db.histories
+    const params = req.query // pass on the query params to store.db.histories
     store.db.history(params)
       .then((rows) => {
         res.json(rows)

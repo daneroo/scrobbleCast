@@ -73,13 +73,13 @@ function hasSameContent (a, b) {
   const B = new Set(b.map(strfy))
 
   let sameContent = true
-  for (let aa of A) {
+  for (const aa of A) {
     if (!B.has(aa)) {
       sameContent = false
       log.verbose('aa is not in B', aa)
     }
   }
-  for (let bb of B) {
+  for (const bb of B) {
     if (!A.has(bb)) {
       sameContent = false
       log.verbose('bb is not in A', bb)

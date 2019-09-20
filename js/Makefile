@@ -31,6 +31,11 @@ restore:
 
 sync:
 	@echo "Synching peer -> DB"
-	docker-compose run --rm scrape node sync.js http://euler.imetrical.com:8000/api
-	docker-compose run --rm scrape node sync.js http://newton.imetrical.com:8000/api
 	docker-compose run --rm scrape node sync.js http://darwin.imetrical.com:8000/api
+	docker-compose run --rm scrape node sync.js http://newton.imetrical.com:8000/api
+
+check:
+	for h in darwin dirac newton; do echo $$h `curl -s http://$$h.imetrical.com:8000/api/version`; done
+	for h in darwin dirac newton; do echo $$h `curl -s http://$$h.imetrical.com:8000/api/status`; done
+	for h in darwin dirac newton; do echo $$h `curl -s http://$$h.imetrical.com:8000/api/digests|shasum -a 256`; done
+

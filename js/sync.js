@@ -10,7 +10,7 @@ var sync = require('./lib/sync')
 var store = require('./lib/store')
 
 // globals
-const baseURI = (process.argv.length > 2) ? process.argv[2] : 'http://euler:8000/api'
+const baseURI = (process.argv.length > 2) ? process.argv[2] : 'http://dirac.imetrical.com:8000/api'
 
 // *** Adjust params as needed, default is ALL TIME
 function syncAll () {

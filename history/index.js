@@ -8,28 +8,28 @@ const Map = immutable.Map
 const List = immutable.List
 
 const argv = require('yargs')
-    .usage('Usage: $0 [options]')
-    .help('h')
-    .alias('h', 'help')
-    .options({
-      u: {
-        alias: 'user',
-        default: ['daniel', 'stephane'],
-        describe: 'Specify a user',
-        array: true
-      },
-      d: {
-        alias: 'days',
-        default: 30,
-        describe: 'Number of days to fetch'
-      },
-      s: {
-        alias: 'host',
-        default: 'dirac.imetrical.com',
-        describe: 'Host to fetch from (http://<host>:8000/api/history)'
-      }
-    })
-    .argv
+  .usage('Usage: $0 [options]')
+  .help('h')
+  .alias('h', 'help')
+  .options({
+    u: {
+      alias: 'user',
+      default: ['daniel', 'stephane'],
+      describe: 'Specify a user',
+      array: true
+    },
+    d: {
+      alias: 'days',
+      default: 30,
+      describe: 'Number of days to fetch'
+    },
+    s: {
+      alias: 'host',
+      default: 'dirac.imetrical.com',
+      describe: 'Host to fetch from (http://<host>:8000/api/history)'
+    }
+  })
+  .argv
 
 // console.log({argv})
 const users = argv.user
@@ -39,7 +39,7 @@ const days = argv.days
 console.log(`Fetching ${days} days of history from ${host} for user:${users}`)
 
 all()
-async function all () {
+async function all() {
   // ['daniel'].forEach(u => {
   for (const u of users) {
     console.log(`\n- For ${u}`)
@@ -50,7 +50,7 @@ async function all () {
   }
 }
 
-async function history (src) {
+async function history(src) {
   // get the podcast title
   const podcasts = await loadHistoryAsList(src, 'podcast')
   const podcastTitlesAndThumb = mapBy(podcasts, 'uuid')
@@ -73,13 +73,13 @@ async function history (src) {
   recentList(episodes, 14, 100)
 }
 
-function writeHistory (episodes, days, user) {
+function writeHistory(episodes, days, user) {
   const file = `data/history-${user}.json`
   console.log(` - Writing recent history: ${user}, ${days} days) (${file})`)
   const es = episodes.filter(sinceDaysFilter(days))
   fs.writeFileSync(file, JSON.stringify(es, null, 2))
 }
-function recentList (episodes, days = 3, maxEntries = 10) {
+function recentList(episodes, days = 3, maxEntries = 10) {
   console.log(`\n - Recently played (max ${days} days, ${maxEntries} entries)`)
   const es = episodes.filter(sinceDaysFilter(days))
   es
@@ -95,7 +95,7 @@ function recentList (episodes, days = 3, maxEntries = 10) {
     })
 }
 
-function summary (episodes) {
+function summary(episodes) {
   const first = new Date(episodes.minBy(e => e.get('firstPlayed')).get('firstPlayed'))
   const last = new Date(episodes.maxBy(e => e.get('lastPlayed')).get('lastPlayed'))
   const days = (last.getTime() - first.getTime()) / 86400000
@@ -113,21 +113,21 @@ function summary (episodes) {
   console.log(`  History of ${days.toFixed(1)} days :  (${first.toISOString().substr(0, 10)}-${last.toISOString().substr(0, 10)})`)
 }
 
-function sinceDaysFilter (days) {
+function sinceDaysFilter(days) {
   const since = daysAgo(days).getTime()
   return e => {
     const lp = new Date(e.get('lastPlayed')).getTime()
     return lp > since
   }
 }
-function daysAgo (days) {
+function daysAgo(days) {
   return new Date(+new Date() - 86400000 * days)
 }
-function sum (list, field) {
+function sum(list, field) {
   return list.map(entry => entry.get(field)).reduce((prev, current) => prev + current)
 }
 // decorate each episode with play count and total
-function playCounts (e) {
+function playCounts(e) {
   const playM = (e.get('play') || Map())
     .sortBy((value, key) => { // just map the key(date), and use default comparator
       return +new Date(key)
@@ -158,9 +158,13 @@ function playCounts (e) {
     .set('playedProportion', playedProportion)
 }
 
-function curriedEpisodeProjection (podcastTitlesAndThumb) {
+function curriedEpisodeProjection(podcastTitlesAndThumb) {
   return e => {
     const lkup = podcastTitlesAndThumb.get(e.get('podcast_uuid')) || Map({})
+    // explicitly call sortBY, because history keys were coming out not-sorted whic was not the case in the database or service.
+    // sortBy: can use: comparatorValueMapper: (value: V, key: K, iter: this) => C,
+    const sortByKey = (value, key, itter) => key
+
     return Map({
       // __lastUpdated: e.get('meta').get('__lastUpdated'),
       uuid: e.get('uuid'),
@@ -169,18 +173,18 @@ function curriedEpisodeProjection (podcastTitlesAndThumb) {
       thumbnail_url: lkup.get('thumbnail_url'),
       title: e.get('title'),
       duration: e.get('duration'),
-      status: e.get('history').get('playing_status'),
-      play: e.get('history').get('played_up_to')
+      status: e.get('history').get('playing_status').sortBy(sortByKey),
+      play: e.get('history').get('played_up_to').sortBy(sortByKey)
     })
   }
 }
 
-function mapBy (list, field) { // e.g. 'uuid'
+function mapBy(list, field) { // e.g. 'uuid'
   return Map(list.map(h => [h.get(field), h]))
 }
 
 // load a  History file (list of maps(all have uuid))
-async function loadHistoryAsList (src, type) {
+async function loadHistoryAsList(src, type) {
   // const object = await fromFile(src, type)
   const object = await fromHost(src, type)
   console.log(`read ${object.length} from ${src.h}`)
@@ -188,10 +192,10 @@ async function loadHistoryAsList (src, type) {
   return list
 }
 
-async function fromHost (src, type) {
+async function fromHost(src, type) {
   const since = (type === 'podcast')
-                    ? '1970-01-01T00:00:00Z'
-                    : new Date(+new Date() - (days * 24 * 60 * 60 * 1000)).toISOString()
+    ? '1970-01-01T00:00:00Z'
+    : new Date(+new Date() - (days * 24 * 60 * 60 * 1000)).toISOString()
 
   var options = {
     uri: `http://${src.h}:8000/api/history`,

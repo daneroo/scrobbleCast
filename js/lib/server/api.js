@@ -42,7 +42,7 @@ router.get('/status', function (req, res) {
     stamp: new Date().toISOString(), // for checking clock sync
     tasks: { // active, and recently completed...
     },
-    sync: { } // checkpoints for peers with stamps (+ recent if not synch'd)
+    sync: {} // checkpoints for peers with stamps (+ recent if not synch'd)
   })
 })
 
@@ -99,11 +99,11 @@ router.route('/history')
         res.json(rows)
       })
       .catch((err) => {
-        log.info('digests error', err)
+        log.info('history error', err)
         // TODO(daneroo): Errors: https://kostasbariotis.com/rest-api-error-handling-with-express-js/
         res.status(500).json({
           name: 'Error',
-          message: 'The digests could not be listed',
+          message: 'The history could not be fetched',
           statusCode: 500,
           errorCode: 500 // could be app specific
         })

@@ -1,6 +1,6 @@
 {
   "name": "compare-history",
-  "version": "1.0.0",
+  "version": "9.0.2",
   "description": "Remote diff over ssh throwaway utility",
   "repository": {
     "type": "git",

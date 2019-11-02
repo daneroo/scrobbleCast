@@ -40,7 +40,7 @@
     "pg-hstore": "^2.3.2",
     "request-promise": "^4.2.2",
     "s3-cli": "^0.13.0",
-    "sequelize": "^4.33.4",
+    "sequelize": "^5.15.1",
     "sqlite3": "^4.1.0",
     "type-is": "^1.6.16",
     "winston": "^2.4.0",

@@ -161,9 +161,14 @@ function playCounts(e) {
 function curriedEpisodeProjection(podcastTitlesAndThumb) {
   return e => {
     const lkup = podcastTitlesAndThumb.get(e.get('podcast_uuid')) || Map({})
-    // explicitly call sortBY, because history keys were coming out not-sorted whic was not the case in the database or service.
+    // explicitly call sortBY, because history keys were coming out not-sorted which was not the case in the database or service.
     // sortBy: can use: comparatorValueMapper: (value: V, key: K, iter: this) => C,
     const sortByKey = (value, key, itter) => key
+
+    // extract these forst, because they are sometime null
+    const status = e.get('history').get('playing_status')
+    const play = e.get('history').get('played_up_to')
+
 
     return Map({
       // __lastUpdated: e.get('meta').get('__lastUpdated'),
@@ -173,8 +178,8 @@ function curriedEpisodeProjection(podcastTitlesAndThumb) {
       thumbnail_url: lkup.get('thumbnail_url'),
       title: e.get('title'),
       duration: e.get('duration'),
-      status: e.get('history').get('playing_status').sortBy(sortByKey),
-      play: e.get('history').get('played_up_to').sortBy(sortByKey)
+      status: (status) ? status.sortBy(sortByKey) : Map(),
+      play: (play) ? play.sortBy(sortByKey) : Map()
     })
   }
 }

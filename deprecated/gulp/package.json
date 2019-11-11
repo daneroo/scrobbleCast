@@ -15,7 +15,7 @@
   },
   "keywords":[],
   "dependencies": {
-    "lodash": "2.4.1"
+    "lodash": "4.17.15"
   },
   "devDependencies": {
     "gulp": "^3.8.8",

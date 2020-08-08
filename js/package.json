@@ -11,7 +11,7 @@
     "coverage": "NODE_ENV=test istanbul cover node_modules/.bin/_mocha -- --recursive test/",
     "test": "npm run lint && npm run secscan && npm run unit",
     "snapshot": "docker run -it --rm --env-file s3cfg.env -v $(pwd)/data/snapshots:/data/snapshots amazon/aws-cli s3 sync /data/snapshots/ s3://scrobblecast/snapshots",
-    "restore": "docker run -it --rm --env-file s3cfg.env -v $(pwd)/data/snapshots:/data/snapshots amazon/aws-cli s3 sync --dryrun s3://scrobblecast/snapshots /data/snapshots/"
+    "restore": "docker run -it --rm --env-file s3cfg.env -v $(pwd)/data/snapshots:/data/snapshots amazon/aws-cli s3 sync s3://scrobblecast/snapshots /data/snapshots/"
   },
   "author": {
     "name": "Daniel Lauzon"

@@ -20,14 +20,16 @@ snapshot:
 	@echo "You could:"
 	@echo "  sudo rm -rf data/snapshots/current/"
 	docker-compose run --rm scrape node snapshots.js
-	docker-compose run --rm scrape npm run snapshot
+	# aws s3 sync, but not from inside the container
+	npm run snapshot
 
 restore:
 	@echo "Restoring from s3 -> data/snapshots -> DB"
 	@echo "Optionally, you could:"
 	@echo "  sudo rm -rf data/"
 	docker-compose run --rm scrape npm run restore
-	docker-compose run --rm scrape node restore.js
+	# aws s3 sync, but not from inside the container
+	npm run restore
 
 sync:
 	@echo "Synching peer -> DB"

@@ -10,8 +10,8 @@
     "secscan": "npm audit || true",
     "coverage": "NODE_ENV=test istanbul cover node_modules/.bin/_mocha -- --recursive test/",
     "test": "npm run lint && npm run secscan && npm run unit",
-    "snapshot": "s3-cli --config s3cfg.ini sync data/snapshots/ s3://scrobblecast/snapshots/",
-    "restore": "s3-cli --config s3cfg.ini sync s3://scrobblecast/snapshots/ data/snapshots/"
+    "snapshot": "docker run -it --rm --env-file s3cfg.env -v $(pwd)/data/snapshots:/data/snapshots amazon/aws-cli s3 sync /data/snapshots/ s3://scrobblecast/snapshots",
+    "restore": "docker run -it --rm --env-file s3cfg.env -v $(pwd)/data/snapshots:/data/snapshots amazon/aws-cli s3 sync s3://scrobblecast/snapshots /data/snapshots/"
   },
   "author": {
     "name": "Daniel Lauzon"
@@ -39,7 +39,6 @@
     "pg": "^6.4.2",
     "pg-hstore": "^2.3.2",
     "request-promise": "^4.2.2",
-    "s3-cli": "^0.13.0",
     "sequelize": "^4.33.4",
     "sqlite3": "^4.1.0",
     "type-is": "^1.6.16",

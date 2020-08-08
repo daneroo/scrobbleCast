@@ -1,6 +1,6 @@
 credentials.json
 credentials.loggly.json
-s3cfg.ini
+s3cfg.env
 node_modules/
 coverage/
 data/

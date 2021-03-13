@@ -2,12 +2,12 @@ language: node_js
 
 # test on multiple node.js versions
 node_js:
-  - 9.5
+  - 14
 
 before_install: cd js
 
 install:
-  - npm install
+  - npm ci
 
 script:
   - npm test

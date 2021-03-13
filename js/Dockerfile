@@ -1,8 +1,8 @@
-FROM node:12
+FROM node:14
 
 # this must have been why my docker instance was diverging (node's cron module on localtime)
 # should be /usr/share/zoneinfo/Canada/Eastern not /usr/share/zoneinfo/EST
-RUN ln -sf /usr/share/zoneinfo/Canada/Eastern /etc/localtime
+# RUN ln -sf /usr/share/zoneinfo/Canada/Eastern /etc/localtime
 
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app

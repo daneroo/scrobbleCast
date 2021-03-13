@@ -1,8 +1,8 @@
 # scrobbleCast
 
 - Codeship:
-  - master: [ ![Codeship Status for daneroo/scrobbleCast](https://app.codeship.com/projects/1306ce10-4248-0135-e58f-567ddc53c8a8/status?branch=master)](https://app.codeship.com/projects/230307)
-  - develop: [ ![Codeship Status for daneroo/scrobbleCast](https://app.codeship.com/projects/1306ce10-4248-0135-e58f-567ddc53c8a8/status?branch=develop)](https://app.codeship.com/projects/230307)
+  - master: [![Codeship Status for daneroo/scrobbleCast](https://app.codeship.com/projects/b7551137-f057-4a12-807a-7a8ae23bddab/status?branch=master)](https://app.codeship.com/projects/434233)
+  - develop: [![Codeship Status for daneroo/scrobbleCast](https://app.codeship.com/projects/b7551137-f057-4a12-807a-7a8ae23bddab/status?branch=develop)](https://app.codeship.com/projects/434233)
 - Travis:
   - master: [![Build Status](https://travis-ci.org/daneroo/scrobbleCast.svg?branch=master)](https://travis-ci.org/daneroo/scrobbleCast)
   - develop: [![Build Status](https://travis-ci.org/daneroo/scrobbleCast.svg?branch=develop)](https://travis-ci.org/daneroo/scrobbleCast)

@@ -10,6 +10,19 @@
   - master: [![Build Status](https://circleci.com/gh/daneroo/scrobbleCast.svg?&style=shield)](https://circleci.com/gh/daneroo/scrobbleCast)
   - develop: [![Build Status](https://circleci.com/gh/daneroo/scrobbleCast/tree/develop.svg?style=shield)](https://circleci.com/gh/daneroo/scrobbleCast)
 
+## TODO
+
+- create-next-app (chakra)
+  - [freeCodeCamp](https://www.freecodecamp.org/news/how-to-use-chakra-ui-with-next-js-and-react/)
+  - no typescript yet
+    - `npx create-next-app --example with-chakra-ui site`
+- use history output (json) to drive pages
+- [Stork](https://github.com/jameslittle230/stork) for search
+- vercel (netlify) for deployment
+- nx (move to typescript)
+- ipfs
+- vega-lite (d3) for viz
+
 ## Overview
 
 - __Idea__: capture and present podcast metadata about *listening events*, as well as *rating* and *categorization*. This can extend to a social network of participants' influence stream.

@@ -12,7 +12,19 @@ const breakpoints = createBreakpoints({
 
 const theme = extendTheme({
   colors: {
-    black: '#16161D'
+    primary: '#692ba8',
+    purple: { // https://smart-swatch.netlify.app/#692ba8
+      50: '#f5e9ff',
+      100: '#dac1f3',
+      200: '#c098e7',
+      300: '#a571dc',
+      400: '#8c48d0',
+      500: '#722fb7',
+      600: '#59238f',
+      700: '#3f1968',
+      800: '#260f40',
+      900: '#10031a'
+    }
   },
   fonts,
   breakpoints

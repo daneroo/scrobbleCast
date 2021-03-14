@@ -14,8 +14,9 @@
 
 - create-next-app (chakra)
   - [freeCodeCamp](https://www.freecodecamp.org/news/how-to-use-chakra-ui-with-next-js-and-react/)
+    - `npx create-next-app site`
   - no typescript yet
-    - `npx create-next-app --example with-chakra-ui site`
+    - `npx create-next-app --example with-chakra-ui-typescript site-ts`
 - use history output (json) to drive pages
 - [Stork](https://github.com/jameslittle230/stork) for search
 - vercel (netlify) for deployment

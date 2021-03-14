@@ -2,6 +2,19 @@ import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 import { Heading, Link, Text, Code, Flex, Box } from '@chakra-ui/react'
 
+function Card (props) {
+  return (
+    <Box
+      as='a'
+      p='6' m='4'
+      borderWidth='1px'
+      rounded='lg'
+      flexBasis={['auto', '45%']}
+      {...props}
+    />
+
+  )
+}
 export default function Home () {
   return (
     <div className={styles.container}>
@@ -19,26 +32,26 @@ export default function Home () {
         </Text>
 
         <Flex flexWrap='wrap' alignItems='center' justifyContent='center' maxW='800px' mt='10'>
-          <Box as='a' href='https://nextjs.org/docs' p='6' m='4' borderWidth='1px' rounded='lg' flexBasis={['auto', '45%']}>
+          <Card href='https://nextjs.org/docs'>
             <Heading as='h3' size='lg' mb='2'>Documentation →</Heading>
             <Text fontSize='lg'>Find in-depth information about Next.js features and API.</Text>
-          </Box>
-          <Box as='a' href='https://nextjs.org/learn' p='6' m='4' borderWidth='1px' rounded='lg' flexBasis={['auto', '45%']}>
+          </Card>
+          <Card href='https://nextjs.org/learn'>
             <Heading as='h3' size='lg' mb='2'>Learn →</Heading>
             <Text fontSize='lg'>Learn about Next.js in an interactive course with quizzes!</Text>
-          </Box>
-          <Box as='a' href='https://github.com/vercel/next.js/tree/master/examples' p='6' m='4' borderWidth='1px' rounded='lg' flexBasis={['auto', '45%']}>
+          </Card>
+          <Card href='https://github.com/vercel/next.js/tree/master/examples'>
             <Heading as='h3' size='lg' mb='2'>Examples →</Heading>
             <Text fontSize='lg'>Discover and deploy boilerplate example Next.js projects.</Text>
-          </Box>
-          <Box as='a' href='https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app' p='6' m='4' borderWidth='1px' rounded='lg' flexBasis={['auto', '45%']}>
+          </Card>
+          <Card href='https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app'>
             <Heading as='h3' size='lg' mb='2'>Deploy →</Heading>
             <Text fontSize='lg'>Instantly deploy your Next.js site to a public URL with Vercel.</Text>
-          </Box>
-          <Box as='a' href='https://chakra-ui.com/' p='6' m='4' borderWidth='1px' rounded='lg' flexBasis={['auto', '45%']}>
+          </Card>
+          <Card href='https://chakra-ui.com/'>
             <Heading as='h3' size='lg' mb='2'>Chakra UI &rarr;</Heading>
             <Text fontSize='lg'>Build accessible React apps & websites with speed.</Text>
-          </Box>
+          </Card>
         </Flex>
       </main>
 

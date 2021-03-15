@@ -8,6 +8,9 @@ npx create-next-app my-chakra-app
 npm i @chakra-ui/react @emotion/react @emotion/styled framer-motion
 ```
 
-## Clean up
+## TODO
 
-- remove unused api routes `/api/hello`
+- use history output (json) to drive : getStaticPaths, getStaticProps
+- [Stork](https://github.com/jameslittle230/stork) for search
+- vega-lite (d3) for viz
+- vercel (netlify) for deployment

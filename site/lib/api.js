@@ -12,10 +12,7 @@ async function fetcher (path, qs = { }) {
   // eslint-disable-next-line no-undef
   const results = await fetch(url)
   const object = await results.json()
-
-  const length = (Array.isArray(object)) ? object.length : 1
-  console.info('fetched', { length, url })
-
+  // console.info('fetched', url)
   return object
 }
 

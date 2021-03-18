@@ -4,7 +4,7 @@ import {
   Stat, StatLabel, StatNumber, StatHelpText, StatGroup
  } from '@chakra-ui/react'
 
-import { getEpisodes,getEpisodesByUUID } from '../../lib/api'
+import { getEpisodes,getEpisode } from '../../lib/api'
 
 export default function EpisodePage ({ episode }) {
   const { uuid, title, podcast_title, playedProportion, duration, lastPlayed, firstPlayed } = episode
@@ -64,9 +64,7 @@ function Card (props) {
 
 export async function getStaticProps ({params}) {
   const {uuid } = params
-  const episodesByUuid = await getEpisodesByUUID()
-
-  const episode = await episodesByUuid[uuid]
+  const episode = await getEpisode(uuid)
   return {
     props: { episode } // will be passed to the page component as props
     // revalidate: 0,
@@ -74,8 +72,8 @@ export async function getStaticProps ({params}) {
 }
 
 export async function getStaticPaths() {
-  const episodes = await getEpisodes()
-  console.log('uuid paths:',episodes.length)
+  const episodes = await getEpisodes(14)
+  // console.log('uuid paths:',episodes.length)
   return {
     paths: episodes.map(({uuid}) => {
       return {

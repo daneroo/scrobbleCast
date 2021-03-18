@@ -26,10 +26,10 @@ export default function PodcastsPage ({ podcasts }) {
 function Podcasts ({ podcasts }) {
   return (
     <Flex flexDirection='column' flexWrap='wrap' maxW='800px' mt='10'>
-      {podcasts.map(({ uuid, title }) => (
+      {podcasts.map(({ uuid, title, author, description }) => (
         <Card key={uuid} href={`/podcasts/${uuid}`}>
-          <Heading as='h4' size='md'>{title}</Heading>
-          <Text fontSize='lg'>Description of {title}</Text>
+          <Heading as='h4' size='md'>{title}  {author}</Heading>
+          <Text fontSize='lg'>{description}</Text>
         </Card>
       ))}
     </Flex>

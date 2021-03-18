@@ -10,7 +10,9 @@ npm i @chakra-ui/react @emotion/react @emotion/styled framer-motion
 
 ## TODO
 
-- use history output (json) to drive : getStaticPaths, getStaticProps
+- use API output (json) to drive : getStaticPaths, getStaticProps
+  - No Optimisation, deploy with ISR
+  - joining to podcast from episode
 - [Stork](https://github.com/jameslittle230/stork) for search
 - vega-lite (d3) for viz
 - vercel (netlify) for deployment

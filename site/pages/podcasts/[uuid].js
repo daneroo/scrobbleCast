@@ -1,22 +1,22 @@
 import Head from 'next/head'
-import { Heading, Text, Box, Flex, VStack } from '@chakra-ui/react'
+import { Heading, Text, Box, Flex, VStack,Code } from '@chakra-ui/react'
 
-import { getPodcasts, getPodcastsByUUID } from '../../lib/api'
+import { getPodcast, getPodcasts } from '../../lib/api'
 
 export default function PodcastPage ({ podcast }) {
-  const {title} = podcast
+  const {title,author,description} = podcast
   return (
     <>
       <Head>
         <title>{title}</title>
       </Head>
-      <VStack as='main' my='2rem'>
-        <Heading as='h1' size='2xl' mb='2'>
-          {title} 
-        </Heading>
-        <Text fontSize='2xl' mt='2'>
-          Description of {title}
-        </Text>
+      <VStack as='main' my='2rem' maxWidth='60rem'>
+        <Heading as='h1' size='xl' mb='2'>{title}</Heading>
+        <Heading as='h2' size='lg' mb='2'>by {author}</Heading>
+        <Text fontSize='md' mt='2'>{description}</Text>
+        <Card>
+            <Code  ><pre>{JSON.stringify(podcast,null,2)}</pre></Code>
+          </Card>
       </VStack>
     </>
   )
@@ -51,9 +51,7 @@ function Card (props) {
 
 export async function getStaticProps ({params}) {
   const {uuid } = params
-  const podcastsByUuid = await getPodcastsByUUID()
-
-  const podcast = await podcastsByUuid[uuid]
+  const podcast = await getPodcast(uuid)
   return {
     props: { podcast } // will be passed to the page component as props
     // revalidate: 0,

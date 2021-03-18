@@ -19,8 +19,13 @@ async function fetcher (path, qs = { }) {
   return object
 }
 
-export async function getVersions () {
-  return fetcher('version')
+export async function getApiSignature () {
+  const versions = await fetcher('version')
+  const generatedAt = new Date().toISOString()
+  return {
+    versions,
+    generatedAt
+  }
 }
 
 // TODO(daneroo): What to do if not found: empty for now

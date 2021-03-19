@@ -60,7 +60,7 @@ export async function getStaticProps ({params}) {
 
 export async function getStaticPaths() {
   const podcasts = await getPodcasts()
-  console.log('uuid paths:',podcasts.length)
+  console.log('podcast paths:',podcasts.length)
   return {
     paths: podcasts.map(({uuid}) => {
       return {

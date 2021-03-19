@@ -6,12 +6,11 @@ export default function Footer ({ apiSignature = {} }) {
     <Flex
       as='footer'
       justifyContent='center' alignItems='center'
-      height='100px'
-      borderTop='1px solid #eaeaea' w='100%'
+      borderTop='1px solid #eee' w='100%'
     >
-      <HStack>
+      <HStack py='.5em'>
         <span>ScrobbleCast v{versions.pocketscrape}</span>
-        <span title={generatedAt}> @ {fromNow(generatedAt)}</span>
+        <span title={generatedAt}> @{fromNow(generatedAt)}</span>
       </HStack>
     </Flex>
   )

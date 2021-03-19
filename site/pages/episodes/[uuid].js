@@ -72,8 +72,8 @@ export async function getStaticProps ({params}) {
 }
 
 export async function getStaticPaths() {
-  const episodes = await getEpisodes(14)
-  // console.log('uuid paths:',episodes.length)
+  const episodes = await getEpisodes()
+  console.log('episode paths:',episodes.length)
   return {
     paths: episodes.map(({uuid}) => {
       return {

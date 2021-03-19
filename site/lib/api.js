@@ -1,7 +1,7 @@
-// import { promises as fs } from 'fs'
-// import { join } from 'path'
+import { promises as fs } from 'fs'
+import { join } from 'path'
 import { daysAgo } from './date'
-// const dataDirectory = join(process.cwd(), 'data')
+const dataDirectory = join(process.cwd(), 'data')
 // const historyFile = join(dataDirectory, 'history-daniel.json')
 
 const baseURL = 'https://scrobblecast.dl.imetrical.com/api'
@@ -12,7 +12,7 @@ async function fetcher (path, qs = { }) {
   // eslint-disable-next-line no-undef
   const results = await fetch(url)
   const object = await results.json()
-  // console.info('fetched', url)
+  console.info('fetched', url)
   return object
 }
 
@@ -25,9 +25,17 @@ export async function getApiSignature () {
   }
 }
 
+const cache = {
+  episode: {},
+  podcast: {}
+}
+
 // TODO(daneroo): What to do if not found: empty for now
-async function getByUUID (uuid) {
-  const items = await fetcher('history', { uuid })
+async function getByUUID ({ uuid, type }) {
+  if (cache[type][uuid]) {
+    return cache[type][uuid]
+  }
+  const items = await fetcher('history', { uuid, type })
   if (items.length === 0) {
     return {}
   }
@@ -37,21 +45,33 @@ async function getByUUID (uuid) {
 }
 
 export async function getEpisode (uuid) {
-  const episode = await getByUUID(uuid)
+  const episode = await getByUUID({ uuid, type: 'episode' })
   return playDecorate(episode)
 }
 
 export async function getPodcast (uuid) {
-  return getByUUID(uuid)
+  return getByUUID({ uuid, type: 'podcast' })
 }
 
-export async function getEpisodes (days) {
+const defaultDays = 45
+export async function getEpisodes (days = defaultDays) {
   const since = daysAgo(days)
-  return fetcher('history', { type: 'episode', user: 'daniel', since })
+  const episodes = await fetcher('history', { type: 'episode', user: 'daniel', since })
+  for (const e of episodes) {
+    cache.episode[e.uuid] = e
+  }
+  console.log('+|Episode Cache|', Object.keys(cache.episode).length)
+  return episodes
 }
 
 export async function getPodcasts () {
-  return fetcher('history', { type: 'podcast', user: 'daniel' })
+  const podcasts = await fetcher('history', { type: 'podcast', user: 'daniel' })
+  for (const p of podcasts) {
+    cache.podcast[p.uuid] = p
+  }
+  console.log('+|Podcast Cache|', Object.keys(cache.podcast).length)
+
+  return podcasts
 }
 
 // add podcast object to episodes
@@ -89,4 +109,37 @@ function byUUID (ary) {
       [uuid]: item
     }
   }, {})
+}
+
+export async function writeStorkIndexFiles () {
+  const podcastsDirectory = join(dataDirectory, 'podcasts')
+  await fs.mkdir(podcastsDirectory, { recursive: true })
+  const podcasts = await getPodcasts()
+  for (const podcast of podcasts) {
+    const { uuid, title, author, description } = podcast
+    const podcastFile = join(podcastsDirectory, uuid + '.txt')
+    await fs.writeFile(podcastFile, `${title} by ${author}\n\n${description}\n`)
+  }
+  const episodesDirectory = join(dataDirectory, 'episodes')
+  await fs.mkdir(episodesDirectory, { recursive: true })
+  const episodes = await getEpisodes()
+  for (const episode of episodes) {
+    const { uuid, title } = episode
+    const episodeFile = join(episodesDirectory, uuid + '.txt')
+    await fs.writeFile(episodeFile, `${title}\n`)
+  }
+
+  const storkConfigFile = join(dataDirectory, 'config.toml')
+  await fs.writeFile(storkConfigFile, `
+[input]
+base_directory = "./"
+files = [
+${podcasts.map((p) => `{path = "podcasts/${p.uuid}.txt", url = "/podcasts/${p.uuid}", title=${JSON.stringify(p.title)}}`).join(',\n')},
+${episodes.map((e) => `{path = "episodes/${e.uuid}.txt", url = "/episodes/${e.uuid}", title=${JSON.stringify(e.title)}}`).join(',\n')}
+]
+ 
+[output]
+filename = "scrobblecast.st"
+`)
+  console.log('Done writing indexed files')
 }

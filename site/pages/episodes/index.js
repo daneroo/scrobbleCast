@@ -1,7 +1,9 @@
+import { useState } from 'react'
 import Head from 'next/head'
 import {
   Heading, Text, Box, Flex, VStack,
-  Stat, StatLabel, StatNumber, StatHelpText, StatGroup
+  Stat, StatLabel, StatNumber, StatHelpText, StatGroup,
+  Button
 } from '@chakra-ui/react'
 import { fromNow, humanDuration } from '../../lib/date.js'
 import { getDecoratedEpisodes } from '../../lib/api'
@@ -31,9 +33,15 @@ function percentComplete (playedProportion) {
 }
 
 function Episodes ({ episodes }) {
+  // Shortened episode list
+  const [sliceLimit, setSliceLimit] = useState(5)
+  const moreAvailable = (sliceLimit < episodes.length)
+  function showMore () {
+    setSliceLimit(Math.min(sliceLimit + 20, episodes.length))
+  }
   return (
     <Flex flexDirection='column' flexWrap='wrap' maxW='800px' mt='10'>
-      {episodes.map((episode) => {
+      {episodes.slice(0, sliceLimit).map((episode) => {
         const { uuid, title, playedProportion, duration, lastPlayed, firstPlayed, podcast } = episode
         return (
           <Card key={uuid} href={`/episodes/${uuid}`}>
@@ -54,6 +62,7 @@ function Episodes ({ episodes }) {
           </Card>
         )
       })}
+      <Button isDisabled={!moreAvailable} onClick={showMore}>{moreAvailable ? 'Show More' : 'At End'} (1..{sliceLimit} of {episodes.length})</Button>
     </Flex>
   )
 }
@@ -72,8 +81,7 @@ function Card (props) {
 }
 
 export async function getStaticProps (context) {
-  const days = 14
-  const episodes = await getDecoratedEpisodes(days)
+  const episodes = await getDecoratedEpisodes()
 
   return {
     props: { episodes } // will be passed to the page component as props

@@ -53,7 +53,7 @@ export async function getPodcast (uuid) {
   return getByUUID({ uuid, type: 'podcast' })
 }
 
-const defaultDays = 45
+const defaultDays = 15
 export async function getEpisodes (days = defaultDays) {
   const since = daysAgo(days)
   const episodes = await fetcher('history', { type: 'episode', user: 'daniel', since })
@@ -115,6 +115,11 @@ export async function writeStorkIndexFiles () {
   const podcastsDirectory = join(dataDirectory, 'podcasts')
   await fs.mkdir(podcastsDirectory, { recursive: true })
   const podcasts = await getPodcasts()
+  const podcastsJSONFile = join(podcastsDirectory, 'poddcasts.json')
+  await fs.writeFile(podcastsJSONFile, JSON.stringify(podcasts.map((p) => {
+    const { uuid, title } = p
+    return { uuid, title }
+  })))
   for (const podcast of podcasts) {
     const { uuid, title, author, description } = podcast
     const podcastFile = join(podcastsDirectory, uuid + '.txt')

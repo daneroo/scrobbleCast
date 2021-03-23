@@ -10,13 +10,21 @@ npm i @chakra-ui/react @emotion/react @emotion/styled framer-motion
 
 ## TODO
 
-- fetch notes (in `../js`)
+- Add Goodreads page
+- move to nx/TypeScript - add tests
+- redo layout - header/footer - see <https://play.pocketcasts.com/>
+  - https://chakra-ui.com/guides/integrations/with-react-table
+  - <https://raptis.wtf/blog/build-a-landing-page-with-chakra-ui-part-1/>
+- CMS: fetch notes (in `../js/showNotes`)
+  - scrape - subscribed podcasts/known podcasts/known episodes
+    - check by fetching it's show notes even if episode is not in list
+  - Here's one I'm no longer subscribed to: <https://play.pocketcasts.com/discover/podcast/e704d9e0-9b5b-0133-2dcb-6dc413d6d41d>
+  - just return uuid for `getStaticPaths`
+  - [If-None-Match](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/If-None-Match)
+  - [If-Modified-Since](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/If-Modified-Since)
 - cache/expire episodes/podcast in `data/<type>.json` so other thread see them.
-- just return uuid for `getStaticPaths`
 - some pages not generated... on demand fallback...
-- fetch notes (in `../js`)
 - add episodes to podcast page
-- redo layout - header/footer
 - add links (Header)
 - joining to podcast from episode
 - [Stork](https://github.com/jameslittle230/stork) for search
@@ -24,6 +32,10 @@ npm i @chakra-ui/react @emotion/react @emotion/styled framer-motion
 - vega-lite (d3) for viz
 - vercel  for deployment
 - netlify for deployment
+
+## Show Notes
+
+Augmented the scrape api to get show notes, should produces a single (html file) with episode info and show notes
 
 ## Stork
 
@@ -33,10 +45,11 @@ npm i @chakra-ui/react @emotion/react @emotion/styled framer-motion
 
 ```bash
 docker build -t stork stork/  # once only
-docker run --rm -it -v $(pwd)/data:/data stork
+docker run --rm -it --name stork -v $(pwd)/data:/data stork
 scp -p data/scrobblecast.st public/stork/scrobblecast.st
 ```
 
+FUll episodes, no showNotes:
 
 ```bash
 $ time docker run --rm -it -v $(pwd)/data:/data stork; scp -p data/scrobblecast.st public/stork/scrobblecast.st

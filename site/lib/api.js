@@ -115,7 +115,7 @@ export async function writeStorkIndexFiles () {
   const podcastsDirectory = join(dataDirectory, 'podcasts')
   await fs.mkdir(podcastsDirectory, { recursive: true })
   const podcasts = await getPodcasts()
-  const podcastsJSONFile = join(podcastsDirectory, 'poddcasts.json')
+  const podcastsJSONFile = join(podcastsDirectory, 'podcasts.json')
   await fs.writeFile(podcastsJSONFile, JSON.stringify(podcasts.map((p) => {
     const { uuid, title } = p
     return { uuid, title }

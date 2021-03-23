@@ -1,34 +1,30 @@
-import { useEffect } from 'react'
-import Head from 'next/head'
-import { Heading, Text, Flex, Box, VStack } from '@chakra-ui/react'
-import Footer from '../components/Footer'
+import { Heading, Text, Flex, Box } from '@chakra-ui/react'
+import PageLayout from '../components/PageLayout'
+import Stork from '../components/Stork'
 import { getApiSignature, writeStorkIndexFiles } from '../lib/api'
 
-export default function Home ({ apiSignature }) {
-  useEffect(() => {
-    if (window.stork) {
-      window.stork.register('scrobblecast', '/stork/scrobblecast.st')
-    }
-  }, [])
+export default function Home ({ apiSignature, loadedIndexes, addLoadedIndex }) {
   return (
     <>
-      <Head>
-        <title>Scrobble Cast</title>
-        <link rel='icon' href='/favicon.ico' />
-        <script src='https://files.stork-search.net/stork.js' />
-        <link rel='stylesheet' href='https://files.stork-search.net/basic.css' />
-      </Head>
-      <VStack as='main' px='.5rem' my='2rem'>
+      <PageLayout
+        {...{ apiSignature, loadedIndexes, addLoadedIndex }}
+      >
         <Heading as='h1' size='2xl' mb='2'>
           Scrobble Cast
         </Heading>
         <Text fontSize='2xl' mt='2'>
           My podcast listening scrobbler
         </Text>
-        <Box className='stork-wrapper'>
-          <input placeholder='Search terms...' style={{ width: '30rem' }} data-stork='scrobblecast' className='stork-input' />
-          <div data-stork='scrobblecast-output' className='stork-output' />
-        </Box>
+        {/* <Box w='100%' maxWidth='30rem'>
+          <Stork
+            loadedIndexes={loadedIndexes}
+            addLoadedIndex={addLoadedIndex}
+            name='scrobblecast'
+            placeholder='Search for ...'
+            // wrapperClassnames={['stork-wrapper-basic']}
+            inputStyles={{ fontSize: '1.2em' }}
+          />
+        </Box> */}
 
         <Flex flexWrap='wrap' alignItems='center' justifyContent='center' maxW='800px' mt='10'>
           <Card href='/podcasts'>
@@ -40,8 +36,7 @@ export default function Home ({ apiSignature }) {
             <Text fontSize='lg'>Recently listened episodes</Text>
           </Card>
         </Flex>
-      </VStack>
-      <Footer apiSignature={apiSignature} />
+      </PageLayout>
     </>
   )
 }

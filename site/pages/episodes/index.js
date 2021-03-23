@@ -5,25 +5,31 @@ import {
   Stat, StatLabel, StatNumber, StatHelpText, StatGroup,
   Button
 } from '@chakra-ui/react'
-import { fromNow, humanDuration } from '../../lib/date.js'
-import { getDecoratedEpisodes } from '../../lib/api'
+import PageLayout from '../../components/PageLayout'
 
-export default function EpisodesPage ({ episodes }) {
+import { fromNow, humanDuration } from '../../lib/date.js'
+import { getDecoratedEpisodes, getApiSignature } from '../../lib/api'
+
+export default function EpisodesPage ({ episodes, apiSignature, loadedIndexes, addLoadedIndex }) {
   const playedEpisodes = episodes.filter((e) => e.playedTime > 0)
   return (
     <>
       <Head>
-        <title>podcasts</title>
+        <title>Episodes</title>
       </Head>
-      <VStack as='main' my='2rem'>
-        <Heading as='h1' size='2xl' mb='2'>
-          Episode Listing
-        </Heading>
-        <Text fontSize='2xl' mt='2'>
-          Recently listened episodes
-        </Text>
-        {playedEpisodes.length > 0 && <Episodes episodes={playedEpisodes} />}
-      </VStack>
+      <PageLayout
+        {...{ apiSignature, loadedIndexes, addLoadedIndex }}
+      >
+        <VStack as='main' my='2rem'>
+          <Heading as='h1' size='2xl' mb='2'>
+            Episode Listing
+          </Heading>
+          <Text fontSize='2xl' mt='2'>
+            Recently listened episodes
+          </Text>
+          {playedEpisodes.length > 0 && <Episodes episodes={playedEpisodes} />}
+        </VStack>
+      </PageLayout>
     </>
   )
 }
@@ -81,10 +87,11 @@ function Card (props) {
 }
 
 export async function getStaticProps (context) {
+  const apiSignature = await getApiSignature()
   const episodes = await getDecoratedEpisodes()
 
   return {
-    props: { episodes } // will be passed to the page component as props
+    props: { episodes, apiSignature } // will be passed to the page component as props
     // revalidate: 0,
   }
 }

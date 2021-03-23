@@ -1,6 +1,5 @@
 import { Heading, Text, Flex, Box } from '@chakra-ui/react'
 import PageLayout from '../components/PageLayout'
-import Stork from '../components/Stork'
 import { getApiSignature, writeStorkIndexFiles } from '../lib/api'
 
 export default function Home ({ apiSignature, loadedIndexes, addLoadedIndex }) {
@@ -13,27 +12,20 @@ export default function Home ({ apiSignature, loadedIndexes, addLoadedIndex }) {
           Scrobble Cast
         </Heading>
         <Text fontSize='2xl' mt='2'>
-          My podcast listening scrobbler
+          What my eyes and ears have been up to
         </Text>
-        {/* <Box w='100%' maxWidth='30rem'>
-          <Stork
-            loadedIndexes={loadedIndexes}
-            addLoadedIndex={addLoadedIndex}
-            name='scrobblecast'
-            placeholder='Search for ...'
-            // wrapperClassnames={['stork-wrapper-basic']}
-            inputStyles={{ fontSize: '1.2em' }}
-          />
-        </Box> */}
-
-        <Flex flexWrap='wrap' alignItems='center' justifyContent='center' maxW='800px' mt='10'>
+        <Flex flexWrap='wrap' alignItems='center' justifyContent='center' maxW='800px' mt='4'>
           <Card href='/podcasts'>
             <Heading as='h3' size='lg' mb='2'>Podcasts →</Heading>
-            <Text fontSize='lg'>Podcasts I subscribe to</Text>
+            <Text fontSize='lg'>Subscribed Podcasts</Text>
           </Card>
           <Card href='/episodes'>
             <Heading as='h3' size='lg' mb='2'>Episodes →</Heading>
-            <Text fontSize='lg'>Recently listened episodes</Text>
+            <Text fontSize='lg'>Recent Episodes</Text>
+          </Card>
+          <Card href='/books'>
+            <Heading as='h3' size='lg' mb='2'>Books →</Heading>
+            <Text fontSize='lg'>Recently read</Text>
           </Card>
         </Flex>
       </PageLayout>
@@ -48,7 +40,7 @@ function Card (props) {
       p='5' m='3'
       borderWidth='1px'
       rounded='lg'
-      flexBasis={['auto', '45%']}
+      // flexBasis={['auto', '45%']}
       {...props}
     />
   )

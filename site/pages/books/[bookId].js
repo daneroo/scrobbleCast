@@ -1,46 +1,48 @@
 import Head from 'next/head'
 import { Heading, Text, Box, Flex, VStack,Code } from '@chakra-ui/react'
 import PageLayout from '../../components/PageLayout'
-import { getPodcast, getPodcasts, getApiSignature} from '../../lib/api'
+import { getBooksFeed,getBook, getApiSignature } from '../../lib/api'
 
-export default function PodcastPage ({ podcast,apiSignature , loadedIndexes, addLoadedIndex }) {
-  const {title,author,description} = podcast
+export default function BookPage ({ book, apiSignature , loadedIndexes, addLoadedIndex }) {
+  const {title,authorName,bookDescription} = book
   return (
     <>
       <Head>
-        <title>Podcast - {title}</title>
+        <title>Book - {title}</title>
       </Head>
       <PageLayout
         {...{ apiSignature, loadedIndexes, addLoadedIndex }}
       >
       <VStack as='main' my='2rem' mx={2} maxWidth='60rem'>
         <Heading as='h1' size='xl' mb='2'>{title}</Heading>
-        <Heading as='h2' size='lg' mb='2'>by {author}</Heading>
-          <Text fontSize='md' mt='2'>{description}</Text>
+        <Heading as='h2' size='lg' mb='2'>by {authorName}</Heading>
+        <Text fontSize='md' mt='2'>{bookDescription}</Text>
       </VStack>
       </PageLayout>
     </>
   )
 }
 
+
 export async function getStaticProps ({params}) {
-  const {uuid } = params
   const apiSignature = await getApiSignature()
-  const podcast = await getPodcast(uuid)
+  const {bookId } = params
+  const book = await getBook(bookId)
   return {
-    props: { apiSignature, podcast } // will be passed to the page component as props
+    props: { apiSignature,book } // will be passed to the page component as props
     // revalidate: 0,
   }
 }
 
 export async function getStaticPaths() {
-  const podcasts = await getPodcasts()
-  console.log('podcast paths:',podcasts.length)
+  const booksFeed = await getBooksFeed()
+  const books = booksFeed.items
+  console.log('books paths:',books.length)
   return {
-    paths: podcasts.map(({uuid}) => {
+    paths: books.map(({bookId}) => {
       return {
         params: {
-          uuid,
+          bookId,
         },
       }
     }),

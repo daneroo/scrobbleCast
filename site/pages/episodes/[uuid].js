@@ -4,15 +4,20 @@ import {
   Stat, StatLabel, StatNumber, StatHelpText, StatGroup
  } from '@chakra-ui/react'
 
-import { getEpisodes,getEpisode } from '../../lib/api'
+ import PageLayout from '../../components/PageLayout'
 
-export default function EpisodePage ({ episode }) {
+import { getEpisodes,getEpisode, getApiSignature } from '../../lib/api'
+
+export default function EpisodePage ({ episode,apiSignature , loadedIndexes, addLoadedIndex }) {
   const { uuid, title, podcast_title, playedProportion, duration, lastPlayed, firstPlayed } = episode
   return (
     <>
       <Head>
-        <title>{title}</title>
+        <title>Episode - {title}</title>
       </Head>
+      <PageLayout
+        {...{ apiSignature, loadedIndexes, addLoadedIndex }}
+      >
       <VStack as='main' my='2rem'>
         <Heading as='h1' size='xl' mb={2}>{title}</Heading>
           <Text fontSize='lg'>{podcast_title}</Text>
@@ -27,46 +32,18 @@ export default function EpisodePage ({ episode }) {
               <StatNumber>{duration}s</StatNumber>
             </Stat>
           </StatGroup>
-          <Card>
-            <Code><pre>{JSON.stringify(episode,null,2)}</pre></Code>
-          </Card>
       </VStack>
+      </PageLayout>
     </>
-  )
-}
-
-// not yet used
-function Episode ({ episode }) {
-  return (
-    <Flex flexDirection='column' flexWrap='wrap' maxW='800px' mt='10'>
-      {podcasts.map(({ uuid, title }) => (
-        <Card key={uuid} href='/'>
-          <Heading as='h4' size='md'>{title}</Heading>
-          <Text fontSize='lg'>Description of {title}</Text>
-        </Card>
-      ))}
-    </Flex>
-  )
-}
-function Card (props) {
-  return (
-    <Box
-      as='a'
-      p='1' m='1'
-      borderWidth='1px'
-      rounded='lg'
-      flexBasis={['auto', '45%']}
-      {...props}
-    />
-
   )
 }
 
 export async function getStaticProps ({params}) {
   const {uuid } = params
+  const apiSignature = await getApiSignature()
   const episode = await getEpisode(uuid)
   return {
-    props: { episode } // will be passed to the page component as props
+    props: { episode, apiSignature } // will be passed to the page component as props
     // revalidate: 0,
   }
 }

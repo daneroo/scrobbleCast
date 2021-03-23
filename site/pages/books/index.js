@@ -1,40 +1,40 @@
 import Head from 'next/head'
 import { Heading, Text, Box, Flex, VStack } from '@chakra-ui/react'
 import PageLayout from '../../components/PageLayout'
-import { getPodcasts, getApiSignature } from '../../lib/api'
 
-export default function PodcastsPage ({ podcasts, apiSignature, loadedIndexes, addLoadedIndex }) {
-  // console.log({ podcasts })
+import { getBooksFeed, getApiSignature } from '../../lib/api'
+
+export default function PodcastsPage ({ books, apiSignature, loadedIndexes, addLoadedIndex }) {
+  // console.log({ books })
   return (
     <>
-      <Head>
-        <title>Podcasts</title>
-      </Head>
       <PageLayout
         {...{ apiSignature, loadedIndexes, addLoadedIndex }}
       >
+        <Head>
+          <title>Books</title>
+        </Head>
         <VStack as='main' my='2rem'>
           <Heading as='h1' size='2xl' mb='2'>
-            Podcast Listing
+            Books Listing
           </Heading>
           <Text fontSize='2xl' mt='2'>
-            This is a list of my subscribed podcasts
+            List of Books
           </Text>
-          {podcasts.length > 0 && <Podcasts podcasts={podcasts} />}
+          {books.length > 0 && <Books books={books} />}
         </VStack>
       </PageLayout>
-
     </>
   )
 }
 
-function Podcasts ({ podcasts }) {
+function Books ({ books }) {
   return (
     <Flex flexDirection='column' flexWrap='wrap' maxW='800px' mt='10'>
-      {podcasts.map(({ uuid, title, author, description }) => (
-        <Card key={uuid} href={`/podcasts/${uuid}`}>
-          <Heading as='h4' size='md'>{title}  {author}</Heading>
-          <Text fontSize='lg'>{description}</Text>
+      {books.map(({ bookId, title, authorName, bookDescription }) => (
+        <Card key={bookId} href={`/books/${bookId}`}>
+          <Heading as='h4' size='md'>{bookId} {title}  {authorName}</Heading>
+          {/* <Text fontSize='lg'>{bookDescription}</Text> */}
         </Card>
       ))}
     </Flex>
@@ -47,7 +47,7 @@ function Card (props) {
       p='1' m='1'
       borderWidth='1px'
       rounded='lg'
-      flexBasis={['auto', '45%']}
+      // flexBasis={['auto', '45%']}
       {...props}
     />
 
@@ -56,9 +56,9 @@ function Card (props) {
 
 export async function getStaticProps (context) {
   const apiSignature = await getApiSignature()
-  const podcasts = await getPodcasts()
+  const booksFeed = await getBooksFeed()
   return {
-    props: { podcasts, apiSignature } // will be passed to the page component as props
+    props: { books: booksFeed.items, apiSignature } // will be passed to the page component as props
     // revalidate: 0,
   }
 }

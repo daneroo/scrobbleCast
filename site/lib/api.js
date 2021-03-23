@@ -74,6 +74,18 @@ export async function getPodcasts () {
   return podcasts
 }
 
+export async function getBooksFeed () {
+  const booksFile = join(process.cwd(), 'public', 'books', 'goodreads-rss.json')
+  const booksFeed = JSON.parse(await fs.readFile(booksFile, { encoding: 'utf8' }))
+  console.log('+|Books (uncached)|', booksFeed.items.length)
+  return booksFeed
+}
+export async function getBook (bookId) {
+  const booksFeed = await getBooksFeed()
+  const found = booksFeed.items.filter((b) => b.bookId === bookId)
+  return found?.[0]
+}
+
 // add podcast object to episodes
 export async function getDecoratedEpisodes (days) {
   // first add podcast

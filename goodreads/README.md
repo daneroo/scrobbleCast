@@ -10,6 +10,7 @@ Also by including a `page=X` url param I can fetch more than 100 items (by pages
 - Check out the `lastBuildDate`s if I modify old items
 - Multiple read dates - find and test
 - Validation any possibly repeated items?, dates?, other scale type projection
+  - `<user_read_at />` only included once for Diamond Age
 - Empty fields (shelf,dates,..)
 - mapping: userShelve: ''->read
 - Make primary key obvious

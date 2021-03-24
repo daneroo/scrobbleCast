@@ -10,7 +10,12 @@ npm i @chakra-ui/react @emotion/react @emotion/styled framer-motion
 
 ## TODO
 
-- Add Goodreads page
+- Cache for api calls - refactor
+- React Table for listings
+- Lighthouse - round 1 done
+  - <https://web.dev/render-blocking-resources/?utm_source=lighthouse&utm_medium=devtools>
+  - <https://javascript.info/script-async-defer>
+  - <https://web.dev/defer-non-critical-css/>
 - move to nx/TypeScript - add tests
 - redo layout - header/footer - see <https://play.pocketcasts.com/>
   - https://chakra-ui.com/guides/integrations/with-react-table

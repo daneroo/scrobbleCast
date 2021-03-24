@@ -81,7 +81,7 @@ export default function Header ({ loadedIndexes, addLoadedIndex, ...rest }) {
             name='scrobblecast'
             placeholder='Search for ...'
             // wrapperClassnames={['stork-wrapper-basic']}
-            wrapperStyles={{ width: '300px' }}
+            wrapperStyles={{ width: '200px' }}
             inputStyles={{ fontSize: '1.0em', zwidth: '50%' }}
           />
 

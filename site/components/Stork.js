@@ -5,7 +5,7 @@ const indexUrls = {
   scrobblecast: '/stork/scrobblecast.st'
 }
 
-const Stork = ({
+export default function Stork ({
   loadedIndexes,
   addLoadedIndex,
   name,
@@ -13,12 +13,13 @@ const Stork = ({
   wrapperStyles,
   wrapperClassnames,
   inputStyles
-}) => {
+}) {
   if (!loadedIndexes) {
     throw new Error('Set loadedIndexes prop!')
   }
-  console.log({ indexUrls })
   useEffect(() => {
+    // if (loadedIndexes) { return }
+
     const storkOptions = {
       // onQueryUpdate: (query, results) => {
       //   window._paq.push(['trackSiteSearch', query, name, results.length])
@@ -27,13 +28,34 @@ const Stork = ({
       //   window._paq.push(['trackEvent', 'searchResultSelected', query, result.entry.title])
       // }
     }
-    console.log({ indexUrls })
-    if (!loadedIndexes.includes(name)) {
-      window.stork.downloadIndex(name, indexUrls[name], storkOptions)
-      addLoadedIndex(name)
+
+    // Move this all to a hook! even the global state of loaded indexes...
+    async function asyncEffect () {
+      console.log('stork.useEffect (async)', new Date().toISOString())
+      const storkLoaded = await waitUntil(async () => typeof window?.stork !== 'undefined')
+      // const storkLoaded = await waitUntil(async () => Math.random() < 0.01)
+      if (!storkLoaded) {
+        throw new Error('Stork global not found')
+      }
+      // even when stork exists, the onload may not have completed: give it another 100ms
+      await delay(100)
+      // or could do the initialize here..
+      // if (loadedIndexes.length===0 {
+      //   window.stork.initialize()
+      // }
+      if (!loadedIndexes.includes(name)) {
+        window.stork.downloadIndex(name, indexUrls[name], storkOptions)
+        addLoadedIndex(name)
+      }
+      window.stork.attach(name)
+      console.log('stork.attached', new Date().toISOString())
+      return storkLoaded
     }
-    window.stork.attach(name)
-  }, [])
+
+    asyncEffect().catch((err) => {
+      console.error(err)
+    })
+  }, [/* loadedIndexes, name */])
   return (
     <Box
       className={['stork-wrapper'].concat(wrapperClassnames).join(' ')}
@@ -52,4 +74,27 @@ const Stork = ({
   )
 }
 
-export default Stork
+// below is reusable - extract
+async function waitUntil (doneFn = async () => false, maxDelay = 10000, iterationDelay = 1) {
+  const start = +new Date()
+  console.log('waitUntil.start')
+
+  while (true) {
+    const done = await doneFn()
+    if (done) {
+      return true
+    }
+    await delay(iterationDelay)
+    const elapsed = +new Date() - start
+    console.log('waitUntil.max?', elapsed)
+    if (elapsed >= maxDelay) {
+      return false
+    }
+  }
+}
+
+function delay (ms = 10) {
+  return new Promise(resolve => {
+    setTimeout(() => { resolve() }, ms)
+  })
+}

@@ -16,74 +16,107 @@ async function fetcher (path, qs = { }) {
   return object
 }
 
+console.log('=-=-=-=-=-= New Cache/New Lambda? =-=-=-=-=-=')
+const cache = {
+  apiSignature: null,
+  episodes: {},
+  episodesByUUID: {},
+  podcasts: [],
+  podcastsByUUID: {},
+  booksFeed: null,
+  bookById: {}
+}
+
 export async function getApiSignature () {
+  if (cache.apiSignature) {
+    return cache.apiSignature
+  }
   const versions = await fetcher('version')
   const generatedAt = new Date().toISOString()
-  return {
+  const apiSignature = {
     versions,
     generatedAt
   }
+  cache.apiSignature = apiSignature
+  return apiSignature
 }
 
-const cache = {
-  episode: {},
-  podcast: {}
-}
-
-// TODO(daneroo): What to do if not found: empty for now
+// - try the cache, then fetch else return {}
 async function getByUUID ({ uuid, type }) {
   if (cache[type][uuid]) {
     return cache[type][uuid]
   }
   const items = await fetcher('history', { uuid, type })
-  if (items.length === 0) {
-    return {}
-  }
-  const item = items[0]
-  // console.log(JSON.stringify(item, null, 2))
+  const item = items?.[0] ?? {}
   return item
 }
 
 export async function getEpisode (uuid) {
-  const episode = await getByUUID({ uuid, type: 'episode' })
+  await getEpisodes() // warm up the cache
+  const episode = await getByUUID({ uuid, type: 'episodesByUUID' })
   return playDecorate(episode)
 }
 
 export async function getPodcast (uuid) {
-  return getByUUID({ uuid, type: 'podcast' })
+  await getPodcasts() // warm up the cache
+  return getByUUID({ uuid, type: 'podcastsByUUID' })
 }
 
 const defaultDays = 15
 export async function getEpisodes (days = defaultDays) {
+  if (cache.episodes.length > 0) {
+    const { episodes } = cache
+    // console.log('|Episodes (hit)|', episodes.length)
+    return episodes
+  }
+
   const since = daysAgo(days)
   const episodes = await fetcher('history', { type: 'episode', user: 'daniel', since })
+  cache.episodes = episodes
   for (const e of episodes) {
-    cache.episode[e.uuid] = e
+    cache.episodesByUUID[e.uuid] = e
   }
-  console.log('+|Episode Cache|', Object.keys(cache.episode).length)
+  console.log('|Episodes (miss)|', episodes.length)
+  console.log('|Episodes (miss/uuid)|', Object.keys(cache.episodesByUUID).length)
   return episodes
 }
 
 export async function getPodcasts () {
-  const podcasts = await fetcher('history', { type: 'podcast', user: 'daniel' })
-  for (const p of podcasts) {
-    cache.podcast[p.uuid] = p
+  if (cache.podcasts.length > 0) {
+    const { podcasts } = cache
+    // console.log('|Podcast (hit)|', podcasts.length)
+    return podcasts
   }
-  console.log('+|Podcast Cache|', Object.keys(cache.podcast).length)
 
+  const podcasts = await fetcher('history', { type: 'podcast', user: 'daniel' })
+  cache.podcasts = podcasts
+  for (const p of podcasts) {
+    cache.podcastsByUUID[p.uuid] = p
+  }
+  console.log('|Podcasts (miss)|', podcasts.length)
+  console.log('|Podcasts (miss/uuid)|', Object.keys(cache.podcastsByUUID).length)
   return podcasts
 }
 
 export async function getBooksFeed () {
+  if (cache.booksFeed) {
+    const { booksFeed } = cache
+    // console.log('|Books (hit)|', booksFeed.items.length)
+    return booksFeed
+  }
   const booksFile = join(process.cwd(), 'public', 'books', 'goodreads-rss.json')
   const booksFeed = JSON.parse(await fs.readFile(booksFile, { encoding: 'utf8' }))
-  console.log('+|Books (uncached)|', booksFeed.items.length)
+  cache.booksFeed = booksFeed
+  for (const b of booksFeed.items) {
+    cache.bookById[b.bookId] = b
+  }
+  console.log('|Books (miss)|', booksFeed.items.length)
+  console.log('|Books (miss/uuid)|', Object.keys(cache.bookById).length)
   return booksFeed
 }
 export async function getBook (bookId) {
-  const booksFeed = await getBooksFeed()
-  const found = booksFeed.items.filter((b) => b.bookId === bookId)
-  return found?.[0]
+  await getBooksFeed() // // warm up the cache
+  return cache.bookById[bookId]
 }
 
 // add podcast object to episodes

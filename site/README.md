@@ -12,6 +12,8 @@ npm i @chakra-ui/react @emotion/react @emotion/styled framer-motion
 
 - React Table for listings
   - <https://chakra-ui.com/guides/integrations/with-react-table>
+  - [x] Books
+  - Podcasts, Episodes
 - Extract hook for Stork - remove global (loadedIndexes state)
 - Cache for api calls - refactor
 - pass thru for indexed bot not generated...

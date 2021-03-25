@@ -5,6 +5,9 @@ const indexUrls = {
   scrobblecast: '/stork/scrobblecast.st'
 }
 
+// - Stork https://github.com/jameslittle230/stork
+// - James Little component https://github.com/stork-search/site/blob/master/src/components/stork.js
+
 export default function Stork ({
   loadedIndexes,
   addLoadedIndex,
@@ -38,7 +41,7 @@ export default function Stork ({
         throw new Error('Stork global not found')
       }
       // even when stork exists, the onload may not have completed: give it another 100ms
-      await delay(100)
+      await delay(200)
       // or could do the initialize here..
       // if (loadedIndexes.length===0 {
       //   window.stork.initialize()
@@ -75,7 +78,7 @@ export default function Stork ({
 }
 
 // below is reusable - extract
-async function waitUntil (doneFn = async () => false, maxDelay = 10000, iterationDelay = 1) {
+async function waitUntil (doneFn = async () => false, maxDelay = 10000, iterationDelay = 100) {
   const start = +new Date()
   console.log('waitUntil.start')
 

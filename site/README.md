@@ -10,15 +10,17 @@ npm i @chakra-ui/react @emotion/react @emotion/styled framer-motion
 
 ## TODO
 
-- Cache for api calls - refactor
 - React Table for listings
-- Lighthouse - round 1 done
+  - <https://chakra-ui.com/guides/integrations/with-react-table>
+- Extract hook for Stork - remove global (loadedIndexes state)
+- Cache for api calls - refactor
+- pass thru for indexed bot not generated...
+- Lighthouse - round 1 done - 68 mobile/99 desktop
   - <https://web.dev/render-blocking-resources/?utm_source=lighthouse&utm_medium=devtools>
   - <https://javascript.info/script-async-defer>
   - <https://web.dev/defer-non-critical-css/>
 - move to nx/TypeScript - add tests
 - redo layout - header/footer - see <https://play.pocketcasts.com/>
-  - https://chakra-ui.com/guides/integrations/with-react-table
   - <https://raptis.wtf/blog/build-a-landing-page-with-chakra-ui-part-1/>
 - CMS: fetch notes (in `../js/showNotes`)
   - scrape - subscribed podcasts/known podcasts/known episodes
@@ -32,8 +34,6 @@ npm i @chakra-ui/react @emotion/react @emotion/styled framer-motion
 - add episodes to podcast page
 - add links (Header)
 - joining to podcast from episode
-- [Stork](https://github.com/jameslittle230/stork) for search
-  - [James Little component](https://github.com/stork-search/site/blob/master/src/components/stork.js)
 - vega-lite (d3) for viz
 - vercel  for deployment
 - netlify for deployment

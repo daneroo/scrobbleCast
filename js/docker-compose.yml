@@ -1,5 +1,5 @@
-# Bumped to 2.4 - for init support
-version: '2.4'
+# Bumped to 2.2 - for init support
+version: '2.2'
 
 services:
   scrape:

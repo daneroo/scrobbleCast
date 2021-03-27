@@ -18,7 +18,7 @@ const utils = require('../utils')
 
 module.exports = defineModels()
 
-// This initializion function is synchronous
+// This initialization function is synchronous
 function defineModels () {
   const creds = config.sequelize.credentials
   const settings = config.sequelize.settings

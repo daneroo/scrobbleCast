@@ -116,7 +116,6 @@ PocketAPI.prototype.episodes = async function (uuid) {
   if (!response || !response.episodes) {
     throw new Error('Unexpected or malformed response')
   }
-
   // Decorate: May not return all episodes...
   const episodes = await this.decorateEpisodes(uuid, response.episodes)
 
@@ -236,6 +235,41 @@ PocketAPI.prototype.inProgress = async function () {
   renameOrRemoveFields(episodes, renameFields)
 
   return this.normalize(episodes, '04-in_progress')
+}
+
+// 2021-03-27 added for showNotes
+PocketAPI.prototype.podcastFull = async function (uuid) {
+  await speedLimit()
+  // e.g. https://podcast-api.pocketcasts.com/podcast/full/e704d9e0-9b5b-0133-2dcb-6dc413d6d41d
+  const uri = `${cacheURI}/podcast/full/${uuid}/0/3/2000`
+  // This now redirects, and responses is gzipped
+  const response = await rp({
+    method: 'GET',
+    uri,
+    headers: {
+      authorization: `Bearer ${this.token}`
+    },
+    gzip: true,
+    json: true
+  })
+  // actually want the whole response!! not just podcast
+  return response
+}
+
+// 2021-03-27 added for showNotes
+PocketAPI.prototype.showNotes = async function (uuid) {
+  await speedLimit()
+  // e.g. https://podcast-api.pocketcasts.com/episode/show_notes/0235bd5d-6e0e-42c4-b18d-4d109426f6da
+  const uri = `${cacheURI}/episode/show_notes/${uuid}`
+  const response = await rp({
+    method: 'GET',
+    uri,
+    headers: {
+      authorization: `Bearer ${this.token}`
+    },
+    json: true
+  })
+  return response.show_notes
 }
 
 // TODO(daneroo): change credential fields to username,password

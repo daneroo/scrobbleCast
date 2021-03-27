@@ -1,5 +1,5 @@
-# This is my new docker 1.9.1 compose file
-version: '2'
+# Bumped to 2.4 - for init support
+version: '2.4'
 
 services:
   scrape:

@@ -5,6 +5,7 @@ services:
   scrape:
     # container_name: scrape
     build: .
+    init: true # Tini forwards signals and reaps processes
     environment:
       # no value inherits from host (but not docker-machine host...)
       - HOSTNAME

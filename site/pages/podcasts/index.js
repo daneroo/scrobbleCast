@@ -1,10 +1,11 @@
+import { useMemo } from 'react'
 import Head from 'next/head'
-import { Heading, Text, Box, Flex, VStack } from '@chakra-ui/react'
+import { Heading, Text, VStack } from '@chakra-ui/react'
 import PageLayout from '../../components/PageLayout'
+import ChakraTable from '../../components/ChakraTable'
 import { getPodcasts, getApiSignature } from '../../lib/api'
 
 export default function PodcastsPage ({ podcasts, apiSignature, loadedIndexes, addLoadedIndex }) {
-  // console.log({ podcasts })
   return (
     <>
       <Head>
@@ -20,7 +21,7 @@ export default function PodcastsPage ({ podcasts, apiSignature, loadedIndexes, a
           <Text fontSize='2xl' mt='2'>
             This is a list of my subscribed podcasts
           </Text>
-          {podcasts.length > 0 && <Podcasts podcasts={podcasts} />}
+          <PodcastList podcasts={podcasts} />
         </VStack>
       </PageLayout>
 
@@ -28,29 +29,34 @@ export default function PodcastsPage ({ podcasts, apiSignature, loadedIndexes, a
   )
 }
 
-function Podcasts ({ podcasts }) {
-  return (
-    <Flex flexDirection='column' flexWrap='wrap' maxW='800px' mt='10'>
-      {podcasts.map(({ uuid, title, author, description }) => (
-        <Card key={uuid} href={`/podcasts/${uuid}`}>
-          <Heading as='h4' size='md'>{title}  {author}</Heading>
-          <Text fontSize='lg'>{description}</Text>
-        </Card>
-      ))}
-    </Flex>
+function PodcastList ({ podcasts }) {
+  const data = useMemo(
+    () => podcasts
+      // .filter((b) => b?.userShelves !== 'to-read')
+      .map((b) => ({
+        ...b,
+        updatedAt: b?.meta?.__lastUpdated,
+        firstSeenAt: b?.meta?.__firstSeen
+      })),
+    []
   )
-}
-function Card (props) {
-  return (
-    <Box
-      as='a'
-      p='1' m='1'
-      borderWidth='1px'
-      rounded='lg'
-      flexBasis={['auto', '45%']}
-      {...props}
-    />
 
+  const columns = useMemo(
+    () => [{
+      Header: 'Title',
+      accessor: 'title'
+    }, {
+      Header: 'Author',
+      accessor: 'author'
+    }, {
+      Header: 'Since',
+      accessor: 'firstSeenAt'
+    }
+    ],
+    []
+  )
+  return (
+    <ChakraTable columns={columns} data={data} />
   )
 }
 

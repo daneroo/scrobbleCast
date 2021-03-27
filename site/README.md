@@ -11,12 +11,10 @@ npm i @chakra-ui/react @emotion/react @emotion/styled framer-motion
 ## TODO
 
 - React Table for listings
-  - <https://chakra-ui.com/guides/integrations/with-react-table>
-  - [x] Books
-  - Podcasts, Episodes
+  - pagination, filtering
 - Extract hook for Stork - remove global (loadedIndexes state)
 - Cache for api calls - refactor
-- pass thru for indexed bot not generated...
+- ISR pass thru for indexed bot not generated...
 - Lighthouse - round 1 done - 68 mobile/99 desktop
   - <https://web.dev/render-blocking-resources/?utm_source=lighthouse&utm_medium=devtools>
   - <https://javascript.info/script-async-defer>

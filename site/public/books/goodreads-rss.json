@@ -1,10 +1,32 @@
 {
   "title": "Daniel's bookshelf: all",
-  "lastBuildDate": "2021-03-23T06.43.45Z",
+  "lastBuildDate": "2021-03-27T20.09.05Z",
   "items": [
     {
+      "guid": "https://www.goodreads.com/review/show/3900843999?utm_medium=api&utm_source=rss",
+      "pubDate": "Fri, 26 Mar 2021 23:34:03 -0700",
+      "title": "The Quantum Labyrinth: How Richard Feynman and John Wheeler Revolutionized Time and Reality",
+      "link": "https://www.goodreads.com/review/show/3900843999?utm_medium=api&utm_source=rss",
+      "bookId": "33784515",
+      "bookImageURL": "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1499713390l/33784515._SY75_.jpg",
+      "bookDescription": "<b>The story of the unlikely friendship between the two physicists who fundamentally recast the notion of time and history</b><br /><br /> In 1939, Richard Feynman, a brilliant graduate of MIT, arrived in John Wheeler's Princeton office to report for duty as his teaching assistant. A lifelong friendship and enormously productive collaboration was born, despite sharp differences in personality. The soft-spoken Wheeler, though conservative in appearance, was a raging nonconformist full of wild ideas about the universe. The boisterous Feynman was a cautious physicist who believed only what could be tested. Yet they were complementary spirits. Their collaboration led to a complete rethinking of the nature of time and reality. It enabled Feynman to show how quantum reality is a combination of alternative, contradictory possibilities, and inspired Wheeler to develop his landmark concept of wormholes, portals to the future and past. Together, Feynman and Wheeler made sure that quantum physics would never be the same again.",
+      "authorName": "Paul Halpern",
+      "isbn": "0465097588",
+      "userName": "Daniel",
+      "userRating": "0",
+      "userReadAt": "",
+      "userDateAdded": "Fri, 26 Mar 2021 23:34:03 -0700",
+      "userDateCreated": "Sat, 20 Mar 2021 22:35:40 -0700",
+      "userShelves": "currently-reading",
+      "userReview": "",
+      "averageRating": "4.03",
+      "bookPublished": "2017",
+      "description": "\n      \n      <a href=\"https://www.goodreads.com/book/show/33784515-the-quantum-labyrinth?utm_medium=api&amp;utm_source=rss\"><img alt=\"The Quantum Labyrinth: How Richard Feynman and John Wheeler Revolutionized Time and Reality\" src=\"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1499713390l/33784515._SY75_.jpg\" /></a><br/>\n                                      author: Paul Halpern<br/>\n                                      name: Daniel<br/>\n                                      average rating: 4.03<br/>\n                                      book published: 2017<br/>\n                                      rating: 0<br/>\n                                      read at: <br/>\n                                      date added: 2021/03/26<br/>\n                                      shelves: currently-reading<br/>\n                                      review: <br/><br/>\n                                      \n    ",
+      "numPages": 0
+    },
+    {
       "guid": "https://www.goodreads.com/review/show/3900753388?utm_medium=api&utm_source=rss",
-      "pubDate": "Mon, 22 Mar 2021 10:19:04 -0700",
+      "pubDate": "Thu, 25 Mar 2021 16:26:26 -0700",
       "title": "Persian Fire: The First World Empire and the Battle for the West",
       "link": "https://www.goodreads.com/review/show/3900753388?utm_medium=api&utm_source=rss",
       "bookId": "103749",
@@ -13,15 +35,59 @@
       "authorName": "Tom Holland",
       "isbn": "0385513119",
       "userName": "Daniel",
-      "userRating": "0",
-      "userReadAt": "",
-      "userDateAdded": "Mon, 22 Mar 2021 10:19:04 -0700",
+      "userRating": "5",
+      "userReadAt": "Thu, 25 Mar 2021 16:26:26 -0700",
+      "userDateAdded": "Thu, 25 Mar 2021 16:26:26 -0700",
       "userDateCreated": "Sat, 20 Mar 2021 21:07:17 -0700",
-      "userShelves": "currently-reading",
+      "userShelves": "",
       "userReview": "",
       "averageRating": "4.15",
       "bookPublished": "2005",
-      "description": "\n      \n      <a href=\"https://www.goodreads.com/book/show/103749.Persian_Fire?utm_medium=api&amp;utm_source=rss\"><img alt=\"Persian Fire: The First World Empire and the Battle for the West\" src=\"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1171501730l/103749._SY75_.jpg\" /></a><br/>\n                                      author: Tom Holland<br/>\n                                      name: Daniel<br/>\n                                      average rating: 4.15<br/>\n                                      book published: 2005<br/>\n                                      rating: 0<br/>\n                                      read at: <br/>\n                                      date added: 2021/03/22<br/>\n                                      shelves: currently-reading<br/>\n                                      review: <br/><br/>\n                                      \n    ",
+      "description": "\n      \n      <a href=\"https://www.goodreads.com/book/show/103749.Persian_Fire?utm_medium=api&amp;utm_source=rss\"><img alt=\"Persian Fire: The First World Empire and the Battle for the West\" src=\"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1171501730l/103749._SY75_.jpg\" /></a><br/>\n                                      author: Tom Holland<br/>\n                                      name: Daniel<br/>\n                                      average rating: 4.15<br/>\n                                      book published: 2005<br/>\n                                      rating: 5<br/>\n                                      read at: 2021/03/25<br/>\n                                      date added: 2021/03/25<br/>\n                                      shelves: <br/>\n                                      review: <br/><br/>\n                                      \n    ",
+      "numPages": 0
+    },
+    {
+      "guid": "https://www.goodreads.com/review/show/3907963267?utm_medium=api&utm_source=rss",
+      "pubDate": "Thu, 25 Mar 2021 00:27:32 -0700",
+      "title": "Dominion: How the Christian Revolution Remade the World",
+      "link": "https://www.goodreads.com/review/show/3907963267?utm_medium=api&utm_source=rss",
+      "bookId": "43885149",
+      "bookImageURL": "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1550694436l/43885149._SY75_.jpg",
+      "bookDescription": "<b>A \"marvelous\" (<i>Economist</i>) account of how the Christian Revolution forged the Western imagination.</b> Crucifixion, the Romans believed, was the worst fate imaginable, a punishment reserved for slaves. How astonishing it was, then, that people should have come to believe that one particular victim of crucifixion-an obscure provincial by the name of Jesus-was to be worshipped as a god. <i>Dominion</i> explores the implications of this shocking conviction as they have reverberated throughout history. Today, the West remains utterly saturated by Christian assumptions. As Tom Holland demonstrates, our morals and ethics are not universal but are instead the fruits of a very distinctive civilization. Concepts such as secularism, liberalism, science, and homosexuality are deeply rooted in a Christian seedbed. From Babylon to the Beatles, Saint Michael to #MeToo, <i>Dominion</i> tells the story of how Christianity transformed the modern world. ",
+      "authorName": "Tom Holland",
+      "isbn": "0465093507",
+      "userName": "Daniel",
+      "userRating": "0",
+      "userReadAt": "",
+      "userDateAdded": "Thu, 25 Mar 2021 00:27:32 -0700",
+      "userDateCreated": "Thu, 25 Mar 2021 00:27:32 -0700",
+      "userShelves": "to-read",
+      "userReview": "",
+      "averageRating": "4.23",
+      "bookPublished": "2019",
+      "description": "\n      \n      <a href=\"https://www.goodreads.com/book/show/43885149-dominion?utm_medium=api&amp;utm_source=rss\"><img alt=\"Dominion: How the Christian Revolution Remade the World\" src=\"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1550694436l/43885149._SY75_.jpg\" /></a><br/>\n                                      author: Tom Holland<br/>\n                                      name: Daniel<br/>\n                                      average rating: 4.23<br/>\n                                      book published: 2019<br/>\n                                      rating: 0<br/>\n                                      read at: <br/>\n                                      date added: 2021/03/25<br/>\n                                      shelves: to-read<br/>\n                                      review: <br/><br/>\n                                      \n    ",
+      "numPages": 0
+    },
+    {
+      "guid": "https://www.goodreads.com/review/show/3897690225?utm_medium=api&utm_source=rss",
+      "pubDate": "Wed, 24 Mar 2021 22:16:54 -0700",
+      "title": "Space at the Speed of Light: The History of 14 Billion Years for People Short on Time",
+      "link": "https://www.goodreads.com/review/show/3897690225?utm_medium=api&utm_source=rss",
+      "bookId": "53233410",
+      "bookImageURL": "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1587446759l/53233410._SY75_.jpg",
+      "bookDescription": "From the big bang to black holes, this fast-paced tour of time and space for the astro-curious unlocks the science of the stars to reveal fascinating theories, surprising discoveries, and ongoing mysteries in modern astronomy and astrophysics.<br /><br />Before the big bang, time, space, and matter didn't exist. In the 14 billion years since, scientists have pointed their telescopes upward, peering outward in space and backward in time, developing and refining theories to explain the weird and wonderful phenomena they observed.<br /><br />Through these observations, we now understand concepts like the size of the universe (still expanding), the distance to the next-nearest star from earth (Alpha Centauri, 26 trillion miles) and what drives the formation of elements (nuclear fusion), planets and galaxies (gravity), and black holes (gravitational collapse). But are these cosmological questions definitively answered or is there more to discover?<br /><br />Oxford University astrophysicist and popular YouTube personality Dr. Becky Smethurst presents everything you need to know about the universe in 10 accessible and engaging lessons.<br /><br />In Space at the Speed of Light: The History of 14 Billion Years for People Short on Time, she guides you through fundamental questions, both answered and unanswered, posed by space scientists. Why does gravity matter? How do we know the big bang happened? What is dark matter? Do aliens exist? Why is the sky dark at night? If you have ever looked up at night and wondered how it all works, you will find answers - and many more questions - in this pocket-sized tour of the universe!",
+      "authorName": "Becky Smethurst",
+      "isbn": "1984858696",
+      "userName": "Daniel",
+      "userRating": "4",
+      "userReadAt": "Wed, 24 Mar 2021 22:16:46 -0700",
+      "userDateAdded": "Wed, 24 Mar 2021 22:16:54 -0700",
+      "userDateCreated": "Thu, 18 Mar 2021 23:36:38 -0700",
+      "userShelves": "",
+      "userReview": "",
+      "averageRating": "4.36",
+      "bookPublished": "",
+      "description": "\n      \n      <a href=\"https://www.goodreads.com/book/show/53233410-space-at-the-speed-of-light?utm_medium=api&amp;utm_source=rss\"><img alt=\"Space at the Speed of Light: The History of 14 Billion Years for People Short on Time\" src=\"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1587446759l/53233410._SY75_.jpg\" /></a><br/>\n                                      author: Becky Smethurst<br/>\n                                      name: Daniel<br/>\n                                      average rating: 4.36<br/>\n                                      book published: <br/>\n                                      rating: 4<br/>\n                                      read at: 2021/03/24<br/>\n                                      date added: 2021/03/24<br/>\n                                      shelves: <br/>\n                                      review: <br/><br/>\n                                      \n    ",
       "numPages": 0
     },
     {
@@ -44,28 +110,6 @@
       "averageRating": "3.96",
       "bookPublished": "2020",
       "description": "\n      \n      <a href=\"https://www.goodreads.com/book/show/43685238-until-the-end-of-time?utm_medium=api&amp;utm_source=rss\"><img alt=\"Until the End of Time: Mind, Matter, and Our Search for Meaning in an Evolving Universe\" src=\"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1582412454l/43685238._SY75_.jpg\" /></a><br/>\n                                      author: Brian Greene<br/>\n                                      name: Daniel<br/>\n                                      average rating: 3.96<br/>\n                                      book published: 2020<br/>\n                                      rating: 4<br/>\n                                      read at: 2021/03/22<br/>\n                                      date added: 2021/03/22<br/>\n                                      shelves: <br/>\n                                      review: <br/><br/>\n                                      \n    ",
-      "numPages": 0
-    },
-    {
-      "guid": "https://www.goodreads.com/review/show/3897690225?utm_medium=api&utm_source=rss",
-      "pubDate": "Mon, 22 Mar 2021 07:22:45 -0700",
-      "title": "Space at the Speed of Light: The History of 14 Billion Years for People Short on Time",
-      "link": "https://www.goodreads.com/review/show/3897690225?utm_medium=api&utm_source=rss",
-      "bookId": "53233410",
-      "bookImageURL": "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1587446759l/53233410._SY75_.jpg",
-      "bookDescription": "From the big bang to black holes, this fast-paced tour of time and space for the astro-curious unlocks the science of the stars to reveal fascinating theories, surprising discoveries, and ongoing mysteries in modern astronomy and astrophysics.<br /><br />Before the big bang, time, space, and matter didn't exist. In the 14 billion years since, scientists have pointed their telescopes upward, peering outward in space and backward in time, developing and refining theories to explain the weird and wonderful phenomena they observed.<br /><br />Through these observations, we now understand concepts like the size of the universe (still expanding), the distance to the next-nearest star from earth (Alpha Centauri, 26 trillion miles) and what drives the formation of elements (nuclear fusion), planets and galaxies (gravity), and black holes (gravitational collapse). But are these cosmological questions definitively answered or is there more to discover?<br /><br />Oxford University astrophysicist and popular YouTube personality Dr. Becky Smethurst presents everything you need to know about the universe in 10 accessible and engaging lessons.<br /><br />In Space at the Speed of Light: The History of 14 Billion Years for People Short on Time, she guides you through fundamental questions, both answered and unanswered, posed by space scientists. Why does gravity matter? How do we know the big bang happened? What is dark matter? Do aliens exist? Why is the sky dark at night? If you have ever looked up at night and wondered how it all works, you will find answers - and many more questions - in this pocket-sized tour of the universe!",
-      "authorName": "Becky Smethurst",
-      "isbn": "1984858696",
-      "userName": "Daniel",
-      "userRating": "0",
-      "userReadAt": "",
-      "userDateAdded": "Mon, 22 Mar 2021 07:22:45 -0700",
-      "userDateCreated": "Thu, 18 Mar 2021 23:36:38 -0700",
-      "userShelves": "currently-reading",
-      "userReview": "",
-      "averageRating": "4.36",
-      "bookPublished": "",
-      "description": "\n      \n      <a href=\"https://www.goodreads.com/book/show/53233410-space-at-the-speed-of-light?utm_medium=api&amp;utm_source=rss\"><img alt=\"Space at the Speed of Light: The History of 14 Billion Years for People Short on Time\" src=\"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1587446759l/53233410._SY75_.jpg\" /></a><br/>\n                                      author: Becky Smethurst<br/>\n                                      name: Daniel<br/>\n                                      average rating: 4.36<br/>\n                                      book published: <br/>\n                                      rating: 0<br/>\n                                      read at: <br/>\n                                      date added: 2021/03/22<br/>\n                                      shelves: currently-reading<br/>\n                                      review: <br/><br/>\n                                      \n    ",
       "numPages": 0
     },
     {
@@ -239,31 +283,9 @@
       "userDateCreated": "Sat, 20 Mar 2021 22:38:02 -0700",
       "userShelves": "on-deck",
       "userReview": "",
-      "averageRating": "3.92",
+      "averageRating": "3.91",
       "bookPublished": "2015",
-      "description": "\n      \n      <a href=\"https://www.goodreads.com/book/show/23013829-einstein-s-dice-and-schr-dinger-s-cat?utm_medium=api&amp;utm_source=rss\"><img alt=\"Einstein&#39;s Dice and Schrödinger&#39;s Cat: How Two Great Minds Battled Quantum Randomness to Create a Unified Theory of Physics\" src=\"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1427161380l/23013829._SY75_.jpg\" /></a><br/>\n                                      author: Paul Halpern<br/>\n                                      name: Daniel<br/>\n                                      average rating: 3.92<br/>\n                                      book published: 2015<br/>\n                                      rating: 0<br/>\n                                      read at: <br/>\n                                      date added: 2021/03/20<br/>\n                                      shelves: on-deck<br/>\n                                      review: <br/><br/>\n                                      \n    ",
-      "numPages": 0
-    },
-    {
-      "guid": "https://www.goodreads.com/review/show/3900843999?utm_medium=api&utm_source=rss",
-      "pubDate": "Sat, 20 Mar 2021 22:37:00 -0700",
-      "title": "The Quantum Labyrinth: How Richard Feynman and John Wheeler Revolutionized Time and Reality",
-      "link": "https://www.goodreads.com/review/show/3900843999?utm_medium=api&utm_source=rss",
-      "bookId": "33784515",
-      "bookImageURL": "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1499713390l/33784515._SY75_.jpg",
-      "bookDescription": "<b>The story of the unlikely friendship between the two physicists who fundamentally recast the notion of time and history</b><br /><br /> In 1939, Richard Feynman, a brilliant graduate of MIT, arrived in John Wheeler's Princeton office to report for duty as his teaching assistant. A lifelong friendship and enormously productive collaboration was born, despite sharp differences in personality. The soft-spoken Wheeler, though conservative in appearance, was a raging nonconformist full of wild ideas about the universe. The boisterous Feynman was a cautious physicist who believed only what could be tested. Yet they were complementary spirits. Their collaboration led to a complete rethinking of the nature of time and reality. It enabled Feynman to show how quantum reality is a combination of alternative, contradictory possibilities, and inspired Wheeler to develop his landmark concept of wormholes, portals to the future and past. Together, Feynman and Wheeler made sure that quantum physics would never be the same again.",
-      "authorName": "Paul Halpern",
-      "isbn": "0465097588",
-      "userName": "Daniel",
-      "userRating": "0",
-      "userReadAt": "",
-      "userDateAdded": "Sat, 20 Mar 2021 22:37:00 -0700",
-      "userDateCreated": "Sat, 20 Mar 2021 22:35:40 -0700",
-      "userShelves": "on-deck",
-      "userReview": "",
-      "averageRating": "4.03",
-      "bookPublished": "2017",
-      "description": "\n      \n      <a href=\"https://www.goodreads.com/book/show/33784515-the-quantum-labyrinth?utm_medium=api&amp;utm_source=rss\"><img alt=\"The Quantum Labyrinth: How Richard Feynman and John Wheeler Revolutionized Time and Reality\" src=\"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1499713390l/33784515._SY75_.jpg\" /></a><br/>\n                                      author: Paul Halpern<br/>\n                                      name: Daniel<br/>\n                                      average rating: 4.03<br/>\n                                      book published: 2017<br/>\n                                      rating: 0<br/>\n                                      read at: <br/>\n                                      date added: 2021/03/20<br/>\n                                      shelves: on-deck<br/>\n                                      review: <br/><br/>\n                                      \n    ",
+      "description": "\n      \n      <a href=\"https://www.goodreads.com/book/show/23013829-einstein-s-dice-and-schr-dinger-s-cat?utm_medium=api&amp;utm_source=rss\"><img alt=\"Einstein&#39;s Dice and Schrödinger&#39;s Cat: How Two Great Minds Battled Quantum Randomness to Create a Unified Theory of Physics\" src=\"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1427161380l/23013829._SY75_.jpg\" /></a><br/>\n                                      author: Paul Halpern<br/>\n                                      name: Daniel<br/>\n                                      average rating: 3.91<br/>\n                                      book published: 2015<br/>\n                                      rating: 0<br/>\n                                      read at: <br/>\n                                      date added: 2021/03/20<br/>\n                                      shelves: on-deck<br/>\n                                      review: <br/><br/>\n                                      \n    ",
       "numPages": 0
     },
     {
@@ -481,9 +503,9 @@
       "userDateCreated": "Sat, 20 Mar 2021 20:43:47 -0700",
       "userShelves": "on-deck",
       "userReview": "",
-      "averageRating": "4.11",
+      "averageRating": "4.12",
       "bookPublished": "2011",
-      "description": "\n      \n      <a href=\"https://www.goodreads.com/book/show/10483171-the-beginning-of-infinity?utm_medium=api&amp;utm_source=rss\"><img alt=\"The Beginning of Infinity: Explanations That Transform the World\" src=\"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1311705051l/10483171._SY75_.jpg\" /></a><br/>\n                                      author: David Deutsch<br/>\n                                      name: Daniel<br/>\n                                      average rating: 4.11<br/>\n                                      book published: 2011<br/>\n                                      rating: 0<br/>\n                                      read at: <br/>\n                                      date added: 2021/03/20<br/>\n                                      shelves: on-deck<br/>\n                                      review: <br/><br/>\n                                      \n    ",
+      "description": "\n      \n      <a href=\"https://www.goodreads.com/book/show/10483171-the-beginning-of-infinity?utm_medium=api&amp;utm_source=rss\"><img alt=\"The Beginning of Infinity: Explanations That Transform the World\" src=\"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1311705051l/10483171._SY75_.jpg\" /></a><br/>\n                                      author: David Deutsch<br/>\n                                      name: Daniel<br/>\n                                      average rating: 4.12<br/>\n                                      book published: 2011<br/>\n                                      rating: 0<br/>\n                                      read at: <br/>\n                                      date added: 2021/03/20<br/>\n                                      shelves: on-deck<br/>\n                                      review: <br/><br/>\n                                      \n    ",
       "numPages": 0
     },
     {
@@ -503,9 +525,9 @@
       "userDateCreated": "Sat, 06 Jun 2020 16:14:57 -0700",
       "userShelves": "",
       "userReview": "",
-      "averageRating": "4.41",
+      "averageRating": "4.40",
       "bookPublished": "2010",
-      "description": "\n      \n      <a href=\"https://www.goodreads.com/book/show/25451264-death-s-end?utm_medium=api&amp;utm_source=rss\"><img alt=\"Death&#39;s End (Remembrance of Earth’s Past #3)\" src=\"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1430330507l/25451264._SY75_.jpg\" /></a><br/>\n                                      author: Liu Cixin<br/>\n                                      name: Daniel<br/>\n                                      average rating: 4.41<br/>\n                                      book published: 2010<br/>\n                                      rating: 4<br/>\n                                      read at: 2021/03/20<br/>\n                                      date added: 2021/03/20<br/>\n                                      shelves: <br/>\n                                      review: <br/><br/>\n                                      \n    ",
+      "description": "\n      \n      <a href=\"https://www.goodreads.com/book/show/25451264-death-s-end?utm_medium=api&amp;utm_source=rss\"><img alt=\"Death&#39;s End (Remembrance of Earth’s Past #3)\" src=\"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1430330507l/25451264._SY75_.jpg\" /></a><br/>\n                                      author: Liu Cixin<br/>\n                                      name: Daniel<br/>\n                                      average rating: 4.40<br/>\n                                      book published: 2010<br/>\n                                      rating: 4<br/>\n                                      read at: 2021/03/20<br/>\n                                      date added: 2021/03/20<br/>\n                                      shelves: <br/>\n                                      review: <br/><br/>\n                                      \n    ",
       "numPages": 0
     },
     {
@@ -767,9 +789,9 @@
       "userDateCreated": "Thu, 22 Oct 2020 01:33:28 -0700",
       "userShelves": "on-deck",
       "userReview": "",
-      "averageRating": "3.96",
+      "averageRating": "3.97",
       "bookPublished": "2013",
-      "description": "\n      \n      <a href=\"https://www.goodreads.com/book/show/17262203-maddaddam?utm_medium=api&amp;utm_source=rss\"><img alt=\"MaddAddam (MaddAddam, #3)\" src=\"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1366394020l/17262203._SX50_.jpg\" /></a><br/>\n                                      author: Margaret Atwood<br/>\n                                      name: Daniel<br/>\n                                      average rating: 3.96<br/>\n                                      book published: 2013<br/>\n                                      rating: 0<br/>\n                                      read at: <br/>\n                                      date added: 2021/03/04<br/>\n                                      shelves: on-deck<br/>\n                                      review: <br/><br/>\n                                      \n    ",
+      "description": "\n      \n      <a href=\"https://www.goodreads.com/book/show/17262203-maddaddam?utm_medium=api&amp;utm_source=rss\"><img alt=\"MaddAddam (MaddAddam, #3)\" src=\"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1366394020l/17262203._SX50_.jpg\" /></a><br/>\n                                      author: Margaret Atwood<br/>\n                                      name: Daniel<br/>\n                                      average rating: 3.97<br/>\n                                      book published: 2013<br/>\n                                      rating: 0<br/>\n                                      read at: <br/>\n                                      date added: 2021/03/04<br/>\n                                      shelves: on-deck<br/>\n                                      review: <br/><br/>\n                                      \n    ",
       "numPages": 0
     },
     {
@@ -921,9 +943,9 @@
       "userDateCreated": "Sun, 24 Jan 2021 23:41:05 -0800",
       "userShelves": "",
       "userReview": "",
-      "averageRating": "3.92",
+      "averageRating": "3.88",
       "bookPublished": "2021",
-      "description": "\n      \n      <a href=\"https://www.goodreads.com/book/show/48930288-extraterrestrial?utm_medium=api&amp;utm_source=rss\"><img alt=\"Extraterrestrial: The First Sign of Intelligent Life Beyond Earth\" src=\"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1610690980l/48930288._SY75_.jpg\" /></a><br/>\n                                      author: Avi Loeb<br/>\n                                      name: Daniel<br/>\n                                      average rating: 3.92<br/>\n                                      book published: 2021<br/>\n                                      rating: 4<br/>\n                                      read at: 2021/02/14<br/>\n                                      date added: 2021/02/14<br/>\n                                      shelves: <br/>\n                                      review: <br/><br/>\n                                      \n    ",
+      "description": "\n      \n      <a href=\"https://www.goodreads.com/book/show/48930288-extraterrestrial?utm_medium=api&amp;utm_source=rss\"><img alt=\"Extraterrestrial: The First Sign of Intelligent Life Beyond Earth\" src=\"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1610690980l/48930288._SY75_.jpg\" /></a><br/>\n                                      author: Avi Loeb<br/>\n                                      name: Daniel<br/>\n                                      average rating: 3.88<br/>\n                                      book published: 2021<br/>\n                                      rating: 4<br/>\n                                      read at: 2021/02/14<br/>\n                                      date added: 2021/02/14<br/>\n                                      shelves: <br/>\n                                      review: <br/><br/>\n                                      \n    ",
       "numPages": 0
     },
     {
@@ -943,9 +965,9 @@
       "userDateCreated": "Thu, 22 Oct 2020 01:33:24 -0700",
       "userShelves": "on-deck",
       "userReview": "",
-      "averageRating": "4.03",
+      "averageRating": "4.04",
       "bookPublished": "2009",
-      "description": "\n      \n      <a href=\"https://www.goodreads.com/book/show/6080337-the-year-of-the-flood?utm_medium=api&amp;utm_source=rss\"><img alt=\"The Year of the Flood (MaddAddam, #2)\" src=\"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1327906873l/6080337._SX50_.jpg\" /></a><br/>\n                                      author: Margaret Atwood<br/>\n                                      name: Daniel<br/>\n                                      average rating: 4.03<br/>\n                                      book published: 2009<br/>\n                                      rating: 0<br/>\n                                      read at: <br/>\n                                      date added: 2021/02/12<br/>\n                                      shelves: on-deck<br/>\n                                      review: <br/><br/>\n                                      \n    ",
+      "description": "\n      \n      <a href=\"https://www.goodreads.com/book/show/6080337-the-year-of-the-flood?utm_medium=api&amp;utm_source=rss\"><img alt=\"The Year of the Flood (MaddAddam, #2)\" src=\"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1327906873l/6080337._SX50_.jpg\" /></a><br/>\n                                      author: Margaret Atwood<br/>\n                                      name: Daniel<br/>\n                                      average rating: 4.04<br/>\n                                      book published: 2009<br/>\n                                      rating: 0<br/>\n                                      read at: <br/>\n                                      date added: 2021/02/12<br/>\n                                      shelves: on-deck<br/>\n                                      review: <br/><br/>\n                                      \n    ",
       "numPages": 0
     },
     {
@@ -1141,9 +1163,9 @@
       "userDateCreated": "Tue, 12 Jan 2021 10:40:21 -0800",
       "userShelves": "",
       "userReview": "",
-      "averageRating": "3.82",
+      "averageRating": "3.83",
       "bookPublished": "2021",
-      "description": "\n      \n      <a href=\"https://www.goodreads.com/book/show/53398908-fundamentals?utm_medium=api&amp;utm_source=rss\"><img alt=\"Fundamentals: Ten Keys to Reality\" src=\"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1606104694l/53398908._SY75_.jpg\" /></a><br/>\n                                      author: Frank Wilczek<br/>\n                                      name: Daniel<br/>\n                                      average rating: 3.82<br/>\n                                      book published: 2021<br/>\n                                      rating: 5<br/>\n                                      read at: 2021/01/31<br/>\n                                      date added: 2021/01/31<br/>\n                                      shelves: <br/>\n                                      review: <br/><br/>\n                                      \n    ",
+      "description": "\n      \n      <a href=\"https://www.goodreads.com/book/show/53398908-fundamentals?utm_medium=api&amp;utm_source=rss\"><img alt=\"Fundamentals: Ten Keys to Reality\" src=\"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1606104694l/53398908._SY75_.jpg\" /></a><br/>\n                                      author: Frank Wilczek<br/>\n                                      name: Daniel<br/>\n                                      average rating: 3.83<br/>\n                                      book published: 2021<br/>\n                                      rating: 5<br/>\n                                      read at: 2021/01/31<br/>\n                                      date added: 2021/01/31<br/>\n                                      shelves: <br/>\n                                      review: <br/><br/>\n                                      \n    ",
       "numPages": 0
     },
     {
@@ -1273,9 +1295,9 @@
       "userDateCreated": "Sat, 30 Jan 2021 22:03:17 -0800",
       "userShelves": "to-read",
       "userReview": "",
-      "averageRating": "4.04",
+      "averageRating": "4.05",
       "bookPublished": "2016",
-      "description": "\n      \n      <a href=\"https://www.goodreads.com/book/show/31580793-a-torch-kept-lit?utm_medium=api&amp;utm_source=rss\"><img alt=\"A Torch Kept Lit: Great Lives of the Twentieth Century\" src=\"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1471914815l/31580793._SY75_.jpg\" /></a><br/>\n                                      author: William F. Buckley Jr.<br/>\n                                      name: Daniel<br/>\n                                      average rating: 4.04<br/>\n                                      book published: 2016<br/>\n                                      rating: 0<br/>\n                                      read at: <br/>\n                                      date added: 2021/01/30<br/>\n                                      shelves: to-read<br/>\n                                      review: <br/><br/>\n                                      \n    ",
+      "description": "\n      \n      <a href=\"https://www.goodreads.com/book/show/31580793-a-torch-kept-lit?utm_medium=api&amp;utm_source=rss\"><img alt=\"A Torch Kept Lit: Great Lives of the Twentieth Century\" src=\"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1471914815l/31580793._SY75_.jpg\" /></a><br/>\n                                      author: William F. Buckley Jr.<br/>\n                                      name: Daniel<br/>\n                                      average rating: 4.05<br/>\n                                      book published: 2016<br/>\n                                      rating: 0<br/>\n                                      read at: <br/>\n                                      date added: 2021/01/30<br/>\n                                      shelves: to-read<br/>\n                                      review: <br/><br/>\n                                      \n    ",
       "numPages": 0
     },
     {
@@ -1625,9 +1647,9 @@
       "userDateCreated": "Sat, 02 Jan 2021 01:31:07 -0800",
       "userShelves": "to-read",
       "userReview": "",
-      "averageRating": "4.15",
+      "averageRating": "4.14",
       "bookPublished": "1989",
-      "description": "\n      \n      <a href=\"https://www.goodreads.com/book/show/12169041-an-introduction-to-functional-programming-through-lambda-calculus?utm_medium=api&amp;utm_source=rss\"><img alt=\"An Introduction to Functional Programming Through Lambda Calculus\" src=\"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1328863452l/12169041._SX50_.jpg\" /></a><br/>\n                                      author: Greg Michaelson<br/>\n                                      name: Daniel<br/>\n                                      average rating: 4.15<br/>\n                                      book published: 1989<br/>\n                                      rating: 0<br/>\n                                      read at: <br/>\n                                      date added: 2021/01/02<br/>\n                                      shelves: to-read<br/>\n                                      review: <br/><br/>\n                                      \n    ",
+      "description": "\n      \n      <a href=\"https://www.goodreads.com/book/show/12169041-an-introduction-to-functional-programming-through-lambda-calculus?utm_medium=api&amp;utm_source=rss\"><img alt=\"An Introduction to Functional Programming Through Lambda Calculus\" src=\"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1328863452l/12169041._SX50_.jpg\" /></a><br/>\n                                      author: Greg Michaelson<br/>\n                                      name: Daniel<br/>\n                                      average rating: 4.14<br/>\n                                      book published: 1989<br/>\n                                      rating: 0<br/>\n                                      read at: <br/>\n                                      date added: 2021/01/02<br/>\n                                      shelves: to-read<br/>\n                                      review: <br/><br/>\n                                      \n    ",
       "numPages": 0
     },
     {
@@ -1801,9 +1823,9 @@
       "userDateCreated": "Sun, 29 Nov 2020 00:18:02 -0800",
       "userShelves": "",
       "userReview": "",
-      "averageRating": "3.72",
+      "averageRating": "3.73",
       "bookPublished": "2018",
-      "description": "\n      \n      <a href=\"https://www.goodreads.com/book/show/36204291-falling-awake?utm_medium=api&amp;utm_source=rss\"><img alt=\"Falling Awake: How to Practice Mindfulness in Everyday Life\" src=\"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1519306367l/36204291._SX50_.jpg\" /></a><br/>\n                                      author: Jon Kabat-Zinn<br/>\n                                      name: Daniel<br/>\n                                      average rating: 3.72<br/>\n                                      book published: 2018<br/>\n                                      rating: 4<br/>\n                                      read at: 2020/11/29<br/>\n                                      date added: 2020/11/29<br/>\n                                      shelves: <br/>\n                                      review: <br/><br/>\n                                      \n    ",
+      "description": "\n      \n      <a href=\"https://www.goodreads.com/book/show/36204291-falling-awake?utm_medium=api&amp;utm_source=rss\"><img alt=\"Falling Awake: How to Practice Mindfulness in Everyday Life\" src=\"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1519306367l/36204291._SX50_.jpg\" /></a><br/>\n                                      author: Jon Kabat-Zinn<br/>\n                                      name: Daniel<br/>\n                                      average rating: 3.73<br/>\n                                      book published: 2018<br/>\n                                      rating: 4<br/>\n                                      read at: 2020/11/29<br/>\n                                      date added: 2020/11/29<br/>\n                                      shelves: <br/>\n                                      review: <br/><br/>\n                                      \n    ",
       "numPages": 0
     },
     {
@@ -1867,9 +1889,9 @@
       "userDateCreated": "Tue, 17 Nov 2020 00:03:19 -0800",
       "userShelves": "to-read",
       "userReview": "",
-      "averageRating": "4.07",
+      "averageRating": "4.08",
       "bookPublished": "2020",
-      "description": "\n      \n      <a href=\"https://www.goodreads.com/book/show/48930266-seven-and-a-half-lessons-about-the-brain?utm_medium=api&amp;utm_source=rss\"><img alt=\"Seven and a Half Lessons About the Brain\" src=\"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1593147285l/48930266._SX50_.jpg\" /></a><br/>\n                                      author: Lisa Feldman Barrett<br/>\n                                      name: Daniel<br/>\n                                      average rating: 4.07<br/>\n                                      book published: 2020<br/>\n                                      rating: 0<br/>\n                                      read at: <br/>\n                                      date added: 2020/11/17<br/>\n                                      shelves: to-read<br/>\n                                      review: <br/><br/>\n                                      \n    ",
+      "description": "\n      \n      <a href=\"https://www.goodreads.com/book/show/48930266-seven-and-a-half-lessons-about-the-brain?utm_medium=api&amp;utm_source=rss\"><img alt=\"Seven and a Half Lessons About the Brain\" src=\"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1593147285l/48930266._SX50_.jpg\" /></a><br/>\n                                      author: Lisa Feldman Barrett<br/>\n                                      name: Daniel<br/>\n                                      average rating: 4.08<br/>\n                                      book published: 2020<br/>\n                                      rating: 0<br/>\n                                      read at: <br/>\n                                      date added: 2020/11/17<br/>\n                                      shelves: to-read<br/>\n                                      review: <br/><br/>\n                                      \n    ",
       "numPages": 0
     },
     {
@@ -1889,9 +1911,9 @@
       "userDateCreated": "Sun, 15 Nov 2020 17:18:07 -0800",
       "userShelves": "to-read",
       "userReview": "",
-      "averageRating": "2.96",
+      "averageRating": "2.95",
       "bookPublished": "",
-      "description": "\n      \n      <a href=\"https://www.goodreads.com/book/show/54498122-covid-19?utm_medium=api&amp;utm_source=rss\"><img alt=\"COVID-19: The Great Reset\" src=\"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1594656246l/54498122._SY75_.jpg\" /></a><br/>\n                                      author: Klaus Schwab<br/>\n                                      name: Daniel<br/>\n                                      average rating: 2.96<br/>\n                                      book published: <br/>\n                                      rating: 0<br/>\n                                      read at: <br/>\n                                      date added: 2020/11/15<br/>\n                                      shelves: to-read<br/>\n                                      review: <br/><br/>\n                                      \n    ",
+      "description": "\n      \n      <a href=\"https://www.goodreads.com/book/show/54498122-covid-19?utm_medium=api&amp;utm_source=rss\"><img alt=\"COVID-19: The Great Reset\" src=\"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1594656246l/54498122._SY75_.jpg\" /></a><br/>\n                                      author: Klaus Schwab<br/>\n                                      name: Daniel<br/>\n                                      average rating: 2.95<br/>\n                                      book published: <br/>\n                                      rating: 0<br/>\n                                      read at: <br/>\n                                      date added: 2020/11/15<br/>\n                                      shelves: to-read<br/>\n                                      review: <br/><br/>\n                                      \n    ",
       "numPages": 0
     },
     {
@@ -1955,9 +1977,9 @@
       "userDateCreated": "Thu, 12 Nov 2020 23:17:05 -0800",
       "userShelves": "to-read",
       "userReview": "",
-      "averageRating": "3.71",
+      "averageRating": "3.72",
       "bookPublished": "2020",
-      "description": "\n      \n      <a href=\"https://www.goodreads.com/book/show/53907906-the-ten-equations-that-rule-the-world?utm_medium=api&amp;utm_source=rss\"><img alt=\"The Ten Equations that Rule the World: And How You Can Use Them Too\" src=\"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1591656589l/53907906._SY75_.jpg\" /></a><br/>\n                                      author: David Sumpter<br/>\n                                      name: Daniel<br/>\n                                      average rating: 3.71<br/>\n                                      book published: 2020<br/>\n                                      rating: 0<br/>\n                                      read at: <br/>\n                                      date added: 2020/11/12<br/>\n                                      shelves: to-read<br/>\n                                      review: <br/><br/>\n                                      \n    ",
+      "description": "\n      \n      <a href=\"https://www.goodreads.com/book/show/53907906-the-ten-equations-that-rule-the-world?utm_medium=api&amp;utm_source=rss\"><img alt=\"The Ten Equations that Rule the World: And How You Can Use Them Too\" src=\"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1591656589l/53907906._SY75_.jpg\" /></a><br/>\n                                      author: David Sumpter<br/>\n                                      name: Daniel<br/>\n                                      average rating: 3.72<br/>\n                                      book published: 2020<br/>\n                                      rating: 0<br/>\n                                      read at: <br/>\n                                      date added: 2020/11/12<br/>\n                                      shelves: to-read<br/>\n                                      review: <br/><br/>\n                                      \n    ",
       "numPages": 0
     },
     {
@@ -1977,9 +1999,9 @@
       "userDateCreated": "Wed, 11 Nov 2020 16:39:43 -0800",
       "userShelves": "to-read",
       "userReview": "",
-      "averageRating": "4.10",
+      "averageRating": "4.09",
       "bookPublished": "",
-      "description": "\n      \n      <a href=\"https://www.goodreads.com/book/show/30653582-fossil-men?utm_medium=api&amp;utm_source=rss\"><img alt=\"Fossil Men: The Quest for the Oldest Skeleton and the Origins of Humankind\" src=\"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1597760117l/30653582._SY75_.jpg\" /></a><br/>\n                                      author: Kermit Pattison<br/>\n                                      name: Daniel<br/>\n                                      average rating: 4.10<br/>\n                                      book published: <br/>\n                                      rating: 0<br/>\n                                      read at: <br/>\n                                      date added: 2020/11/11<br/>\n                                      shelves: to-read<br/>\n                                      review: <br/><br/>\n                                      \n    ",
+      "description": "\n      \n      <a href=\"https://www.goodreads.com/book/show/30653582-fossil-men?utm_medium=api&amp;utm_source=rss\"><img alt=\"Fossil Men: The Quest for the Oldest Skeleton and the Origins of Humankind\" src=\"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1597760117l/30653582._SY75_.jpg\" /></a><br/>\n                                      author: Kermit Pattison<br/>\n                                      name: Daniel<br/>\n                                      average rating: 4.09<br/>\n                                      book published: <br/>\n                                      rating: 0<br/>\n                                      read at: <br/>\n                                      date added: 2020/11/11<br/>\n                                      shelves: to-read<br/>\n                                      review: <br/><br/>\n                                      \n    ",
       "numPages": 0
     },
     {
@@ -1999,9 +2021,9 @@
       "userDateCreated": "Tue, 10 Nov 2020 12:01:27 -0800",
       "userShelves": "to-read",
       "userReview": "",
-      "averageRating": "4.05",
+      "averageRating": "4.04",
       "bookPublished": "2020",
-      "description": "\n      \n      <a href=\"https://www.goodreads.com/book/show/50922348-dearly?utm_medium=api&amp;utm_source=rss\"><img alt=\"Dearly: New Poems\" src=\"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1587480086l/50922348._SY75_.jpg\" /></a><br/>\n                                      author: Margaret Atwood<br/>\n                                      name: Daniel<br/>\n                                      average rating: 4.05<br/>\n                                      book published: 2020<br/>\n                                      rating: 0<br/>\n                                      read at: <br/>\n                                      date added: 2020/11/10<br/>\n                                      shelves: to-read<br/>\n                                      review: <br/><br/>\n                                      \n    ",
+      "description": "\n      \n      <a href=\"https://www.goodreads.com/book/show/50922348-dearly?utm_medium=api&amp;utm_source=rss\"><img alt=\"Dearly: New Poems\" src=\"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1587480086l/50922348._SY75_.jpg\" /></a><br/>\n                                      author: Margaret Atwood<br/>\n                                      name: Daniel<br/>\n                                      average rating: 4.04<br/>\n                                      book published: 2020<br/>\n                                      rating: 0<br/>\n                                      read at: <br/>\n                                      date added: 2020/11/10<br/>\n                                      shelves: to-read<br/>\n                                      review: <br/><br/>\n                                      \n    ",
       "numPages": 0
     },
     {
@@ -2021,9 +2043,9 @@
       "userDateCreated": "Mon, 09 Nov 2020 23:02:37 -0800",
       "userShelves": "to-read",
       "userReview": "",
-      "averageRating": "4.17",
+      "averageRating": "4.16",
       "bookPublished": "2020",
-      "description": "\n      \n      <a href=\"https://www.goodreads.com/book/show/51778153-livewired?utm_medium=api&amp;utm_source=rss\"><img alt=\"Livewired: The Inside Story of the Ever-Changing Brain\" src=\"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1580794624l/51778153._SX50_SY75_.jpg\" /></a><br/>\n                                      author: David Eagleman<br/>\n                                      name: Daniel<br/>\n                                      average rating: 4.17<br/>\n                                      book published: 2020<br/>\n                                      rating: 0<br/>\n                                      read at: <br/>\n                                      date added: 2020/11/09<br/>\n                                      shelves: to-read<br/>\n                                      review: <br/><br/>\n                                      \n    ",
+      "description": "\n      \n      <a href=\"https://www.goodreads.com/book/show/51778153-livewired?utm_medium=api&amp;utm_source=rss\"><img alt=\"Livewired: The Inside Story of the Ever-Changing Brain\" src=\"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1580794624l/51778153._SX50_SY75_.jpg\" /></a><br/>\n                                      author: David Eagleman<br/>\n                                      name: Daniel<br/>\n                                      average rating: 4.16<br/>\n                                      book published: 2020<br/>\n                                      rating: 0<br/>\n                                      read at: <br/>\n                                      date added: 2020/11/09<br/>\n                                      shelves: to-read<br/>\n                                      review: <br/><br/>\n                                      \n    ",
       "numPages": 0
     },
     {
@@ -2065,9 +2087,9 @@
       "userDateCreated": "Mon, 26 Oct 2020 22:37:45 -0700",
       "userShelves": "to-read",
       "userReview": "",
-      "averageRating": "3.26",
+      "averageRating": "3.25",
       "bookPublished": "",
-      "description": "\n      \n      <a href=\"https://www.goodreads.com/book/show/50358530-every-life-is-on-fire?utm_medium=api&amp;utm_source=rss\"><img alt=\"Every Life Is on Fire: How Thermodynamics Explains the Origins of Living Things\" src=\"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1580816663l/50358530._SY75_.jpg\" /></a><br/>\n                                      author: Jeremy England<br/>\n                                      name: Daniel<br/>\n                                      average rating: 3.26<br/>\n                                      book published: <br/>\n                                      rating: 0<br/>\n                                      read at: <br/>\n                                      date added: 2020/10/26<br/>\n                                      shelves: to-read<br/>\n                                      review: <br/><br/>\n                                      \n    ",
+      "description": "\n      \n      <a href=\"https://www.goodreads.com/book/show/50358530-every-life-is-on-fire?utm_medium=api&amp;utm_source=rss\"><img alt=\"Every Life Is on Fire: How Thermodynamics Explains the Origins of Living Things\" src=\"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1580816663l/50358530._SY75_.jpg\" /></a><br/>\n                                      author: Jeremy England<br/>\n                                      name: Daniel<br/>\n                                      average rating: 3.25<br/>\n                                      book published: <br/>\n                                      rating: 0<br/>\n                                      read at: <br/>\n                                      date added: 2020/10/26<br/>\n                                      shelves: to-read<br/>\n                                      review: <br/><br/>\n                                      \n    ",
       "numPages": 0
     },
     {
@@ -2220,8 +2242,8 @@
       "userShelves": "to-read",
       "userReview": "",
       "averageRating": "3.56",
-      "bookPublished": "",
-      "description": "\n      \n      <a href=\"https://www.goodreads.com/book/show/54109215-the-wake-up-call?utm_medium=api&amp;utm_source=rss\"><img alt=\"The Wake-Up Call: Why the Pandemic Has Exposed the Weakness of the West, and How to Fix It\" src=\"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1594617615l/54109215._SY75_.jpg\" /></a><br/>\n                                      author: John Micklethwait<br/>\n                                      name: Daniel<br/>\n                                      average rating: 3.56<br/>\n                                      book published: <br/>\n                                      rating: 0<br/>\n                                      read at: <br/>\n                                      date added: 2020/10/09<br/>\n                                      shelves: to-read<br/>\n                                      review: <br/><br/>\n                                      \n    ",
+      "bookPublished": "2020",
+      "description": "\n      \n      <a href=\"https://www.goodreads.com/book/show/54109215-the-wake-up-call?utm_medium=api&amp;utm_source=rss\"><img alt=\"The Wake-Up Call: Why the Pandemic Has Exposed the Weakness of the West, and How to Fix It\" src=\"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1594617615l/54109215._SY75_.jpg\" /></a><br/>\n                                      author: John Micklethwait<br/>\n                                      name: Daniel<br/>\n                                      average rating: 3.56<br/>\n                                      book published: 2020<br/>\n                                      rating: 0<br/>\n                                      read at: <br/>\n                                      date added: 2020/10/09<br/>\n                                      shelves: to-read<br/>\n                                      review: <br/><br/>\n                                      \n    ",
       "numPages": 0
     },
     {
@@ -3781,9 +3803,9 @@
       "userDateCreated": "Sat, 11 Aug 2018 13:16:12 -0700",
       "userShelves": "",
       "userReview": "A perfect little book. Deep yet accessible. It discusses the fundamental nature of time, and feels like a book of philosophy or poetry.",
-      "averageRating": "4.11",
+      "averageRating": "4.10",
       "bookPublished": "2017",
-      "description": "\n      \n      <a href=\"https://www.goodreads.com/book/show/40674555-the-order-of-time?utm_medium=api&amp;utm_source=rss\"><img alt=\"The Order of Time\" src=\"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1541263282l/40674555._SX50_.jpg\" /></a><br/>\n                                      author: Carlo Rovelli<br/>\n                                      name: Daniel<br/>\n                                      average rating: 4.11<br/>\n                                      book published: 2017<br/>\n                                      rating: 5<br/>\n                                      read at: 2018/09/08<br/>\n                                      date added: 2019/06/05<br/>\n                                      shelves: <br/>\n                                      review: <br/>A perfect little book. Deep yet accessible. It discusses the fundamental nature of time, and feels like a book of philosophy or poetry.<br/>\n                                      \n    ",
+      "description": "\n      \n      <a href=\"https://www.goodreads.com/book/show/40674555-the-order-of-time?utm_medium=api&amp;utm_source=rss\"><img alt=\"The Order of Time\" src=\"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1541263282l/40674555._SX50_.jpg\" /></a><br/>\n                                      author: Carlo Rovelli<br/>\n                                      name: Daniel<br/>\n                                      average rating: 4.10<br/>\n                                      book published: 2017<br/>\n                                      rating: 5<br/>\n                                      read at: 2018/09/08<br/>\n                                      date added: 2019/06/05<br/>\n                                      shelves: <br/>\n                                      review: <br/>A perfect little book. Deep yet accessible. It discusses the fundamental nature of time, and feels like a book of philosophy or poetry.<br/>\n                                      \n    ",
       "numPages": 0
     },
     {
@@ -3935,9 +3957,9 @@
       "userDateCreated": "Mon, 09 Dec 2013 23:42:02 -0800",
       "userShelves": "",
       "userReview": "",
-      "averageRating": "3.93",
+      "averageRating": "3.94",
       "bookPublished": "1940",
-      "description": "\n      \n      <a href=\"https://www.goodreads.com/book/show/154060.A_Mathematician_s_Apology?utm_medium=api&amp;utm_source=rss\"><img alt=\"A Mathematician&#39;s Apology\" src=\"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1348629338l/154060._SY75_.jpg\" /></a><br/>\n                                      author: G.H. Hardy<br/>\n                                      name: Daniel<br/>\n                                      average rating: 3.93<br/>\n                                      book published: 1940<br/>\n                                      rating: 0<br/>\n                                      read at: <br/>\n                                      date added: 2019/05/14<br/>\n                                      shelves: <br/>\n                                      review: <br/><br/>\n                                      \n    ",
+      "description": "\n      \n      <a href=\"https://www.goodreads.com/book/show/154060.A_Mathematician_s_Apology?utm_medium=api&amp;utm_source=rss\"><img alt=\"A Mathematician&#39;s Apology\" src=\"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1348629338l/154060._SY75_.jpg\" /></a><br/>\n                                      author: G.H. Hardy<br/>\n                                      name: Daniel<br/>\n                                      average rating: 3.94<br/>\n                                      book published: 1940<br/>\n                                      rating: 0<br/>\n                                      read at: <br/>\n                                      date added: 2019/05/14<br/>\n                                      shelves: <br/>\n                                      review: <br/><br/>\n                                      \n    ",
       "numPages": 0
     },
     {
@@ -4001,9 +4023,9 @@
       "userDateCreated": "Sun, 05 May 2019 22:16:13 -0700",
       "userShelves": "",
       "userReview": "",
-      "averageRating": "3.93",
+      "averageRating": "3.92",
       "bookPublished": "2019",
-      "description": "\n      \n      <a href=\"https://www.goodreads.com/book/show/40917082-einstein-s-unfinished-revolution?utm_medium=api&amp;utm_source=rss\"><img alt=\"Einstein&#39;s Unfinished Revolution: The Search for What Lies Beyond the Quantum\" src=\"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1538388401l/40917082._SY75_.jpg\" /></a><br/>\n                                      author: Lee Smolin<br/>\n                                      name: Daniel<br/>\n                                      average rating: 3.93<br/>\n                                      book published: 2019<br/>\n                                      rating: 3<br/>\n                                      read at: 2019/05/12<br/>\n                                      date added: 2019/05/12<br/>\n                                      shelves: <br/>\n                                      review: <br/><br/>\n                                      \n    ",
+      "description": "\n      \n      <a href=\"https://www.goodreads.com/book/show/40917082-einstein-s-unfinished-revolution?utm_medium=api&amp;utm_source=rss\"><img alt=\"Einstein&#39;s Unfinished Revolution: The Search for What Lies Beyond the Quantum\" src=\"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1538388401l/40917082._SY75_.jpg\" /></a><br/>\n                                      author: Lee Smolin<br/>\n                                      name: Daniel<br/>\n                                      average rating: 3.92<br/>\n                                      book published: 2019<br/>\n                                      rating: 3<br/>\n                                      read at: 2019/05/12<br/>\n                                      date added: 2019/05/12<br/>\n                                      shelves: <br/>\n                                      review: <br/><br/>\n                                      \n    ",
       "numPages": 0
     },
     {
@@ -5013,9 +5035,9 @@
       "userDateCreated": "Thu, 09 Jul 2015 19:47:47 -0700",
       "userShelves": "to-read",
       "userReview": "",
-      "averageRating": "4.37",
+      "averageRating": "4.36",
       "bookPublished": "1973",
-      "description": "\n      \n      <a href=\"https://www.goodreads.com/book/show/112247.The_Art_of_Computer_Programming_Volume_1?utm_medium=api&amp;utm_source=rss\"><img alt=\"The Art of Computer Programming, Volume 1: Fundamental Algorithms\" src=\"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1388242904l/112247._SX50_.jpg\" /></a><br/>\n                                      author: Donald Ervin Knuth<br/>\n                                      name: Daniel<br/>\n                                      average rating: 4.37<br/>\n                                      book published: 1973<br/>\n                                      rating: 0<br/>\n                                      read at: <br/>\n                                      date added: 2015/07/09<br/>\n                                      shelves: to-read<br/>\n                                      review: <br/><br/>\n                                      \n    ",
+      "description": "\n      \n      <a href=\"https://www.goodreads.com/book/show/112247.The_Art_of_Computer_Programming_Volume_1?utm_medium=api&amp;utm_source=rss\"><img alt=\"The Art of Computer Programming, Volume 1: Fundamental Algorithms\" src=\"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1388242904l/112247._SX50_.jpg\" /></a><br/>\n                                      author: Donald Ervin Knuth<br/>\n                                      name: Daniel<br/>\n                                      average rating: 4.36<br/>\n                                      book published: 1973<br/>\n                                      rating: 0<br/>\n                                      read at: <br/>\n                                      date added: 2015/07/09<br/>\n                                      shelves: to-read<br/>\n                                      review: <br/><br/>\n                                      \n    ",
       "numPages": 0
     },
     {
@@ -5365,9 +5387,9 @@
       "userDateCreated": "Sun, 14 Dec 2014 17:00:06 -0800",
       "userShelves": "",
       "userReview": "",
-      "averageRating": "4.25",
+      "averageRating": "4.24",
       "bookPublished": "2008",
-      "description": "\n      \n      <a href=\"https://www.goodreads.com/book/show/6590008-javascript?utm_medium=api&amp;utm_source=rss\"><img alt=\"JavaScript: The Good Parts\" src=\"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1328327382l/6590008._SX50_.jpg\" /></a><br/>\n                                      author: Douglas Crockford<br/>\n                                      name: Daniel<br/>\n                                      average rating: 4.25<br/>\n                                      book published: 2008<br/>\n                                      rating: 5<br/>\n                                      read at: <br/>\n                                      date added: 2014/12/14<br/>\n                                      shelves: <br/>\n                                      review: <br/><br/>\n                                      \n    ",
+      "description": "\n      \n      <a href=\"https://www.goodreads.com/book/show/6590008-javascript?utm_medium=api&amp;utm_source=rss\"><img alt=\"JavaScript: The Good Parts\" src=\"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1328327382l/6590008._SX50_.jpg\" /></a><br/>\n                                      author: Douglas Crockford<br/>\n                                      name: Daniel<br/>\n                                      average rating: 4.24<br/>\n                                      book published: 2008<br/>\n                                      rating: 5<br/>\n                                      read at: <br/>\n                                      date added: 2014/12/14<br/>\n                                      shelves: <br/>\n                                      review: <br/><br/>\n                                      \n    ",
       "numPages": 0
     },
     {
@@ -5387,9 +5409,9 @@
       "userDateCreated": "Sun, 09 Nov 2014 19:52:22 -0800",
       "userShelves": "",
       "userReview": "",
-      "averageRating": "3.35",
+      "averageRating": "3.36",
       "bookPublished": "2013",
-      "description": "\n      \n      <a href=\"https://www.goodreads.com/book/show/16096109-the-new-digital-age?utm_medium=api&amp;utm_source=rss\"><img alt=\"The New Digital Age: Reshaping the Future of People, Nations and Business\" src=\"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1364816597l/16096109._SX50_.jpg\" /></a><br/>\n                                      author: Eric Schmidt<br/>\n                                      name: Daniel<br/>\n                                      average rating: 3.35<br/>\n                                      book published: 2013<br/>\n                                      rating: 3<br/>\n                                      read at: 2014/12/07<br/>\n                                      date added: 2014/12/07<br/>\n                                      shelves: <br/>\n                                      review: <br/><br/>\n                                      \n    ",
+      "description": "\n      \n      <a href=\"https://www.goodreads.com/book/show/16096109-the-new-digital-age?utm_medium=api&amp;utm_source=rss\"><img alt=\"The New Digital Age: Reshaping the Future of People, Nations and Business\" src=\"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1364816597l/16096109._SX50_.jpg\" /></a><br/>\n                                      author: Eric Schmidt<br/>\n                                      name: Daniel<br/>\n                                      average rating: 3.36<br/>\n                                      book published: 2013<br/>\n                                      rating: 3<br/>\n                                      read at: 2014/12/07<br/>\n                                      date added: 2014/12/07<br/>\n                                      shelves: <br/>\n                                      review: <br/><br/>\n                                      \n    ",
       "numPages": 0
     },
     {
@@ -5585,9 +5607,9 @@
       "userDateCreated": "Thu, 15 May 2014 09:52:19 -0700",
       "userShelves": "to-read",
       "userReview": "",
-      "averageRating": "3.43",
+      "averageRating": "3.42",
       "bookPublished": "2009",
-      "description": "\n      \n      <a href=\"https://www.goodreads.com/book/show/6764834-why-not-socialism?utm_medium=api&amp;utm_source=rss\"><img alt=\"Why Not Socialism?\" src=\"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1348028438l/6764834._SX50_.jpg\" /></a><br/>\n                                      author: G.A. Cohen<br/>\n                                      name: Daniel<br/>\n                                      average rating: 3.43<br/>\n                                      book published: 2009<br/>\n                                      rating: 0<br/>\n                                      read at: <br/>\n                                      date added: 2014/05/15<br/>\n                                      shelves: to-read<br/>\n                                      review: <br/><br/>\n                                      \n    ",
+      "description": "\n      \n      <a href=\"https://www.goodreads.com/book/show/6764834-why-not-socialism?utm_medium=api&amp;utm_source=rss\"><img alt=\"Why Not Socialism?\" src=\"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1348028438l/6764834._SX50_.jpg\" /></a><br/>\n                                      author: G.A. Cohen<br/>\n                                      name: Daniel<br/>\n                                      average rating: 3.42<br/>\n                                      book published: 2009<br/>\n                                      rating: 0<br/>\n                                      read at: <br/>\n                                      date added: 2014/05/15<br/>\n                                      shelves: to-read<br/>\n                                      review: <br/><br/>\n                                      \n    ",
       "numPages": 0
     },
     {
@@ -5784,8 +5806,8 @@
       "userShelves": "currently-reading",
       "userReview": "",
       "averageRating": "3.95",
-      "bookPublished": "2013",
-      "description": "\n      \n      <a href=\"https://www.goodreads.com/book/show/15751404-david-and-goliath?utm_medium=api&amp;utm_source=rss\"><img alt=\"David and Goliath: Underdogs, Misfits, and the Art of Battling Giants\" src=\"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1391813567l/15751404._SX50_.jpg\" /></a><br/>\n                                      author: Malcolm Gladwell<br/>\n                                      name: Daniel<br/>\n                                      average rating: 3.95<br/>\n                                      book published: 2013<br/>\n                                      rating: 0<br/>\n                                      read at: <br/>\n                                      date added: 2013/12/27<br/>\n                                      shelves: currently-reading<br/>\n                                      review: <br/><br/>\n                                      \n    ",
+      "bookPublished": "",
+      "description": "\n      \n      <a href=\"https://www.goodreads.com/book/show/15751404-david-and-goliath?utm_medium=api&amp;utm_source=rss\"><img alt=\"David and Goliath: Underdogs, Misfits, and the Art of Battling Giants\" src=\"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1391813567l/15751404._SX50_.jpg\" /></a><br/>\n                                      author: Malcolm Gladwell<br/>\n                                      name: Daniel<br/>\n                                      average rating: 3.95<br/>\n                                      book published: <br/>\n                                      rating: 0<br/>\n                                      read at: <br/>\n                                      date added: 2013/12/27<br/>\n                                      shelves: currently-reading<br/>\n                                      review: <br/><br/>\n                                      \n    ",
       "numPages": 0
     },
     {
@@ -6289,9 +6311,9 @@
       "userDateCreated": "Sat, 05 Nov 2011 00:19:47 -0700",
       "userShelves": "",
       "userReview": "",
-      "averageRating": "3.70",
+      "averageRating": "3.71",
       "bookPublished": "1990",
-      "description": "\n      \n      <a href=\"https://www.goodreads.com/book/show/850213.The_Secret_Pilgrim?utm_medium=api&amp;utm_source=rss\"><img alt=\"The Secret Pilgrim\" src=\"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1223634844l/850213._SY75_.jpg\" /></a><br/>\n                                      author: John le Carré<br/>\n                                      name: Daniel<br/>\n                                      average rating: 3.70<br/>\n                                      book published: 1990<br/>\n                                      rating: 3<br/>\n                                      read at: <br/>\n                                      date added: 2013/01/16<br/>\n                                      shelves: <br/>\n                                      review: <br/><br/>\n                                      \n    ",
+      "description": "\n      \n      <a href=\"https://www.goodreads.com/book/show/850213.The_Secret_Pilgrim?utm_medium=api&amp;utm_source=rss\"><img alt=\"The Secret Pilgrim\" src=\"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1223634844l/850213._SY75_.jpg\" /></a><br/>\n                                      author: John le Carré<br/>\n                                      name: Daniel<br/>\n                                      average rating: 3.71<br/>\n                                      book published: 1990<br/>\n                                      rating: 3<br/>\n                                      read at: <br/>\n                                      date added: 2013/01/16<br/>\n                                      shelves: <br/>\n                                      review: <br/><br/>\n                                      \n    ",
       "numPages": 0
     },
     {
@@ -6433,7 +6455,7 @@
       "link": "https://www.goodreads.com/review/show/508222647?utm_medium=api&utm_source=rss",
       "bookId": "43369",
       "bookImageURL": "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1411218313l/43369._SY75_.jpg",
-      "bookDescription": "&gt;With his unique brand of erudition and wit, Hitchens describes the ways in which religion is man-made. \"God did not make us,\" he says. \"We made God.\" He explains the ways in which religion is immoral: We damage our children by indoctrinating them. It is a cause of sexual repression, violence, and ignorance. It is a distortion of our origins and the cosmos. In the place of religion, Hitchens offers the promise of a new enlightenment through science and reason, a realm in which hope and wonder can be found through a strand of DNA or a gaze through the Hubble Telescope. As Hitchens sees it, you needn't get the blues once you discover the heavens are empty.",
+      "bookDescription": "With his unique brand of erudition and wit, Hitchens describes the ways in which religion is man-made. \"God did not make us,\" he says. \"We made God.\" He explains the ways in which religion is immoral: We damage our children by indoctrinating them. It is a cause of sexual repression, violence, and ignorance. It is a distortion of our origins and the cosmos. In the place of religion, Hitchens offers the promise of a new enlightenment through science and reason, a realm in which hope and wonder can be found through a strand of DNA or a gaze through the Hubble Telescope. As Hitchens sees it, you needn't get the blues once you discover the heavens are empty.",
       "authorName": "Christopher Hitchens",
       "isbn": "0446579807",
       "userName": "Daniel",
@@ -6949,9 +6971,9 @@
       "userDateCreated": "Wed, 16 Jan 2013 10:09:44 -0800",
       "userShelves": "",
       "userReview": "",
-      "averageRating": "4.32",
+      "averageRating": "4.33",
       "bookPublished": "1993",
-      "description": "\n      \n      <a href=\"https://www.goodreads.com/book/show/477269.The_Inner_Art_of_Meditation?utm_medium=api&amp;utm_source=rss\"><img alt=\"The Inner Art of Meditation\" src=\"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1175094043l/477269._SY75_.jpg\" /></a><br/>\n                                      author: Jack Kornfield<br/>\n                                      name: Daniel<br/>\n                                      average rating: 4.32<br/>\n                                      book published: 1993<br/>\n                                      rating: 4<br/>\n                                      read at: <br/>\n                                      date added: 2013/01/16<br/>\n                                      shelves: <br/>\n                                      review: <br/><br/>\n                                      \n    ",
+      "description": "\n      \n      <a href=\"https://www.goodreads.com/book/show/477269.The_Inner_Art_of_Meditation?utm_medium=api&amp;utm_source=rss\"><img alt=\"The Inner Art of Meditation\" src=\"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1175094043l/477269._SY75_.jpg\" /></a><br/>\n                                      author: Jack Kornfield<br/>\n                                      name: Daniel<br/>\n                                      average rating: 4.33<br/>\n                                      book published: 1993<br/>\n                                      rating: 4<br/>\n                                      read at: <br/>\n                                      date added: 2013/01/16<br/>\n                                      shelves: <br/>\n                                      review: <br/><br/>\n                                      \n    ",
       "numPages": 0
     },
     {

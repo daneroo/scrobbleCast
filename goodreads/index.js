@@ -77,6 +77,7 @@ async function main () {
     const bookFileJSON = `${bookFilePFX}.json`
     const asJSON = JSON.stringify(feed, null, 2)
     await fs.writeFile(bookFileJSON, asJSON)
+    console.log(`\nscp -p ${bookFileJSON} ../site/public/books/goodreads-rss.json\n`)
   } catch (err) {
     console.error(err)
   }

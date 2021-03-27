@@ -72,7 +72,7 @@ async function scrape (credentials) {
   var start = +new Date()
   lifecycle('scrape', 'start', { user: credentials.name })
 
-  // this shoulbe isolated/shared in Session: return by sign_in.
+  // this should be isolated/shared in Session: return by sign_in.
   var apiSession = new PocketAPI({
     stamp: utils.stamp('10minutes')
   })

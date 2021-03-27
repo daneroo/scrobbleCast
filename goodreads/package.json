@@ -1,0 +1,19 @@
+{
+  "name": "goodreads",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "standard"
+  },
+  "author": "Daniel Lauzon",
+  "license": "ISC",
+  "dependencies": {
+    "node-fetch": "^2.6.1",
+    "xml2js": "^0.4.23"
+  },
+  "devDependencies": {
+    "standard": "^16.0.3"
+  }
+}

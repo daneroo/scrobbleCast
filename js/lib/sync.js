@@ -48,7 +48,8 @@ async function fetchMissingFromRemote (baseURI, missingLocal) {
     try {
       const item = await rp(options)
       fetchedItems.push(item)
-      log.verbose(`--fetched:  ${options.uri}`)
+      const { __stamp: stamp, title } = item
+      log.verbose(`--fetched:  ${options.uri}`, { stamp, title })
     } catch (error) {
       log.verbose(`--failed to fetch: ${options.uri}`)
     }

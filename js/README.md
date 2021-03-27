@@ -52,6 +52,8 @@ DB_LOG=1 DB_DIALECT=postgres npm run unit
 
 ## TODO
 
+- added (temporary) `./showNotes.js` script - to produce static documents for stork
+  - added 2 methods to pocketAPIv2 
 - cleanup
   - Prune and move evernote to .
   - npm outdated

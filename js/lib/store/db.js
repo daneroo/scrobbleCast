@@ -319,10 +319,10 @@ async function loadByRangeWithDeadline ({ user, order = 'dedup', pageSize = 1000
       await load({ user: 'daniel', order, pageSize, where }, itemHandler)
 
       const elapsed = +new Date() - start
-      log.debug('loadByRange', { type, uuidPfx: uuidRange[0], ...itemHandler.value(), timeout, elapsed })
+      log.debug('loadByRange', { type, uuidPfx: uuidRange[0], timeout, elapsed })
 
       if (elapsed > timeout) {
-        log.warn('loadByRange timed out', { ...itemHandler.value(), timeout, elapsed })
+        log.warn('loadByRange timed out', { timeout, elapsed })
         // break out of both loops
         return
       }

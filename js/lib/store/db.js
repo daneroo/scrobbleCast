@@ -8,7 +8,6 @@ var crypto = require('crypto')
 var log = require('../log')
 var utils = require('../utils')
 const orm = require('../model/orm')
-const { stampOffset } = require('../tasks/spread')
 const Op = orm.Op
 // these might be moved or exposed
 
@@ -329,6 +328,19 @@ async function loadByRangeWithDeadline ({ user, order = 'dedup', pageSize = 1000
       }
     }
   }
+}
+
+// TODO:daneroo Copied from tasks/spread because ofg circular dependancy
+// returns the offset for the ISO8601 stamp
+// The offset represents an offset from midnight in (ten minute) units
+// returns [0,144)
+function stampOffset (stamp) {
+  const startOfDay = stamp.substr(0, 10) + 'T00:00:00Z'
+
+  const diff = +new Date(stamp) - new Date(startOfDay)
+  // number of (full) ten minute periods since 00:00
+  const offset = Math.floor(diff / 1000 / 60 / 10)
+  return offset
 }
 
 // fetch all items with same __user,__type,uuid

@@ -2,26 +2,24 @@
 
 // testbed to try to accelarate 'streaming' or 'paged' item loading
 // the goal is to lessen memory footprint while doing a global dedup...
-const orm = require('./lib/model/orm')
 const db = require('./lib/store').db
 const log = require('./lib/log')
 const delta = require('./lib/delta')
-
 const utils = require('./lib/utils')
 
 main()
 
 async function main () {
-  await showRate('dbLoad    -Count', dbLoad, counterHandlerG)
-  await showRate('ormByPage -Count', ormByPage, counterHandlerG)
-  await showRate('dbLoad    -Dedup', dbLoad, dedupHandlerG)
-  await showRate('ormByPage -Dedup', ormByPage, dedupHandlerG)
+  await showRate('dbLoadByRange -Count', dbLoadByRange, counterHandlerG)
+  await showRate('dbLoad        -Count', dbLoad, counterHandlerG)
+  await showRate('dbLoadByRange -Dedup', dbLoadByRange, dedupHandlerG)
+  await showRate('dbLoad        -Dedup', dbLoad, dedupHandlerG)
   await showRate('digestOfDigests', digestOfDigests)
 }
 
 async function showRate (name, loader, handlerG) {
   console.log('---')
-  const iterations = 6
+  const iterations = 1
   for (let i = 0; i < iterations; i++) {
     const pageSize = 10000 << i
     const start = +new Date()
@@ -83,14 +81,12 @@ function dedupHandlerG () {
   return handler
 }
 
-async function ormByPage (pageSize, handler) {
-  const qy = db.loadQy({ user: 'daniel' })
-  await orm.Item.findAllByPage(qy, handler, pageSize)
-  return handler.value()
-}
-
 async function dbLoad (pageSize, handler) {
   await db.load({ user: 'daniel', pageSize }, handler, pageSize)
+  return handler.value()
+}
+async function dbLoadByRange (pageSize, handler) {
+  await db.loadByRangeWithDeadline({ user: 'daniel', pageSize, timeout: 10000 }, handler, pageSize)
   return handler.value()
 }
 

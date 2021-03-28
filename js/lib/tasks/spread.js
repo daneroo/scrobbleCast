@@ -73,6 +73,7 @@ function uuidOffset (uuid, { algorithm = 'md5', numBytes = 8 } = {}) {
 
 // returns the offset for the ISO8601 stamp
 // The offset represents an offset from midnight in (ten minute) units
+// returns [0,144)
 function stampOffset (stamp) {
   const startOfDay = stamp.substr(0, 10) + 'T00:00:00Z'
 

@@ -8,6 +8,7 @@ var crypto = require('crypto')
 var log = require('../log')
 var utils = require('../utils')
 const orm = require('../model/orm')
+const { stampOffset } = require('../tasks/spread')
 const Op = orm.Op
 // these might be moved or exposed
 
@@ -34,7 +35,8 @@ exports = module.exports = {
     snapshot: 'snapshot'
   },
   loadQy,
-  load: load,
+  load,
+  loadByRangeWithDeadline,
   loadItemsForHistory,
   getByDigest,
 
@@ -276,11 +278,11 @@ function loadQy ({ user, order = 'dedup' }) {
   }
 }
 
-// pass each item in the database to the itemhandler
+// pass each item in the database to the itemHandler
 // there are 2 load orders:
 //   dedup: suitable for smaller accumulator (grouped by uuid)
 //   snapshot: suitable for snapshot file order
-// -No longer returns anything, acumulate your values in the itemHandler
+// -No longer returns anything, accumulate your values in the itemHandler
 // -itemHandler should be an async/promise function (it's resolved return value is ignored)
 async function load ({ user, order = 'dedup', pageSize = 10000, where = {} }, itemHandler) {
   const noop = async () => true // default handler (async)
@@ -299,6 +301,34 @@ async function load ({ user, order = 'dedup', pageSize = 10000, where = {} }, it
     // console.log('Qualified load:', {qy})
   }
   await orm.Item.findAllByPage(qy, itemHandler, pageSize)
+}
+
+// Same as load but breaks the queries by Type/UUID ranges
+// also has a deadline/timeout
+async function loadByRangeWithDeadline ({ user, order = 'dedup', pageSize = 10000, where = {}, timeout = 60000 }, itemHandler) {
+  const start = +new Date()
+  const { between } = Op
+  const offset = stampOffset(new Date().toISOString()) // [0,144)
+  const uuidRanges = [
+    ['0', '1'], ['1', '2'], ['2', '3'], ['3', '4'], ['4', '5'], ['5', '6'], ['6', '7'], ['7', '8'],
+    ['8', '9'], ['9', 'a'], ['a', 'b'], ['b', 'c'], ['c', 'd'], ['d', 'e'], ['e', 'f'], ['f', 'g']
+  ]
+  for (const type of ['episode', 'podcast']) {
+    for (let idx = 0; idx < uuidRanges.length; idx++) {
+      const uuidRange = uuidRanges[(idx + offset) % uuidRanges.length]
+      const where = { __type: type, uuid: { [between]: uuidRange } }
+      await load({ user: 'daniel', where, pageSize }, itemHandler, pageSize)
+
+      const elapsed = +new Date() - start
+      log.debug('loadByRange', { type, uuidPfx: uuidRange[0], ...itemHandler.value(), timeout, elapsed })
+
+      if (elapsed > timeout) {
+        log.warn('loadByRange timed out', { ...itemHandler.value(), timeout, elapsed })
+        // break out of both loops
+        return
+      }
+    }
+  }
 }
 
 // fetch all items with same __user,__type,uuid

@@ -85,7 +85,7 @@ async function dedupTask (credentials) {
   }
 
   try {
-    await store.db.load({ user }, itemHandler)
+    await store.db.loadByRangeWithDeadline({ user }, itemHandler)
 
     // last flush of Accumulator
     historiesToUpsert.push(historyForSingleUuid)

@@ -11,12 +11,16 @@ var store = require('./lib/store')
 
 // globals
 const baseURI = (process.argv.length > 2) ? process.argv[2] : 'http://dirac.imetrical.com:8000/api'
+const since = (process.argv.length > 3) ? process.argv[3] : null
 
 // *** Adjust params as needed, default is ALL TIME
 function syncAll () {
   const syncParams = {
     // since: utils.ago(1 * 24 * 3600),
     // before: utils.stamp('10minutes')
+  }
+  if (since) {
+    syncParams.since = since
   }
   return sync.sync(baseURI, syncParams)
 }

@@ -1,6 +1,6 @@
 'use strict'
 
-// testbed to try to accelarate 'streaming' or 'paged' item loading
+// testbed to try to accelerate 'streaming' or 'paged' item loading
 // the goal is to lessen memory footprint while doing a global dedup...
 const db = require('./lib/store').db
 const log = require('./lib/log')

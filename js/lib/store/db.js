@@ -316,7 +316,7 @@ async function loadByRangeWithDeadline ({ user, order = 'dedup', pageSize = 1000
     for (let idx = 0; idx < uuidRanges.length; idx++) {
       const uuidRange = uuidRanges[(idx + offset) % uuidRanges.length]
       const where = { __type: type, uuid: { [between]: uuidRange } }
-      await load({ user: 'daniel', where, pageSize }, itemHandler, pageSize)
+      await load({ user: 'daniel', order, pageSize, where }, itemHandler)
 
       const elapsed = +new Date() - start
       log.debug('loadByRange', { type, uuidPfx: uuidRange[0], ...itemHandler.value(), timeout, elapsed })

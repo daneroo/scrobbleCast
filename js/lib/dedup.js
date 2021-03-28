@@ -1,6 +1,6 @@
 'use strict'
 
-// Acculumalte delta history per user/__type/uuid
+// Accumulate delta history per user/__type/uuid
 // Also writes the history to db.history
 // deduplication is full, but persisting to table is conservative:
 // only write (upsert history) if:
@@ -85,7 +85,7 @@ async function dedupTask (credentials) {
   }
 
   try {
-    await store.db.load({ user }, itemHandler)
+    await store.db.loadByRangeWithDeadline({ user }, itemHandler)
 
     // last flush of Accumulator
     historiesToUpsert.push(historyForSingleUuid)

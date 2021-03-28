@@ -52,7 +52,6 @@ DB_LOG=1 DB_DIALECT=postgres npm run unit
 
 ## TODO
 
-- add args to sync.js --since / --before
 - added (temporary) `./showNotes.js` script - to produce static documents for stork
   - added 2 methods to pocketAPIv2 
 - cleanup

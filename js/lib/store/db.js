@@ -304,7 +304,7 @@ async function load ({ user, order = 'dedup', pageSize = 10000, where = {} }, it
 
 // Same as load but breaks the queries by Type/UUID ranges
 // also has a deadline/timeout
-async function loadByRangeWithDeadline ({ user, order = 'dedup', pageSize = 10000, where = {}, timeout = 60000 }, itemHandler) {
+async function loadByRangeWithDeadline ({ user, order = 'dedup', pageSize = 10000, where = {}, timeout = 30000 }, itemHandler) {
   const start = +new Date()
   const { between } = Op
   const offset = stampOffset(new Date().toISOString()) // [0,144)

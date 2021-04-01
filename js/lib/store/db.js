@@ -304,7 +304,7 @@ async function load ({ user, order = 'dedup', pageSize = 10000, where = {} }, it
 
 // Same as load but breaks the queries by Type/UUID ranges
 // also has a deadline/timeout
-async function loadByRangeWithDeadline ({ user, order = 'dedup', pageSize = 10000, where = {}, timeout = 30000 }, itemHandler) {
+async function loadByRangeWithDeadline ({ user, order = 'dedup', pageSize = 10000, where: ignoredWhere = {}, timeout = 30000 }, itemHandler) {
   const start = +new Date()
   const { between } = Op
   const offset = stampOffset(new Date().toISOString()) // [0,144)
@@ -315,7 +315,10 @@ async function loadByRangeWithDeadline ({ user, order = 'dedup', pageSize = 1000
   for (const type of ['episode', 'podcast']) {
     for (let idx = 0; idx < uuidRanges.length; idx++) {
       const uuidRange = uuidRanges[(idx + offset) % uuidRanges.length]
-      const where = { __type: type, uuid: { [between]: uuidRange } }
+      const where = {
+        __type: type,
+        uuid: { [between]: uuidRange }
+      }
       await load({ user: 'daniel', order, pageSize, where }, itemHandler)
 
       const elapsed = +new Date() - start

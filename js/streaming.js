@@ -4,17 +4,20 @@
 // the goal is to lessen memory footprint while doing a global dedup...
 const db = require('./lib/store').db
 const log = require('./lib/log')
+const store = require('./lib/store')
 const delta = require('./lib/delta')
 const utils = require('./lib/utils')
 
 main()
 
 async function main () {
+  await store.db.init()
   await showRate('dbLoadByRange -Count', dbLoadByRange, counterHandlerG)
   await showRate('dbLoad        -Count', dbLoad, counterHandlerG)
   await showRate('dbLoadByRange -Dedup', dbLoadByRange, dedupHandlerG)
   await showRate('dbLoad        -Dedup', dbLoad, dedupHandlerG)
   await showRate('digestOfDigests', digestOfDigests)
+  await store.db.end()
 }
 
 async function showRate (name, loader, handlerG) {
@@ -86,7 +89,7 @@ async function dbLoad (pageSize, handler) {
   return handler.value()
 }
 async function dbLoadByRange (pageSize, handler) {
-  await db.loadByRangeWithDeadline({ user: 'daniel', pageSize, timeout: 10000 }, handler, pageSize)
+  await db.loadByRangeWithDeadline({ user: 'daniel', pageSize, timeout: 100000 }, handler, pageSize)
   return handler.value()
 }
 

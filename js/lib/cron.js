@@ -5,7 +5,7 @@ const cron = require('cron')
 const CronJob = cron.CronJob
 const log = require('./log')
 const tasks = require('./tasks')
-const store = require('./store') // just for checkpoint
+const store = require('./store') // just for checkpoint, and db.init
 
 // globals
 const allCredentials = [] // injected in start(injectedCredentials) below
@@ -13,7 +13,7 @@ const allCredentials = [] // injected in start(injectedCredentials) below
 // cron crash course:
 //  */5 :== 0-59/5, and
 //  4-59/10 :== 4,14,24,34
-// Every recurrence pattern is offset by 10 seconds to avoid timestamping in previous minute!
+// Every recurrence pattern is offset by 10 seconds to avoid timestamp in previous minute!
 const recurrence = {
   // everyDayAtMidnight: '10 0 0 * * *',
   // everyHourExceptMidnight: '10 0 1-23/1 * * *',
@@ -74,12 +74,13 @@ function runJob (task, when) {
   return job // if you ever want to stop it.
 }
 
-function start (injectedCredentials) {
+async function start (injectedCredentials) {
   // set the module golbal variable
   allCredentials.length = 0 // (const so empty and push)
   allCredentials.push(...injectedCredentials)
 
   log.info('Starting Cron')
+  await store.db.init()
   // auto-start all three
   runJob(scrapeDedupDigest, recurrence.everyTenMinutes) // var scrape = ...
   runJob(tasks.logcheck, recurrence.everyTenMinutesOffsetByFour) // var logcheck =

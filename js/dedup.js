@@ -22,6 +22,7 @@ async function main () {
     const { digest, elapsed } = await digestTimer(store.db.digestOfDigestsHistory)
     log.verbose('checkpoint', { digest: digest, scope: 'history', elapsed })
   }
+  await store.db.end()
 }
 
 async function digestTimer (digester) {

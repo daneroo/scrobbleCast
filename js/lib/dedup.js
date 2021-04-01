@@ -115,7 +115,7 @@ async function _filterExisting (Model, wrappedItemsWithDigests) {
 
   const existingDigests = await Model.findAll({
     raw: true,
-    attibutes: ['digest'],
+    attributes: ['digest'],
     where: {
       digest: {
         [Op.in]: digests

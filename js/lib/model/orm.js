@@ -5,6 +5,7 @@ const mkdirp = require('mkdirp')
 const Sequelize = require('sequelize')
 // Implemented my own hooks similar to sequelize-json
 // const JsonField = require('sequelize-json')
+const log = require('../log') // this module should not log 8-(
 const config = require('../config')
 const utils = require('../utils')
 /*
@@ -145,7 +146,19 @@ function defineModels () {
       // log.info('make sure sqlite storage path exists', {dialect: config.sequelize.settings.dialect, storage: config.sequelize.settings.storage, dir: dir})
       mkdirp.sync(dir)
     }
-    return sequelize.sync()
+    await sequelize.sync()
+
+    {
+      const [results] = await sequelize.query('select sqlite_version() as version;')
+      log.debug('SQLite version:', results?.[0])
+    }
+
+    // Enable SQLite WAL https://github.com/mapbox/node-sqlite3/issues/747
+    {
+      // const [results] = await sequelize.query('PRAGMA journal_mode = DELETE;')
+      const [results] = await sequelize.query('PRAGMA journal_mode = WAL;')
+      log.debug('SQLite journal mode', results?.[0])
+    }
   }
 
   return {

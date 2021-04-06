@@ -75,7 +75,7 @@ function runJob (task, when) {
 }
 
 async function start (injectedCredentials) {
-  // set the module golbal variable
+  // set the module global variable
   allCredentials.length = 0 // (const so empty and push)
   allCredentials.push(...injectedCredentials)
 

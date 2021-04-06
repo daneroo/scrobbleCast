@@ -52,6 +52,7 @@ DB_LOG=1 DB_DIALECT=postgres npm run unit
 
 ## TODO
 
+- Revert WAL - or make a config param - orm.js
 - Update sequelize v6 (and other deps)
 - added (temporary) `./showNotes.js` script - to produce static documents for stork
   - added 2 methods to pocketAPIv2 

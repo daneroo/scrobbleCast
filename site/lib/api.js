@@ -62,7 +62,7 @@ export async function getPodcast (uuid) {
   return getByUUID({ uuid, type: 'podcastsByUUID' })
 }
 
-const defaultDays = 15
+const defaultDays = 45
 export async function getEpisodes (days = defaultDays) {
   if (cache.episodes.length > 0) {
     const { episodes } = cache
@@ -187,9 +187,6 @@ files = [
 ${podcasts.map((p) => `{path = "podcasts/${p.uuid}.txt", url = "/podcasts/${p.uuid}", title=${JSON.stringify(p.title)}}`).join(',\n')},
 ${episodes.map((e) => `{path = "episodes/${e.uuid}.txt", url = "/episodes/${e.uuid}", title=${JSON.stringify(e.title)}}`).join(',\n')}
 ]
- 
-[output]
-filename = "scrobblecast.st"
 `)
-  console.log('Done writing indexed files')
+  console.log(`Done writing indexed files - ${episodes.length} episodes / ${podcasts.length} podcasts`)
 }

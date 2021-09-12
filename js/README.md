@@ -12,22 +12,6 @@ make snapshot
 make restore
 ```
 
-## Clock Drift
-
-_dirac clock running fast in docker:_
-
-```bash
-date;docker exec -it js_scrape_1 date; date
-docker run --rm --privileged alpine hwclock -s
-date +%Y-%m-%dT%H:%M:%S%z ;docker exec -it js_scrape_1 date -Isec; date +%Y-%m-%dT%H:%M:%S%z
-
-# while true; do sleep 600; done
-AHEAD=$(expr $(docker run --rm alpine date +%s) - $(date +%s)); echo $(date +%Y-%m-%dT%H:%M:%S) Docker clock is ahead by ${AHEAD}
-docker run --rm  alpine date +%s; date +%s
-
-docker run --rm --net=host --pid=host --privileged -it justincormack/nsenter1 /bin/sh -c 'tail -2000 /var/log/ntpd.err.log'
-```
-
 ## Nats
 
 ```bash
@@ -52,10 +36,25 @@ DB_LOG=1 DB_DIALECT=postgres npm run unit
 
 ## TODO
 
+- Adjust qcic.site/nats section to see new events - generic - no schema
+- Make digest a stream(s)
+- Logcheck - not necessary? will replace, from sync task/discovery - before and after?
+- digest has no stamp@10minutes?
+- Declare nats schema (id:ulid,host)
+  - im.scrobblecast.scrape.{task,progress,digest,sync,sync.trace,sync.error,logcheck?}
+  - We might want to add `host|agentId` to subject taxonomy
+- Push image to ghcr.io
+- [Build w/Github Actions](https://betterprogramming.pub/continuously-build-node-js-docker-images-using-github-actions-1e58df9c9faa)
 - Revert WAL - or make a config param - orm.js
+- Remove loggly, replace with:
+  - [pino](https://getpino.io/)
+  - [pino-http](https://www.npmjs.com/package/pino-http)
+  - [pino-pretty](https://github.com/pinojs/pino-pretty)
 - Update sequelize v6 (and other deps)
+  - [Update to winston@3](https://github.com/winstonjs/winston/blob/HEAD/UPGRADE-3.0.md)
 - added (temporary) `./showNotes.js` script - to produce static documents for stork
-  - added 2 methods to pocketAPIv2 
+  - added 2 methods to pocketAPIv2
+  
 - cleanup
   - Prune and move evernote to .
   - npm outdated
@@ -193,8 +192,6 @@ for h in darwin dirac newton; do echo $h `curl -s http://$h.imetrical.com:8000/a
 docker-compose run --rm scrape node sync.js http://dirac.imetrical.com:8000/api
 docker-compose run --rm scrape node sync.js http://darwin.imetrical.com:8000/api
 docker-compose run --rm scrape node sync.js http://newton.imetrical.com:8000/api
-docker-compose run --rm scrape node sync.js http://192.168.3.131:8000/api
-docker-compose run --rm scrape node sync.js http://192.168.5.144:8000/api
 
 # dedup as needed - also upserts all history
 export HOSTNAME; docker-compose run --rm scrape node dedup.js
@@ -273,3 +270,19 @@ time docker-compose exec postgres psql -U postgres scrobblecast -q -P pager=off 
     Note: the POST returns a 302, which rejects the request-promise,  
     whereas a faled login returns the login page content again (200)  
     the 302 response also has a new XSRF-TOKEN cookie  
+
+## Clock Drift (ancient history)
+
+_dirac clock running fast in docker:_
+
+```bash
+date;docker exec -it js_scrape_1 date; date
+docker run --rm --privileged alpine hwclock -s
+date +%Y-%m-%dT%H:%M:%S%z ;docker exec -it js_scrape_1 date -Isec; date +%Y-%m-%dT%H:%M:%S%z
+
+# while true; do sleep 600; done
+AHEAD=$(expr $(docker run --rm alpine date +%s) - $(date +%s)); echo $(date +%Y-%m-%dT%H:%M:%S) Docker clock is ahead by ${AHEAD}
+docker run --rm  alpine date +%s; date +%s
+
+docker run --rm --net=host --pid=host --privileged -it justincormack/nsenter1 /bin/sh -c 'tail -2000 /var/log/ntpd.err.log'
+```

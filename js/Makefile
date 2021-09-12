@@ -1,6 +1,6 @@
 
 
-export HOSTNAME=$(shell hostname)
+export HOSTALIAS=$(shell hostname)
 
 all:
 	@echo "Make all the things: build, start, logs, snapshot, restore"

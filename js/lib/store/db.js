@@ -333,7 +333,7 @@ async function loadByRangeWithDeadline ({ user, order = 'dedup', pageSize = 1000
   }
 }
 
-// TODO:daneroo Copied from tasks/spread because ofg circular dependancy
+// TODO:daneroo Copied from tasks/spread because of circular dependency
 // returns the offset for the ISO8601 stamp
 // The offset represents an offset from midnight in (ten minute) units
 // returns [0,144)

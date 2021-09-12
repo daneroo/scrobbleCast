@@ -3,10 +3,13 @@ const os = require('os')
 const fs = require('fs')
 
 module.exports = {
-  hostname: process.env.HOSTNAME || os.hostname(),
+  hostname: process.env.HOSTALIAS || process.env.HOSTNAME || os.hostname(),
   version: { // also exposed as API /version
     pocketscrape: require('../package').version,
     node: process.versions.node
+  },
+  nats: {
+    servers: [process.env.NATSURL || 'nats://nats.dl.imetrical.com:4222']
   },
   loggly: getConfig('credentials.loggly.json', null),
   express: {

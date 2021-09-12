@@ -1,6 +1,7 @@
 .git
 node_modules/
 coverage/
+# credentials.loggly.json
 # credentials.json
 data/
 data.201[45]-*.tgz
@@ -9,4 +10,3 @@ couchdb/
 podcast-history-*.json
 episode-history-*.json
 episode-play-history-*.json
-# credentials.loggly.json

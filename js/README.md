@@ -36,12 +36,13 @@ DB_LOG=1 DB_DIALECT=postgres npm run unit
 
 ## TODO
 
-- Try nats opt: waitOnFirstConnect: true : for req/reply it will be necessary
-- Logcheck - not necessary? will replace
+- Adjust qcic.site/nats section to see new events - generic - no schema
+- Make digest a stream(s)
+- Logcheck - not necessary? will replace, from sync task/discovery - before and after?
 - digest has no stamp@10minutes?
 - Declare nats schema (id:ulid,host)
   - im.scrobblecast.scrape.{task,progress,digest,sync,sync.trace,sync.error,logcheck?}
-  - adjust qcic.site/nats section to see new events
+  - We might want to add `host|agentId` to subject taxonomy
 - Push image to ghcr.io
 - [Build w/Github Actions](https://betterprogramming.pub/continuously-build-node-js-docker-images-using-github-actions-1e58df9c9faa)
 - Revert WAL - or make a config param - orm.js

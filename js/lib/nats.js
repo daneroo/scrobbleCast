@@ -38,6 +38,8 @@ const connectionOptions = {
 // This is a singleton. i.e. latch variable for single permanent connection object (Promise)
 // it is a var to prevent hoisting error
 // on error, will just return Promise<null>
+// Each publish will initiate the connection, if it is not already open. So `waitOnFirstConnect` option is not required/desired
+// We can revisit this when we add subscriber and response handlers
 var ncPromise = null
 async function connectToNats () {
   const wasNotConnected = !ncPromise

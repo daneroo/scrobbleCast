@@ -1,9 +1,10 @@
 'use strict'
 
 // dependencies - core-public-internal
-var rp = require('request-promise')
-var log = require('./log')
-var store = require('./store')
+const rp = require('request-promise')
+const log = require('./log')
+const nats = require('./nats')
+const store = require('./store')
 const insertDedup = require('./tasks/insertDedup').insertDedup
 
 exports = module.exports = {
@@ -18,22 +19,23 @@ async function sync (baseURI, syncParams) {
 }
 
 async function compare (baseURI, remoteDigests, localDigests) {
-  const missingLocal = []
+  const missingInLocal = []
   remoteDigests.forEach(function (acc, digest) {
     if (!localDigests.has(digest)) {
       // log.verbose('-remote & !local', digest)
-      missingLocal.push(digest)
+      missingInLocal.push(digest)
     }
   })
-  const missingRemote = []
+  const missingInRemote = []
   localDigests.forEach(function (acc, digest) {
     if (!remoteDigests.has(digest)) {
       // log.verbose('-local & !remote', digest)
-      missingRemote.push(digest)
+      missingInRemote.push(digest)
     }
   })
-  log.verbose('Sync missing', { from: baseURI, local: missingLocal.length, remote: missingRemote.length })
-  const counts = await fetchMissingFromRemote(baseURI, missingLocal)
+  nats.publish('sync.count', { remote: baseURI, missingInLocal: missingInLocal.length, missingInRemote: missingInRemote.length })
+  log.verbose('Sync missing', { remote: baseURI, missingInLocal: missingInLocal.length, missingInRemote: missingInRemote.length })
+  const counts = await fetchMissingFromRemote(baseURI, missingInLocal)
   return counts
 }
 
@@ -49,9 +51,11 @@ async function fetchMissingFromRemote (baseURI, missingLocal) {
       const item = await rp(options)
       fetchedItems.push(item)
       const { __stamp: stamp, title } = item
+      nats.publish('sync.trace', { uri: options.uri, stamp, title })
       log.verbose(`--fetched:  ${options.uri}`, { stamp, title })
     } catch (error) {
-      log.verbose(`--failed to fetch: ${options.uri}`)
+      nats.publish('sync.error', { uri: options.uri, error: error.message })
+      log.verbose(`--failed to fetch: ${options.uri} ${error.message}`)
     }
   }
   const counts = await insertDedup(fetchedItems)

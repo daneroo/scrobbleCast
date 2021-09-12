@@ -4,6 +4,7 @@
 const cron = require('cron')
 const CronJob = cron.CronJob
 const log = require('./log')
+const nats = require('./nats')
 const tasks = require('./tasks')
 const store = require('./store') // just for checkpoint, and db.init
 
@@ -41,11 +42,13 @@ async function scrapeDedupDigest () {
       const { digest, elapsed } = await digestTimer(store.db.digestOfDigests)
       // checkpoint: Stash this as verbose for dev
       log.info('checkpoint', { digest, scope: 'item', elapsed })
+      nats.publish('digest', { digest, scope: 'item', elapsed })
     }
     { // digest of histories
       const { digest, elapsed } = await digestTimer(store.db.digestOfDigestsHistory)
       // checkpoint: Stash this as verbose for dev
       log.info('checkpoint', { digest, scope: 'history', elapsed })
+      nats.publish('digest', { digest, scope: 'history', elapsed })
     }
   } catch (error) {
     // TODO, might want to catch before tasks.dedup is called, to make sure dedup always runs...
@@ -75,7 +78,7 @@ function runJob (task, when) {
 }
 
 async function start (injectedCredentials) {
-  // set the module golbal variable
+  // set the module global variable
   allCredentials.length = 0 // (const so empty and push)
   allCredentials.push(...injectedCredentials)
 

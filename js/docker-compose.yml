@@ -7,8 +7,8 @@ services:
     build: .
     init: true # Tini forwards signals and reaps processes
     environment:
-      # no value inherits from host (but not docker-machine host...)
-      - HOSTNAME
+      - HOSTALIAS  # no value inherits from ENV, which is set in Makefile
+      - NATSURL=nats://nats.dl.imetrical.com:4222
       - DB_DIALECT=sqlite
     # command: npm start
     ports:

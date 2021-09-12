@@ -6,6 +6,7 @@ const _ = require('lodash')
 const PocketAPI = require('./pocketAPIv2')
 const log = require('./log')
 const config = require('./config')
+const nats = require('./nats')
 const utils = require('./utils')
 const dedupTask = require('./dedup').dedupTask
 const logcheckTask = require('./logcheck').logcheckTask
@@ -41,20 +42,20 @@ async function sync () {
 
   const start = +new Date()
   lifecycle('sync', 'start')
-  for (const host of hosts) {
-    const startHost = +new Date()
-    if (thisHost === host) {
-      lifecycle(`sync:${host}`, 'skip')
+  for (const remote of hosts) {
+    if (thisHost === remote) {
+      // lifecycle('sync:host', 'skip', { remote })
       continue
     }
     try {
-      const baseURI = `http://${host}.imetrical.com:8000/api`
-      lifecycle(`sync:${host}`, 'start')
+      const startRemote = +new Date()
+      const baseURI = `http://${remote}.imetrical.com:8000/api`
+      lifecycle('sync:host', 'start', { remote })
       const counts = await syncTask(baseURI, syncParams)
-      lifecycle('sync:host', 'done', { host, ...counts, elapsed: elapsedSince(startHost) })
+      lifecycle('sync:host', 'done', { remote, ...counts, elapsed: elapsedSince(startRemote) })
     } catch (error) {
       log.error('tasks.sync:host:error:', error)
-      lifecycle('sync:host', 'done with error', { host })
+      lifecycle('sync:host', 'done with error', { remote })
     }
   }
   lifecycle('sync', 'done', { elapsed: elapsedSince(start) })
@@ -99,7 +100,7 @@ async function scrape (credentials) {
       // -1,0,1,2: skip,deep,shallow,recent
       const select = spread.select(apiSession.stamp, uuid, recentPodcastUuids) // new schedule method
 
-      if (select >= 0) { // deep, shallow i.e. not skip, no longer any cocept of shallow
+      if (select >= 0) { // deep, shallow i.e. not skip, no longer any concept of shallow
         const episodes = await apiSession.episodes(uuid)
         const counts02 = await insertDedup(episodes)
         sumCounts(sums, counts02)
@@ -144,15 +145,17 @@ function sumCounts (sums, counts) {
   return sums
 }
 // Task quick: start for daniel
-function lifecycle (task, verb, meta) {
+function lifecycle (task, state, meta) {
   meta = {
     task,
     ...meta
   }
-  log.info(`Task ${verb}`, meta)
+  log.info(`Task ${state}`, meta)
+  nats.publish('task', { state, ...meta })
 }
 
-function progress (msg, meta) {
+function progress (step, meta) {
   meta = meta || {}
-  log.info(`|${msg}|`, meta)
+  log.info(`|${step}|`, meta)
+  nats.publish('progress', { step, ...meta })
 }

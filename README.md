@@ -3,18 +3,17 @@
 - Codeship (Cloudbees):
   - master: [![Codeship Status for daneroo/scrobbleCast](https://app.codeship.com/projects/b7551137-f057-4a12-807a-7a8ae23bddab/status?branch=master)](https://app.codeship.com/projects/434233)
   - develop: [![Codeship Status for daneroo/scrobbleCast](https://app.codeship.com/projects/b7551137-f057-4a12-807a-7a8ae23bddab/status?branch=develop)](https://app.codeship.com/projects/434233)
-- Travis:
-  - master: [![Build Status](https://travis-ci.org/daneroo/scrobbleCast.svg?branch=master)](https://travis-ci.org/daneroo/scrobbleCast)
-  - develop: [![Build Status](https://travis-ci.org/daneroo/scrobbleCast.svg?branch=develop)](https://travis-ci.org/daneroo/scrobbleCast)
 - CircleCI:
   - master: [![Build Status](https://circleci.com/gh/daneroo/scrobbleCast.svg?&style=shield)](https://circleci.com/gh/daneroo/scrobbleCast)
   - develop: [![Build Status](https://circleci.com/gh/daneroo/scrobbleCast/tree/develop.svg?style=shield)](https://circleci.com/gh/daneroo/scrobbleCast)
+- Travis-ci.org: deprecated since 2021-06-15
 
 ## TODO
 
 - nx (move to typescript)
 - ipfs
 - [Github Actions](https://blog.devgenius.io/how-to-build-and-run-a-nodejs-app-with-docker-github-actions-59eb264dfef5)
+- Validate CodeShip/CloudBees
 
 ## Overview
 

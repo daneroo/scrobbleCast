@@ -3,11 +3,11 @@
 
 name: Scrape-CI
 
-on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+on: [push, pull_request]
+  # push:
+  #   branches: [ master ]
+  # ç:
+  #   branches: [ master ]
 
 jobs:
   build:

@@ -1,5 +1,8 @@
 # scrobbleCast
 
+- Github Actions:
+  - main: [![Scrape-CI](https://github.com/daneroo/scrobbleCast/actions/workflows/scrape.yml/badge.svg)](https://github.com/daneroo/scrobbleCast/actions/workflows/scrape.yml)
+  - develop: [![Scrape-CI](https://github.com/daneroo/scrobbleCast/actions/workflows/scrape.yml/badge.svg?branch=develop)](https://github.com/daneroo/scrobbleCast/actions/workflows/scrape.yml)
 - CircleCI:
   - master: [![Build Status](https://circleci.com/gh/daneroo/scrobbleCast.svg?&style=shield)](https://circleci.com/gh/daneroo/scrobbleCast)
   - develop: [![Build Status](https://circleci.com/gh/daneroo/scrobbleCast/tree/develop.svg?style=shield)](https://circleci.com/gh/daneroo/scrobbleCast)

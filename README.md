@@ -10,8 +10,7 @@
 
 - nx (move to typescript)
 - ipfs
-- [Github Actions](https://blog.devgenius.io/how-to-build-and-run-a-nodejs-app-with-docker-github-actions-59eb264dfef5)
-- Validate CodeShip/CloudBees
+- Github Actions - only need to get working-directory to work with npm cache
 
 ## Overview
 

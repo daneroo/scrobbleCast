@@ -28,6 +28,8 @@ jobs:
       uses: actions/setup-node@v2
       with:
         node-version: ${{ matrix.node-version }}
-#         cache: 'npm'
-    - run: npm ci
-    - run: npm test
+        cache: 'npm'
+        cache-dependency-path: ./js/package-lock.json
+    - run: |
+        npm ci
+        npm test

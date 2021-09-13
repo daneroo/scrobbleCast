@@ -17,6 +17,7 @@ services:
     volumes:
       - ./credentials.json:/usr/src/app/credentials.json:ro
       - ./credentials.loggly.json:/usr/src/app/credentials.loggly.json:ro
+      # bind mount on linux: uid(node)==uid(daniel)==1000: lucky, now that container runs as node user
       - ./data:/usr/src/app/data
 
     restart: unless-stopped

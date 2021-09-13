@@ -36,6 +36,7 @@ DB_LOG=1 DB_DIALECT=postgres npm run unit
 
 ## TODO
 
+- top level scripts - proper exit (shutdown)
 - Adjust qcic.site/nats section to see new events - generic - no schema
 - Make digest a stream(s)
 - Logcheck - not necessary? will replace, from sync task/discovery - before and after?
@@ -44,7 +45,9 @@ DB_LOG=1 DB_DIALECT=postgres npm run unit
   - im.scrobblecast.scrape.{task,progress,digest,sync,sync.trace,sync.error,logcheck?}
   - We might want to add `host|agentId` to subject taxonomy
 - Push image to ghcr.io
+- Build w/Github Actions
 - [Build w/Github Actions](https://betterprogramming.pub/continuously-build-node-js-docker-images-using-github-actions-1e58df9c9faa)
+- [Github Actions](https://blog.devgenius.io/how-to-build-and-run-a-nodejs-app-with-docker-github-actions-59eb264dfef5)
 - Revert WAL - or make a config param - orm.js
 - Remove loggly, replace with:
   - [pino](https://getpino.io/)

@@ -10,7 +10,7 @@ on: [push, pull_request]
   #   branches: [ master ]
 
 jobs:
-  build:
+  test:
 
     runs-on: ubuntu-latest
     defaults:
@@ -25,12 +25,35 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v2
       with:
         node-version: ${{ matrix.node-version }}
-        cache: 'npm'
+        cache: 'npm'  # doesn't work locally with act
         cache-dependency-path: ./js/package-lock.json
+    
     - run: |
         npm ci
         npm test
+
+  # https://github.com/marketplace/actions/publish-docker
+  container:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Publish to Registry
+      pre: echo ::save-state name=RELEASE_VERSION::$(echo ${GITHUB_REF:10})
+      uses: elgohr/Publish-Docker-Github-Action@master
+      with:
+        name: daneroo/scrobblecast/scrape
+        workdir: js
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+        registry: ghcr.io
+        snapshot: true  # add a tag like: 2021091401115446b3b3
+        no_push: true
+        tag_names: true # should include
+        # no_push: ${{ github.event_name == 'push' }} # actually on for tags?
+        # tags: "latest,${{ env.STATE_RELEASE_VERSION }}"

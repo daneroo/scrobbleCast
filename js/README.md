@@ -12,6 +12,12 @@ make snapshot
 make restore
 ```
 
+## CI/CD
+
+CI is performed by GitHub Actions, (as well as CircleCI for now).
+
+There is a job for running tests, and if they pass an image (`ghcr.io/daneroo/scrobblecast/scrape:TAG`) is built and pushed to Github Container Registry.
+
 ## Nats
 
 ```bash
@@ -21,7 +27,7 @@ npx natsboard --nats-mon-url http://demo.nats.io:8222
 
 ## Test
 
-Until npm run sescan passes!
+Until npm run sescan/audit passes!
 
 ```bash
 npm run unit
@@ -36,16 +42,15 @@ DB_LOG=1 DB_DIALECT=postgres npm run unit
 
 ## TODO
 
-- top level scripts - proper exit (shutdown)
-- Make digest a stream(s)
+- Move `/js` to `/packages/scrape`
+- Graceful Exit (shutdown) - for all top level scripts (dedup,sync,...)
+- Make NATS Stream for `*.digest` events
 - Logcheck - not necessary? will replace, from sync task/discovery - before and after?
-- digest has no stamp@10minutes?
+- NATS `*.digest` event has no stamp@10minutes?
 - Declare nats schema (id:ulid,host)
   - im.scrobblecast.scrape.{task,progress,digest,sync,sync.trace,sync.error,logcheck?}
   - We might want to add `host|agentId` to subject taxonomy
-- Push image to ghcr.io
-- Build w/Github Actions
-- [Github Actions](https://blog.devgenius.io/how-to-build-and-run-a-nodejs-app-with-docker-github-actions-59eb264dfef5)
+- Define Release/Tag process for docker images
 - Revert WAL - or make a config param - orm.js
 - Remove loggly, replace with:
   - [pino](https://getpino.io/)
@@ -155,22 +160,11 @@ You gotta be kidding, separate statement for list, and put/get/delete
 ### Local
 
 - clean, restore, scrape, snapshot
-- sqlite/postgres variant
+- sqlite/postgres variants
 
 ```bash
 # start fresh? cleanup first?
-rm -rf data/
-docker volume rm js_scrbl_pgdata
-
-# build and run
-export HOSTNAME
-docker-compose build --pull
-export HOSTNAME; docker-compose up -d
-docker-compose logs -f scrape
-
-# clear screen:
-/usr/bin/osascript -e 'tell application "System Events" to tell process "Terminal" to keystroke "k" using command down'
-
+# e.g. rm -rf data/
 
 # restore from s3 -> data/snapshots -> DB
 docker-compose run --rm scrape npm run restore
@@ -182,25 +176,6 @@ docker-compose run --rm scrape node restore.js
 export HOSTNAME; docker-compose run --rm scrape node snapshots.js
 docker-compose run --rm scrape npm run snapshot
 
-# curl digests:
-for h in darwin dirac newton; do echo $h `curl -s http://$h.imetrical.com:8000/api/digests|shasum -a 256`; done
-# curl version:
-for h in darwin dirac newton; do echo $h `curl -s http://$h.imetrical.com:8000/api/version`; done
-# curl status:
-for h in darwin dirac newton; do echo $h `curl -s http://$h.imetrical.com:8000/api/status`; done
-
-# to run a single sync run
-docker-compose run --rm scrape node sync.js http://dirac.imetrical.com:8000/api
-docker-compose run --rm scrape node sync.js http://darwin.imetrical.com:8000/api
-docker-compose run --rm scrape node sync.js http://newton.imetrical.com:8000/api
-
-# dedup as needed - also upserts all history
-export HOSTNAME; docker-compose run --rm scrape node dedup.js
-
-# delete for extraordinary reconcile
-docker-compose exec postgres psql -U postgres scrobblecast
-scrobblecast=# delete from items where encode(digest(item::text, 'sha256'), 'hex')='3fef8c3a1f5808d2938e06fa9e5cb419fe6d7fe9d10e56f59ddb87a5245d7211';
-
 # check monthly sums after restore/snapshots...
 md5sum $(find data/snapshots -type f -not -name current\*)|cut -d \  -f 1|sort|md5sum
 
@@ -209,34 +184,12 @@ docker exec -it js_scrape_1 bash -c 'md5sum $(find data/snapshots -type f -not -
 docker-compose run --rm scrape bash -c 'md5sum $(find data/snapshots -type f -not -name current\*)|cut -d \  -f 1|sort|md5sum'
 ```
 
-## Deployment: Zeit Now / Docker Cloud / k8s
-
-inject credentials somehow:
-
-```bash
-remove .dockerignore for 2 credential json files
-remove user daniel clause causing perm probs.
-How to set HOSTNAME???
-
-inject data (before synch is possible)
-```
-
-Build the image locally
-
-```bash
-  docker-compose build
-  docker tag nodejses6_scrape:latest daneroo/scrobblecast:withcreds
-  # Just regenerate if you loose these keys (password is api key)
-  docker login -u daneroo -p f787d9cc-b151-48a1-84aa-3b39ac0bb972 -e daniel.lauzon@gmail.com
-  docker push daneroo/scrobblecast:withcreds
-```
-
 ## Postgres notes
 
 Start a container and connect to it
 
 ```bash
-docker-compose up -d postgres
+docker-compose -f docker-compose-services.yml up -d
 
 docker-compose exec postgres bash
   psql -U postgres scrobblecast
@@ -272,7 +225,13 @@ time docker-compose exec postgres psql -U postgres scrobblecast -q -P pager=off 
     whereas a faled login returns the login page content again (200)  
     the 302 response also has a new XSRF-TOKEN cookie  
 
-## Clock Drift (ancient history)
+## History
+
+## Zeit/Now/Vercel
+
+Before Now v2, we used to run docker containers on Zeit.
+
+### Clock Drift (ancient history)
 
 _dirac clock running fast in docker:_
 

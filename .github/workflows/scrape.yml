@@ -58,5 +58,4 @@ jobs:
         tag_names: true # includes refs (branch and tags)
         # no_push: ${{ github.event_name == 'push' }} # actually on for tags?
         # tags: "latest,${{ env.STATE_RELEASE_VERSION }}"
-        tags: "latest,${{ env.ACT }}"
         no_push: ${{ env.ACT == 'true' }} # disables push for local `act` run

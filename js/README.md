@@ -18,6 +18,12 @@ CI is performed by GitHub Actions, (as well as CircleCI for now).
 
 There is a job for running tests, and if they pass an image (`ghcr.io/daneroo/scrobblecast/scrape:TAG`) is built and pushed to Github Container Registry.
 
+It is also possible to run the Github actions with [act](https://github.com/nektos/act),
+with 2 caveats
+
+- `actions/setup-node@v2`'s `cache: 'npm'` statement must be commented out
+- `elgohr/Publish-Docker-Github-Action@master`'s `no_push: true` must be uncommented
+
 ## Nats
 
 ```bash

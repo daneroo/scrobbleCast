@@ -38,13 +38,14 @@ jobs:
         npm test
 
   # https://github.com/marketplace/actions/publish-docker
+  #  i.e. https://github.com/elgohr/Publish-Docker-Github-Action
   container:
     needs: test
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
     - name: Publish to Registry
-      pre: echo ::save-state name=RELEASE_VERSION::$(echo ${GITHUB_REF:10})
+      # pre: echo ::save-state name=RELEASE_VERSION::$(echo ${GITHUB_REF:10})
       uses: elgohr/Publish-Docker-Github-Action@master
       with:
         name: daneroo/scrobblecast/scrape

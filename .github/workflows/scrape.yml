@@ -45,7 +45,6 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Publish to Registry
-      # pre: echo ::save-state name=RELEASE_VERSION::$(echo ${GITHUB_REF:10})
       uses: elgohr/Publish-Docker-Github-Action@master
       with:
         name: daneroo/scrobblecast/scrape
@@ -54,7 +53,7 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
         registry: ghcr.io
         snapshot: true  # add a tag like: 2021091401115446b3b3
-        no_push: true
-        tag_names: true # should include
+        # no_push: true
+        tag_names: true # includes refs (branch and tags)
         # no_push: ${{ github.event_name == 'push' }} # actually on for tags?
         # tags: "latest,${{ env.STATE_RELEASE_VERSION }}"

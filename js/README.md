@@ -22,7 +22,7 @@ It is also possible to run the Github actions with [act](https://github.com/nekt
 with 2 caveats
 
 - `actions/setup-node@v2`'s `cache: 'npm'` statement must be commented out
-- `elgohr/Publish-Docker-Github-Action@master`'s `no_push: true` must be uncommented
+- `elgohr/Publish-Docker-Github-Action@master`'s `no_push: ${{ env.ACT == 'true' }}` which disables push for local `act` run
 
 ## Nats
 

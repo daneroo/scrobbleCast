@@ -32,7 +32,7 @@ jobs:
       uses: actions/setup-node@v2
       with:
         node-version: ${{ matrix.node-version }}
-        # cache: 'npm'  # doesn't work locally with act
+        cache: 'npm'  # comment out for local `act` run
         cache-dependency-path: ./js/package-lock.json
     
     - run: |
@@ -55,7 +55,8 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
         registry: ghcr.io
         snapshot: true  # add a tag like: 2021091401115446b3b3
-        # no_push: true
         tag_names: true # includes refs (branch and tags)
         # no_push: ${{ github.event_name == 'push' }} # actually on for tags?
         # tags: "latest,${{ env.STATE_RELEASE_VERSION }}"
+        tags: "latest,${{ env.ACT }}"
+        no_push: ${{ env.ACT == 'true' }} # disables push for local `act` run

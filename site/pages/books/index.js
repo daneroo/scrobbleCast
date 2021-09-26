@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import Head from 'next/head'
+import Link from 'next/link'
 import { Heading, Text, VStack } from '@chakra-ui/react'
 
 import PageLayout from '../../components/PageLayout'
@@ -51,7 +52,10 @@ function BookList ({ books }) {
   const columns = useMemo(
     () => [{
       Header: 'Title',
-      accessor: 'title'
+      accessor: 'title',
+      Cell: ({ value, row: { original: { bookId } } }) => {
+        return <Link href={`/books/${bookId}`}><a>{value}</a></Link>
+      }
     }, {
       Header: 'Author',
       accessor: 'authorName'

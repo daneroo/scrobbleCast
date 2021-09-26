@@ -1,15 +1,14 @@
 import { useState, useMemo } from 'react'
 
 import Head from 'next/head'
+import Link from 'next/link'
 import {
-  Heading, Text, Box, Flex, VStack,
-  Stat, StatLabel, StatNumber, StatHelpText, StatGroup,
-  Button
+  Heading, Text, Flex, VStack, Button
 } from '@chakra-ui/react'
 import PageLayout from '../../components/PageLayout'
 import ChakraTable from '../../components/ChakraTable'
 
-import { fromNow, humanDuration } from '../../lib/date.js'
+// import { fromNow, humanDuration } from '../../lib/date.js'
 import { getDecoratedEpisodes, getApiSignature } from '../../lib/api'
 
 export default function EpisodesPage ({ episodes, apiSignature, loadedIndexes, addLoadedIndex }) {
@@ -68,7 +67,10 @@ function EpisodeList ({ episodes }) {
   const columns = useMemo(
     () => [{
       Header: 'Title',
-      accessor: 'title'
+      accessor: 'title',
+      Cell: ({ value, row: { original: { uuid } } }) => {
+        return <Link href={`/episodes/${uuid}`}><a>{value}</a></Link>
+      }
     }, {
       Header: 'Podcast',
       accessor: 'podcastTitle'

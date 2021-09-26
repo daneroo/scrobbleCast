@@ -98,14 +98,26 @@ export async function getPodcasts () {
   return podcasts
 }
 
+// https://raw.githubusercontent.com/daneroo/scrobble-books-data/main/goodreads-rss.json
 export async function getBooksFeed () {
   if (cache.booksFeed) {
     const { booksFeed } = cache
     // console.log('|Books (hit)|', booksFeed.items.length)
     return booksFeed
   }
-  const booksFile = join(process.cwd(), 'public', 'books', 'goodreads-rss.json')
-  const booksFeed = JSON.parse(await fs.readFile(booksFile, { encoding: 'utf8' }))
+
+  // old way
+  // const booksFile = join(process.cwd(), 'public', 'books', 'goodreads-rss.json')
+  // const booksFeed = JSON.parse(await fs.readFile(booksFile, { encoding: 'utf8' }))
+
+  // new way
+
+  const url = 'https://raw.githubusercontent.com/daneroo/scrobble-books-data/main/goodreads-rss.json'
+  console.log(`fetching url: ${url}`)
+  // eslint-disable-next-line no-undef
+  const results = await fetch(url)
+  const booksFeed = await results.json()
+
   cache.booksFeed = booksFeed
   for (const b of booksFeed.items) {
     cache.bookById[b.bookId] = b

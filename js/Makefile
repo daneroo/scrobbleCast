@@ -17,6 +17,9 @@ stop:
 logs:
 	docker-compose logs -f scrape
 
+nats:
+	nats sub -r im.scrobblecast.\>
+
 sync:
 	@echo "Synching peer -> DB  (can take a since date as 2nd param)"
 	docker-compose run --rm scrape node sync.js http://darwin.imetrical.com:8000/api

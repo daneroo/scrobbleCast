@@ -1,15 +1,15 @@
 import Head from 'next/head'
 import {
-  Heading, Text, Box, Flex, VStack,Code,
+  Heading, Text, VStack,
   Stat, StatLabel, StatNumber, StatHelpText, StatGroup
- } from '@chakra-ui/react'
+} from '@chakra-ui/react'
 
- import PageLayout from '../../components/PageLayout'
+import PageLayout from '../../components/PageLayout'
 
-import { getEpisodes,getEpisode, getApiSignature } from '../../lib/api'
+import { getEpisodes, getEpisode, getApiSignature } from '../../lib/api'
 
-export default function EpisodePage ({ episode,apiSignature , loadedIndexes, addLoadedIndex }) {
-  const { uuid, title, podcast_title, playedProportion, duration, lastPlayed, firstPlayed } = episode
+export default function EpisodePage ({ episode, apiSignature, loadedIndexes, addLoadedIndex }) {
+  const { title, podcast_title: podcastTitle, playedProportion, duration, lastPlayed, firstPlayed } = episode
   return (
     <>
       <Head>
@@ -18,9 +18,9 @@ export default function EpisodePage ({ episode,apiSignature , loadedIndexes, add
       <PageLayout
         {...{ apiSignature, loadedIndexes, addLoadedIndex }}
       >
-      <VStack as='main' my='2rem'>
-        <Heading as='h1' size='xl' mb={2}>{title}</Heading>
-          <Text fontSize='lg'>{podcast_title}</Text>
+        <VStack as='main' my='2rem'>
+          <Heading as='h1' size='xl' mb={2}>{title}</Heading>
+          <Text fontSize='lg'>{podcastTitle}</Text>
           <StatGroup>
             <Stat size='sm'>
               <StatLabel>Played</StatLabel>
@@ -32,14 +32,14 @@ export default function EpisodePage ({ episode,apiSignature , loadedIndexes, add
               <StatNumber>{duration}s</StatNumber>
             </Stat>
           </StatGroup>
-      </VStack>
+        </VStack>
       </PageLayout>
     </>
   )
 }
 
-export async function getStaticProps ({params}) {
-  const {uuid } = params
+export async function getStaticProps ({ params }) {
+  const { uuid } = params
   const apiSignature = await getApiSignature()
   const episode = await getEpisode(uuid)
   return {
@@ -48,17 +48,16 @@ export async function getStaticProps ({params}) {
   }
 }
 
-export async function getStaticPaths() {
+export async function getStaticPaths () {
   const episodes = await getEpisodes()
-  console.log('episode paths:',episodes.length)
   return {
-    paths: episodes.map(({uuid}) => {
+    paths: episodes.map(({ uuid }) => {
       return {
         params: {
-          uuid,
-        },
+          uuid
+        }
       }
     }),
-    fallback: false,
+    fallback: false
   }
 }

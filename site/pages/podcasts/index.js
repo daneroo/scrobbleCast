@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import Head from 'next/head'
+import Link from 'next/link'
 import { Heading, Text, VStack } from '@chakra-ui/react'
 import PageLayout from '../../components/PageLayout'
 import ChakraTable from '../../components/ChakraTable'
@@ -44,7 +45,10 @@ function PodcastList ({ podcasts }) {
   const columns = useMemo(
     () => [{
       Header: 'Title',
-      accessor: 'title'
+      accessor: 'title',
+      Cell: ({ value, row: { original: { uuid } } }) => {
+        return <Link href={`/podcasts/${uuid}`}><a>{value}</a></Link>
+      }
     }, {
       Header: 'Author',
       accessor: 'author'

@@ -46,11 +46,15 @@ function Card (props) {
   )
 }
 
-const shouldWriteIndex = false
-
 export async function getStaticProps (context) {
   const apiSignature = await getApiSignature()
-  if (shouldWriteIndex) { await writeStorkIndexFiles() }
+  const shouldWriteIndex = process.env.STORK_WRITE_INDEX_FILES
+  if (shouldWriteIndex) {
+    console.log('Writing Stork Index Files', { shouldWriteIndex })
+    await writeStorkIndexFiles()
+  } else {
+    console.log('Skipping Stork Index Files', { shouldWriteIndex })
+  }
   return {
     props: { apiSignature }, // will be passed to the page component as props
     revalidate: 60 // in seconds

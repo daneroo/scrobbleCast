@@ -169,6 +169,7 @@ function byUUID (ary) {
 }
 
 export async function writeStorkIndexFiles () {
+  // podcasts
   const podcastsDirectory = join(dataDirectory, 'podcasts')
   await fs.mkdir(podcastsDirectory, { recursive: true })
   const podcasts = await getPodcasts()
@@ -182,6 +183,8 @@ export async function writeStorkIndexFiles () {
     const podcastFile = join(podcastsDirectory, uuid + '.txt')
     await fs.writeFile(podcastFile, `${title} by ${author}\n\n${description}\n`)
   }
+
+  // episodes
   const episodesDirectory = join(dataDirectory, 'episodes')
   await fs.mkdir(episodesDirectory, { recursive: true })
   const episodes = await getEpisodes()
@@ -191,13 +194,25 @@ export async function writeStorkIndexFiles () {
     await fs.writeFile(episodeFile, `${title}\n`)
   }
 
+  // books
+  const booksDirectory = join(dataDirectory, 'books')
+  await fs.mkdir(booksDirectory, { recursive: true })
+  const books = (await getBooksFeed()).items
+  for (const book of books) {
+    const { bookId, title, authorName, bookDescription } = book
+    const bookFile = join(booksDirectory, bookId + '.txt')
+    await fs.writeFile(bookFile, `${title} by ${authorName}\n\n${bookDescription}\n`)
+  }
+
+  // config.toml
   const storkConfigFile = join(dataDirectory, 'config.toml')
   await fs.writeFile(storkConfigFile, `
 [input]
 base_directory = "./"
 files = [
 ${podcasts.map((p) => `{path = "podcasts/${p.uuid}.txt", url = "/podcasts/${p.uuid}", title=${JSON.stringify(p.title)}}`).join(',\n')},
-${episodes.map((e) => `{path = "episodes/${e.uuid}.txt", url = "/episodes/${e.uuid}", title=${JSON.stringify(e.title)}}`).join(',\n')}
+${episodes.map((e) => `{path = "episodes/${e.uuid}.txt", url = "/episodes/${e.uuid}", title=${JSON.stringify(e.title)}}`).join(',\n')},
+${books.map((b) => `{path = "books/${b.bookId}.txt", url = "/books/${b.bookId}", title=${JSON.stringify(b.title)}}`).join(',\n')}
 ]
 `)
   console.log(`Done writing indexed files - ${episodes.length} episodes / ${podcasts.length} podcasts`)

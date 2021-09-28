@@ -73,7 +73,9 @@ function EpisodeList ({ episodes }) {
       }
     }, {
       Header: 'Podcast',
-      accessor: 'podcastTitle'
+      accessor: 'podcastTitle',
+      // eslint-disable-next-line camelcase
+      Cell: ({ value, row: { original: { podcast_uuid } } }) => <Link href={`/podcasts/${podcast_uuid}`}><a>{value}</a></Link>
     }, {
       Header: '%',
       accessor: 'percentPlayed'

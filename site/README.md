@@ -38,21 +38,39 @@ npm i @chakra-ui/react @emotion/react @emotion/styled framer-motion
 - vercel  for deployment
 - netlify for deployment
 
-## Show Notes
+## Publish to Vercel
 
-Augmented the scrape api to get show notes, should produces a single (html file) with episode info and show notes
+We publish with a local build for now.
 
-## Stork
+- Update stork index as below
+- `npm run build`
+- `npm run start` # test locally
+- `vercel` || `vercel --prod`
+
+### Stork
 
 - Full index: ~73k entries - 48 minutes - 26MB
 - 90d: ~2.4k entries - 20s - 3MB
 - 180d: ~7k entries - 69s - 5MB
 
+For the stork index, we run a build with `STORK_WRITE_INDEX=true` which:
+
+- overwrites files in `./data`
+- uses docker to produce `public/stork/scrobblecast.st`
+
 ```bash
+# rm -rf data
+STORK_WRITE_INDEX_FILES=true npm run build
 docker build -t stork stork/  # once only
+# build the index from the generated files
 docker run --rm -it --name stork -v $(pwd)/data:/data stork
+# copy the `.st` file to the public forlder
 scp -p data/scrobblecast.st public/stork/scrobblecast.st
 ```
+
+## Show Notes
+
+Augmented the scrape api to get show notes, should produces a single (html file) with episode info and show notes
 
 FUll episodes, no showNotes:
 

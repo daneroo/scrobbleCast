@@ -75,7 +75,7 @@ export async function getStaticProps (context) {
   const apiSignature = await getApiSignature()
   const booksFeed = await getBooksFeed()
   return {
-    props: { books: booksFeed.items, apiSignature } // will be passed to the page component as props
-    // revalidate: 0,
+    props: { books: booksFeed.items, apiSignature }, // will be passed to the page component as props
+    revalidate: 600 // will cause the page to revalidate every 10 minutes
   }
 }

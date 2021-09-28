@@ -1,10 +1,10 @@
 import Head from 'next/head'
-import { Heading, Text, Box, Flex, VStack,Code } from '@chakra-ui/react'
+import { Heading, Text, VStack } from '@chakra-ui/react'
 import PageLayout from '../../components/PageLayout'
-import { getPodcast, getPodcasts, getApiSignature} from '../../lib/api'
+import { getPodcast, getPodcasts, getApiSignature } from '../../lib/api'
 
-export default function PodcastPage ({ podcast,apiSignature , loadedIndexes, addLoadedIndex }) {
-  const {title,author,description} = podcast
+export default function PodcastPage ({ podcast, apiSignature, loadedIndexes, addLoadedIndex }) {
+  const { title, author, description } = podcast
   return (
     <>
       <Head>
@@ -13,18 +13,18 @@ export default function PodcastPage ({ podcast,apiSignature , loadedIndexes, add
       <PageLayout
         {...{ apiSignature, loadedIndexes, addLoadedIndex }}
       >
-      <VStack as='main' my='2rem' mx={2} maxWidth='60rem'>
-        <Heading as='h1' size='xl' mb='2'>{title}</Heading>
-        <Heading as='h2' size='lg' mb='2'>by {author}</Heading>
+        <VStack as='main' my='2rem' mx={2} maxWidth='60rem'>
+          <Heading as='h1' size='xl' mb='2'>{title}</Heading>
+          <Heading as='h2' size='lg' mb='2'>by {author}</Heading>
           <Text fontSize='md' mt='2'>{description}</Text>
-      </VStack>
+        </VStack>
       </PageLayout>
     </>
   )
 }
 
-export async function getStaticProps ({params}) {
-  const {uuid } = params
+export async function getStaticProps ({ params }) {
+  const { uuid } = params
   const apiSignature = await getApiSignature()
   const podcast = await getPodcast(uuid)
   return {
@@ -33,17 +33,17 @@ export async function getStaticProps ({params}) {
   }
 }
 
-export async function getStaticPaths() {
+export async function getStaticPaths () {
   const podcasts = await getPodcasts()
-  console.log('podcast paths:',podcasts.length)
+  console.log('podcast paths:', podcasts.length)
   return {
-    paths: podcasts.map(({uuid}) => {
+    paths: podcasts.map(({ uuid }) => {
       return {
         params: {
-          uuid,
-        },
+          uuid
+        }
       }
     }),
-    fallback: false,
+    fallback: false
   }
 }

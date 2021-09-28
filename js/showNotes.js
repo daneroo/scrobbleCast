@@ -4,7 +4,7 @@
 // - it writes files for ./data/stork/episodes
 // - it fetches all show notes for all episode in all podcasts
 // - all podcasts means: apiSession.podcasts() \union known podcasts
-//  where knowPodcasts was extracted from podcast history on 2021-03-23
+//  where knownPodcasts was extracted from podcast history on 2021-03-23
 // but should be made dynamic, with connection to database
 
 // dependencies - core-public-internal

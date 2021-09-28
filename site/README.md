@@ -10,6 +10,7 @@ npm i @chakra-ui/react @emotion/react @emotion/styled framer-motion
 
 ## TODO
 
+- Replace stork with Fuse or Lunr
 - React Table for listings
   - pagination, filtering
 - Extract hook for Stork - remove global (loadedIndexes state)
@@ -42,10 +43,12 @@ npm i @chakra-ui/react @emotion/react @emotion/styled framer-motion
 
 We publish with a local build for now.
 
-- Update stork index as below
-- `npm run build`
-- `npm run start` # test locally
-- `vercel` || `vercel --prod`
+```bash
+# Update stork index as below if needed
+npm run build
+npm run start # to test production build locally
+vercel # vercel --prod
+```
 
 ### Stork
 

@@ -5,7 +5,8 @@
 
 name: Scrape-CI
 
-on: [push, pull_request]
+on:
+  [push, pull_request]
   # push:
   #   branches: [ master ]
   # pull_request:
@@ -13,7 +14,6 @@ on: [push, pull_request]
 
 jobs:
   test:
-
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -26,18 +26,18 @@ jobs:
         node-version: [14.x, 16.x]
 
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v2
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'  # comment out for local `act` run
-        cache-dependency-path: ./js/package-lock.json
-    
-    - run: |
-        npm ci
-        npm test
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm" # comment out for local `act` run
+          cache-dependency-path: ./js/package-lock.json
+
+      - run: |
+          npm ci
+          npm test
 
   # https://github.com/marketplace/actions/publish-docker
   #  i.e. https://github.com/elgohr/Publish-Docker-Github-Action
@@ -45,17 +45,18 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Publish to Registry
-      uses: elgohr/Publish-Docker-Github-Action@master
-      with:
-        name: daneroo/scrobblecast/scrape
-        workdir: js
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-        registry: ghcr.io
-        snapshot: true  # add a tag like: 2021091401115446b3b3
-        tag_names: true # includes refs (branch and tags)
-        # no_push: ${{ github.event_name == 'push' }} # actually on for tags?
-        # tags: "latest,${{ env.STATE_RELEASE_VERSION }}"
-        no_push: ${{ env.ACT == 'true' }} # disables push for local `act` run
+      - uses: actions/checkout@v2
+      - name: Publish to Registry
+        # if: ${{ github.event_name != 'pull_request' }}
+        uses: elgohr/Publish-Docker-Github-Action@master
+        with:
+          name: daneroo/scrobblecast/scrape
+          workdir: js
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          registry: ghcr.io
+          snapshot: true # add a tag like: 2021091401115446b3b3
+          tag_names: true # includes refs (branch and tags)
+          # tags: "latest,${{ env.STATE_RELEASE_VERSION }}"
+          # disables push for local `act` run || or pull requests
+          no_push: ${{ env.ACT == 'true' || github.event_name != 'pull_request' }}

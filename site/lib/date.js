@@ -13,3 +13,7 @@ export function humanDuration (durationSeconds) {
 export function fromNow (when) {
   return moment(when).fromNow()
 }
+
+export function localNoTZ (when) {
+  return moment(when).format('YYYY-MM-DD HH:mm:ss')
+}

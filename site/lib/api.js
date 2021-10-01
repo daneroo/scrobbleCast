@@ -62,7 +62,7 @@ export async function getPodcast (uuid) {
   return getByUUID({ uuid, type: 'podcastsByUUID' })
 }
 
-const defaultDays = 45
+const defaultDays = 90
 export async function getEpisodes (days = defaultDays) {
   if (cache.episodes.length > 0) {
     const { episodes } = cache

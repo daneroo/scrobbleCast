@@ -3,8 +3,10 @@ import { useState, useMemo } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
 import {
-  Heading, Text, Flex, VStack, Button
+  Heading, Text, Flex, VStack, HStack, Input, Button, Checkbox
 } from '@chakra-ui/react'
+import Fuse from 'fuse.js'
+
 import PageLayout from '../../components/PageLayout'
 import ChakraTable from '../../components/ChakraTable'
 
@@ -12,7 +14,6 @@ import ChakraTable from '../../components/ChakraTable'
 import { getDecoratedEpisodes, getApiSignature } from '../../lib/api'
 
 export default function EpisodesPage ({ episodes, apiSignature, loadedIndexes, addLoadedIndex }) {
-  const playedEpisodes = episodes.filter((e) => e.playedTime > 0)
   return (
     <>
       <Head>
@@ -28,7 +29,7 @@ export default function EpisodesPage ({ episodes, apiSignature, loadedIndexes, a
           <Text fontSize='2xl' mt='2'>
             Recently listened episodes
           </Text>
-          <EpisodeList episodes={playedEpisodes} />
+          <EpisodeList episodes={episodes} />
         </VStack>
       </PageLayout>
     </>
@@ -40,28 +41,67 @@ function asPercentage (playedProportion) {
 }
 
 function EpisodeList ({ episodes }) {
-  // Shortened episode list
-  const [sliceLimit, setSliceLimit] = useState(5)
-  const moreAvailable = (sliceLimit < episodes.length)
-  function showMore () {
-    setSliceLimit(Math.min(sliceLimit + 20, episodes.length))
+  // make the fuse index, and memoize it
+  const fuseIndex = useMemo(() => {
+    const keys = [
+      'title',
+      'podcast.title'
+      // 'showNotes'
+    ]
+    return Fuse.createIndex(keys, episodes)
+  }, [episodes])
+
+  // state for search term
+  const [searchTerm, setSearchTerm] = useState('')
+  const onSearch = (event) => {
+    // TODO: can we debounce this?
+    setSearchTerm(event.target.value)
   }
 
-  // const { uuid, title, playedProportion, duration, lastPlayed, firstPlayed, podcast } = episode
+  const [onlyPlayed, setOnlyPlayed] = useState(true)
+  const onPlayedOnly = (event) => {
+    setOnlyPlayed(event.target.checked)
+  }
+
+  const filtered = useMemo(
+    () => {
+      // reload the memoized index
+      const fuse = new Fuse(episodes, { includeScore: true }, fuseIndex)
+      const maxSearchResults = 20 // this jut speed up the re-rendering of results
+      const searchFiltered = searchTerm // if there is a search term, filter the books
+        ? fuse.search(searchTerm, { limit: maxSearchResults }).map(({ item }) => item) // .slice(0, 10)
+        : episodes
+
+      // filter for played>0
+      const playFiltered = onlyPlayed
+        ? searchFiltered.filter((e) => e.playedTime > 0)
+        : searchFiltered
+      return playFiltered
+    },
+    [episodes, searchTerm, onlyPlayed]
+  )
+
+  // Shortened episode list
+  const [sliceLimit, setSliceLimit] = useState(5)
+  const moreAvailable = (sliceLimit < filtered.length)
+  function showMore () {
+    setSliceLimit(Math.min(sliceLimit + 20, filtered.length))
+  }
 
   const data = useMemo(
-    () => episodes
-      .slice(0, sliceLimit)
-      // .filter((b) => b?.userShelves !== 'to-read')
-      .map((b) => ({
-        ...b,
-        percentPlayed: asPercentage(b?.playedProportion),
-        podcastTitle: b?.podcast?.title,
-        updatedAt: b?.meta?.__lastUpdated,
-        firstSeenAt: b?.meta?.__firstSeen,
-        lasPlayedAt: b?.meta?.__lastPlayed
-      })),
-    [sliceLimit]
+    () => {
+      return filtered
+        .slice(0, sliceLimit)
+        .map((b) => ({
+          ...b,
+          percentPlayed: asPercentage(b?.playedProportion),
+          podcastTitle: b?.podcast?.title,
+          updatedAt: b?.meta?.__lastUpdated,
+          firstSeenAt: b?.meta?.__firstSeen,
+          lasPlayedAt: b?.meta?.__lastPlayed
+        }))
+    },
+    [filtered, searchTerm, sliceLimit]
   )
 
   const columns = useMemo(
@@ -87,10 +127,17 @@ function EpisodeList ({ episodes }) {
     []
   )
   return (
-    <Flex flexDirection='column' flexWrap='wrap' maxW='800px' mt='10'>
-      <ChakraTable columns={columns} data={data} />
-      <Button isDisabled={!moreAvailable} onClick={showMore}>{moreAvailable ? 'Show More' : 'At End'} (1..{sliceLimit} of {episodes.length})</Button>
-    </Flex>
+    <>
+      <HStack>
+        <Input placeholder='Search..' onChange={onSearch} />
+        <Checkbox defaultIsChecked onChange={onPlayedOnly}>Played</Checkbox>
+      </HStack>
+      <Flex flexDirection='column' flexWrap='wrap' maxW='800px' mt='10'>
+        <ChakraTable columns={columns} data={data} />
+        <Button isDisabled={!moreAvailable} onClick={showMore}>{moreAvailable ? 'Show More' : 'At End'} (1..{Math.min(sliceLimit, filtered.length)} of {filtered.length})</Button>
+      </Flex>
+    </>
+
   )
 }
 
@@ -99,7 +146,7 @@ export async function getStaticProps (context) {
   const episodes = await getDecoratedEpisodes()
 
   return {
-    props: { episodes, apiSignature } // will be passed to the page component as props
-    // revalidate: 0,
+    props: { episodes, apiSignature }, // will be passed to the page component as props
+    revalidate: 600 // will cause the page to revalidate every 10 minutes
   }
 }

@@ -1,6 +1,6 @@
 import { Heading, Text, Flex, Box } from '@chakra-ui/react'
 import PageLayout from '../components/PageLayout'
-import { getApiSignature, writeStorkIndexFiles } from '../lib/api'
+import { getApiSignature, writeSearchIndexFiles } from '../lib/api'
 
 export default function Home ({ apiSignature, loadedIndexes, addLoadedIndex }) {
   return (
@@ -15,6 +15,10 @@ export default function Home ({ apiSignature, loadedIndexes, addLoadedIndex }) {
           What my eyes and ears have been up to
         </Text>
         <Flex flexWrap='wrap' alignItems='center' justifyContent='center' maxW='800px' mt='4'>
+          <Card href='/books'>
+            <Heading as='h3' size='lg' mb='2'>Books →</Heading>
+            <Text fontSize='lg'>Recently read</Text>
+          </Card>
           <Card href='/podcasts'>
             <Heading as='h3' size='lg' mb='2'>Podcasts →</Heading>
             <Text fontSize='lg'>Subscribed Podcasts</Text>
@@ -22,10 +26,6 @@ export default function Home ({ apiSignature, loadedIndexes, addLoadedIndex }) {
           <Card href='/episodes'>
             <Heading as='h3' size='lg' mb='2'>Episodes →</Heading>
             <Text fontSize='lg'>Recent Episodes</Text>
-          </Card>
-          <Card href='/books'>
-            <Heading as='h3' size='lg' mb='2'>Books →</Heading>
-            <Text fontSize='lg'>Recently read</Text>
           </Card>
         </Flex>
       </PageLayout>
@@ -48,12 +48,12 @@ function Card (props) {
 
 export async function getStaticProps (context) {
   const apiSignature = await getApiSignature()
-  const shouldWriteIndex = process.env.STORK_WRITE_INDEX_FILES
+  const shouldWriteIndex = process.env.SEARCH_WRITE_INDEX_FILES
   if (shouldWriteIndex) {
-    console.log('Writing Stork Index Files', { shouldWriteIndex })
-    await writeStorkIndexFiles()
+    console.log('Writing Search Index Files', { shouldWriteIndex })
+    await writeSearchIndexFiles()
   } else {
-    console.log('Skipping Stork Index Files', { shouldWriteIndex })
+    console.log('Skipping Search Index Files', { shouldWriteIndex })
   }
   return {
     props: { apiSignature }, // will be passed to the page component as props

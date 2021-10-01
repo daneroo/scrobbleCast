@@ -166,7 +166,7 @@ function byUUID (ary) {
   }, {})
 }
 
-export async function writeStorkIndexFiles () {
+export async function writeSearchIndexFiles () {
   // podcasts
   const podcastsDirectory = join(dataDirectory, 'podcasts')
   await fs.mkdir(podcastsDirectory, { recursive: true })
@@ -203,8 +203,8 @@ export async function writeStorkIndexFiles () {
   }
 
   // config.toml
-  const storkConfigFile = join(dataDirectory, 'config.toml')
-  await fs.writeFile(storkConfigFile, `
+  const searchConfigFile = join(dataDirectory, 'config.toml')
+  await fs.writeFile(searchConfigFile, `
 [input]
 base_directory = "./"
 files = [

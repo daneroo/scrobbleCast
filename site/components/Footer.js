@@ -23,7 +23,8 @@ export default function Footer ({ apiSignature = defaultAPISignature }) {
     <Flex
       as='footer'
       justifyContent='center' alignItems='center'
-      borderTop='1px solid #eee' w='100%'
+      borderTop='1px solid #eee'
+      w='100%'
     >
       <HStack sx={{ color: 'gray.500', py: '.5em' }}>
         <span>ScrobbleCast v{versions.pocketscrape} </span>

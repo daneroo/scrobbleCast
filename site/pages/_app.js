@@ -2,8 +2,6 @@ import { useState } from 'react'
 import Head from 'next/head'
 import { ChakraProvider } from '@chakra-ui/react'
 import theme from '../theme'
-//  Move this to module - or re-implement in chakra/emotion
-import '../styles/stork-basic.css'
 
 function MyApp ({ Component, pageProps }) {
   const [loadedIndexes, setLoadedIndexes] = useState([])
@@ -14,7 +12,6 @@ function MyApp ({ Component, pageProps }) {
       <Head>
         <title>Scrobble Cast</title>
         <link rel='icon' href='/favicon.ico' />
-        <script defer async src='/js/stork.js' onLoad='stork.initialize()' />
       </Head>
 
       <Component {...{

@@ -51,6 +51,18 @@ vercel # vercel --prod
 
 ### Search
 
+#### Fuse.js
+
+Currently implemented for books (~470).
+
+The index is created and memoized in the BookList component.
+The indexing could also be done in getStaticProps, or even upstream in the data repo.
+Futhermore the index itself might be [lazy loaded](https://nextjs.org/docs/advanced-features/dynamic-import) when a search term is first entered
+
+- [Used this article to get started](https://www.freecodecamp.org/news/how-to-add-search-to-a-react-app-with-fuse-js/)
+
+#### Stork (removed)
+
 Stork performance:
 
 - Full index: ~73k entries - 48 minutes - 26MB

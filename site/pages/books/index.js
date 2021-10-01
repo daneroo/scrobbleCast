@@ -1,15 +1,15 @@
 import { useMemo, useState } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
-import { Heading, Text, VStack, Select } from '@chakra-ui/react'
+import { Heading, Text, VStack, HStack, Select, Input } from '@chakra-ui/react'
+import Fuse from 'fuse.js'
 
 import PageLayout from '../../components/PageLayout'
 import ChakraTable from '../../components/ChakraTable'
 
 import { getBooksFeed, getApiSignature } from '../../lib/api'
 
-export default function PodcastsPage ({ books, apiSignature, loadedIndexes, addLoadedIndex }) {
-  // console.log({ books })
+export default function BooksPage ({ books, apiSignature, loadedIndexes, addLoadedIndex }) {
   return (
     <>
       <Head>
@@ -42,26 +42,59 @@ function safeDate (dateStr) {
 }
 
 function BookList ({ books }) {
+  // make the fuse index, and memoize it
+  const fuseIndex = useMemo(() => {
+    const keys = [
+      'title',
+      'authorName',
+      'bookDescription'
+    ]
+    return Fuse.createIndex(keys, books)
+  }, [books])
+
+  // the drop down items are inferred from the unfiltered books array
   const shelves = useMemo(() => {
     const shelves = new Set()
     books.forEach(b => {
       shelves.add(b.userShelves)
     })
-    return Array.from(shelves)
+    // prepend 'All'
+    return ['All', ...Array.from(shelves)]
   }, [books])
 
-  const [shelf, setShelf] = useState(shelves[0])
+  // state for search term
+  const [searchTerm, setSearchTerm] = useState('')
+  const onSearch = (event) => {
+    // TODO: can we debounce this?
+    setSearchTerm(event.target.value)
+  }
+
+  // default shelf is 'currently-reading' if present, else shelves[0]=='All'
+  const [shelf, setShelf] = useState(shelves.includes('currently-reading') ? 'currently-reading' : shelves[0])
   const onShelfChange = (event) => {
-    console.log('changed to', event.target.value)
     setShelf(event.target.value)
   }
 
+  // Filtering is applied in order:
+  // - Search filtering if we have a search term
+  // - Shelf filtering
   const data = useMemo(
-    () => books
-      // .filter((b) => b?.userShelves !== 'to-read')
-      .filter((b) => b?.userShelves === shelf)
-      .map((b) => ({ ...b, userReadAt: safeDate(b?.userReadAt) })),
-    [books, shelf]
+    () => {
+      // reload the memoized index
+      const fuse = new Fuse(books, { includeScore: true }, fuseIndex)
+      const searchFiltered = searchTerm // if there is a search term, filter the books
+        ? fuse.search(searchTerm).map(({ item }) => item) // .slice(0, 10)
+        : books
+
+      const shelfFiltered = (shelf === 'All')
+        ? searchFiltered
+        : searchFiltered.filter((b) => b?.userShelves === shelf)
+
+      // Finally, make the dates safe
+      return shelfFiltered
+        .map((b) => ({ ...b, userReadAt: safeDate(b?.userReadAt) }))
+    },
+    [books, shelf, searchTerm]
   )
 
   const columns = useMemo(
@@ -86,11 +119,14 @@ function BookList ({ books }) {
   )
   return (
     <>
-      <Select value={shelf} onChange={onShelfChange}>
-        {shelves.map((shelf) => (
-          <option key={shelf} value={shelf}>{shelf}</option>
-        ))}
-      </Select>
+      <HStack>
+        <Input placeholder='Search..' onChange={onSearch} />
+        <Select value={shelf} onChange={onShelfChange}>
+          {shelves.map((shelf) => (
+            <option key={shelf} value={shelf}>{shelf}</option>
+          ))}
+        </Select>
+      </HStack>
       <ChakraTable columns={columns} data={data} />
     </>
   )

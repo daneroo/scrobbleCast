@@ -7,11 +7,11 @@ const defaultAPISignature = { versions: { pocketsrape: '0.0', node: '12.0' }, ge
 export default function Footer ({ apiSignature = defaultAPISignature }) {
   const { versions, generatedAt } = apiSignature
 
+  // just for fun toggle the footer date formating every 3 seconds
   const [toggle, setToggle] = useState(false)
   useEffect(() => {
     let toggler = toggle
     const intervalID = setInterval(() => {
-      console.log({ toggler })
       toggler = !toggler
       setToggle(!toggler)
     }, 3000)

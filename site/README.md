@@ -13,7 +13,6 @@ npm i @chakra-ui/react @emotion/react @emotion/styled framer-motion
 - Replace stork with Fuse or Lunr
 - React Table for listings
   - pagination, filtering
-- Extract hook for Stork - remove global (loadedIndexes state)
 - Cache for api calls - refactor
 - ISR pass thru for indexed bot not generated...
 - Lighthouse - round 1 done - 68 mobile/99 desktop
@@ -44,38 +43,37 @@ npm i @chakra-ui/react @emotion/react @emotion/styled framer-motion
 We publish with a local build for now.
 
 ```bash
-# Update stork index as below if needed
+# Update search index as below if needed
 npm run build
 npm run start # to test production build locally
 vercel # vercel --prod
 ```
 
-### Stork
+### Search
+
+Stork performance:
 
 - Full index: ~73k entries - 48 minutes - 26MB
 - 90d: ~2.4k entries - 20s - 3MB
 - 180d: ~7k entries - 69s - 5MB
 
-For the stork index, we run a build with `STORK_WRITE_INDEX=true` which:
+<!-- TODO: refine for Fuse/Lunr -->
+To create the index, we run a build with `SEARCH_WRITE_INDEX_FILES=true` which:
 
 - overwrites files in `./data`
 - uses docker to produce `public/stork/scrobblecast.st`
 
 ```bash
 # rm -rf data
-STORK_WRITE_INDEX_FILES=true npm run build
-docker build -t stork stork/  # once only
-# build the index from the generated files
-docker run --rm -it --name stork -v $(pwd)/data:/data stork
-# copy the `.st` file to the public forlder
-scp -p data/scrobblecast.st public/stork/scrobblecast.st
+SEARCH_WRITE_INDEX_FILES=true npm run build
+# scp -p data/scrobblecast.st public/stork/scrobblecast.st
 ```
 
 ## Show Notes
 
 Augmented the scrape api to get show notes, should produces a single (html file) with episode info and show notes
 
-FUll episodes, no showNotes:
+Full episodes, no showNotes:
 
 ```bash
 $ time docker run --rm -it -v $(pwd)/data:/data stork; scp -p data/scrobblecast.st public/stork/scrobblecast.st

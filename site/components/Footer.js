@@ -7,11 +7,11 @@ const defaultAPISignature = { versions: { pocketsrape: '0.0', node: '12.0' }, ge
 export default function Footer ({ apiSignature = defaultAPISignature }) {
   const { versions, generatedAt } = apiSignature
 
+  // just for fun toggle the footer date formating every 3 seconds
   const [toggle, setToggle] = useState(false)
   useEffect(() => {
     let toggler = toggle
     const intervalID = setInterval(() => {
-      console.log({ toggler })
       toggler = !toggler
       setToggle(!toggler)
     }, 3000)
@@ -23,7 +23,8 @@ export default function Footer ({ apiSignature = defaultAPISignature }) {
     <Flex
       as='footer'
       justifyContent='center' alignItems='center'
-      borderTop='1px solid #eee' w='100%'
+      borderTop='1px solid #eee'
+      w='100%'
     >
       <HStack sx={{ color: 'gray.500', py: '.5em' }}>
         <span>ScrobbleCast v{versions.pocketscrape} </span>

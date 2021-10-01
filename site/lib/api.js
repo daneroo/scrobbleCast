@@ -106,17 +106,15 @@ export async function getBooksFeed () {
     return booksFeed
   }
 
-  // old way
-  // const booksFile = join(process.cwd(), 'public', 'books', 'goodreads-rss.json')
-  // const booksFeed = JSON.parse(await fs.readFile(booksFile, { encoding: 'utf8' }))
-
-  // new way
-
+  // Get books data from latest `scrobble-books-data` Github Actions run
   const url = 'https://raw.githubusercontent.com/daneroo/scrobble-books-data/main/goodreads-rss.json'
   console.log(`fetching url: ${url}`)
   // eslint-disable-next-line no-undef
   const results = await fetch(url)
   const booksFeed = await results.json()
+
+  // Move this upstream to scroble-books-data
+  booksFeed.items = booksFeed.items.map(b => ({ ...b, userShelves: b?.userShelves || 'read' }))
 
   cache.booksFeed = booksFeed
   for (const b of booksFeed.items) {

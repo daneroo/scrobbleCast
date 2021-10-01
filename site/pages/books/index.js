@@ -1,7 +1,7 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
-import { Heading, Text, VStack } from '@chakra-ui/react'
+import { Heading, Text, VStack, Select } from '@chakra-ui/react'
 
 import PageLayout from '../../components/PageLayout'
 import ChakraTable from '../../components/ChakraTable'
@@ -42,11 +42,26 @@ function safeDate (dateStr) {
 }
 
 function BookList ({ books }) {
+  const shelves = useMemo(() => {
+    const shelves = new Set()
+    books.forEach(b => {
+      shelves.add(b.userShelves)
+    })
+    return Array.from(shelves)
+  }, [books])
+
+  const [shelf, setShelf] = useState(shelves[0])
+  const onShelfChange = (event) => {
+    console.log('changed to', event.target.value)
+    setShelf(event.target.value)
+  }
+
   const data = useMemo(
     () => books
-      .filter((b) => b?.userShelves !== 'to-read')
+      // .filter((b) => b?.userShelves !== 'to-read')
+      .filter((b) => b?.userShelves === shelf)
       .map((b) => ({ ...b, userReadAt: safeDate(b?.userReadAt) })),
-    []
+    [books, shelf]
   )
 
   const columns = useMemo(
@@ -60,6 +75,9 @@ function BookList ({ books }) {
       Header: 'Author',
       accessor: 'authorName'
     }, {
+      Header: 'Shelf',
+      accessor: 'userShelves'
+    }, {
       Header: 'Read',
       accessor: 'userReadAt'
     }
@@ -67,7 +85,14 @@ function BookList ({ books }) {
     []
   )
   return (
-    <ChakraTable columns={columns} data={data} />
+    <>
+      <Select value={shelf} onChange={onShelfChange}>
+        {shelves.map((shelf) => (
+          <option key={shelf} value={shelf}>{shelf}</option>
+        ))}
+      </Select>
+      <ChakraTable columns={columns} data={data} />
+    </>
   )
 }
 

@@ -1,6 +1,6 @@
 {
   "name": "site",
-  "version": "10.0.1",
+  "version": "10.0.2",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -8,18 +8,16 @@
     "start": "next start"
   },
   "dependencies": {
-    "@chakra-ui/icons": "^1.0.6",
-    "@chakra-ui/react": "^1.3.4",
-    "@emotion/react": "^11.1.5",
-    "@emotion/styled": "^11.1.5",
-    "framer-motion": "^3.10.3",
-    "i": "^0.3.6",
+    "@chakra-ui/icons": "^1.0.15",
+    "@chakra-ui/react": "^1.6.8",
+    "@emotion/react": "^11.4.1",
+    "@emotion/styled": "^11.3.0",
+    "framer-motion": "^4.1.17",
     "moment": "^2.29.1",
-    "next": "10.0.8",
-    "npm": "^7.6.3",
-    "react": "17.0.1",
-    "react-dom": "17.0.1",
-    "react-table": "^7.6.3"
+    "next": "^11.1.2",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-table": "^7.7.0"
   },
   "devDependencies": {
     "standard": "^16.0.3"

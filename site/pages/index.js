@@ -1,6 +1,6 @@
 import { Heading, Text, Flex, Box } from '@chakra-ui/react'
 import PageLayout from '../components/PageLayout'
-import { getApiSignature, writeSearchIndexFiles } from '../lib/api'
+import { getApiSignature } from '../lib/api'
 
 export default function Home ({ apiSignature, loadedIndexes, addLoadedIndex }) {
   return (
@@ -48,13 +48,6 @@ function Card (props) {
 
 export async function getStaticProps (context) {
   const apiSignature = await getApiSignature()
-  const shouldWriteIndex = process.env.SEARCH_WRITE_INDEX_FILES
-  if (shouldWriteIndex) {
-    console.log('Writing Search Index Files', { shouldWriteIndex })
-    await writeSearchIndexFiles()
-  } else {
-    console.log('Skipping Search Index Files', { shouldWriteIndex })
-  }
   return {
     props: { apiSignature }, // will be passed to the page component as props
     revalidate: 60 // in seconds

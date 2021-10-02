@@ -1,24 +1,19 @@
-import { promises as fs } from 'fs'
-import { join } from 'path'
 import { daysAgo } from './date'
-const dataDirectory = join(process.cwd(), 'data')
-// const historyFile = join(dataDirectory, 'history-daniel.json')
 
 const baseURL = 'https://scrobblecast.dl.imetrical.com/api'
 
 async function fetcher (path, qs = { }) {
   const qss = new URLSearchParams(qs).toString()
   const url = `${baseURL}/${path}?${qss}`
+  // const now = +new Date()
   // eslint-disable-next-line no-undef
   const results = await fetch(url)
   const object = await results.json()
-  console.info('fetched', url)
+  // console.info('fetched', url, +new Date() - now)
   return object
 }
 
-console.log('=-=-=-=-=-= New Cache/New Lambda? =-=-=-=-=-=')
 const cache = {
-  apiSignature: null,
   episodes: {},
   episodesByUUID: {},
   podcasts: [],
@@ -28,16 +23,13 @@ const cache = {
 }
 
 export async function getApiSignature () {
-  if (cache.apiSignature) {
-    return cache.apiSignature
-  }
-  const versions = await fetcher('version')
+  const { version } = await import('../package.json')
   const generatedAt = new Date().toISOString()
   const apiSignature = {
-    versions,
+    version,
     generatedAt
   }
-  cache.apiSignature = apiSignature
+  // console.log('apiSignature', apiSignature)
   return apiSignature
 }
 
@@ -76,8 +68,7 @@ export async function getEpisodes (days = defaultDays) {
   for (const e of episodes) {
     cache.episodesByUUID[e.uuid] = e
   }
-  console.log('|Episodes (miss)|', episodes.length)
-  console.log('|Episodes (miss/uuid)|', Object.keys(cache.episodesByUUID).length)
+  // console.log(`|Episodes (miss)| = ${episodes.length} == uuids: ${Object.keys(cache.episodesByUUID).length}`)
   return episodes
 }
 
@@ -93,8 +84,7 @@ export async function getPodcasts () {
   for (const p of podcasts) {
     cache.podcastsByUUID[p.uuid] = p
   }
-  console.log('|Podcasts (miss)|', podcasts.length)
-  console.log('|Podcasts (miss/uuid)|', Object.keys(cache.podcastsByUUID).length)
+  // console.log(`|Podcasts (miss)| = ${podcasts.length} == uuids: ${Object.keys(cache.podcastsByUUID).length}`)
   return podcasts
 }
 
@@ -108,22 +98,21 @@ export async function getBooksFeed () {
 
   // Get books data from latest `scrobble-books-data` Github Actions run
   const url = 'https://raw.githubusercontent.com/daneroo/scrobble-books-data/main/goodreads-rss.json'
-  console.log(`fetching url: ${url}`)
   // eslint-disable-next-line no-undef
   const results = await fetch(url)
   const booksFeed = await results.json()
 
-  // Move this upstream to scroble-books-data
+  // Move this upstream to scrobble-books-data
   booksFeed.items = booksFeed.items.map(b => ({ ...b, userShelves: b?.userShelves || 'read' }))
 
   cache.booksFeed = booksFeed
   for (const b of booksFeed.items) {
     cache.bookById[b.bookId] = b
   }
-  console.log('|Books (miss)|', booksFeed.items.length)
-  console.log('|Books (miss/uuid)|', Object.keys(cache.bookById).length)
+  // console.log(`|Books (miss)| = ${booksFeed.items.length} == uuids: ${Object.keys(cache.bookById).length}`)
   return booksFeed
 }
+
 export async function getBook (bookId) {
   await getBooksFeed() // // warm up the cache
   return cache.bookById[bookId]
@@ -164,54 +153,4 @@ function byUUID (ary) {
       [uuid]: item
     }
   }, {})
-}
-
-export async function writeSearchIndexFiles () {
-  // podcasts
-  const podcastsDirectory = join(dataDirectory, 'podcasts')
-  await fs.mkdir(podcastsDirectory, { recursive: true })
-  const podcasts = await getPodcasts()
-  const podcastsJSONFile = join(podcastsDirectory, 'podcasts.json')
-  await fs.writeFile(podcastsJSONFile, JSON.stringify(podcasts.map((p) => {
-    const { uuid, title } = p
-    return { uuid, title }
-  })))
-  for (const podcast of podcasts) {
-    const { uuid, title, author, description } = podcast
-    const podcastFile = join(podcastsDirectory, uuid + '.txt')
-    await fs.writeFile(podcastFile, `${title} by ${author}\n\n${description}\n`)
-  }
-
-  // episodes
-  const episodesDirectory = join(dataDirectory, 'episodes')
-  await fs.mkdir(episodesDirectory, { recursive: true })
-  const episodes = await getEpisodes()
-  for (const episode of episodes) {
-    const { uuid, title } = episode
-    const episodeFile = join(episodesDirectory, uuid + '.txt')
-    await fs.writeFile(episodeFile, `${title}\n`)
-  }
-
-  // books
-  const booksDirectory = join(dataDirectory, 'books')
-  await fs.mkdir(booksDirectory, { recursive: true })
-  const books = (await getBooksFeed()).items
-  for (const book of books) {
-    const { bookId, title, authorName, bookDescription } = book
-    const bookFile = join(booksDirectory, bookId + '.txt')
-    await fs.writeFile(bookFile, `${title} by ${authorName}\n\n${bookDescription}\n`)
-  }
-
-  // config.toml
-  const searchConfigFile = join(dataDirectory, 'config.toml')
-  await fs.writeFile(searchConfigFile, `
-[input]
-base_directory = "./"
-files = [
-${podcasts.map((p) => `{path = "podcasts/${p.uuid}.txt", url = "/podcasts/${p.uuid}", title=${JSON.stringify(p.title)}}`).join(',\n')},
-${episodes.map((e) => `{path = "episodes/${e.uuid}.txt", url = "/episodes/${e.uuid}", title=${JSON.stringify(e.title)}}`).join(',\n')},
-${books.map((b) => `{path = "books/${b.bookId}.txt", url = "/books/${b.bookId}", title=${JSON.stringify(b.title)}}`).join(',\n')}
-]
-`)
-  console.log(`Done writing indexed files - ${episodes.length} episodes / ${podcasts.length} podcasts`)
 }

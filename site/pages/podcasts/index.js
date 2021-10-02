@@ -35,7 +35,6 @@ export default function PodcastsPage ({ podcasts, apiSignature, loadedIndexes, a
 function PodcastList ({ podcasts }) {
   // make the fuse index, and memoize it
   const fuseIndex = useMemo(() => {
-    console.dir(podcasts?.[0])
     const keys = [
       'title',
       'author',

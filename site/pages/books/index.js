@@ -82,7 +82,7 @@ function BookList ({ books }) {
     () => {
       // reload the memoized index
       const fuse = new Fuse(books, { includeScore: true }, fuseIndex)
-      const maxSearchResults = 20 // this jut speed up the re-rendering of results
+      const maxSearchResults = 20 // this just speed up the re-rendering of results
       const searchFiltered = searchTerm // if there is a search term, filter the books
         ? fuse.search(searchTerm, { limit: maxSearchResults }).map(({ item }) => item) // .slice(0, 10)
         : books

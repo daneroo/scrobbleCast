@@ -3,7 +3,11 @@ import { daysAgo } from './date'
 const baseURL = 'https://scrobblecast.dl.imetrical.com/api'
 
 async function fetcher (path, qs = { }) {
-  const qss = new URLSearchParams(qs).toString()
+  //  temporary for tracing, while we understand revalidation
+  const ts = new Date().toISOString().replace(/:/g, '.')
+  const qss = new URLSearchParams({ ...qs, ts }).toString()
+  // const qss = new URLSearchParams(qs).toString()
+
   const url = `${baseURL}/${path}?${qss}`
   // const now = +new Date()
   // eslint-disable-next-line no-undef
@@ -38,7 +42,7 @@ async function getByUUID ({ uuid, type }) {
   if (cache[type][uuid]) {
     return cache[type][uuid]
   }
-  const items = await fetcher('history', { uuid, type })
+  const items = await fetcher('history', { uuid, type, origin: 'getByUUID' })
   const item = items?.[0] ?? {}
   return item
 }
@@ -54,7 +58,7 @@ export async function getPodcast (uuid) {
   return getByUUID({ uuid, type: 'podcastsByUUID' })
 }
 
-const defaultDays = 90
+const defaultDays = 14
 export async function getEpisodes (days = defaultDays) {
   if (cache.episodes.length > 0) {
     const { episodes } = cache
@@ -63,7 +67,7 @@ export async function getEpisodes (days = defaultDays) {
   }
 
   const since = daysAgo(days)
-  const episodes = await fetcher('history', { type: 'episode', user: 'daniel', since })
+  const episodes = await fetcher('history', { type: 'episode', user: 'daniel', since, origin: 'getEpisodes' })
   cache.episodes = episodes
   for (const e of episodes) {
     cache.episodesByUUID[e.uuid] = e
@@ -79,7 +83,7 @@ export async function getPodcasts () {
     return podcasts
   }
 
-  const podcasts = await fetcher('history', { type: 'podcast', user: 'daniel' })
+  const podcasts = await fetcher('history', { type: 'podcast', user: 'daniel', origin: 'getPodcasts' })
   cache.podcasts = podcasts
   for (const p of podcasts) {
     cache.podcastsByUUID[p.uuid] = p

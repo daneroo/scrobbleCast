@@ -11,9 +11,9 @@ npm i @chakra-ui/react @emotion/react @emotion/styled framer-motion
 ## TODO
 
 - [Creative Tim - Chakra Purity](https://demos.creative-tim.com/docs-purity-ui-dashboard/)]
+  - Cards for Home Page w/ counts
+  - React Table for listings:  re-use pagination, search
 - Revalidate ok with defaultDays=14
-- React Table for listings
-  - re-use pagination, search
 - Cache for api calls - refactor
 - ISR pass thru for indexed bot not generated...
 - Lighthouse - round 1 done - 68 mobile/99 desktop

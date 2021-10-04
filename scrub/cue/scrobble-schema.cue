@@ -3,8 +3,8 @@ import "time"
 // Top Level is an array of #item
 [...#item]
 
-#item: #base
-// #item: #podcast | #episode
+// #item: #base
+#item: #podcast | #episode
 
 #base: {
 	"__type":             "episode" | "podcast"
@@ -15,7 +15,7 @@ import "time"
 	url:                  #URL | null
 	title:                string
 	id?:                  int | null
-	author?:              string | null
+	author?:              string | null // only in podcast
 	description?:         string | null
 	published_at?:        #YMDHMS | #RFC3339Z // episode only
 	episodes_sort_order?: int | =~"^[0-9]+$"
@@ -34,15 +34,14 @@ import "time"
 }
 
 #podcast: #base & {
-	"__type":            "podcast"
-	"__sourceType":      "01-podcasts"
-	id?:                 int | null
-	// author:              string
-	// description:         string | null
-	// author:              string
-	// thumbnail_url?:      #URL
-	// autoSkipLast:        0
-	// episodes_sort_order: 3 //int | =~"^[0-9]+$"
+	"__type":       "podcast"
+	"__sourceType": "01-podcasts"
+	id?:             int // not null in podcasts
+	author:              string | null
+	description:         string | null
+	thumbnail_url?:      #URL
+	autoSkipLast:        0
+	episodes_sort_order: 3 //int | =~"^[0-9]+$"
 }
 
 #episode: #base & {
@@ -79,14 +78,14 @@ import "time"
 
 // N'importe quoi: ww -  /path/to/something.png
 // #URL:     =~"(http[s]?:)?//.*"
-#URL:     string
+#URL: string
 
 // #UUID: =~"^[[:xdigit]]{8}-[[:xdigit]]{4}-[[:xdigit]]{4}-[[:xdigit]]{4}-[[:xdigit]]{12}$"
 #UUID:    =~"^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$"
 #SRCTYPE: "01-podcasts" | "02-podcasts" | "03-new_releases" | "04-in_progress"
 
 // #MIME: "audio/mp3" | "audio/mpeg" | "audio/mp4"
-#MIME: 	"audio/aac" |
+#MIME: "audio/aac" |
 	"audio/mp3" |
 	"audio/mp4" |
 	"audio/mpeg" |

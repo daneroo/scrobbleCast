@@ -50,15 +50,15 @@ for jsonl in $(find data/snapshots/monthly -name "monthly*.jsonl" | sort); do
   cue vet -d "#item" scrobble-schema.cue $jsonl
 done
 
-for cue in $(find data/snapshots/monthly -name "monthly*.cue" | sort); do
+time for cue in $(find data/snapshots/monthly -name "monthly*20*.cue" | sort); do
   echo Vetting $cue
-  cue vet scrobble-schema.cue $cue
+  cue vet -c scrobble-schema.cue $cue
 done
 
 # Working incrementally
-for cue in $(find data/snapshots/monthly -name "monthly*2014*.cue" | sort); do
+time for cue in $(find data/snapshots/monthly -name "monthly*2019*.cue" | sort); do
   echo Vetting $cue
-  cue vet scrobble-schema.cue $cue
+  cue vet -c scrobble-schema.cue $cue
 done
 
 ```

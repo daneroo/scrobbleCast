@@ -2,18 +2,20 @@
 
 Start to extract all data through existing API.
 
-We also have a NDJson, or `.jsonl` archive of all items. e.g.: `data/snapshots/monthly/daniel/monthly-daniel-2021-09-01T00:00:00Z.jsonl`
+We also have a NDJson, or `.jsonl` archive of all items. e.g.:
+`data/snapshots/monthly/daniel/monthly-daniel-2021-09-01T00:00:00Z.jsonl`
 
 - Check the speed of extracting all items from the API.
   - Get digests of a type for a time range
   - Get each items for a given digest
   - Estimate, this will take 8 hours. at least! (651793 items)
     - 19 s / 416 items : 22 items/s
-    - 1239 s / 22060 items:  18 items/s
+    - 1239 s / 22060 items: 18 items/s
 - Alternative: add api route /items?type&uuid - same as snapshot!
   - Call it export
   - Model it on the /digest route (same digestQy) but
-    - modify: `const items = await orm.Item.findAll(qy).map(r => ({digest:r.digest,item:r.item}))`
+    - modify:
+      `const items = await orm.Item.findAll(qy).map(r => ({digest:r.digest,item:r.item}))`
     - or us loadQy with order:snapshot
 
 ## Scrubbing
@@ -25,6 +27,12 @@ We also have a NDJson, or `.jsonl` archive of all items. e.g.: `data/snapshots/m
 - Make sure history in non-redundant
   - We think we have a bug!
 
+## Deno land
+
+```bash
+deno run -A --unstable readjson.ts
+```
+
 ## Export to Git
 
 - Extract podcast only, turn into git history
@@ -33,7 +41,7 @@ We also have a NDJson, or `.jsonl` archive of all items. e.g.: `data/snapshots/m
 
 ## Items
 
- These include both podcasts and episodes
+These include both podcasts and episodes
 
 - All items can be fetched by individual digest.
 - We can fetch a list of digests in a time range

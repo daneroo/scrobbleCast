@@ -3,6 +3,7 @@
 const tasks = require('./lib/tasks')
 const store = require('./lib/store')
 const log = require('./lib/log')
+const nats = require('./lib/nats')
 
 // globals
 const allCredentials = require('./credentials.json')
@@ -23,6 +24,7 @@ async function main () {
     log.verbose('checkpoint', { digest: digest, scope: 'history', elapsed })
   }
   await store.db.end()
+  await nats.disconnectFromNats()
 }
 
 async function digestTimer (digester) {

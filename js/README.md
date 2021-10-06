@@ -49,6 +49,14 @@ DB_LOG=1 DB_DIALECT=postgres npm run unit
 ## TODO
 
 - Move `/js` to `/packages/scrape`
+- Dedup not filtering for user? Ahh user:=daniel fixed not committed
+  - info: Task done task=dedup, user=stephane, total=215851, duplicates=0, keepers=215851, elapsed=32
+  - info: Task done task=dedup, user=daniel, total=215851, duplicates=0, keepers=215851, elapsed=32.4
+- Both fetched from dirac (from newton), same time: ahh: duration is different, playing status toggle 0,1
+  - More than one entry per stamp???
+  - <http://dirac.imetrical.com:8000/api/digest/2677e54f4078cc814b8cacba6102d1b24794898ca11351167ea476228e29c7b1>
+  - <http://dirac.imetrical.com:8000/api/digest/d024f17af3bb428e74079269e6e2f53b10d49e90a945d6f8f451032b36b6255a>
+
 - Graceful Exit (shutdown) - for all top level scripts (dedup,sync,...)
 - Make NATS Stream for `*.digest` events
 - Logcheck - not necessary? will replace, from sync task/discovery - before and after?

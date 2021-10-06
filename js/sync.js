@@ -5,6 +5,7 @@
 // Object keys: user/type/uuid/stamp/
 
 // dependencies - core-public-internal
+const nats = require('./lib/nats')
 var log = require('./lib/log')
 var sync = require('./lib/sync')
 var store = require('./lib/store')
@@ -31,12 +32,14 @@ Promise.resolve(true)
   .then(syncAll)
   .catch(verboseErrorHandler(false))
   // this used to be a finally clause - for which there is a polyfill: https://www.promisejs.org/api/
-  .then(function () {
+  .then(async function () {
     log.debug('OK: Done, done, releasing PG connection')
-    store.db.end()
-  }, function (err) {
+    await store.db.end()
+    await nats.disconnectFromNats()
+  }, async function (err) {
     log.debug('ERR: Done, done, releasing PG connection', err)
-    store.db.end()
+    await store.db.end()
+    await nats.disconnectFromNats()
   })
 
 // ************ Utilities

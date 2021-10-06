@@ -101,7 +101,7 @@ describe('delta', function () {
     })
 
     xit('should be invariant to merge order', function () {
-      // This fails becaus merge of values is not order invariant
+      // This fails because merge of values is not order invariant
       acc.merge(second)
       acc.merge(first)
       var noclass = _.merge({}, acc.accumulators.a)

@@ -1,8 +1,6 @@
-'use strict'
-
 // Usage:
 // Accumulator = new require(...delta.js).Accumulator
-// var a = new Accuumulator()
+// var a = new Accumulator()
 // for (i in inputs) a.merge(i);
 // --> a.merged, a.changes,
 
@@ -18,7 +16,7 @@ var sinkFile = require('./sink/file')
 // * is_deleted, starred, (is_video ?) number<->boolean
 // * duration, played_up_to, playing_status null <-> number
 // Conclusion:
-// cast boolean fiels to their truthy value
+// cast boolean field to their truthy value
 // omit null values from comparison
 //   which means that we may not have a merged value for these (duration)
 function normalize (thing) {
@@ -56,7 +54,13 @@ function normalize (thing) {
       if (!isNaN(parsed)) {
         thing.size = parsed
       } else {
-        console.error('Size NaN:', thing.__stamp, thing.__sourceType, thing.size, typeof thing.size)
+        console.error(
+          'Size NaN:',
+          thing.__stamp,
+          thing.__sourceType,
+          thing.size,
+          typeof thing.size
+        )
       }
     }
   }
@@ -86,13 +90,15 @@ function compare (from, to) {
       var change = {
         key: key
       }
-      if (_.isUndefined(f)) { // new key
+      if (_.isUndefined(f)) {
+        // new key
         _.merge(change, {
           op: 'new',
           to: t
         })
         // console.log('--new key', key);
-      } else if (_.isUndefined(t)) { // deleted key
+      } else if (_.isUndefined(t)) {
+        // deleted key
         _.merge(change, {
           op: 'del',
           from: f
@@ -111,7 +117,8 @@ function compare (from, to) {
       // or maybe specific ones? (podcast_id)
       // if (change.op) {
       // if (change.op && 'chg' === change.op) { // only op:chg
-      if (change.op && change.op !== 'del') { // op in {new,chg}
+      if (change.op && change.op !== 'del') {
+        // op in {new,chg}
         changes.push(change)
       }
     })
@@ -129,7 +136,11 @@ function Accumulator () {
   this.history = {} // array of changesets
 }
 
-Accumulator.prototype.appendHistory = function (changes, __stamp, __sourceType) {
+Accumulator.prototype.appendHistory = function (
+  changes,
+  __stamp,
+  __sourceType
+) {
   if (!changes || !changes.length) {
     return
   }
@@ -141,9 +152,21 @@ Accumulator.prototype.appendHistory = function (changes, __stamp, __sourceType) 
   // could also include thumbnail_url for __type:podcast
   // var ignoredChangeKeys = ['url', 'uuid', 'title', 'published_at', 'size', 'duration', 'file_type', 'podcast_id', 'id', 'podcast_uuid', 'thumbnail_url'];
   // keep uuid!
-  var ignoredChangeKeys = ['url', 'title', 'published_at', 'size', 'duration', 'file_type', 'podcast_id', 'id', 'podcast_uuid', 'thumbnail_url']
+  var ignoredChangeKeys = [
+    'url',
+    'title',
+    'published_at',
+    'size',
+    'duration',
+    'file_type',
+    'podcast_id',
+    'id',
+    'podcast_uuid',
+    'thumbnail_url'
+  ]
 
-  changes.forEach(function (change) { // op,key,from,to
+  changes.forEach(function (change) {
+    // op,key,from,to
     if (_.contains(ignoredChangeKeys, change.key)) {
       return
     }
@@ -192,7 +215,9 @@ Accumulator.prototype.merge = function (item) {
   // old sanity check, from a previous format.
   if (item.__type === 'episode' && !to.podcast_uuid) {
     console.log('Accumulator.merge: no podcast_uuid for episode:', item)
-    throw (new Error('Accumulator.merge: no podcast_uuid for episode:' + JSON.stringify(item)))
+    throw new Error(
+      'Accumulator.merge: no podcast_uuid for episode:' + JSON.stringify(item)
+    )
   }
   // end of special fix check
 
@@ -216,7 +241,7 @@ Accumulator.prototype.merge = function (item) {
   // TODO what if stamp < __lastUpdated ??
   _.merge(this, to)
 
-  // delete and re-attach the history attribute: makes it appear at the end of the object (usualy)
+  // delete and re-attach the history attribute: makes it appear at the end of the object (usually)
   var h = this.history
   delete this.history
   this.history = h
@@ -262,7 +287,10 @@ AccumulatorByUuid.prototype.sortAndSave = function (_user, _type) {
     return [item.meta.__lastUpdated, item.uuid]
   }).reverse()
 
-  var outfile = path.join(sinkFile.dataDirname, util.format('history-%s-%s.json', _user, _type))
+  var outfile = path.join(
+    sinkFile.dataDirname,
+    util.format('history-%s-%s.json', _user, _type)
+  )
 
   sinkFile.write(outfile, sorted, {
     overwrite: true,
@@ -271,12 +299,14 @@ AccumulatorByUuid.prototype.sortAndSave = function (_user, _type) {
 }
 
 // need a new name:
-// Convienience to get AccByUuid per type (podcast/episode)
+// Convenience to get AccByUuid per type (podcast/episode)
 function AccumulatorByTypeByUuid (/* options */) {
   this.accumulatorsByType = {} // by uuid
 }
 
-AccumulatorByTypeByUuid.prototype.getAccumulatorByUuidForType = function (type) {
+AccumulatorByTypeByUuid.prototype.getAccumulatorByUuidForType = function (
+  type
+) {
   if (!this.accumulatorsByType[type]) {
     this.accumulatorsByType[type] = new AccumulatorByUuid()
   }

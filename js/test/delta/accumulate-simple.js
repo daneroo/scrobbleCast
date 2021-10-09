@@ -75,7 +75,8 @@ describe('delta', function () {
       expect(reify(acc)).to.deep.equal(expected)
     })
 
-    it.only('should pass a reality check', function () {
+    // skip until insert dedup is properly fixed
+    it('should pass a reality check - pre dedupStamp behavior fixed', function () {
       // sqlite3 scrobblecast-scratch.sqlite "select item from items where uuid='a1a9876e-5804-482c-b57a-4e694fe802d1'"
       var data = [
         { __type: 'episode', __sourceType: '03-new_releases', __user: 'daniel', __stamp: '2021-10-01T04:20:00Z', uuid: 'a1a9876e-5804-482c-b57a-4e694fe802d1', url: 'https://cbc.mc.tritondigital.com/CBC_QUIRKSAIO_P/media/quirksaio-RAopE1rb-20210930.mp3', duration: 3251, title: 'Indigenous archeology and unmarked graves, footprints of first peoples, laser cooked food, monkeys choke under pressure, vampire bats meet for a drink and spider learning', size: '52133222', starred: false, podcast_uuid: '52905800-287d-012e-0725-00163e1b201c', published_at: '2021-10-01T04:10:00Z', file_type: 'audio/mp3', playing_status: 1, played_up_to: 0, is_deleted: false },
@@ -499,22 +500,22 @@ describe('delta', function () {
         { __type: 'episode', __sourceType: '02-podcasts', __user: 'daniel', __stamp: '2021-10-06T00:20:00Z', podcast_uuid: '52905800-287d-012e-0725-00163e1b201c', uuid: 'a1a9876e-5804-482c-b57a-4e694fe802d1', starred: false, duration: 3251, url: 'https://cbc.mc.tritondigital.com/CBC_QUIRKSAIO_P/media/quirksaio-RAopE1rb-20210930.mp3', title: 'Indigenous archeology and unmarked graves, footprints of first peoples, laser cooked food, monkeys choke under pressure, vampire bats meet for a drink and spider learning', file_type: 'audio/mp3', published_at: '2021-10-01T04:10:00Z', size: 52133222, playing_status: 0, played_up_to: 0, is_deleted: false }
       ]
       // remove duplicate entries per stamp
-      console.log('===============')
-      data.forEach(function (item) {
-        console.log('-', item.__stamp)
-      })
-      console.log('===============', data.length)
+      // console.log('===============')
+      // data.forEach(function (item) {
+      //   console.log('-', item.__stamp)
+      // })
+      // console.log('===============', data.length)
 
-      const hash = data.reduce((hash, item) => {
-        hash[item.__stamp] = item
-        return hash
-      }, {})
-      Object.values(hash).forEach(function (item) {
-        console.log('+', item.__stamp)
-      })
-      console.log('===============', Object.values(hash).length)
+      // const hash = data.reduce((hash, item) => {
+      //   hash[item.__stamp] = item
+      //   return hash
+      // }, {})
+      // Object.values(hash).forEach(function (item) {
+      //   console.log('+', item.__stamp)
+      // })
+      // console.log('===============', Object.values(hash).length)
 
-      data = Object.values(hash)
+      // data = Object.values(hash)
 
       data.forEach(function (item) {
         acc.merge(item)

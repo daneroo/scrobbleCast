@@ -9,6 +9,7 @@ make build
 make start
 make logs
 make snapshot
+make archive # after snapshot
 make restore
 ```
 
@@ -48,14 +49,11 @@ DB_LOG=1 DB_DIALECT=postgres npm run unit
 
 ## TODO
 
-- Revert WAL - or make a config param - orm.js
-- Dedup not filtering for user? Ahh user:=daniel fixed not committed
-  - info: Task done task=dedup, user=stephane, total=215851, duplicates=0, keepers=215851, elapsed=32
-  - info: Task done task=dedup, user=daniel, total=215851, duplicates=0, keepers=215851, elapsed=32.4
-- Both fetched from dirac (from newton), same time: ahh: duration is different, playing status toggle 0,1
-  - More than one entry per stamp???
-  - <http://dirac.imetrical.com:8000/api/digest/2677e54f4078cc814b8cacba6102d1b24794898ca11351167ea476228e29c7b1>
-  - <http://dirac.imetrical.com:8000/api/digest/d024f17af3bb428e74079269e6e2f53b10d49e90a945d6f8f451032b36b6255a>
+- Revert WAL - or make a config param - orm.js - Went back to no WAL for dedupStamp rollout
+- dedupStamp Fixed - Document in history section
+  - `daniel  |episode|656755 -> 347926`: 52% remain
+  - `stephane|episode|301949 -> 260610`: 86% remain
+  - `podcasts unchanged`
 
 - Graceful Exit (shutdown) - for all top level scripts (dedup,sync,...)
 - Move `/js` to `/packages/scrape`
@@ -66,7 +64,7 @@ DB_LOG=1 DB_DIALECT=postgres npm run unit
   - im.scrobblecast.scrape.{task,progress,digest,sync,sync.trace,sync.error,logcheck?}
   - We might want to add `host|agentId` to subject taxonomy
 - Define Release/Tag process for docker images
-- Remove loggly, replace with:
+- Remove loggly, replace with: (write a nats.io transport?)
   - [pino](https://getpino.io/)
   - [pino-http](https://www.npmjs.com/package/pino-http)
   - [pino-pretty](https://github.com/pinojs/pino-pretty)
@@ -198,6 +196,21 @@ docker exec -it js_scrape_1 bash -c 'md5sum $(find data/snapshots -type f -not -
 docker-compose run --rm scrape bash -c 'md5sum $(find data/snapshots -type f -not -name current\*)|cut -d \  -f 1|sort|md5sum'
 ```
 
+## SQLite Snippets
+
+```bash
+sqlite3 scrobblecast.sqlite "VACUUM;"
+
+# count by user/type
+sqlite3 scrobblecast.sqlite "select __user, __type, count(*) from items group by __user, __type"
+
+# count by user/type/uuid/stamp == 1 or 2
+sqlite3 scrobblecast.sqlite "select __user, __type, uuid, __stamp, count(*) as Z from items group by __user, __type, uuid, __stamp having Z>1"
+
+# count by user/type/uuid
+sqlite3 scrobblecast.sqlite "select __user, __type, uuid, count(*) as Z from items group by __user, __type, uuid"
+```
+
 ## Postgres notes
 
 Start a container and connect to it
@@ -241,7 +254,7 @@ time docker-compose exec postgres psql -U postgres scrobblecast -q -P pager=off 
 
 ## History
 
-## Zeit/Now/Vercel
+### Zeit/Now/Vercel
 
 Before Now v2, we used to run docker containers on Zeit.
 

@@ -47,3 +47,7 @@ restore:
 	# aws s3 sync, but not from inside the container
 	npm run restore
 
+archive:
+	@echo "Archiving data/snapshots for /archive"
+	@echo tar cjvf scrobbleCast-data-snapshots-`date -u +%Y%m%d.%H%MZ`.tar.bz2 data/snapshots/monthly/
+	@echo "mv scrobbleCast-data-snapshots-... /Volumes/Space/archive/mirror/scrobbleCast/"

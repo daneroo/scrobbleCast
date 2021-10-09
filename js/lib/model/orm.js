@@ -155,8 +155,8 @@ function defineModels () {
 
     // Enable SQLite WAL https://github.com/mapbox/node-sqlite3/issues/747
     {
-      // const [results] = await sequelize.query('PRAGMA journal_mode = DELETE;') // default
-      const [results] = await sequelize.query('PRAGMA journal_mode = WAL;')
+      const [results] = await sequelize.query('PRAGMA journal_mode = DELETE;') // default
+      // const [results] = await sequelize.query('PRAGMA journal_mode = WAL;')
       log.debug('SQLite journal mode', results?.[0])
     }
   }

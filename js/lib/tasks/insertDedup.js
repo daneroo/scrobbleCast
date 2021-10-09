@@ -4,7 +4,7 @@
 
 // dependencies - core-public-internal
 const _ = require('lodash')
-const db = require('../store/db')
+const { db } = require('../store')
 const delta = require('../delta')
 const dedup = require('../dedup')
 const utils = require('../utils')
@@ -36,7 +36,7 @@ async function insertDedup (items) {
     await db.saveAll(allInserts)
   }
   if (allDuplicates.length > 0) {
-    await dedup.deleteDuplicates(allDuplicates)
+    await db.removeAllByBatch(allDuplicates)
   }
   if (allInserts.length > 0 || allDuplicates.length > 0) {
     log.verbose('insertDedup', counts)

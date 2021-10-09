@@ -48,6 +48,7 @@ exports = module.exports = {
 
   remove,
   removeAll,
+  removeAllByBatch,
 
   // Deprecated: for sync reconciliation
   getByKey
@@ -312,6 +313,15 @@ async function loadByRangeWithDeadline ({ user, order = 'dedup', pageSize = 1000
     ['0', '1'], ['1', '2'], ['2', '3'], ['3', '4'], ['4', '5'], ['5', '6'], ['6', '7'], ['7', '8'],
     ['8', '9'], ['9', 'a'], ['a', 'b'], ['b', 'c'], ['c', 'd'], ['d', 'e'], ['e', 'f'], ['f', 'g']
   ]
+
+  // 9562234f-6bdf-4b1f-973c-57ec7c7a6f9b
+  // const uuidRanges = [
+  //   ['9562234f-6bdf-4b1f-973c-57ec7c7a6f9b', '9562234f-6bdf-4b1f-973c-57ec7c7a6f9b']
+  // ]
+  // a1a9876e-5804-482c-b57a-4e694fe802d1
+  // const uuidRanges = [
+  //   ['a1a9876e-5804-482c-b57a-4e694fe802d1', 'a1a9876e-5804-482c-b57a-4e694fe802d1']
+  // ]
   for (const type of ['episode', 'podcast']) {
     for (let idx = 0; idx < uuidRanges.length; idx++) {
       const uuidRange = uuidRanges[(idx + offset) % uuidRanges.length]
@@ -322,7 +332,7 @@ async function loadByRangeWithDeadline ({ user, order = 'dedup', pageSize = 1000
       await load({ user, order, pageSize, where }, itemHandler)
 
       const elapsed = +new Date() - start
-      log.debug('loadByRange', { type, uuidPfx: uuidRange[0], timeout, elapsed })
+      // log.debug('loadByRange', { type, uuidPfx: uuidRange[0], timeout, elapsed })
 
       if (elapsed > timeout) {
         log.warn('loadByRange timed out', { timeout, elapsed })
@@ -452,6 +462,7 @@ async function history (params) {
   const histories = await orm.History.findAll(qy).map(r => r.history)
   return histories
 }
+
 // Delete by digest
 // log.warn if item not found
 // returns: The number of destroyed rows
@@ -482,6 +493,23 @@ async function removeAll (items) {
     log.warn('removeAll unexpected rowCount!=items', { rowCount: rowCount, items: items.length })
   }
   return rowCount
+}
+
+// call removeAll above, in batches of maxBatchSize
+async function removeAllByBatch (items) {
+  if (items.length === 0) {
+    return
+  }
+  // shallow copy of duplicates because batching process is destructive
+  items = items.slice()
+
+  const maxBatchSize = 1000
+
+  while (items.length > 0) {
+    // this removes maxBatchSize elements from duplicates at a time
+    const batch = items.splice(0, maxBatchSize)
+    await removeAll(batch)
+  }
 }
 
 // Deprecated, throws. Refactor out of sync...

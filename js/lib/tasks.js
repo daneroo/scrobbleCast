@@ -8,16 +8,18 @@ const log = require('./log')
 const config = require('./config')
 const nats = require('./nats')
 const utils = require('./utils')
-const dedupTask = require('./dedup').dedupTask
-const logcheckTask = require('./logcheck').logcheckTask
-const syncTask = require('./sync').sync
+const { dedupTask } = require('./dedup')
+const { dedupStampTask } = require('./dedupStamp')
+const { logcheckTask } = require('./logcheck')
+const { syncTask } = require('./sync')
 const spread = require('./tasks/spread')
-const insertDedup = require('./tasks/insertDedup').insertDedup
+const { insertDedup } = require('./tasks/insertDedup')
 
 // Exported API
 exports = module.exports = {
   logcheck,
   sync,
+  dedupStamp,
   dedup,
   scrape
 }
@@ -59,6 +61,13 @@ async function sync () {
     }
   }
   lifecycle('sync', 'done', { elapsed: elapsedSince(start) })
+}
+
+async function dedupStamp (credentials) {
+  var start = +new Date()
+  lifecycle('dedupStamp', 'start', { user: credentials.name })
+  const counts = await dedupStampTask(credentials)
+  lifecycle('dedupStamp', 'done', { user: credentials.name, ...counts, elapsed: elapsedSince(start) })
 }
 
 async function dedup (credentials) {

@@ -36,6 +36,9 @@ async function scrapeDedupDigest () {
       await tasks.scrape(credentials)
     }
     for (const credentials of allCredentials) {
+      await tasks.dedupStamp(credentials)
+    }
+    for (const credentials of allCredentials) {
       await tasks.dedup(credentials)
     }
     { // digest of items

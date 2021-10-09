@@ -11,16 +11,15 @@
 const log = require('./log')
 const utils = require('./utils')
 // -- Implementation functions
-const store = require('./store')
 const delta = require('./delta')
 const orm = require('./model/orm')
+const { db } = require('./store')
 const Op = orm.Op
 
 // Exported API
 exports = module.exports = {
   dedupTask,
-  upsertHistories,
-  deleteDuplicates
+  upsertHistories
 }
 
 async function dedupTask (credentials) {
@@ -85,17 +84,18 @@ async function dedupTask (credentials) {
   }
 
   try {
-    await store.db.loadByRangeWithDeadline({ user }, itemHandler)
+    await db.loadByRangeWithDeadline({ user, timeout: 1800000 }, itemHandler)
 
     // last flush of Accumulator
-    historiesToUpsert.push(historyForSingleUuid)
-    // last flush of historyBatch
-    const batchCounts = await batchUpsertHistory(historiesToUpsert, stamp)
-    counts.insertH += batchCounts.insert
-    counts.updateH += batchCounts.update
-    historiesToUpsert.length = 0 // empty
-
-    await deleteDuplicates(duplicates)
+    if (historyForSingleUuid !== null) {
+      historiesToUpsert.push(historyForSingleUuid)
+      // last flush of historyBatch
+      const batchCounts = await batchUpsertHistory(historiesToUpsert, stamp)
+      counts.insertH += batchCounts.insert
+      counts.updateH += batchCounts.update
+      historiesToUpsert.length = 0 // empty
+    }
+    await db.removeAllByBatch(duplicates)
 
     return counts
   } catch (error) { // TODO: might remove this altogether
@@ -191,28 +191,4 @@ async function upsertHistories (histories) {
     log.error('history::bulkCreate', error)
   }
   return counts
-}
-
-// TODO: move this into db.removeAll, does batch logic
-async function deleteDuplicates (duplicates) {
-  if (duplicates.length === 0) {
-    return
-  }
-  // shallow copy of duplicates because batching process is destructive
-  duplicates = duplicates.slice()
-
-  const maxBatchSize = 1000
-  const start = +new Date()
-  log.verbose('deleting %d duplicates', duplicates.length)
-
-  let soFar = 0
-  while (duplicates.length > 0) {
-    // this removes maxBatchsize elements from duplicates
-    const batch = duplicates.splice(0, maxBatchSize)
-    const actuallyRemoved = await store.db.removeAll(batch)
-    soFar += actuallyRemoved
-    const elapsed = (+new Date() - start) / 1000
-    const rate = (soFar / elapsed).toFixed(0) + 'r/s'
-    log.verbose(' .. deleted duplicates', { deleted: soFar, remaining: duplicates.length, elapsed: elapsed, rate: rate })
-  }
 }

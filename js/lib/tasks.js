@@ -11,7 +11,7 @@ const utils = require('./utils')
 const { dedupTask } = require('./dedup')
 const { dedupStampTask } = require('./dedupStamp')
 const { logcheckTask } = require('./logcheck')
-const { syncTask } = require('./sync')
+const { sync: syncTask } = require('./sync')
 const spread = require('./tasks/spread')
 const { insertDedup } = require('./tasks/insertDedup')
 

@@ -84,7 +84,7 @@ async function dedupTask (credentials) {
   }
 
   try {
-    await db.loadByRangeWithDeadline({ user, timeout: 1800000 }, itemHandler)
+    await db.loadByRangeWithDeadline({ user, timeout: 30000 }, itemHandler)
 
     // last flush of Accumulator
     if (historyForSingleUuid !== null) {

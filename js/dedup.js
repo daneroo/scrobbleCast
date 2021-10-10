@@ -12,16 +12,19 @@ main()
 async function main () {
   await store.db.init()
   for (const credentials of allCredentials) {
+    await tasks.dedupStamp(credentials)
     await tasks.dedup(credentials)
   }
 
   {
     const { digest, elapsed } = await digestTimer(store.db.digestOfDigests)
-    log.verbose('checkpoint', { digest: digest, scope: 'item', elapsed })
+    log.info('checkpoint', { digest: digest, scope: 'item', elapsed })
   }
   {
-    const { digest, elapsed } = await digestTimer(store.db.digestOfDigestsHistory)
-    log.verbose('checkpoint', { digest: digest, scope: 'history', elapsed })
+    const { digest, elapsed } = await digestTimer(
+      store.db.digestOfDigestsHistory
+    )
+    log.info('checkpoint', { digest: digest, scope: 'history', elapsed })
   }
   await store.db.end()
   await nats.disconnectFromNats()

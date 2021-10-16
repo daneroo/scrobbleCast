@@ -16,7 +16,17 @@ We also have a NDJson, or `.jsonl` archive of all items. e.g.:
   - Model it on the /digest route (same digestQy) but
     - modify:
       `const items = await orm.Item.findAll(qy).map(r => ({digest:r.digest,item:r.item}))`
-    - or us loadQy with order:snapshot
+    - or use loadQy with order:snapshot
+
+## TODO
+
+- validate: make single stream, use AJV's parser
+  - anotate the source from ? jsonl/api
+- extend classify to count by user/sourceType/values for fields, or value types
+- make sources async iterators: (current `.jsonl`)
+  - read http/api (history/items)
+  - read sqlite:<https://deno.land/x/sqlite@v3.1.1>
+- `cue/scrobble-schema.cue`: not done for episodes
 
 ## Scrubbing
 
@@ -27,14 +37,14 @@ We also have a NDJson, or `.jsonl` archive of all items. e.g.:
 - Make sure history in non-redundant
   - We think we have a bug!
 
-## TODO
+## Cue lang
 
-- <https://deno.land/x/sqlite@v3.1.1>
+- See [`./cue/README.md`](./cue/README.md)
 
 ## Deno land
 
 ```bash
-deno run -A --unstable readjson.ts
+deno run -A --unstable validate.ts
 ```
 
 ## Export to Git

@@ -12,7 +12,7 @@ npm i @chakra-ui/react @emotion/react @emotion/styled framer-motion
 
 - [Creative Tim - Chakra Purity](https://demos.creative-tim.com/docs-purity-ui-dashboard/)]
   - Cards for Home Page w/ counts
-  - React Table for listings:  re-use pagination, search
+  - React Table for listings: re-use pagination, search
 - Revalidate ok with defaultDays=14
 - Cache for api calls - refactor
 - ISR pass thru for indexed bot not generated...
@@ -36,7 +36,9 @@ npm i @chakra-ui/react @emotion/react @emotion/styled framer-motion
 - add links (Header)
 - joining to podcast from episode
 - vega-lite (d3) for viz
-- vercel  for deployment
+- vercel for deployment
+  - Gitlab example: <https://github.com/vercel/vercel/discussions/4853>
+  - also deployed iris-documentation-template-mdx this way
 - netlify for deployment
 
 ## Publish to Vercel
@@ -71,6 +73,7 @@ Stork performance:
 - 180d: ~7k entries - 69s - 5MB
 
 <!-- TODO: refine for Fuse/Lunr -->
+
 To create the index, we run a build with `SEARCH_WRITE_INDEX_FILES=true` which:
 
 - overwrites files in `./data`
@@ -96,8 +99,8 @@ Index built, 25,957,020 bytes written to scrobblecast.st.
   0.761s to write file
   2890.800s total
 2890.110s
-$ du -sm data/scrobblecast.st 
+$ du -sm data/scrobblecast.st
 26  data/scrobblecast.st
-$ wc -l data/config.toml 
+$ wc -l data/config.toml
    73161 data/config.toml
 ```

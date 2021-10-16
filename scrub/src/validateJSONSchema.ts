@@ -174,23 +174,3 @@ export function validateJSONSchema(validatorFunction: any, data: any): void {
     console.log(validatorFunction.errors);
   }
 }
-
-const ex1 = {
-  "__type": "episode",
-  "__sourceType": "04-in_progress",
-  "__user": "daniel",
-  "__stamp": "2021-10-01T00:00:00Z",
-  "uuid": "708a7990-1c24-4167-8118-e6e4c4500280",
-  "url":
-    "https://sphinx.acast.com/intelligencesquared/thesundaydebate-thewestshouldcuttieswithsaudiarabia/media.mp3",
-  "duration": 3850,
-  "title": "The Sunday Debate: The West Should Cut Ties with Saudi Arabia",
-  "size": "87774831",
-  "starred": false,
-  "podcast_uuid": "5bbc3e50-026e-0131-c9c5-723c91aeae46",
-  "published_at": "2021-08-29T03:00:00Z",
-  "file_type": "audio/mp3",
-  "playing_status": 2,
-  "played_up_to": 874,
-  "is_deleted": false,
-};

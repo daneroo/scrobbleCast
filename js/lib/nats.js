@@ -2,7 +2,7 @@
 
 // dependencies - core-public-internal
 const { connect, JSONCodec } = require('nats')
-const { ulid } = require('ulid')
+// const { ulid } = require('ulid')
 const config = require('./config')
 const log = require('./log')
 
@@ -20,11 +20,15 @@ async function publish (subject, payload = {}) {
   }
   // log.debug(`>> |${subject}|`, JSON.stringify(payload))
   const jc = JSONCodec() // can this object be shared? - recreate every time for now
-  nc.publish(`im.scrobblecast.scrape.${subject}`, jc.encode({
-    id: ulid(),
-    host: config.hostname,
-    ...payload
-  }))
+  nc.publish(
+    `im.scrobblecast.scrape.${subject}`,
+    jc.encode({
+      // id: ulid(),
+      stamp: new Date().toISOString(),
+      host: config.hostname,
+      ...payload
+    })
+  )
 }
 
 const connectionOptions = {
@@ -49,7 +53,8 @@ async function connectToNats () {
   }
   try {
     const nc = await ncPromise
-    if (wasNotConnected) { // just log thi once
+    if (wasNotConnected) {
+      // just log thi once
       log.info(`Connected to nats: ${nc.getServer()}`)
     }
   } catch (err) {

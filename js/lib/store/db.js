@@ -30,8 +30,8 @@ exports = module.exports = {
 
   // load: (opts, handler) => {} // foreach item, cb(item);
   fieldOrders: {
-    dedup: 'dedup', // default
-    snapshot: 'snapshot'
+    dedup: ['__user', '__type', 'uuid', '__stamp', '__sourceType', 'digest'], // dedup order
+    snapshot: ['__user', '__stamp', '__type', 'uuid', '__sourceType', 'digest'] // snapshot,file order
   },
   loadQy,
   load,
@@ -44,6 +44,7 @@ exports = module.exports = {
   digestOfDigests,
   digestOfDigestsHistory,
 
+  items,
   history,
 
   remove,
@@ -263,15 +264,18 @@ async function saveAll (items) {
 }
 
 // order must be one of dedup, or snapshot
-function loadQy ({ user, order = 'dedup' }) {
+const dedupOrderJStr = JSON.stringify(exports.fieldOrders.dedup)
+const snapshotOrderJStr = JSON.stringify(exports.fieldOrders.snapshot)
+function validFieldOrder (order) {
+  const orderJStr = JSON.stringify(order)
+  return orderJStr === dedupOrderJStr || orderJStr === snapshotOrderJStr
+}
+
+function loadQy ({ user, order = exports.fieldOrders.dedup }) {
   if (!user) {
     throw new Error('db:loadQy missing required user')
   }
-  const fieldOrders = {
-    dedup: ['__user', '__type', 'uuid', '__stamp', '__sourceType', 'digest'], // dedup order
-    snapshot: ['__user', '__stamp', '__type', 'uuid', '__sourceType', 'digest'] // snapshot,file order
-  }
-  if (!order || !exports.fieldOrders[order] || !fieldOrders[order]) {
+  if (!validFieldOrder(order)) {
     throw new Error('db:loadQy unknown field order error: ' + order)
   }
 
@@ -280,8 +284,7 @@ function loadQy ({ user, order = 'dedup' }) {
     where: {
       __user: user
     },
-    order: fieldOrders[order]
-    // order: ['__user', '__type', 'uuid', '__stamp', '__sourceType', 'digest'] // dedup load order
+    order
   }
 }
 
@@ -292,7 +295,7 @@ function loadQy ({ user, order = 'dedup' }) {
 // -No longer returns anything, accumulate your values in the itemHandler
 // -itemHandler should be an async/promise function (it's resolved return value is ignored)
 async function load (
-  { user, order = 'dedup', pageSize = 10000, where = {} },
+  { user, order = exports.fieldOrders.dedup, pageSize = 10000, where = {} },
   itemHandler
 ) {
   const noop = async () => true // default handler (async)
@@ -301,7 +304,7 @@ async function load (
   if (!user) {
     throw new Error('db:load missing required user property')
   }
-  if (!order || !exports.fieldOrders[order]) {
+  if (!validFieldOrder(order)) {
     throw new Error('db:load unknown field order error: ' + order)
   }
 
@@ -318,7 +321,7 @@ async function load (
 async function loadByRangeWithDeadline (
   {
     user,
-    order = 'dedup',
+    order = exports.fieldOrders.dedup,
     pageSize = 10000,
     where: ignoredWhere = {},
     timeout = 30000
@@ -464,6 +467,53 @@ async function digestOfDigestsHistory () {
   }
   const itemDigester = item => item.digest
   return digester(orm.History, qy, itemDigester, pageSize)
+}
+
+// returns items in snapshot order
+// you need to specify the user and type
+// you should limit the number of items returned by
+// specifying a date range or a uuid
+function itemQy ({
+  user,
+  type,
+  uuid,
+  since = '1970-01-01T00:00:00Z',
+  before = '2040-01-01T00:00:00Z'
+} = {}) {
+  if (!user) {
+    throw new Error('db:itemQy missing required user')
+  }
+  if (!type) {
+    throw new Error('db:itemQy missing required type')
+  }
+  // TODO(daneroo) validate max date range || uuid ?
+
+  const qy = {
+    attributes: ['item', '__stamp'],
+    where: {
+      __stamp: {
+        [Op.gte]: since, // >= since (inclusive)
+        [Op.lt]: before // < before (strict)
+      }
+    },
+    order: exports.fieldOrders.snapshot
+  }
+  if (user) {
+    qy.where.__user = user
+  }
+  if (type) {
+    qy.where.__type = type
+  }
+  if (uuid) {
+    qy.where.uuid = uuid
+  }
+  return qy
+}
+
+async function items (params) {
+  const qy = itemQy(params)
+  const items = await orm.Item.findAll(qy).map(r => r.item)
+  return items
 }
 
 function historyQy ({

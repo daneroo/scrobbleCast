@@ -49,14 +49,14 @@ DB_LOG=1 DB_DIALECT=postgres npm run unit
 
 ## TODO
 
-- add `/api/export` route to mimic snapshot
+- add `/api/items` route to mimic snapshot, similar to history
 - Revert WAL - or make a config param - orm.js - Went back to no WAL for dedupStamp rollout
 - Graceful Exit (shutdown) - for all top level scripts (dedup,sync,...)
 - Move `/js` to `/packages/scrape`
 - Make NATS Stream for `*.digest` events
 - Logcheck - not necessary? will replace, from sync task/discovery - before and after?
 - NATS `*.digest` event has no stamp@10minutes?
-- Declare nats schema (id:ulid,host)
+- Declare nats schema (stamp,host) || removed ulid
   - im.scrobblecast.scrape.{task,progress,digest,sync,sync.trace,sync.error,logcheck?}
   - We might want to add `host|agentId` to subject taxonomy
 - Define Release/Tag process for docker images

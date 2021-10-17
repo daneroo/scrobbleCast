@@ -49,12 +49,8 @@ DB_LOG=1 DB_DIALECT=postgres npm run unit
 
 ## TODO
 
+- add `/api/export` route to mimic snapshot
 - Revert WAL - or make a config param - orm.js - Went back to no WAL for dedupStamp rollout
-- dedupStamp Fixed - Document in history section
-  - `daniel  |episode|656755 -> 347926`: 52% remain
-  - `stephane|episode|301949 -> 260610`: 86% remain
-  - `podcasts unchanged`
-
 - Graceful Exit (shutdown) - for all top level scripts (dedup,sync,...)
 - Move `/js` to `/packages/scrape`
 - Make NATS Stream for `*.digest` events
@@ -71,8 +67,9 @@ DB_LOG=1 DB_DIALECT=postgres npm run unit
 - Update sequelize v6 (and other deps)
   - [Update to winston@3](https://github.com/winstonjs/winston/blob/HEAD/UPGRADE-3.0.md)
 - added (temporary) `./showNotes.js` script - to produce static documents for stork
+
   - added 2 methods to pocketAPIv2
-  
+
 - cleanup
   - Prune and move evernote to .
   - npm outdated
@@ -97,15 +94,18 @@ DB_LOG=1 DB_DIALECT=postgres npm run unit
 Scenario:
 
 - restore from s3:
+
   - s3://scrobblecast/snapshots/ -> file:data/snapshots/
   - file:data/snapshots/ -> store
   - dedup
 
 - scrape
+
   - scrape:(quick|shallow|deep) -> store
   - dedup
 
 - sync(peer)
+
   - Discovery (hardcoded 2 list for now)
   - sync (peer)
   - dedup
@@ -113,7 +113,7 @@ Scenario:
 - snapshot/sync to s3
   - dedup
   - store -> file:data/snapshots
-  - file:data/snapshots/ ->  s3://scrobblecast/snapshots/
+  - file:data/snapshots/ -> s3://scrobblecast/snapshots/
 
 ## S3 Bucket and policy
 
@@ -137,30 +137,20 @@ You gotta be kidding, separate statement for list, and put/get/delete
   "Statement": [
     {
       "Sid": "Stmt1469750860759",
-      "Action": [
-        "s3:ListBucket"
-      ],
+      "Action": ["s3:ListBucket"],
       "Effect": "Allow",
       "Resource": "arn:aws:s3:::scrobblecast",
       "Principal": {
-        "AWS": [
-          "arn:aws:iam::450450915582:user/scrobblecast-s3-rw"
-        ]
+        "AWS": ["arn:aws:iam::450450915582:user/scrobblecast-s3-rw"]
       }
     },
     {
       "Sid": "Stmt1469750944350",
-      "Action": [
-        "s3:DeleteObject",
-        "s3:GetObject",
-        "s3:PutObject"
-      ],
+      "Action": ["s3:DeleteObject", "s3:GetObject", "s3:PutObject"],
       "Effect": "Allow",
       "Resource": "arn:aws:s3:::scrobblecast/*",
       "Principal": {
-        "AWS": [
-          "arn:aws:iam::450450915582:user/scrobblecast-s3-rw"
-        ]
+        "AWS": ["arn:aws:iam::450450915582:user/scrobblecast-s3-rw"]
       }
     }
   ]
@@ -250,9 +240,31 @@ time docker-compose exec postgres psql -U postgres scrobblecast -q -P pager=off 
   - POST form to /users/sign_in, with authenticity_token and credentials in form  
     Note: the POST returns a 302, which rejects the request-promise,  
     whereas a faled login returns the login page content again (200)  
-    the 302 response also has a new XSRF-TOKEN cookie  
+    the 302 response also has a new XSRF-TOKEN cookie
 
 ## History
+
+### dedupStamp
+
+It was (improperly) possible to get duplicate items for same timestamp, due to flapping in the upstream APIs
+
+Because of this we added another step in cron (dedupStamp), which still cannot be avoided because scraping is done in steps [02-podcasts,03-new_releases,04-in_progress], which are inserted independently.
+
+When this code was deployed (2021-10-09) it caused a significant deduplication:
+
+- `daniel |episode|656755 -> 347926`: 52% remain
+- `stephane|episode|301949 -> 260610`: 86% remain
+- `podcasts unchanged`
+
+snapshot items before and after (only monthly):
+
+- daniel: 651793 -> 348473 53% remain
+- stephane: 307163 -> 266248 87% remain
+
+A fresh snapshot was generated on 2021-10-16 which overwrites which was
+
+- pushed to `s3://scrobblecast/snapshots`
+- archived `/archive/mirror/scrobbleCast`
 
 ### Zeit/Now/Vercel
 

@@ -30,8 +30,8 @@ exports = module.exports = {
 
   // load: (opts, handler) => {} // foreach item, cb(item);
   fieldOrders: {
-    dedup: 'dedup', // default
-    snapshot: 'snapshot'
+    dedup: ['__user', '__type', 'uuid', '__stamp', '__sourceType', 'digest'], // dedup order
+    snapshot: ['__user', '__stamp', '__type', 'uuid', '__sourceType', 'digest'] // snapshot,file order
   },
   loadQy,
   load,
@@ -44,6 +44,7 @@ exports = module.exports = {
   digestOfDigests,
   digestOfDigestsHistory,
 
+  items,
   history,
 
   remove,
@@ -52,7 +53,6 @@ exports = module.exports = {
 
   // Deprecated: for sync reconciliation
   getByKey
-
 }
 
 // expose private methods for tests
@@ -96,12 +96,17 @@ function _isErrorDuplicateDigest (error) {
   // It seems this test is suffient
   if (error.name === 'SequelizeUniqueConstraintError') {
     // Log if other assumtions are not correct (just in case)
-    if (!error.errors ||
-        !error.errors.length > 0 ||
-        error.errors[0].message !== 'digest must be unique' ||
-        error.errors[0].path !== 'digest'
+    if (
+      !error.errors ||
+      !error.errors.length > 0 ||
+      error.errors[0].message !== 'digest must be unique' ||
+      error.errors[0].path !== 'digest'
     ) {
-      log.error('_isErrorDuplicateDigest', { message: error.message, name: error.name, errors: error.errors })
+      log.error('_isErrorDuplicateDigest', {
+        message: error.message,
+        name: error.name,
+        errors: error.errors
+      })
     }
     return true
   }
@@ -197,7 +202,7 @@ async function _filterExisting (wrappedItemsWithDigests) {
 
   const existingDigests = await orm.Item.findAll({
     raw: true,
-    attibutes: ['digest'],
+    attributes: ['digest'],
     where: {
       digest: {
         [Op.in]: digests
@@ -241,7 +246,11 @@ async function saveAll (items) {
   } catch (error) {
     // rethrow unless we know it's a duplicate digest error
     if (!_isErrorDuplicateDigest(error)) {
-      log.error('saveAll:error', { message: error.message, name: error.name, errors: error.errors })
+      log.error('saveAll:error', {
+        message: error.message,
+        name: error.name,
+        errors: error.errors
+      })
       throw error
     }
     // log.debug('saveAll: At least one duplicate digest, save each item')
@@ -255,16 +264,19 @@ async function saveAll (items) {
 }
 
 // order must be one of dedup, or snapshot
-function loadQy ({ user, order = 'dedup' }) {
+const dedupOrderJStr = JSON.stringify(exports.fieldOrders.dedup)
+const snapshotOrderJStr = JSON.stringify(exports.fieldOrders.snapshot)
+function validFieldOrder (order) {
+  const orderJStr = JSON.stringify(order)
+  return orderJStr === dedupOrderJStr || orderJStr === snapshotOrderJStr
+}
+
+function loadQy ({ user, order = exports.fieldOrders.dedup }) {
   if (!user) {
-    throw (new Error('db:loadQy missing required user'))
+    throw new Error('db:loadQy missing required user')
   }
-  const fieldOrders = {
-    dedup: ['__user', '__type', 'uuid', '__stamp', '__sourceType', 'digest'], // dedup order
-    snapshot: ['__user', '__stamp', '__type', 'uuid', '__sourceType', 'digest'] // snapshot,file order
-  }
-  if (!order || !exports.fieldOrders[order] || !fieldOrders[order]) {
-    throw (new Error('db:loadQy unknown field order error: ' + order))
+  if (!validFieldOrder(order)) {
+    throw new Error('db:loadQy unknown field order error: ' + order)
   }
 
   return {
@@ -272,9 +284,7 @@ function loadQy ({ user, order = 'dedup' }) {
     where: {
       __user: user
     },
-    order: fieldOrders[order]
-    // order: ['__user', '__type', 'uuid', '__stamp', '__sourceType', 'digest'] // dedup load order
-
+    order
   }
 }
 
@@ -284,15 +294,18 @@ function loadQy ({ user, order = 'dedup' }) {
 //   snapshot: suitable for snapshot file order
 // -No longer returns anything, accumulate your values in the itemHandler
 // -itemHandler should be an async/promise function (it's resolved return value is ignored)
-async function load ({ user, order = 'dedup', pageSize = 10000, where = {} }, itemHandler) {
+async function load (
+  { user, order = exports.fieldOrders.dedup, pageSize = 10000, where = {} },
+  itemHandler
+) {
   const noop = async () => true // default handler (async)
   itemHandler = itemHandler || noop
   // opts.prefix = opts.prefix || ''
   if (!user) {
-    throw (new Error('db:load missing required user property'))
+    throw new Error('db:load missing required user property')
   }
-  if (!order || !exports.fieldOrders[order]) {
-    throw (new Error('db:load unknown field order error: ' + order))
+  if (!validFieldOrder(order)) {
+    throw new Error('db:load unknown field order error: ' + order)
   }
 
   const qy = loadQy({ user, order })
@@ -305,23 +318,38 @@ async function load ({ user, order = 'dedup', pageSize = 10000, where = {} }, it
 
 // Same as load but breaks the queries by Type/UUID ranges
 // also has a deadline/timeout
-async function loadByRangeWithDeadline ({ user, order = 'dedup', pageSize = 10000, where: ignoredWhere = {}, timeout = 30000 }, itemHandler) {
+async function loadByRangeWithDeadline (
+  {
+    user,
+    order = exports.fieldOrders.dedup,
+    pageSize = 10000,
+    where: ignoredWhere = {},
+    timeout = 30000
+  },
+  itemHandler
+) {
   const start = +new Date()
   const { between } = Op
   const offset = stampOffset(new Date().toISOString()) // [0,144)
   const uuidRanges = [
-    ['0', '1'], ['1', '2'], ['2', '3'], ['3', '4'], ['4', '5'], ['5', '6'], ['6', '7'], ['7', '8'],
-    ['8', '9'], ['9', 'a'], ['a', 'b'], ['b', 'c'], ['c', 'd'], ['d', 'e'], ['e', 'f'], ['f', 'g']
+    ['0', '1'],
+    ['1', '2'],
+    ['2', '3'],
+    ['3', '4'],
+    ['4', '5'],
+    ['5', '6'],
+    ['6', '7'],
+    ['7', '8'],
+    ['8', '9'],
+    ['9', 'a'],
+    ['a', 'b'],
+    ['b', 'c'],
+    ['c', 'd'],
+    ['d', 'e'],
+    ['e', 'f'],
+    ['f', 'g']
   ]
 
-  // 9562234f-6bdf-4b1f-973c-57ec7c7a6f9b
-  // const uuidRanges = [
-  //   ['9562234f-6bdf-4b1f-973c-57ec7c7a6f9b', '9562234f-6bdf-4b1f-973c-57ec7c7a6f9b']
-  // ]
-  // a1a9876e-5804-482c-b57a-4e694fe802d1
-  // const uuidRanges = [
-  //   ['a1a9876e-5804-482c-b57a-4e694fe802d1', 'a1a9876e-5804-482c-b57a-4e694fe802d1']
-  // ]
   for (const type of ['episode', 'podcast']) {
     for (let idx = 0; idx < uuidRanges.length; idx++) {
       const uuidRange = uuidRanges[(idx + offset) % uuidRanges.length]
@@ -359,12 +387,15 @@ function stampOffset (stamp) {
 // fetch all items with same __user,__type,uuid
 async function loadItemsForHistory (item) {
   const items = []
-  await load({
-    user: item.__user,
-    where: { __type: item.__type, uuid: item.uuid }
-  }, async function (fetched) {
-    items.push(fetched.item)
-  })
+  await load(
+    {
+      user: item.__user,
+      where: { __type: item.__type, uuid: item.uuid }
+    },
+    async function (fetched) {
+      items.push(fetched.item)
+    }
+  )
   return items
 }
 
@@ -378,7 +409,10 @@ async function getByDigest (digest) {
   return wrapped ? wrapped.item : null
 }
 
-function digestsQy ({ since = '1970-01-01T00:00:00Z', before = '2040-01-01T00:00:00Z' } = {}) {
+function digestsQy ({
+  since = '1970-01-01T00:00:00Z',
+  before = '2040-01-01T00:00:00Z'
+} = {}) {
   return {
     raw: true,
     attributes: ['digest', '__stamp'],
@@ -400,14 +434,15 @@ async function digests (syncParams = {}) {
 
 // Refactored to work with Item and History
 // itemDigester takes the "item" return from query (qy) and produces the digest string
-async function digester (Model, qy, itemDigester, pageSize = 100000) { // for Item and History
+async function digester (Model, qy, itemDigester, pageSize = 100000) {
+  // for Item and History
   const algorithm = 'sha256'
 
   const hash = crypto.createHash(algorithm)
   let isFirst = true
   async function handler (item) {
     const digest = itemDigester(item)
-    const str = ((isFirst) ? '[' : ',') + JSON.stringify(digest)
+    const str = (isFirst ? '[' : ',') + JSON.stringify(digest)
     hash.update(str)
     isFirst = false
   }
@@ -434,7 +469,60 @@ async function digestOfDigestsHistory () {
   return digester(orm.History, qy, itemDigester, pageSize)
 }
 
-function historyQy ({ user, type, uuid, since = '1970-01-01T00:00:00Z', before = '2040-01-01T00:00:00Z' } = {}) {
+// returns items in snapshot order
+// you need to specify the user and type
+// you should limit the number of items returned by
+// specifying a date range or a uuid
+function itemQy ({
+  user,
+  type,
+  uuid,
+  since = '1970-01-01T00:00:00Z',
+  before = '2040-01-01T00:00:00Z'
+} = {}) {
+  if (!user) {
+    throw new Error('db:itemQy missing required user')
+  }
+  if (!type) {
+    throw new Error('db:itemQy missing required type')
+  }
+  // TODO(daneroo) validate max date range || uuid ?
+
+  const qy = {
+    attributes: ['item', '__stamp'],
+    where: {
+      __stamp: {
+        [Op.gte]: since, // >= since (inclusive)
+        [Op.lt]: before // < before (strict)
+      }
+    },
+    order: exports.fieldOrders.snapshot
+  }
+  if (user) {
+    qy.where.__user = user
+  }
+  if (type) {
+    qy.where.__type = type
+  }
+  if (uuid) {
+    qy.where.uuid = uuid
+  }
+  return qy
+}
+
+async function items (params) {
+  const qy = itemQy(params)
+  const items = await orm.Item.findAll(qy).map(r => r.item)
+  return items
+}
+
+function historyQy ({
+  user,
+  type,
+  uuid,
+  since = '1970-01-01T00:00:00Z',
+  before = '2040-01-01T00:00:00Z'
+} = {}) {
   const qy = {
     attributes: ['history', '__lastUpdated'],
     where: {
@@ -475,7 +563,10 @@ async function remove (item) {
     }
   })
   if (rowCount !== 1) {
-    log.warn('remove unexpected rowCount!=1', { rowCount: rowCount, digest: digest })
+    log.warn('remove unexpected rowCount!=1', {
+      rowCount: rowCount,
+      digest: digest
+    })
   }
   return rowCount
 }
@@ -490,7 +581,10 @@ async function removeAll (items) {
     }
   })
   if (rowCount !== items.length) {
-    log.warn('removeAll unexpected rowCount!=items', { rowCount: rowCount, items: items.length })
+    log.warn('removeAll unexpected rowCount!=items', {
+      rowCount: rowCount,
+      items: items.length
+    })
   }
   return rowCount
 }
@@ -528,5 +622,5 @@ async function getByKey (item) {
   })
   // console.log('found', found)
   // console.log('found.item', found.item)
-  return (found) ? found.item : null
+  return found ? found.item : null
 }

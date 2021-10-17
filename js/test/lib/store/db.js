@@ -10,7 +10,9 @@ describe('store', function () {
   // this.timeout(20000)
   before(async () => {
     if (process.env.NODE_ENV !== 'test') {
-      throw new Error('Tests must be run with NODE_ENV==test to ensure data safety')
+      throw new Error(
+        'Tests must be run with NODE_ENV==test to ensure data safety'
+      )
     }
     await orm.init() // side effect creates storage directory for sqlite
   })
@@ -20,10 +22,8 @@ describe('store', function () {
   })
 
   describe('db', function () {
-    it.skip('should initialise (open connections) the store', async () => {
-    })
-    it.skip('should end (close connections) the store', async () => {
-    })
+    it.skip('should initialise (open connections) the store', async () => {})
+    it.skip('should end (close connections) the store', async () => {})
     it('should save an item', async () => {
       const item = helpers.makeItem(1)
       const ok = await db.save(item)
@@ -134,7 +134,7 @@ describe('store', function () {
     })
 
     it('should load and handle each item in the right order (snapshot|file)', async () => {
-      // create in invers order as expected to be load'ed
+      // create in inverse order as expected to be load'ed
       const items = helpers.makeItems([3, 2, 1])
       const ok = await db.saveAll(items)
       expect(ok).to.equal(true)
@@ -144,9 +144,18 @@ describe('store', function () {
 
       expect(handler.callCount, 'handler called thrice').to.equal(3)
       // ensure call order is __stamp ascending
-      expect(handler.getCall(0).args[0].item, 'handler called 1st with item 2').to.deep.equal(items[2])
-      expect(handler.getCall(1).args[0].item, 'handler called 2nd with item 1').to.deep.equal(items[1])
-      expect(handler.getCall(2).args[0].item, 'handler called 3rd with item 0').to.deep.equal(items[0])
+      expect(
+        handler.getCall(0).args[0].item,
+        'handler called 1st with item 2'
+      ).to.deep.equal(items[2])
+      expect(
+        handler.getCall(1).args[0].item,
+        'handler called 2nd with item 1'
+      ).to.deep.equal(items[1])
+      expect(
+        handler.getCall(2).args[0].item,
+        'handler called 3rd with item 0'
+      ).to.deep.equal(items[0])
     })
     it('should load and handle each item in the right order (dedup|default)', async () => {
       // create in invers order as expected to be load'ed
@@ -163,9 +172,18 @@ describe('store', function () {
 
       expect(handler.callCount, 'handler called thrice').to.equal(3)
       // ensure call order is __stamp ascending
-      expect(handler.getCall(0).args[0].item, 'handler called 1st with item 2').to.deep.equal(items[2])
-      expect(handler.getCall(1).args[0].item, 'handler called 2nd with item 0').to.deep.equal(items[0])
-      expect(handler.getCall(2).args[0].item, 'handler called 3rd with item 1').to.deep.equal(items[1])
+      expect(
+        handler.getCall(0).args[0].item,
+        'handler called 1st with item 2'
+      ).to.deep.equal(items[2])
+      expect(
+        handler.getCall(1).args[0].item,
+        'handler called 2nd with item 0'
+      ).to.deep.equal(items[0])
+      expect(
+        handler.getCall(2).args[0].item,
+        'handler called 3rd with item 1'
+      ).to.deep.equal(items[1])
     })
 
     it('should load with appropriate filter by __user', async () => {
@@ -188,7 +206,7 @@ describe('store', function () {
 
       try {
         await db.load({}, handler)
-        throw (new Error('should not reach this'))
+        throw new Error('should not reach this')
       } catch (err) {
         expect(err.message).to.equal('db:load missing required user property')
       }
@@ -258,7 +276,10 @@ describe('store', function () {
         },
         {
           name: 'since and before',
-          args: { since: '2017-06-02T00:00:00Z', before: '2017-06-04T00:00:00Z' },
+          args: {
+            since: '2017-06-02T00:00:00Z',
+            before: '2017-06-04T00:00:00Z'
+          },
           expected: [
             '2a87b34d35438cf1a0b696898f075b9cdcb156698f7edf86e337a220c92c0a22', // 2017-06-03T00:00:00Z
             '4c01804183b5f842c4b30407d2d117d1419e2a8e05ca7e986511497639f6c84a' // 2017-06-02T00:00:00Z
@@ -266,7 +287,10 @@ describe('store', function () {
         },
         {
           name: 'empty (since > before)',
-          args: { since: '2017-06-04T00:00:00Z', before: '2017-06-02T00:00:00Z' },
+          args: {
+            since: '2017-06-04T00:00:00Z',
+            before: '2017-06-02T00:00:00Z'
+          },
           expected: []
         }
       ]
@@ -283,7 +307,9 @@ describe('store', function () {
       await db.saveAll(items)
 
       const got = await db.digestOfDigests()
-      expect(got).to.equal('084bb7cb8df1c14bbb672ff64de3eb8e191468ef6db9b1ac68c577c60b01f7e4')
+      expect(got).to.equal(
+        '084bb7cb8df1c14bbb672ff64de3eb8e191468ef6db9b1ac68c577c60b01f7e4'
+      )
     })
 
     // This was to test deprecation notice of getByKey
@@ -311,11 +337,11 @@ describe('store', function () {
         const got = await db.getByKey(item)
         expect(got).to.equal(null)
       } catch (err) {
-        throw (new Error('should not reach this'))
+        throw new Error('should not reach this')
       }
     })
 
-    it('should remove an item if it exists and if it does\'nt', async () => {
+    it("should remove an item if it exists and if it does'nt", async () => {
       const items = helpers.makeItems([1, 2])
       const ok = await db.saveAll(items)
       expect(ok).to.equal(true)
@@ -388,7 +414,8 @@ describe('store', function () {
     describe('private', function () {
       it('should calculate the _digest of an item', async () => {
         const item = helpers.makeItem(0)
-        const want = '39b3d1263027fefa1b881599a099e9096a5cdab12eb156f336225de68e747f62'
+        const want =
+          '39b3d1263027fefa1b881599a099e9096a5cdab12eb156f336225de68e747f62'
         const got = db._digest(item)
         expect(got).to.equal(want)
       })

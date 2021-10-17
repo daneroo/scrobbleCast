@@ -36,7 +36,7 @@ snapshot:
 	@echo "You could:"
 	@echo "  sudo rm -rf data/snapshots/current/"
 	docker-compose run --rm scrape node snapshots.js
-	# aws s3 sync, but not from inside the container
+	# aws s3 sync, but from inside the amazon/aws-cli container
 	npm run snapshot
 
 restore:

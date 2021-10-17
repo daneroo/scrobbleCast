@@ -40,45 +40,48 @@ router.get('/version', function (req, res) {
 router.get('/status', function (req, res) {
   res.json({
     stamp: new Date().toISOString(), // for checking clock sync
-    tasks: { // active, and recently completed...
+    tasks: {
+      // active, and recently completed...
     },
     sync: {} // checkpoints for peers with stamps (+ recent if not synch'd)
   })
 })
 
 // define the digests route
-router.route('/digests')
-  .get(function (req, res) {
-    const syncParams = req.query // pass on the query params to pg.digests
-    store.db.digests(syncParams)
-      .then((rows) => {
-        res.json(rows)
+router.route('/digests').get(function (req, res) {
+  const syncParams = req.query // pass on the query params to pg.digests
+  store.db
+    .digests(syncParams)
+    .then(rows => {
+      res.json(rows)
+    })
+    .catch(err => {
+      log.info('digests error', err)
+      // TODO(daneroo): Errors: https://kostasbariotis.com/rest-api-error-handling-with-express-js/
+      res.status(500).json({
+        name: 'Error',
+        message: 'The digests could not be listed',
+        statusCode: 500,
+        errorCode: 500 // could be app specific
       })
-      .catch((err) => {
-        log.info('digests error', err)
-        // TODO(daneroo): Errors: https://kostasbariotis.com/rest-api-error-handling-with-express-js/
-        res.status(500).json({
-          name: 'Error',
-          message: 'The digests could not be listed',
-          statusCode: 500,
-          errorCode: 500 // could be app specific
-        })
-      })
-  })
+    })
+})
 // .post(function (req, res) {
 //   // This is where we add...
 // });
 
-router.route('/digest/:digest')
+router
+  .route('/digest/:digest')
   // .put(function(req, res) {
   // })
   .get(function (req, res) {
     const digest = req.params.digest
-    store.db.getByDigest(digest)
-      .then((item) => {
+    store.db
+      .getByDigest(digest)
+      .then(item => {
         res.json(item)
       })
-      .catch((err) => {
+      .catch(err => {
         log.info('getByDigest error', err)
         // TODO(daneroo): Errors: https://kostasbariotis.com/rest-api-error-handling-with-express-js/
         res.status(404).json({
@@ -90,22 +93,45 @@ router.route('/digest/:digest')
       })
   })
 
+// define the items route
+// returns items array in snapshot order
+// requires a query param of type and user
+// should also specify either a uuid, or a [since,before] range
+router.route('/items').get(function (req, res) {
+  const params = req.query // pass on the query params to store.db.items
+  store.db
+    .items(params)
+    .then(rows => {
+      res.json(rows)
+    })
+    .catch(err => {
+      log.info('items error', err)
+      res.status(500).json({
+        name: 'Error',
+        message: 'The items could not be fetched',
+        statusCode: 500,
+        errorCode: 500 // could be app specific
+      })
+    })
+})
+
 // define the histories route
-router.route('/history')
-  .get(function (req, res) {
-    const params = req.query // pass on the query params to store.db.histories
-    store.db.history(params)
-      .then((rows) => {
-        res.json(rows)
+// should have been pluralized, as we always return an array
+router.route('/history').get(function (req, res) {
+  const params = req.query // pass on the query params to store.db.history
+  store.db
+    .history(params)
+    .then(rows => {
+      res.json(rows)
+    })
+    .catch(err => {
+      log.info('history error', err)
+      // TODO(daneroo): Errors: https://kostasbariotis.com/rest-api-error-handling-with-express-js/
+      res.status(500).json({
+        name: 'Error',
+        message: 'The history could not be fetched',
+        statusCode: 500,
+        errorCode: 500 // could be app specific
       })
-      .catch((err) => {
-        log.info('history error', err)
-        // TODO(daneroo): Errors: https://kostasbariotis.com/rest-api-error-handling-with-express-js/
-        res.status(500).json({
-          name: 'Error',
-          message: 'The history could not be fetched',
-          statusCode: 500,
-          errorCode: 500 // could be app specific
-        })
-      })
-  })
+    })
+})

@@ -11,8 +11,12 @@ var sync = require('./lib/sync')
 var store = require('./lib/store')
 
 // globals
-const baseURI = (process.argv.length > 2) ? process.argv[2] : 'http://dirac.imetrical.com:8000/api'
-const since = (process.argv.length > 3) ? process.argv[3] : null
+const baseURI =
+  process.argv.length > 2
+    ? process.argv[2]
+    : 'http://dirac.imetrical.com:8000/api'
+
+const since = process.argv.length > 3 ? process.argv[3] : null
 
 // *** Adjust params as needed, default is ALL TIME
 function syncAll () {
@@ -32,15 +36,18 @@ Promise.resolve(true)
   .then(syncAll)
   .catch(verboseErrorHandler(false))
   // this used to be a finally clause - for which there is a polyfill: https://www.promisejs.org/api/
-  .then(async function () {
-    log.debug('OK: Done, done, releasing PG connection')
-    await store.db.end()
-    await nats.disconnectFromNats()
-  }, async function (err) {
-    log.debug('ERR: Done, done, releasing PG connection', err)
-    await store.db.end()
-    await nats.disconnectFromNats()
-  })
+  .then(
+    async function () {
+      log.debug('OK: Done, done, releasing PG connection')
+      await store.db.end()
+      await nats.disconnectFromNats()
+    },
+    async function (err) {
+      log.debug('ERR: Done, done, releasing PG connection', err)
+      await store.db.end()
+      await nats.disconnectFromNats()
+    }
+  )
 
 // ************ Utilities
 
@@ -49,7 +56,7 @@ function verboseErrorHandler (shouldRethrow) {
   return function errorHandler (error) {
     log.error('error', error)
     if (shouldRethrow) {
-      throw (error)
+      throw error
     }
   }
 }

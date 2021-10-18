@@ -12,11 +12,20 @@ const dataGLob = "./cue/data/snapshots/**/*.jsonl";
 const now = +new Date();
 const counts = {
   files: 0,
-  uuids: 0,
-  podcasts: 0,
-  episodes: 0,
+  items: 0,
+  podcasts: {
+    items: 0,
+    uuids: 0,
+  },
+  episodes: {
+    items: 0,
+    uuids: 0,
+  },
 };
-const uuidSet = new Set<string>();
+const uuidSets = {
+  podcasts: new Set<string>(),
+  episodes: new Set<string>(),
+};
 
 for await (const thing of fromGlob(dataGLob)) {
   counts.files++;
@@ -26,8 +35,8 @@ for await (const thing of fromGlob(dataGLob)) {
     const reader = await Deno.open(path);
     const validate = validatorForPodcast();
     for await (const podcast of getPodcasts(reader)) {
-      counts.podcasts++;
-      uuidSet.add(podcast.uuid);
+      counts.podcasts.items++;
+      uuidSets.podcasts.add(podcast.uuid);
       validateJSONSchema(validate, podcast);
     }
   }
@@ -36,8 +45,8 @@ for await (const thing of fromGlob(dataGLob)) {
     const reader = await Deno.open(path);
     const validate = validatorForEpisode();
     for await (const episode of getEpisodes(reader)) {
-      counts.episodes++;
-      uuidSet.add(episode.uuid);
+      counts.episodes.items++;
+      uuidSets.episodes.add(episode.uuid);
       // counts.uuids = uuidSet.size
       // console.log(podcast.uuid);
       validateJSONSchema(validate, episode);
@@ -45,11 +54,13 @@ for await (const thing of fromGlob(dataGLob)) {
   }
   console.log(`  .. ${name}`);
 }
-counts.uuids = uuidSet.size; // only count once!
+counts.items = counts.podcasts.items + counts.episodes.items;
+counts.podcasts.uuids = uuidSets.podcasts.size;
+counts.episodes.uuids = uuidSets.episodes.size;
 
 const elapsed = (+new Date() - now) / 1000;
-const rate = (counts.podcasts / elapsed).toFixed(0);
+const rate = (counts.items / elapsed).toFixed(0);
 console.log(
-  `Found ${counts.files} files with ${counts.podcasts} items @ ${rate}/s (${elapsed}s)`,
+  `Found ${counts.files} files with ${counts.items} items @ ${rate}/s (${elapsed}s)`,
 );
 console.log("Found", JSON.stringify(counts, null, 2));

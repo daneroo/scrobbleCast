@@ -45,6 +45,9 @@ We also have a NDJson, or `.jsonl` archive of all items. e.g.:
 
 ```bash
 deno run -A --unstable validate.ts
+deno run -A --unstable walkAndFetch.ts
+
+deno test
 ```
 
 ## Export to Git
@@ -53,7 +56,7 @@ deno run -A --unstable validate.ts
 - Then episodes
 - Then user play/start history
 
-## Items
+## Items (podcasts and episodes)
 
 These include both podcasts and episodes
 
@@ -61,13 +64,10 @@ These include both podcasts and episodes
 - We can fetch a list of digests in a time range
 
 ```bash
-curl -s 'http://dirac:8000/api/digests?since=2021-05-16&before=2021-05-17'| jq
-curl -s 'http://dirac:8000/api/digests?since=2021-05-16&before=2021-05-17'| jq '. | length'
-
-for digest in $(curl -s 'http://dirac:8000/api/digests?since=2021-05-01&before=2021-05-02'| jq -r .[]); do
-  echo fetching digest $digest
-  curl -s "http://dirac:8000/api/digest/$digest" | jq
-done
+# 1 month's podcast items≈
+curl -s 'http://dirac:8000/api/items?user=daniel&type=podcast&since=2021-05-01&before=2021-06-01'| jq
+# 1 day's episode items
+curl -s 'http://dirac:8000/api/items?user=daniel&type=episode&since=2021-05-16&before=2021-05-17'| jq '. | length'
 ```
 
 ## History

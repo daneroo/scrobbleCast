@@ -5,21 +5,14 @@ Start to extract all data through existing API.
 We also have a NDJson, or `.jsonl` archive of all items. e.g.:
 `data/snapshots/monthly/daniel/monthly-daniel-2021-09-01T00:00:00Z.jsonl`
 
-- Check the speed of extracting all items from the API.
-  - Get digests of a type for a time range
-  - Get each items for a given digest
-  - Estimate, this will take 8 hours. at least! (651793 items)
-    - 19 s / 416 items : 22 items/s
-    - 1239 s / 22060 items: 18 items/s
-- Alternative: add api route /items?type&uuid - same as snapshot!
-  - Call it export
-  - Model it on the /digest route (same digestQy) but
-    - modify:
-      `const items = await orm.Item.findAll(qy).map(r => ({digest:r.digest,item:r.item}))`
-    - or use loadQy with order:snapshot
+- from `/api/items?user=..&type=..&since=..&before=..` - in snapshot order
 
 ## TODO
 
+- addMonthsUTC is broken
+  - daniel's podcasts for [2014-11-01T00:00:00Z,2014-12-01T01:00:00Z): 70
+  - daniel's podcasts for [2014-12-01T01:00:00Z,2014-12-31T01:00:00Z): 21
+  - daniel's podcasts for [2014-12-31T01:00:00Z,2015-01-31T01:00:00Z): 37
 - validate: make single stream, use AJV's parser
   - anotate the source from ? jsonl/api
 - extend classify to count by user/sourceType/values for fields, or value types

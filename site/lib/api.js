@@ -57,7 +57,6 @@ async function getByUUID ({ uuid, type, cacheType }) {
     return cache[cacheType][uuid]
   }
   const items = await fetcher('history', { uuid, type, origin: 'getByUUID' })
-  console.log('cache miss', items)
   const item = items?.[0] ?? {}
   return item
 }
@@ -170,7 +169,6 @@ export async function getDecoratedEpisodes (days) {
 
 // playCount playedTime firstPlayed lastPlayed playedProportion
 export function playDecorate (episode) {
-  console.log('pDcrt', episode)
   const play = episode.history.played_up_to
   const playedTime = Math.max(...Object.values(play)) || 0
   const playedProportion = playedTime / episode.duration

@@ -3,20 +3,29 @@ import { Heading, Text, VStack } from '@chakra-ui/react'
 import PageLayout from '../../components/PageLayout'
 import { getBooksFeed, getBook, getApiSignature } from '../../lib/api'
 
-export default function BookPage ({ book, apiSignature, loadedIndexes, addLoadedIndex }) {
+export default function BookPage ({
+  book,
+  apiSignature,
+  loadedIndexes,
+  addLoadedIndex
+}) {
   const { title, authorName, bookDescription } = book
   return (
     <>
       <Head>
         <title>Book - {title}</title>
       </Head>
-      <PageLayout
-        {...{ apiSignature, loadedIndexes, addLoadedIndex }}
-      >
+      <PageLayout {...{ apiSignature, loadedIndexes, addLoadedIndex }}>
         <VStack as='main' my='2rem' mx={2} maxWidth='60rem'>
-          <Heading as='h1' size='xl' mb='2'>{title}</Heading>
-          <Heading as='h2' size='lg' mb='2'>by {authorName}</Heading>
-          <Text fontSize='md' mt='2'>{bookDescription}</Text>
+          <Heading as='h1' size='xl' mb='2'>
+            {title}
+          </Heading>
+          <Heading as='h2' size='lg' mb='2'>
+            by {authorName}
+          </Heading>
+          <Text fontSize='md' mt='2'>
+            {bookDescription}
+          </Text>
         </VStack>
       </PageLayout>
     </>
@@ -29,7 +38,7 @@ export async function getStaticProps ({ params }) {
   const book = await getBook(bookId)
   return {
     props: { apiSignature, book } // will be passed to the page component as props
-    // revalidate: 0,
+    // revalidate: 600, whenever we show progress...
   }
 }
 
@@ -44,6 +53,6 @@ export async function getStaticPaths () {
         }
       }
     }),
-    fallback: false
+    fallback: 'blocking' // to get new books after site publish
   }
 }

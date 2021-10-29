@@ -10,12 +10,17 @@ npm i @chakra-ui/react @emotion/react @emotion/styled framer-motion
 
 ## TODO
 
-- [Creative Tim - Chakra Purity](https://demos.creative-tim.com/docs-purity-ui-dashboard/)]
+- Fallback: http://localhost:3000/episodes/03b1aaa0-46ac-0132-caa2-5f4c86fd3263
+- Styling
+  - Tailwind css (instead of Creative Tim)
+    - [Vanilla Extract (css in TS)](https://vanilla-extract.style/)
+    - [Typed Tailwind](https://github.com/thien-do/typed.tw)
+    - [Creative Tim - Chakra Purity](https://demos.creative-tim.com/docs-purity-ui-dashboard/)]
   - Cards for Home Page w/ counts
   - React Table for listings: re-use pagination, search
 - Revalidate ok with defaultDays=14
 - Cache for api calls - refactor
-- ISR pass thru for indexed bot not generated...
+- [Streaming media](https://blog.openreplay.com/building-a-music-entertainment-application-with-reactjs-nextjs-algolia-and-firebase)
 - Lighthouse - round 1 done - 68 mobile/99 desktop
   - <https://web.dev/render-blocking-resources/?utm_source=lighthouse&utm_medium=devtools>
   - <https://javascript.info/script-async-defer>

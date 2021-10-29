@@ -1,55 +1,82 @@
 import { Heading, Text, Flex, Box } from '@chakra-ui/react'
 import PageLayout from '../components/PageLayout'
-import { getApiSignature } from '../lib/api'
+import { getApiSignature, getCounts } from '../lib/api'
+import Link from 'next/link'
 
-export default function Home ({ apiSignature, loadedIndexes, addLoadedIndex }) {
+export default function Home ({
+  apiSignature,
+  counts,
+  loadedIndexes,
+  addLoadedIndex
+}) {
+  const sections = [
+    { href: '/books', title: 'Books', subtitle: 'Read', count: counts?.books },
+    {
+      href: '/podcasts',
+      title: 'Podcasts',
+      subtitle: 'Subscribed',
+      count: counts?.podcasts
+    },
+    {
+      href: '/episodes',
+      title: 'Episodes',
+      subtitle: 'Recent',
+      count: counts?.episodes
+    }
+  ]
   return (
     <>
-      <PageLayout
-        {...{ apiSignature, loadedIndexes, addLoadedIndex }}
-      >
+      <PageLayout {...{ apiSignature, loadedIndexes, addLoadedIndex }}>
         <Heading as='h1' size='2xl' mb='2'>
           Scrobble Cast
         </Heading>
         <Text fontSize='2xl' mt='2'>
           What my eyes and ears have been up to
         </Text>
-        <Flex flexWrap='wrap' alignItems='center' justifyContent='center' maxW='800px' mt='4'>
-          <Card href='/books'>
-            <Heading as='h3' size='lg' mb='2'>Books →</Heading>
-            <Text fontSize='lg'>Recently read</Text>
-          </Card>
-          <Card href='/podcasts'>
-            <Heading as='h3' size='lg' mb='2'>Podcasts →</Heading>
-            <Text fontSize='lg'>Subscribed Podcasts</Text>
-          </Card>
-          <Card href='/episodes'>
-            <Heading as='h3' size='lg' mb='2'>Episodes →</Heading>
-            <Text fontSize='lg'>Recent Episodes</Text>
-          </Card>
+        <Flex
+          flexWrap='wrap'
+          alignItems='center'
+          justifyContent='center'
+          maxW='800px'
+          mt='4'
+        >
+          {sections.map(({ href, title, subtitle, count }) => (
+            <Card key={href} href={href}>
+              <Heading as='h3' size='lg' mb='2'>
+                {title} →
+              </Heading>
+              <Text fontSize='lg'>
+                {count} {subtitle}
+              </Text>
+            </Card>
+          ))}
         </Flex>
       </PageLayout>
     </>
   )
 }
 
-function Card (props) {
+function Card ({ href, children }) {
   return (
     <Box
-      as='a'
-      p='5' m='3'
+      p='5'
+      m='3'
       borderWidth='1px'
       rounded='lg'
       // flexBasis={['auto', '45%']}
-      {...props}
-    />
+    >
+      <Link href={href}>
+        <a>{children}</a>
+      </Link>
+    </Box>
   )
 }
 
 export async function getStaticProps (context) {
   const apiSignature = await getApiSignature()
+  const counts = await getCounts()
   return {
-    props: { apiSignature }, // will be passed to the page component as props
+    props: { apiSignature, counts }, // will be passed to the page component as props
     revalidate: 60 // in seconds
   }
 }

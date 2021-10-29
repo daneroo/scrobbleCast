@@ -1,35 +1,56 @@
 import Head from 'next/head'
 import {
-  Heading, Text, VStack,
-  Stat, StatLabel, StatNumber, StatHelpText, StatGroup
+  Heading,
+  Text,
+  VStack,
+  HStack,
+  Stat,
+  StatLabel,
+  StatNumber,
+  StatHelpText,
+  StatGroup
 } from '@chakra-ui/react'
 
 import PageLayout from '../../components/PageLayout'
 
 import { getEpisodes, getEpisode, getApiSignature } from '../../lib/api'
 
-export default function EpisodePage ({ episode, apiSignature, loadedIndexes, addLoadedIndex }) {
-  const { title, podcast_title: podcastTitle, playedProportion, duration, lastPlayed, firstPlayed } = episode
+export default function EpisodePage ({
+  episode,
+  apiSignature,
+  loadedIndexes,
+  addLoadedIndex
+}) {
+  const {
+    title,
+    podcast_title: podcastTitle,
+    playedProportion,
+    duration,
+    lastPlayed,
+    firstPlayed
+  } = episode
   return (
     <>
       <Head>
         <title>Episode - {title}</title>
       </Head>
-      <PageLayout
-        {...{ apiSignature, loadedIndexes, addLoadedIndex }}
-      >
+      <PageLayout {...{ apiSignature, loadedIndexes, addLoadedIndex }}>
         <VStack as='main' my='2rem'>
-          <Heading as='h1' size='xl' mb={2}>{title}</Heading>
+          <Heading as='h1' size='xl' mb={2}>
+            {title}
+          </Heading>
           <Text fontSize='lg'>{podcastTitle}</Text>
-          <StatGroup>
+          <StatGroup w='lg' borderWidth='1px' rounded='lg'>
             <Stat size='sm'>
               <StatLabel>Played</StatLabel>
-              <StatNumber>{(playedProportion * 100).toFixed(2)}%</StatNumber>
-              <StatHelpText>{firstPlayed} - {lastPlayed}</StatHelpText>
+              <StatNumber>{(playedProportion * 100).toFixed(0)}%</StatNumber>
+              <StatHelpText>
+                {firstPlayed} {lastPlayed ? `- ${lastPlayed}` : ''}
+              </StatHelpText>
             </Stat>
             <Stat size='sm'>
               <StatLabel>Duration</StatLabel>
-              <StatNumber>{duration}s</StatNumber>
+              <StatNumber>{(duration / 60).toFixed(0)} minutes</StatNumber>
             </Stat>
           </StatGroup>
         </VStack>
@@ -43,8 +64,8 @@ export async function getStaticProps ({ params }) {
   const apiSignature = await getApiSignature()
   const episode = await getEpisode(uuid)
   return {
-    props: { episode, apiSignature } // will be passed to the page component as props
-    // revalidate: 0,
+    props: { episode, apiSignature }, // will be passed to the page component as props
+    revalidate: 600
   }
 }
 
@@ -58,6 +79,7 @@ export async function getStaticPaths () {
         }
       }
     }),
-    fallback: false
+    // fallback: false
+    fallback: 'blocking'
   }
 }

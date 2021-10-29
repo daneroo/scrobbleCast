@@ -2,7 +2,7 @@ import { daysAgo } from './date'
 
 const baseURL = 'https://scrobblecast.dl.imetrical.com/api'
 
-async function fetcher (path, qs = { }) {
+async function fetcher (path, qs = {}) {
   //  temporary for tracing, while we understand revalidation
   const ts = new Date().toISOString().replace(/:/g, '.')
   const qss = new URLSearchParams({ ...qs, ts }).toString()
@@ -37,25 +37,44 @@ export async function getApiSignature () {
   return apiSignature
 }
 
+export async function getCounts () {
+  const booksFeed = await getBooksFeed()
+  const books = booksFeed.items.filter(b => b.userShelves === 'read').length
+  const podcasts = (await getPodcasts()).length // filter for subscribed?
+  const episodes = (await getDecoratedEpisodes()).filter(
+    episode => episode.playedTime > 0
+  ).length // already filtered for < defaultDays
+  return {
+    books,
+    podcasts,
+    episodes
+  }
+}
+
 // - try the cache, then fetch else return {}
-async function getByUUID ({ uuid, type }) {
-  if (cache[type][uuid]) {
-    return cache[type][uuid]
+async function getByUUID ({ uuid, type, cacheType }) {
+  if (cache?.[cacheType]?.[uuid]) {
+    return cache[cacheType][uuid]
   }
   const items = await fetcher('history', { uuid, type, origin: 'getByUUID' })
+  console.log('cache miss', items)
   const item = items?.[0] ?? {}
   return item
 }
 
 export async function getEpisode (uuid) {
   await getEpisodes() // warm up the cache
-  const episode = await getByUUID({ uuid, type: 'episodesByUUID' })
+  const episode = await getByUUID({
+    uuid,
+    type: 'episode',
+    cacheType: 'episodesByUUID'
+  })
   return playDecorate(episode)
 }
 
 export async function getPodcast (uuid) {
   await getPodcasts() // warm up the cache
-  return getByUUID({ uuid, type: 'podcastsByUUID' })
+  return getByUUID({ uuid, type: 'podcast', cacheType: 'podcastsByUUID' })
 }
 
 const defaultDays = 14
@@ -67,7 +86,12 @@ export async function getEpisodes (days = defaultDays) {
   }
 
   const since = daysAgo(days)
-  const episodes = await fetcher('history', { type: 'episode', user: 'daniel', since, origin: 'getEpisodes' })
+  const episodes = await fetcher('history', {
+    type: 'episode',
+    user: 'daniel',
+    since,
+    origin: 'getEpisodes'
+  })
   cache.episodes = episodes
   for (const e of episodes) {
     cache.episodesByUUID[e.uuid] = e
@@ -83,7 +107,11 @@ export async function getPodcasts () {
     return podcasts
   }
 
-  const podcasts = await fetcher('history', { type: 'podcast', user: 'daniel', origin: 'getPodcasts' })
+  const podcasts = await fetcher('history', {
+    type: 'podcast',
+    user: 'daniel',
+    origin: 'getPodcasts'
+  })
   cache.podcasts = podcasts
   for (const p of podcasts) {
     cache.podcastsByUUID[p.uuid] = p
@@ -101,13 +129,17 @@ export async function getBooksFeed () {
   }
 
   // Get books data from latest `scrobble-books-data` Github Actions run
-  const url = 'https://raw.githubusercontent.com/daneroo/scrobble-books-data/main/goodreads-rss.json'
+  const url =
+    'https://raw.githubusercontent.com/daneroo/scrobble-books-data/main/goodreads-rss.json'
   // eslint-disable-next-line no-undef
   const results = await fetch(url)
   const booksFeed = await results.json()
 
   // Move this upstream to scrobble-books-data
-  booksFeed.items = booksFeed.items.map(b => ({ ...b, userShelves: b?.userShelves || 'read' }))
+  booksFeed.items = booksFeed.items.map(b => ({
+    ...b,
+    userShelves: b?.userShelves || 'read'
+  }))
 
   cache.booksFeed = booksFeed
   for (const b of booksFeed.items) {
@@ -127,7 +159,7 @@ export async function getDecoratedEpisodes (days) {
   // first add podcast
   const podcastsByUUID = byUUID(await getPodcasts())
   const episodes = await getEpisodes(days)
-  const decorated = episodes.map((episode) => {
+  const decorated = episodes.map(episode => {
     return {
       ...playDecorate(episode),
       podcast: podcastsByUUID[episode.podcast_uuid]
@@ -138,6 +170,7 @@ export async function getDecoratedEpisodes (days) {
 
 // playCount playedTime firstPlayed lastPlayed playedProportion
 export function playDecorate (episode) {
+  console.log('pDcrt', episode)
   const play = episode.history.played_up_to
   const playedTime = Math.max(...Object.values(play)) || 0
   const playedProportion = playedTime / episode.duration

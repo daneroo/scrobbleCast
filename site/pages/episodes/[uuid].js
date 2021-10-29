@@ -40,17 +40,17 @@ export default function EpisodePage ({
             {title}
           </Heading>
           <Text fontSize='lg'>{podcastTitle}</Text>
-          <StatGroup w='lg' borderWidth='1px' rounded='lg'>
-            <Stat size='sm'>
+          <StatGroup p={2} borderWidth='1px' rounded='lg'>
+            <Stat size='md' px={3}>
               <StatLabel>Played</StatLabel>
               <StatNumber>{(playedProportion * 100).toFixed(0)}%</StatNumber>
               <StatHelpText>
                 {firstPlayed} {lastPlayed ? `- ${lastPlayed}` : ''}
               </StatHelpText>
             </Stat>
-            <Stat size='sm'>
+            <Stat size='md' px={3}>
               <StatLabel>Duration</StatLabel>
-              <StatNumber>{(duration / 60).toFixed(0)} minutes</StatNumber>
+              <StatNumber>{(duration / 60).toFixed(0)}m</StatNumber>
             </Stat>
           </StatGroup>
         </VStack>

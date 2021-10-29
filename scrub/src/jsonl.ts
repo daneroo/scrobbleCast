@@ -1,4 +1,4 @@
-import { readLines } from "https://deno.land/std@0.109.0/io/mod.ts";
+import { readLines } from "./deps.ts";
 
 // https://javascript.info/async-iterators-generators
 

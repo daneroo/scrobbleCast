@@ -9,10 +9,6 @@ We also have a NDJson, or `.jsonl` archive of all items. e.g.:
 
 ## TODO
 
-- addMonthsUTC is broken
-  - daniel's podcasts for [2014-11-01T00:00:00Z,2014-12-01T01:00:00Z): 70
-  - daniel's podcasts for [2014-12-01T01:00:00Z,2014-12-31T01:00:00Z): 21
-  - daniel's podcasts for [2014-12-31T01:00:00Z,2015-01-31T01:00:00Z): 37
 - validate: make single stream, use AJV's parser
   - anotate the source from ? jsonl/api
 - extend classify to count by user/sourceType/values for fields, or value types
@@ -40,7 +36,22 @@ We also have a NDJson, or `.jsonl` archive of all items. e.g.:
 deno run -A --unstable validate.ts
 deno run -A --unstable walkAndFetch.ts
 
-deno test
+deno test --unstable
+```
+
+### Dependency Management
+
+See [Deno: Locks and Integraity](https://deno.land/manual/linking_to_external_code/integrity_checking)
+
+Check outdated deps
+
+```bash
+## permissive
+deno run -A https://deno.land/x/udd/main.ts --dry-run src/deps.ts
+## check other deps (not in deps.ts)
+deno run -A https://deno.land/x/udd/main.ts --dry-run src/*.ts *.ts
+## strict - permissions and pinned udd version - could put udd in deps?!
+deno run --allow-net --allow-read=./  https://deno.land/x/udd@0.5.0/main.ts --dry-run src/*.ts
 ```
 
 ## Export to Git

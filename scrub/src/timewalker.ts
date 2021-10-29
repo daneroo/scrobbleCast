@@ -1,7 +1,5 @@
 // All dates expressed in UTC strings
 
-import { addDays, addMonths } from "https://cdn.skypack.dev/date-fns@2.25.0";
-
 export type Interval = {
   since: string;
   before: string;
@@ -34,13 +32,15 @@ export function startOfMonthUTC(stamp: string): string {
 
 // not UTC related but matches the names of the other functions, and does not clash with imported addDays
 export function addDaysUTC(stamp: string, days: number): string {
-  const d = Date.parse(stamp);
-  return trimMillis(addDays(d, days).toISOString());
+  const d = new Date(stamp);
+  d.setUTCDate(d.getUTCDate() + days);
+  return trimMillis(d.toISOString());
 }
 // not UTC related but matches the names of the other functions, and does not clash with imported addDays
-export function addMonthsUTC(stamp: string, days: number): string {
-  const d = Date.parse(stamp);
-  return trimMillis(addMonths(d, days).toISOString());
+export function addMonthsUTC(stamp: string, months: number): string {
+  const d = new Date(stamp);
+  d.setUTCMonth(d.getUTCMonth() + months);
+  return trimMillis(d.toISOString());
 }
 
 export function* walkDaysUTC(

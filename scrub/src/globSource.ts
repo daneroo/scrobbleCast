@@ -1,4 +1,4 @@
-import { expandGlob } from "https://deno.land/std@0.109.0/fs/mod.ts";
+import { expandGlob } from "./deps.ts";
 
 // https://javascript.info/async-iterators-generators
 

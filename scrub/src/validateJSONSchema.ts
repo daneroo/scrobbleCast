@@ -1,5 +1,5 @@
-import Ajv from "https://cdn.skypack.dev/ajv";
-import addFormats from "https://cdn.skypack.dev/ajv-formats";
+import { Ajv } from "./deps.ts";
+import { addFormats } from "./deps.ts";
 
 export const schemaPodcast = {
   type: "object",

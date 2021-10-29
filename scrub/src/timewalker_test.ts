@@ -1,7 +1,4 @@
-import { assertEquals } from "https://deno.land/std@0.111.0/testing/asserts.ts";
-
-//  for brokenness assertions
-import { startOfDay } from "https://cdn.skypack.dev/date-fns@2.25.0";
+import { assertEquals } from "./deps.ts";
 
 import {
   addDaysUTC,
@@ -57,7 +54,12 @@ Deno.test("addMonthsUTC", () => {
   );
   assertEquals(
     addMonthsUTC("2006-01-02T15:04:05.999Z", -5),
-    "2005-08-02T14:04:05Z",
+    "2005-08-02T15:04:05Z",
+  );
+  // Failing test!
+  assertEquals(
+    addMonthsUTC("2014-11-01T00:00:00Z", 1),
+    "2014-12-01T00:00:00Z",
   );
 });
 
@@ -194,25 +196,4 @@ Deno.test("walkMonthsUTC example 2 month+1s interval shifted", () => {
     since: "2021-02-01T00:00:00Z",
   }];
   assertEquals(actual, expected);
-});
-
-Deno.test({
-  name: "date-fns startOfDay is hard to use in Non UTC",
-  ignore: true, // just to prove startOfDay is hard to use in UTC when TZ is non UTC
-  fn(): void {
-    const preTZ = Deno.env.get("TZ");
-    // console.log({ preTZ });
-    Deno.env.set("TZ", "America/Montreal");
-    assertEquals(
-      startOfDay(new Date("2021-01-02T03:04:05Z")).toISOString(),
-      "2021-01-01T05:00:00.000Z",
-    );
-    if (preTZ) {
-      Deno.env.set("TZ", preTZ);
-    } else {
-      Deno.env.delete("TZ");
-    }
-    // const postTZ = Deno.env.get("TZ");
-    // console.log({ postTZ });
-  },
 });

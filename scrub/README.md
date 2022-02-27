@@ -9,8 +9,9 @@ We also have a NDJson, or `.jsonl` archive of all items. e.g.:
 
 ## TODO
 
-- validate: make single stream, use AJV's parser
-  - anotate the source from ? jsonl/api
+- compare fetched history, with merged objects : podcasts first
+- validate: make single stream, use AJV parser
+  - annotate the source from ? jsonl/api
 - extend classify to count by user/sourceType/values for fields, or value types
 - make sources async iterators: (current `.jsonl`)
   - read http/api (history/items)

@@ -14,6 +14,7 @@
 - nx (move to typescript)
 - ipfs
 - Github Actions - only need to get working-directory to work with npm cache
+- [microdiff](https://github.com/AsyncBanana/microdiff)
 
 ## Overview
 

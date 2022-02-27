@@ -7,12 +7,12 @@ services:
     build: .
     init: true # Tini forwards signals and reaps processes
     environment:
-      - HOSTALIAS  # no value inherits from ENV, which is set in Makefile
-      - NATSURL=nats://nats.dl.imetrical.com:4222
+      - HOSTALIAS # no value inherits from ENV, which is set in Makefile
+      - NATSURL=nats://dirac.ts.imetrical.com:4222
       - DB_DIALECT=sqlite
     # command: npm start
     ports:
-     - "8000:8000"
+      - "8000:8000"
 
     volumes:
       - ./credentials.json:/usr/src/app/credentials.json:ro

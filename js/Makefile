@@ -1,6 +1,6 @@
 
 
-export HOSTALIAS=$(shell hostname)
+export HOSTALIAS=$(shell hostname -s)
 
 all:
 	@echo "Make all the things: build, start, logs, snapshot, restore"
@@ -17,8 +17,11 @@ stop:
 logs:
 	docker-compose logs -f scrape
 
+nats-top:
+	nats-top -s nats.ts.imetrical.com
+
 nats:
-	nats sub -r im.scrobblecast.\>
+	nats -s nats.ts.imetrical.com sub -r im.scrobblecast.\>
 
 sync:
 	@echo "Synching peer -> DB  (can take a since date as 2nd param)"

@@ -10,7 +10,6 @@ npm i @chakra-ui/react @emotion/react @emotion/styled framer-motion
 
 ## TODO
 
-- Fallback: http://localhost:3000/episodes/03b1aaa0-46ac-0132-caa2-5f4c86fd3263
 - Styling
   - Tailwind css (instead of Creative Tim)
     - [Vanilla Extract (css in TS)](https://vanilla-extract.style/)

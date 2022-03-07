@@ -8,6 +8,9 @@ Using a `Makefile`, with targets:
 make build
 make start
 make logs
+make nats-top
+make nats
+make sync ## add options for since (arg[2])
 make snapshot
 make archive # after snapshot
 make restore
@@ -28,8 +31,21 @@ with 2 caveats
 ## Nats
 
 ```bash
-docker run -d --name nats -p 4222:4222 -p 6222:6222 -p 8222:8222 nats
-npx natsboard --nats-mon-url http://demo.nats.io:8222
+# jetstream clock test
+nats stream info clockstream
+nats stream purge clockstream
+nats stream rm clockstream
+
+nats pub test.clock --count=3600 --sleep 1s "{stamp:\"{{TimeStamp}}\"}"
+nats pub test.clock.1 --count=3600 --sleep 1s "{origin:\"1\" stamp:\"{{TimeStamp}}\"}"
+nats pub test.clock.2 --count=3600 --sleep 1s "{origin:\"2\" stamp:\"{{TimeStamp}}\"}"
+
+export NATSURL=nats://nats.ts.imetrical.com:4222
+export NATSURL=nats://localhost:4222
+node jetstream-clock.js
+
+
+
 ```
 
 ## Test

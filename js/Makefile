@@ -17,11 +17,14 @@ stop:
 logs:
 	docker-compose logs -f scrape
 
+nats:
+	nats -s nats.ts.imetrical.com sub -r im.scrobblecast.\>
+
 nats-top:
 	nats-top -s nats.ts.imetrical.com
 
-nats:
-	nats -s nats.ts.imetrical.com sub -r im.scrobblecast.\>
+natsboard:
+	npx natsboard --nats-mon-url http://nats.ts.imetrical.com:8222
 
 sync:
 	@echo "Synching peer -> DB  (can take a since date as 2nd param)"

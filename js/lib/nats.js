@@ -1,7 +1,7 @@
 // Simplest possible nats client just to publish our events
 
 // dependencies - core-public-internal
-const { connect, JSONCodec } = require('nats')
+const { connect, JSONCodec, RetentionPolicy, consumerOpts } = require('nats')
 // const { ulid } = require('ulid')
 const config = require('./config')
 const log = require('./log')
@@ -9,7 +9,9 @@ const log = require('./log')
 exports = module.exports = {
   publish,
   connectToNats,
-  disconnectFromNats
+  disconnectFromNats,
+  findOrCreateStream,
+  replayMessages
 }
 
 async function publish (subject, payload = {}) {
@@ -76,3 +78,139 @@ async function disconnectFromNats () {
   log.info('Nats connection closed')
   ncPromise = null
 }
+
+// stream stuff
+// warn if subjects do not match
+// warn if maxAge differs
+async function findOrCreateStream (
+  streamName,
+  subjects,
+  maxAge = 86400 * 1e9 // 24h  in nanoseconds
+) {
+  const nc = await connectToNats()
+  if (!nc) {
+    // log.warn('Nats connection not available, but will retry on next action')
+    return
+  } // just a resolve if we are connected
+
+  const jsm = await nc.jetstreamManager()
+
+  // 1-Find the stream
+  try {
+    const existingStream = await jsm.streams.info(streamName)
+    // log.debug('found existing stream', existingStream)
+
+    // check and warn if subjects has changed
+    if (
+      JSON.stringify(existingStream.config.subjects) !==
+      JSON.stringify(subjects)
+    ) {
+      log.warn('Existing stream: subjects does not match desired:', {
+        current: existingStream.config.subjects,
+        desired: subjects
+      })
+    }
+    // TODO(daneroo): check retention policy is set to limits
+    // check and warn if max_age has changed
+    if (existingStream.config.max_age !== maxAge) {
+      log.warn('Existing stream: max_age does not match desired:', {
+        current: existingStream.config.max_age,
+        desired: maxAge
+      })
+    }
+    return existingStream
+  } catch (err) {
+    if (err.message === 'stream not found') {
+      // 2-Create the stream
+      const newStream = await jsm.streams.add({
+        name: streamName,
+        subjects,
+        retention: RetentionPolicy.Limits,
+        max_age: maxAge
+      })
+      // log.debug('created new stream', newStream)
+      return newStream
+    } else {
+      log.error('error finding or creating stream', err)
+      throw err
+    }
+  }
+}
+
+// This returns an async iterable over JsMsgs
+// assumes that the stream state is recent enough to rely on stream.state.messages > 0
+// if no message is received in the first emptyTimeoutDeadline. it will return an empty iterable
+async function * replayMessages (stream, subject, deltaMS = 0) {
+  const emptyTimeoutDeadline = 2e3 // 2 seconds in ms
+  const nc = await connectToNats()
+  if (!nc) {
+    log.warn('Nats connection not available, but will retry on next publish')
+    return
+  } // just a resolve if we are connected
+
+  // log.debug('stream info', stream)
+  try {
+    if (stream.state.messages > 0) {
+      // create a jetstream client:
+      const js = nc.jetstream()
+
+      // create an ephemeral ordered consumer for the stream
+      const opts = consumerOpts()
+      opts.orderedConsumer()
+      opts.ackNone()
+      if (deltaMS) {
+        opts.startAtTimeDelta(deltaMS) // 10 seconds in ms
+      }
+      // opts.deliverTo(createInbox()) // not for orderedConsumer
+      // log.debug('opts', opts)
+
+      // now subscribe to a new ephemeral stream
+      const sub = await js.subscribe(subject, opts)
+
+      // Guard against the stream being empty with a timeout
+      // This will unsubscribe *IFF* the stream is empty, i.e. no first message before timeout deadline
+      // The timeout will be cancelled if the stream is not empty
+      let cancelTimeout = setTimeout(() => {
+        // log.debug('will unsubscribe, timeout expired')
+        sub.unsubscribe()
+      }, emptyTimeoutDeadline)
+
+      for await (const m of sub) {
+        // cancel the unsubscribe on timeout action if we receive a message, i.e. stream is not empty
+        if (cancelTimeout) {
+          clearTimeout(cancelTimeout)
+          cancelTimeout = null
+        }
+        yield m
+
+        // terminate the loop if this is the last item in the subscription
+        if (m.info.pending === 0) {
+          // log.debug('all messages received (pending=0)')
+          break
+        }
+      }
+      // log.debug('will sub.destroy()')
+      sub.destroy() // this deletes the ephemeral consumer
+    } else {
+      log.warn('replayMessages: No available messages', {
+        stream: stream.config.name,
+        subjects: stream.config.subjects
+      })
+    }
+  } catch (err) {
+    log.error(`replayMessages error: ${err.message}`, err)
+  }
+}
+
+// export function * walkDaysUTC (
+//   since: string,
+//   before: string
+// ): IterableIterator<Interval> {
+//   let current = startOfDayUTC(since)
+//   let next = addDaysUTC(current, 1)
+//   while (current < before && next < before) {
+//     yield { since: current, before: next }
+//     current = next
+//     next = addDaysUTC(current, 1)
+//   }
+// }

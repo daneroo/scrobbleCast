@@ -59,4 +59,4 @@ jobs:
           tag_names: true # includes refs (branch and tags)
           # tags: "latest,${{ env.STATE_RELEASE_VERSION }}"
           # disables push for local `act` run || or pull requests
-          no_push: ${{ github.event_name != 'pull_request' }}
+          # no_push: ${{ github.event_name != 'pull_request' }}

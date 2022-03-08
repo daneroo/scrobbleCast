@@ -65,21 +65,21 @@ DB_LOG=1 DB_DIALECT=postgres npm run unit
 
 ## TODO
 
-- add `/api/items` route to mimic snapshot, similar to history
-- Revert WAL - or make a config param - orm.js - Went back to no WAL for dedupStamp rollout
-- Graceful Exit (shutdown) - for all top level scripts (dedup,sync,...)
-- Move `/js` to `/packages/scrape`
-- Make NATS Stream for `*.digest` events
-- Logcheck - not necessary? will replace, from sync task/discovery - before and after?
-- NATS `*.digest` event has no stamp@10minutes?
+- add discovery through nats
+  - add sync routes aas nats responders
 - Declare nats schema (stamp,host) || removed ulid
   - im.scrobblecast.scrape.{task,progress,digest,sync,sync.trace,sync.error,logcheck?}
   - We might want to add `host|agentId` to subject taxonomy
-- Define Release/Tag process for docker images
+- add `/api/items` route to mimic snapshot, similar to history
 - Remove loggly, replace with: (write a nats.io transport?)
   - [pino](https://getpino.io/)
   - [pino-http](https://www.npmjs.com/package/pino-http)
   - [pino-pretty](https://github.com/pinojs/pino-pretty)
+- Consider lightstream (perhaps from scrub container)
+- Graceful Exit (shutdown) - for all top level scripts (dedup,sync,...)
+- Move `/js` to `/packages/scrape`
+- Logcheck - not necessary? will replace, from sync task/discovery - before and after?
+- Define Release/Tag process for docker images
 - Update sequelize v6 (and other deps)
   - [Update to winston@3](https://github.com/winstonjs/winston/blob/HEAD/UPGRADE-3.0.md)
 - added (temporary) `./showNotes.js` script - to produce static documents for stork

@@ -10,31 +10,67 @@
 
 // dependencies - core-public-internal
 const loggly = require('loggly')
+const { JSONCodec } = require('nats')
 const _ = require('lodash')
 const log = require('./log')
+const nats = require('./nats')
 const config = require('./config')
+const { stream } = require('winston')
 
 exports = module.exports = {
   // TODO(daneroo): add tests
-  getCheckpointRecords: getCheckpointRecords,
-  logcheckTask: logcheckTask,
-  detectMismatch: detectMismatch,
+  logcheckTask,
+  getCheckpointRecords,
+  getCheckpointRecordsNats,
+  detectMismatch,
   // below are Tested
-  removeNonReporting: removeNonReporting,
-  detectNonReporting: detectNonReporting,
+  removeNonReporting,
+  detectNonReporting,
   // exposed for testing
-  lastReportedDigest: lastReportedDigest,
-  lastReportedStamp: lastReportedStamp,
-  lastReportedRecord: lastReportedRecord,
-  parseCheckpointEvents: parseCheckpointEvents
+  lastReportedDigest,
+  lastReportedStamp,
+  lastReportedRecord,
+  parseCheckpointEvents
+}
 
+// TODO(daneroo) include latest stamp information
+// convenience to be run from task.
+// run the query, detection and log it!
+async function logcheckTask () {
+  try {
+    for (const [method, fetcher] of Object.entries({
+      loggly: getCheckpointRecords,
+      nats: getCheckpointRecordsNats
+    })) {
+      const checkpointRecords = await fetcher()
+
+      // {host:stamp}
+      const nonReporting = detectNonReporting(checkpointRecords, new Date())
+      for (const host in nonReporting) {
+        log.error('logcheck.noreport', {
+          host: host,
+          since: nonReporting[host]
+        })
+      }
+
+      const reportingRecords = removeNonReporting(
+        checkpointRecords,
+        nonReporting
+      )
+
+      detectMismatch(reportingRecords)
+    }
+  } catch (error) {
+    log.error('logcheck: %s', error)
+  }
 }
 
 //  return an array of {}
 async function getCheckpointRecords () {
   // The search options can be parametrized later (hours,runs...)
   var searchOptions = {
-    query: 'tag:pocketscrape AND json.message:checkpoint AND json.scope:item AND json.digest:*',
+    query:
+      'tag:pocketscrape AND json.message:checkpoint AND json.scope:item AND json.digest:*',
     from: '-24h',
     until: 'now',
     order: 'desc', // which is the default
@@ -47,28 +83,46 @@ async function getCheckpointRecords () {
   return parseCheckpointEvents(events)
 }
 
-// TODO(daneroo) include latest stamp information
-// convenience to be run from task.
-// run the query, detection and log it!
-async function logcheckTask () {
-  // return getCheckpointRecords()
-  //   .then(detectMismatch)
+// same stream is used for digests of scope item and history
+async function getCheckpointRecordsNats (scopeFilter = 'item') {
+  const records = []
+  const streamName = 'scrobblecastDigest'
+  const subjects = [
+    'im.scrobblecast.scrape.digest',
+    'im.scrobblecast.scrape.digest.>'
+  ]
+
+  const maxAge = 86400e9 // 24h in nanoseconds (stream retention)
+  const deltaMS = 12 * 3600 * 1e3 // 12h in ms
   try {
-    const checkpointRecords = await getCheckpointRecords()
-    // console.log(JSON.stringify(checkpointRecords, null, 2))
+    const stream = await nats.findOrCreateStream(streamName, subjects, maxAge)
+    const asyncMessageIterator = nats.replayMessages(
+      stream,
+      subjects[0],
+      deltaMS
+    )
+    const jc = JSONCodec()
 
-    // {host:stamp}
-    const nonReporting = detectNonReporting(checkpointRecords, new Date())
-    for (const host in nonReporting) {
-      log.error('logcheck.noreport', { host: host, since: nonReporting[host] })
+    let fetched = 0
+    for await (const m of asyncMessageIterator) {
+      fetched++
+      // log.debug('--', m.seq, m.info.pending, m.subject, jc.decode(m.data))
+      const { stamp, host, digest, scope } = jc.decode(m.data)
+      if (scope === scopeFilter) {
+        const record = { stamp, host, digest }
+        records.push(record)
+      }
     }
-
-    const reportingRecords = removeNonReporting(checkpointRecords, nonReporting)
-
-    detectMismatch(reportingRecords)
-  } catch (error) {
-    log.error('logcheck: %s', error)
+    log.verbose('logcheck.query.nats', {
+      fetched,
+      filtered: records.length,
+      total_messages: stream?.state?.messages
+    })
+  } catch (err) {
+    log.error(`nats error: ${err.message}`, err)
   }
+
+  return records
 }
 
 // Simply logs as error, which sends it back to loggly
@@ -98,7 +152,7 @@ function detectMismatch (records) {
 }
 
 function removeNonReporting (records, nonReporting) {
-  const reportingRecords = records.filter((record) => !nonReporting[record.host])
+  const reportingRecords = records.filter(record => !nonReporting[record.host])
   return reportingRecords
 }
 // return {host:stamp} that have not reported since (since - howRecent)
@@ -163,7 +217,10 @@ function parseCheckpointEvents (events) {
     const hostRE = /^host-/
     const defaultHost = 'unknown'
     // return the last matching host, with suitable default
-    const host = event.tags.reduce((host, tag) => tag.match(hostRE) ? tag.replace(hostRE, '') : host, defaultHost)
+    const host = event.tags.reduce(
+      (host, tag) => (tag.match(hostRE) ? tag.replace(hostRE, '') : host),
+      defaultHost
+    )
 
     // skip if event.event.json.digest not found
     if (event.event && event.event.json && event.event.json.digest) {
@@ -186,19 +243,18 @@ function parseCheckpointEvents (events) {
 async function queryLoggly (searchOptions) {
   return new Promise(function (resolve, reject) {
     const client = loggly.createClient(config.loggly)
-    client.search(searchOptions)
-      .run(function (err, results) {
-        if (err) {
-          // the error object doesn't work with loggly, convert to string to send
-          log.error('logcheck.query: %s', err)
-          reject(err)
-        } else {
-          log.verbose('logcheck.query', {
-            fetched: results.events.length,
-            total_events: results.total_events
-          })
-          resolve(results.events)
-        }
-      })
+    client.search(searchOptions).run(function (err, results) {
+      if (err) {
+        // the error object doesn't work with loggly, convert to string to send
+        log.error('logcheck.query: %s', err)
+        reject(err)
+      } else {
+        log.verbose('logcheck.query.loggly', {
+          fetched: results.events.length,
+          total_events: results.total_events
+        })
+        resolve(results.events)
+      }
+    })
   })
 }

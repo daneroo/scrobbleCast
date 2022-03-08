@@ -5,6 +5,7 @@ const cron = require('cron')
 const CronJob = cron.CronJob
 const log = require('./log')
 const nats = require('./nats')
+const utils = require('./utils')
 const tasks = require('./tasks')
 const store = require('./store') // just for checkpoint, and db.init
 
@@ -48,7 +49,7 @@ async function scrapeDedupDigest () {
       const { digest, elapsed } = await digestTimer(store.db.digestOfDigests)
       // checkpoint: Stash this as verbose for dev
       log.info('checkpoint', { genStamp, digest, scope: 'item', elapsed })
-      nats.publish('digest', { getStamp, digest, scope: 'item', elapsed })
+      nats.publish('digest', { genStamp, digest, scope: 'item', elapsed })
     }
     {
       // digest of histories

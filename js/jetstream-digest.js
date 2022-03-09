@@ -17,7 +17,7 @@ async function main () {
   ]
 
   const maxAge = 86400e9 // 24h in nanoseconds (stream retention)
-  const deltaMS = 3600e3 // 2h in ms
+  const deltaMS = 7200e3 // 2h in ms
 
   try {
     const stream = await nats.findOrCreateStream(streamName, subjects, maxAge)

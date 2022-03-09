@@ -5,6 +5,7 @@ const cron = require('cron')
 const CronJob = cron.CronJob
 const log = require('./log')
 const nats = require('./nats')
+const utils = require('./utils')
 const tasks = require('./tasks')
 const store = require('./store') // just for checkpoint, and db.init
 
@@ -32,6 +33,8 @@ const recurrence = {
 // then perform a checkpoint
 async function scrapeDedupDigest () {
   try {
+    // this should be th same as the generation stamp that is used in scrape task
+    const genStamp = utils.stamp('10minutes')
     for (const credentials of allCredentials) {
       await tasks.scrape(credentials)
     }
@@ -41,17 +44,21 @@ async function scrapeDedupDigest () {
     for (const credentials of allCredentials) {
       await tasks.dedup(credentials)
     }
-    { // digest of items
+    {
+      // digest of items
       const { digest, elapsed } = await digestTimer(store.db.digestOfDigests)
       // checkpoint: Stash this as verbose for dev
-      log.info('checkpoint', { digest, scope: 'item', elapsed })
-      nats.publish('digest', { digest, scope: 'item', elapsed })
+      log.info('checkpoint', { genStamp, digest, scope: 'item', elapsed })
+      nats.publish('digest', { genStamp, digest, scope: 'item', elapsed })
     }
-    { // digest of histories
-      const { digest, elapsed } = await digestTimer(store.db.digestOfDigestsHistory)
+    {
+      // digest of histories
+      const { digest, elapsed } = await digestTimer(
+        store.db.digestOfDigestsHistory
+      )
       // checkpoint: Stash this as verbose for dev
-      log.info('checkpoint', { digest, scope: 'history', elapsed })
-      nats.publish('digest', { digest, scope: 'history', elapsed })
+      log.info('checkpoint', { genStamp, digest, scope: 'history', elapsed })
+      nats.publish('digest', { genStamp, digest, scope: 'history', elapsed })
     }
   } catch (error) {
     // TODO, might want to catch before tasks.dedup is called, to make sure dedup always runs...
@@ -68,7 +75,9 @@ async function scrapeDedupDigest () {
 
 // auto-starts
 function runJob (task, when) {
-  const message = `Starting CronJob: ${task.name ? task.name : 'anonymous'} ${when}`
+  const message = `Starting CronJob: ${
+    task.name ? task.name : 'anonymous'
+  } ${when}`
   log.info(message)
 
   var job = new CronJob({

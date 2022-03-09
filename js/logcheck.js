@@ -1,11 +1,12 @@
 'use strict'
 
 // dependencies - core-public-internal
-var _ = require('lodash')
-var Table = require('cli-table')
-var colors = require('colors/safe') // don't touch String prototype
-var log = require('./lib/log')
+const _ = require('lodash')
+const Table = require('cli-table')
+const colors = require('colors/safe') // don't touch String prototype
+const log = require('./lib/log')
 var logcheck = require('./lib/logcheck')
+const nats = require('./lib/nats')
 
 const showRawRecords = false
 const justTask = false
@@ -13,34 +14,56 @@ const justTask = false
 main()
 
 async function main () {
-  log.verbose('Starting LogCheck')
   if (justTask) {
-    logcheck.logcheckTask()
+    await logcheck.logcheckTask()
   } else {
-    //
-    // Find items logged between today and yesterday.
-    //
-    try {
-      const checkpointRecords = await logcheck.getCheckpointRecords()
-      // console.log(JSON.stringify(checkpointRecords, null, 2))
+    await mainWithMethod('loggly')
+    await mainWithMethod('nats')
+  }
+  await closeGracefully('normalExit')
+}
 
-      if (showRawRecords) {
-        showRecords(checkpointRecords)
-      }
+async function mainWithMethod (method = 'loggly') {
+  log.verbose('Starting LogCheck', { method })
+  if (!['nats', 'loggly'].includes(method)) {
+    log.error('unknown method', { method })
+    return
+  }
+  //
+  // Find items logged between today and yesterday.
+  //
+  try {
+    const checkpointRecords =
+      method === 'loggly'
+        ? await logcheck.getCheckpointRecords()
+        : await logcheck.getCheckpointRecordsNats()
 
-      // {host:stamp}
-      const nonReporting = logcheck.detectNonReporting(checkpointRecords, new Date())
-      for (const host in nonReporting) {
-        log.error('logcheck.noreport', { host: host, since: nonReporting[host] })
-      }
-
-      const reportingRecords = logcheck.removeNonReporting(checkpointRecords, nonReporting)
-      logcheck.detectMismatch(reportingRecords)
-
-      aggRecords(reportingRecords)
-    } catch (error) {
-      log.error('logcheck.error', error)
+    log.debug('got checkpointRecords', checkpointRecords.length, { method })
+    if (showRawRecords) {
+      showRecords(checkpointRecords)
     }
+
+    // {host:stamp}
+    const nonReporting = logcheck.detectNonReporting(
+      checkpointRecords,
+      new Date()
+    )
+    for (const host in nonReporting) {
+      log.error('logcheck.noreport', {
+        host: host,
+        since: nonReporting[host]
+      })
+    }
+
+    const reportingRecords = logcheck.removeNonReporting(
+      checkpointRecords,
+      nonReporting
+    )
+    logcheck.detectMismatch(reportingRecords)
+
+    aggRecords(reportingRecords)
+  } catch (error) {
+    log.error('logcheck.error', error)
   }
 }
 
@@ -50,16 +73,22 @@ async function main () {
 function aggRecords (records) {
   const hosts = distinct(records, 'host') // these are sorted
   const NOVALUE = '-no value-'
-  function emptyHostMap () { // function bound to hosts, which is an array
-    return _.reduce(hosts, function (result, value /* , key */) {
-      result[value] = NOVALUE
-      return result
-    }, {})
+  function emptyHostMap () {
+    // function bound to hosts, which is an array
+    return _.reduce(
+      hosts,
+      function (result, value /* , key */) {
+        result[value] = NOVALUE
+        return result
+      },
+      {}
+    )
   }
 
   // map [{stamp, host, digest}] - array of obj
   // to [[ stamp, host1-digest,.. hostn-digest]] - array of arrays
-  function makeTableStampByHost () { // function is bound to records
+  function makeTableStampByHost () {
+    // function is bound to records
     var digestbyStampByHost = {}
     _(records).each(function (r) {
       // stamp is rounded to 10min so we can match entries.
@@ -78,13 +107,18 @@ function aggRecords (records) {
     // [stamp, digestOfHost1, digestOfHost2, digestOfHost3,...]
     var rows = []
     // keep the table in reverse chronological order
-    _.keys(digestbyStampByHost).sort().reverse().forEach(function (stamp) {
-      const row = [stamp]
-      _.keys(digestbyStampByHost[stamp]).sort().forEach(function (host) {
-        row.push(digestbyStampByHost[stamp][host])
+    _.keys(digestbyStampByHost)
+      .sort()
+      .reverse()
+      .forEach(function (stamp) {
+        const row = [stamp]
+        _.keys(digestbyStampByHost[stamp])
+          .sort()
+          .forEach(function (host) {
+            row.push(digestbyStampByHost[stamp][host])
+          })
+        rows.push(row)
       })
-      rows.push(row)
-    })
     return rows
   }
 
@@ -98,7 +132,8 @@ function aggRecords (records) {
   rows = rows.map(row => {
     // adjust the output each row in stamp, digest,digest,..
     return row.map((v, idx) => {
-      if (idx === 0) { // this is the stamp
+      if (idx === 0) {
+        // this is the stamp
         return shortDate(v)
       }
       return v.substr(0, 7) // shortDigest a la github
@@ -107,7 +142,7 @@ function aggRecords (records) {
 
   // keep only until first match
   var foundIdentical = false
-  rows = rows.filter((row) => {
+  rows = rows.filter(row => {
     // is all digests's are equal (1 distinct vale)
     if (!foundIdentical && _.uniq(row.slice(1)).length === 1) {
       foundIdentical = true
@@ -148,9 +183,11 @@ function showRecords (records) {
 
   const ellipsis = false
   const howMany = 3
-  if (ellipsis && records.length > (howMany * 2)) {
+  if (ellipsis && records.length > howMany * 2) {
     var dotdotdot = blankedObject(records[0], '.')
-    records = records.slice(0, howMany).concat(dotdotdot, records.slice(-howMany))
+    records = records
+      .slice(0, howMany)
+      .concat(dotdotdot, records.slice(-howMany))
   }
 
   var table = newTable(['stamp', 'host', 'digest'])
@@ -164,10 +201,14 @@ function showRecords (records) {
 // Utility to create an object with same keys, but default values
 function blankedObject (obj, defaultValue) {
   defaultValue = defaultValue === undefined ? '' : defaultValue
-  return _.reduce(obj, function (result, value, key) {
-    result[key] = defaultValue
-    return result
-  }, {})
+  return _.reduce(
+    obj,
+    function (result, value, key) {
+      result[key] = defaultValue
+      return result
+    },
+    {}
+  )
 }
 
 // Utility to create our formatted table
@@ -184,3 +225,14 @@ function newTable (head) {
   })
   return table
 }
+
+// Graceful shutdown
+// see https://snyk.io/blog/10-best-practices-to-containerize-nodejs-web-applications-with-docker/
+async function closeGracefully (signal) {
+  log.info(`Received signal to terminate: ${signal}`)
+
+  await Promise.all([nats.disconnectFromNats()])
+  process.exit()
+}
+process.on('SIGINT', closeGracefully)
+process.on('SIGTERM', closeGracefully)

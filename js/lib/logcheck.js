@@ -15,7 +15,6 @@ const _ = require('lodash')
 const log = require('./log')
 const nats = require('./nats')
 const config = require('./config')
-const { stream } = require('winston')
 
 exports = module.exports = {
   // TODO(daneroo): add tests
@@ -42,6 +41,7 @@ async function logcheckTask () {
       loggly: getCheckpointRecords,
       nats: getCheckpointRecordsNats
     })) {
+      log.info(`logcheck.task.${method}`)
       const checkpointRecords = await fetcher()
 
       // {host:stamp}

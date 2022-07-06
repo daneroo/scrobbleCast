@@ -16,7 +16,7 @@
   "license": "ISC",
   "dependencies": {
     "immutable": "^3.8.2",
-    "moment": "^2.21.0",
+    "moment": "^2.29.4",
     "request": "^2.85.0",
     "request-promise-native": "^1.0.5",
     "standard": "^11.0.1",

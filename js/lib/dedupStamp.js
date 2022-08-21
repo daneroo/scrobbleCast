@@ -59,7 +59,10 @@ async function dedupStampTask (credentials) {
   }
 
   try {
-    await db.loadByRangeWithDeadline({ user, timeout: 30000 }, itemHandlerRemover)
+    await db.loadByRangeWithDeadline(
+      { user, timeout: 90000 },
+      itemHandlerRemover
+    )
     // last flush of sameStamp Accumulator
     if (sameStamp.length > 1) {
       // const last = sameStamp.slice(-1)[0]
@@ -73,7 +76,8 @@ async function dedupStampTask (credentials) {
     await db.removeAllByBatch(duplicates)
 
     return counts
-  } catch (error) { // TODO: might remove this altogether
+  } catch (error) {
+    // TODO: might remove this altogether
     log.error('Dedup', {
       error: error
     })

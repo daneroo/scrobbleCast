@@ -84,7 +84,7 @@ async function dedupTask (credentials) {
   }
 
   try {
-    await db.loadByRangeWithDeadline({ user, timeout: 30000 }, itemHandler)
+    await db.loadByRangeWithDeadline({ user, timeout: 90000 }, itemHandler)
 
     // last flush of Accumulator
     if (historyForSingleUuid !== null) {
@@ -98,7 +98,8 @@ async function dedupTask (credentials) {
     await db.removeAllByBatch(duplicates)
 
     return counts
-  } catch (error) { // TODO: might remove this altogether
+  } catch (error) {
+    // TODO: might remove this altogether
     log.error('Dedup', {
       error: error
     })
@@ -168,12 +169,13 @@ async function upsertHistories (histories) {
       where: key
     })
     // duplicate means history is present and matches digest
-    const duplicate = dbDigest && (dbDigest.digest === digest)
+    const duplicate = dbDigest && dbDigest.digest === digest
     if (duplicate) {
       continue
     }
     try {
-      if (dbDigest) { // and not duplicate
+      if (dbDigest) {
+        // and not duplicate
         counts.update++
         await orm.History.upsert({ ...key, history })
       } else {

@@ -1,7 +1,14 @@
 // Simplest possible nats client just to publish our events
 
 // dependencies - core-public-internal
-const { connect, JSONCodec, RetentionPolicy, consumerOpts } = require('nats')
+const {
+  connect,
+  JSONCodec,
+  createInbox,
+  RetentionPolicy,
+  // Empty,
+  consumerOpts
+} = require('nats')
 // const { ulid } = require('ulid')
 const config = require('./config')
 const log = require('./log')
@@ -11,7 +18,11 @@ exports = module.exports = {
   connectToNats,
   disconnectFromNats,
   findOrCreateStream,
-  replayMessages
+  replayMessages,
+  scatter,
+  scatterIterable,
+  delay,
+  timeout
 }
 
 async function publish (subject, payload = {}) {
@@ -159,9 +170,8 @@ async function * replayMessages (stream, subject, deltaMS = 0) {
       opts.orderedConsumer()
       opts.ackNone()
       if (deltaMS) {
-        opts.startAtTimeDelta(deltaMS) // 10 seconds in ms
+        opts.startAtTimeDelta(deltaMS)
       }
-      // opts.deliverTo(createInbox()) // not for orderedConsumer
       // log.debug('opts', opts)
 
       // now subscribe to a new ephemeral stream
@@ -170,16 +180,17 @@ async function * replayMessages (stream, subject, deltaMS = 0) {
       // Guard against the stream being empty with a timeout
       // This will unsubscribe *IFF* the stream is empty, i.e. no first message before timeout deadline
       // The timeout will be cancelled if the stream is not empty
-      let cancelTimeout = setTimeout(() => {
-        // log.debug('will unsubscribe, timeout expired')
+      let to = timeout(emptyTimeoutDeadline)
+      to.catch(() => {
+        log.debug('replayMessages timeout', { emptyTimeoutDeadline })
         sub.unsubscribe()
-      }, emptyTimeoutDeadline)
+      })
 
       for await (const m of sub) {
         // cancel the unsubscribe on timeout action if we receive a message, i.e. stream is not empty
-        if (cancelTimeout) {
-          clearTimeout(cancelTimeout)
-          cancelTimeout = null
+        if (to) {
+          to.cancel()
+          to = null // no need to reset the timeout
         }
         yield m
 
@@ -202,15 +213,76 @@ async function * replayMessages (stream, subject, deltaMS = 0) {
   }
 }
 
-// export function * walkDaysUTC (
-//   since: string,
-//   before: string
-// ): IterableIterator<Interval> {
-//   let current = startOfDayUTC(since)
-//   let next = addDaysUTC(current, 1)
-//   while (current < before && next < before) {
-//     yield { since: current, before: next }
-//     current = next
-//     next = addDaysUTC(current, 1)
-//   }
-// }
+// This returns the collection of messages as an array (asychronously)
+//  by invoking the iterable below: scatterIterable
+async function scatter (subject, payload = {}) {
+  const jc = JSONCodec()
+  const buf = []
+
+  for await (const m of scatterIterable(subject, payload)) {
+    buf.push(jc.decode(m.data))
+  }
+
+  return buf
+}
+
+// This returns an async iterable over JsMsgs
+async function * scatterIterable (subject, payload = {}) {
+  const firstTimeoutDeadline = 1e3 // 1 second
+  const subsequentTimeoutDeadline = 200 // 200ms
+  const nc = await connectToNats()
+  if (!nc) {
+    log.warn('Nats connection not available, but will retry on next publish')
+    return
+  } // just a resolve if we are connected
+
+  const jc = JSONCodec()
+  const inbox = createInbox(nc.options.inboxPrefix || '')
+
+  const sub = nc.subscribe(inbox)
+  await nc.flush()
+
+  nc.publish(subject, jc.encode(payload), { reply: inbox })
+  let to = timeout(firstTimeoutDeadline)
+  to.catch(() => {
+    sub.unsubscribe()
+  })
+  for await (const m of sub) {
+    yield m
+
+    to.cancel()
+    to = timeout(subsequentTimeoutDeadline)
+    to.catch(() => {
+      sub.unsubscribe()
+    })
+  }
+}
+
+function delay (ms) {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve()
+    }, ms)
+  })
+}
+
+// from nats utils (not exported)
+function timeout (ms) {
+  const err = new Error(`timeout after ${ms}ms`)
+  let methods
+  let timer
+  const p = new Promise((_resolve, reject) => {
+    const cancel = () => {
+      if (timer) {
+        clearTimeout(timer)
+      }
+    }
+    methods = { cancel }
+    // @ts-ignore: node is not a number
+    timer = setTimeout(() => {
+      reject(err)
+    }, ms)
+  })
+  // noinspection JSUnusedAssignment
+  return Object.assign(p, methods)
+}

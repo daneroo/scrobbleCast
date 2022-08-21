@@ -34,7 +34,7 @@ const recurrence = {
 async function scrapeDedupDigest () {
   try {
     // this should be th same as the generation stamp that is used in scrape task
-    const genStamp = utils.stamp('10minutes')
+    const generation = utils.stamp('10minutes')
     for (const credentials of allCredentials) {
       await tasks.scrape(credentials)
     }
@@ -48,8 +48,8 @@ async function scrapeDedupDigest () {
       // digest of items
       const { digest, elapsed } = await digestTimer(store.db.digestOfDigests)
       // checkpoint: Stash this as verbose for dev
-      log.info('checkpoint', { genStamp, digest, scope: 'item', elapsed })
-      nats.publish('digest', { genStamp, digest, scope: 'item', elapsed })
+      log.info('checkpoint', { generation, digest, scope: 'item', elapsed })
+      nats.publish('digest', { generation, digest, scope: 'item', elapsed })
     }
     {
       // digest of histories
@@ -57,8 +57,8 @@ async function scrapeDedupDigest () {
         store.db.digestOfDigestsHistory
       )
       // checkpoint: Stash this as verbose for dev
-      log.info('checkpoint', { genStamp, digest, scope: 'history', elapsed })
-      nats.publish('digest', { genStamp, digest, scope: 'history', elapsed })
+      log.info('checkpoint', { generation, digest, scope: 'history', elapsed })
+      nats.publish('digest', { generation, digest, scope: 'history', elapsed })
     }
   } catch (error) {
     // TODO, might want to catch before tasks.dedup is called, to make sure dedup always runs...

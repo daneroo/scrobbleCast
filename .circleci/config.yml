@@ -14,7 +14,6 @@ jobs:
       - restore_cache:
           key: dependency-cache-{{ checksum "js/package-lock.json" }}
       - node/install:
-          install-yarn: true
           node-version: '18'
       - run:
           working_directory: ~/daneroo/scrobbleCast/js

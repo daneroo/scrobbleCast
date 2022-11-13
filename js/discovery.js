@@ -6,7 +6,7 @@
 const log = require('./lib/log')
 const nats = require('./lib/nats')
 
-const { JSONCodec } = require('nats')
+// const { JSONCodec } = require('nats')
 
 main()
 async function main () {
@@ -14,13 +14,13 @@ async function main () {
 
   const subject = 'im.scrobblecast.scrape.discovery'
   const count = 100
-  const timeout = 1000
+  // const timeout = 1000
   const interval = 500
 
   try {
-    const nc = await nats.connectToNats() // just a resolve if we are connected
+    // const nc = await nats.connectToNats() // just a resolve if we are connected
 
-    const jc = JSONCodec()
+    // const jc = JSONCodec()
 
     for (let i = 1; i <= count; i++) {
       // get my peers: scatter => [{peerId}]

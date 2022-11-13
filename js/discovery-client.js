@@ -63,10 +63,10 @@ async function closeGracefully (signal) {
 process.on('SIGINT', closeGracefully)
 process.on('SIGTERM', closeGracefully)
 
-function delay (ms) {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve()
-    }, ms)
-  })
-}
+// function delay (ms) {
+//   return new Promise((resolve) => {
+//     setTimeout(() => {
+//       resolve()
+//     }, ms)
+//   })
+// }

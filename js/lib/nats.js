@@ -271,7 +271,7 @@ function timeout (ms) {
   const err = new Error(`timeout after ${ms}ms`)
   let methods
   let timer
-  const p = new Promise((_resolve, reject) => {
+  const p = new Promise((resolve, reject) => {
     const cancel = () => {
       if (timer) {
         clearTimeout(timer)

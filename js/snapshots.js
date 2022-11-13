@@ -18,6 +18,7 @@ var log = require('./lib/log')
 var sinkFile = require('./lib/sink/file')
 var delta = require('./lib/delta')
 var store = require('./lib/store')
+const { Op } = require('sequelize')
 
 // globals
 var allCredentials = require('./credentials.json')
@@ -45,7 +46,23 @@ async function snapshotForUser (credentials) {
   const user = credentials.name
 
   // use special order to match file writing..
-  await store.db.load({ user, order: store.db.fieldOrders.snapshot }, writerCtx.handler)
+  for (let year = 2014; year <= new Date().getUTCFullYear(); year++) {
+    const since = year.toString()
+    const before = (year + 1).toString()
+    await store.db.load(
+      {
+        user,
+        order: store.db.fieldOrders.snapshot,
+        where: {
+          __stamp: {
+            [Op.gte]: since, // >= since (inclusive)
+            [Op.lt]: before // < before (strict)
+          }
+        }
+      },
+      writerCtx.handler
+    )
+  }
 
   await writerCtx.flush() // ok, cause it's synchronous (for now)
   log.verbose('snapshot:counts', {
@@ -119,7 +136,9 @@ function newWriterCtx () {
   function writeByMonth (item) {
     var __stamp = new Date(Date.parse(item.__stamp))
     // find begining of month (UTC)
-    var month = new Date(Date.UTC(__stamp.getUTCFullYear(), __stamp.getUTCMonth())).toJSON()
+    var month = new Date(
+      Date.UTC(__stamp.getUTCFullYear(), __stamp.getUTCMonth())
+    ).toJSON()
     // iso8601, remove millis
     month = month.replace(/\.\d{3}Z$/, 'Z')
 

@@ -10,28 +10,28 @@ const { JSONCodec } = require('nats')
 
 main()
 async function main () {
-  log.info('JetStream setup for im.scrobblecast.scrape.digest')
+  log.info('Peer discovery')
 
-  const streamName = 'scrobblecastDigest'
-  const subjects = [
-    'im.scrobblecast.scrape.digest',
-    'im.scrobblecast.scrape.digest.>'
-  ]
-
-  const maxAge = 86400e9 // 24h in nanoseconds (stream retention)
-  const deltaMS = 7200e3 // 2h in ms
+  const subject = 'im.scrobblecast.scrape.discovery'
+  const count = 100
+  const timeout = 1000
+  const interval = 500
 
   try {
-    const stream = await nats.findOrCreateStream(streamName, subjects, maxAge)
-    const asyncMessageIterator = nats.replayMessages(
-      stream,
-      subjects[0],
-      deltaMS
-    )
+    const nc = await nats.connectToNats() // just a resolve if we are connected
+
     const jc = JSONCodec()
 
-    for await (const m of asyncMessageIterator) {
-      log.info('--', m.seq, m.info.pending, m.subject, jc.decode(m.data))
+    for (let i = 1; i <= count; i++) {
+      // get my peers: scatter => [{peerId}]
+      {
+        const peers = await nats.scatter(subject)
+        console.log(`[${i}]: ${peers.length} peers`, JSON.stringify(peers))
+      }
+
+      if (interval) {
+        await nats.delay(interval)
+      }
     }
   } catch (err) {
     log.error(`nats error: ${err.message}`, err)

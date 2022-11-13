@@ -1,15 +1,21 @@
-version: 2
+version: '2.1'
+orbs:
+  node: circleci/node@5.0.3
+
 jobs:
   build:
     working_directory: ~/daneroo/scrobbleCast
     parallelism: 1
     docker:
-    # node:18 not yet available
-      - image: circleci/node:16
+      - image: 'cimg/base:stable'
+
     steps:
       - checkout
       - restore_cache:
           key: dependency-cache-{{ checksum "js/package-lock.json" }}
+      - node/install:
+          install-yarn: true
+          node-version: '18'
       - run:
           working_directory: ~/daneroo/scrobbleCast/js
           name: npm-install

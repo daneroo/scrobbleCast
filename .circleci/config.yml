@@ -4,7 +4,8 @@ jobs:
     working_directory: ~/daneroo/scrobbleCast
     parallelism: 1
     docker:
-      - image: circleci/node:18
+    # node:18 not yet available
+      - image: circleci/node:16
     steps:
       - checkout
       - restore_cache:

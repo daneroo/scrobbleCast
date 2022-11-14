@@ -16,8 +16,11 @@ jobs:
       - node/install:
           node-version: "18"
       - run:
+          name: Install pnpm
+          command: corepack enable && corepack prepare pnpm@latest
+      - run:
           working_directory: ~/daneroo/scrobbleCast/js
-          name: pnpm-install
+          name: Install dependencies
           command: pnpm install --frozen-lockfile --loglevel error
       - save_cache:
           key: dependency-cache-{{ checksum "js/pnpm-lock.yaml" }}

@@ -22,7 +22,7 @@ exports = module.exports = {
   upsertHistories
 }
 
-async function dedupTask (credentials) {
+async function dedupTask(credentials) {
   // stamp is used for spread.select===deep
   const stamp = utils.stamp('10minutes')
 
@@ -44,7 +44,7 @@ async function dedupTask (credentials) {
   // to break items on uuid boundaries
   let lastSeen = '' // composite key: {__user, __type, uuid}
 
-  async function itemHandler ({ item }) {
+  async function itemHandler({ item }) {
     const { __user, __type, uuid } = item
     const seeing = JSON.stringify({ __user, __type, uuid })
 
@@ -107,12 +107,12 @@ async function dedupTask (credentials) {
   }
 }
 
-function _digest (item) {
+function _digest(item) {
   return utils.digest(JSON.stringify(item))
 }
 
-async function _filterExisting (Model, wrappedItemsWithDigests) {
-  const digests = wrappedItemsWithDigests.map(i => i.digest)
+async function _filterExisting(Model, wrappedItemsWithDigests) {
+  const digests = wrappedItemsWithDigests.map((i) => i.digest)
 
   const existingDigests = await Model.findAll({
     raw: true,
@@ -122,7 +122,7 @@ async function _filterExisting (Model, wrappedItemsWithDigests) {
         [Op.in]: digests
       }
     }
-  }).map(i => i.digest)
+  }).map((i) => i.digest)
   // if no existing digests, return original array
   if (existingDigests.length === 0) {
     return wrappedItemsWithDigests
@@ -131,26 +131,28 @@ async function _filterExisting (Model, wrappedItemsWithDigests) {
 
   // make a lookup for filtering
   const exists = {}
-  existingDigests.forEach(digest => {
+  existingDigests.forEach((digest) => {
     exists[digest] = true
   })
 
-  const filtered = wrappedItemsWithDigests.filter(item => !exists[item.digest])
+  const filtered = wrappedItemsWithDigests.filter(
+    (item) => !exists[item.digest]
+  )
 
   return filtered
 }
 
-async function batchUpsertHistory (histories, stamp) {
+async function batchUpsertHistory(histories, stamp) {
   // remove existing
-  const wrapped = histories.map(h => ({ history: h, digest: _digest(h) }))
+  const wrapped = histories.map((h) => ({ history: h, digest: _digest(h) }))
   const needSaving = await _filterExisting(orm.History, wrapped)
 
-  const counts = await upsertHistories(needSaving.map(h => h.history))
+  const counts = await upsertHistories(needSaving.map((h) => h.history))
   return counts
 }
 
 // TODO:daneroo should move to some class akin to store.*, perhaps history.(mem|db)
-async function upsertHistories (histories) {
+async function upsertHistories(histories) {
   const counts = { insert: 0, update: 0 }
   if (histories.length === 0) {
     return counts

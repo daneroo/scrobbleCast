@@ -20,7 +20,7 @@ exports = module.exports = {
 // We were keeping multiple items for the same _stamp,
 // and sometimes they contain conflicting values which causes flapping.
 // This task removes all but the last item for a given stamp (as sorted by dedup order, which includes __sourceType).
-async function dedupStampTask (credentials) {
+async function dedupStampTask(credentials) {
   const user = credentials.name
   const counts = {
     total: 0,
@@ -35,7 +35,7 @@ async function dedupStampTask (credentials) {
   let lastSeen = '' // composite key: {__user, __type, uuid,__stamp}
 
   const sameStamp = []
-  async function itemHandlerRemover ({ item }) {
+  async function itemHandlerRemover({ item }) {
     const { __user, __type, uuid, __stamp } = item
     const seeing = JSON.stringify({ __user, __type, uuid, __stamp })
     // if we have a new __stamp, mark all but last as duplicates

@@ -22,7 +22,7 @@ const dataDirectory = join(process.cwd(), 'data', 'stork') /// stork
 const episodesDirectory = join(dataDirectory, 'episodes')
 
 main()
-async function main () {
+async function main() {
   for (const credentials of allCredentials) {
     if (credentials.name !== 'daniel') {
       continue
@@ -32,7 +32,7 @@ async function main () {
   log.info('Done')
 }
 
-async function noteTask (credentials) {
+async function noteTask(credentials) {
   const start = +new Date()
   // lifecycle('notes', 'start', { user: credentials.name })
 
@@ -71,7 +71,7 @@ async function noteTask (credentials) {
   log.info('Processed All', { ...sums, elapsed })
 }
 
-async function notesForPodcast (apiSession, podcast) {
+async function notesForPodcast(apiSession, podcast) {
   const start = +new Date()
   const counts = {
     skipped: 0,
@@ -121,18 +121,21 @@ async function notesForPodcast (apiSession, podcast) {
 //   return { path: '/path', exists: true }
 // }
 
-async function writeEpisode (apiSession, episode, episodeFile) {
+async function writeEpisode(apiSession, episode, episodeFile) {
   const { title, notes } = episode
   // log.info(JSON.stringify({ episode }, null, 2))
   await fs.mkdir(episodesDirectory, { recursive: true })
   // add meta for podcast and episode, at least uuids
-  await fs.writeFile(episodeFile, `
+  await fs.writeFile(
+    episodeFile,
+    `
   ${title}\n
   ${notes}\n  
-`)
+`
+  )
 }
 
-function sumCounts (sums, counts) {
+function sumCounts(sums, counts) {
   for (const key in counts) {
     sums[key] = sums[key] || 0
     sums[key] += counts[key]
@@ -140,7 +143,7 @@ function sumCounts (sums, counts) {
   return sums
 }
 
-function knownPodcasts () {
+function knownPodcasts() {
   /* spellchecker: disable */
   return [
     {
@@ -201,7 +204,8 @@ function knownPodcasts () {
     },
     {
       uuid: '566fbb40-6020-0131-740c-723c91aeae46',
-      title: 'Epicenter - Learn about Crypto, Blockchain, Ethereum, Bitcoin and Distributed Technologies'
+      title:
+        'Epicenter - Learn about Crypto, Blockchain, Ethereum, Bitcoin and Distributed Technologies'
     },
     {
       uuid: 'c0313510-8262-0132-e7ff-5f4c86fd3263',
@@ -293,7 +297,8 @@ function knownPodcasts () {
     },
     {
       uuid: '8fc91c30-03a7-0134-9c92-59d98c6b72b8',
-      title: 'The TWIML AI Podcast (formerly This Week in Machine Learning & Artificial Intelligence)'
+      title:
+        'The TWIML AI Podcast (formerly This Week in Machine Learning & Artificial Intelligence)'
     },
     {
       uuid: 'f1434cd0-dbb9-0134-ebdd-4114446340cb',
@@ -701,7 +706,8 @@ function knownPodcasts () {
     },
     {
       uuid: 'effb1f10-6067-0136-4e65-69745d675bc7',
-      title: "Sean Carroll's Mindscape: Science, Society, Philosophy, Culture, Arts, and Ideas"
+      title:
+        "Sean Carroll's Mindscape: Science, Society, Philosophy, Culture, Arts, and Ideas"
     },
     {
       uuid: 'f5413aa0-606d-0136-4e65-69745d675bc7',
@@ -737,7 +743,8 @@ function knownPodcasts () {
     },
     {
       uuid: '25304390-54f4-012f-0ee2-525400c11844',
-      title: "Everyday Einstein's Quick and Dirty Tips for Making Sense of Science"
+      title:
+        "Everyday Einstein's Quick and Dirty Tips for Making Sense of Science"
     },
     {
       uuid: '7ddc0670-46fc-0132-cadc-5f4c86fd3263',

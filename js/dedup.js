@@ -9,7 +9,7 @@ const nats = require('./lib/nats')
 const allCredentials = require('./credentials.json')
 
 main()
-async function main () {
+async function main() {
   await store.db.init()
   for (const credentials of allCredentials) {
     await tasks.dedupStamp(credentials)
@@ -30,7 +30,7 @@ async function main () {
   await nats.disconnectFromNats()
 }
 
-async function digestTimer (digester) {
+async function digestTimer(digester) {
   const start = +new Date()
   const digest = await digester()
   const elapsed = (+new Date() - start) / 1000

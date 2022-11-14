@@ -25,7 +25,7 @@ exports = module.exports = {
   timeout
 }
 
-async function publish (subject, payload = {}) {
+async function publish(subject, payload = {}) {
   const nc = await connectToNats() // just a resolve if we are connected
   if (!nc) {
     log.warn('Nats connection not available, but will retry on next publish')
@@ -58,7 +58,7 @@ const connectionOptions = {
 // Each publish will initiate the connection, if it is not already open. So `waitOnFirstConnect` option is not required/desired
 // We can revisit this when we add subscriber and response handlers
 let ncPromise = null
-async function connectToNats () {
+async function connectToNats() {
   const wasNotConnected = !ncPromise
   if (wasNotConnected) {
     log.debug(`Connecting to nats: ${JSON.stringify(config.nats.servers)}`)
@@ -77,7 +77,7 @@ async function connectToNats () {
   return ncPromise
 }
 
-async function disconnectFromNats () {
+async function disconnectFromNats() {
   const nc = await connectToNats()
   if (!nc) {
     log.info('not connected to nats')
@@ -93,7 +93,7 @@ async function disconnectFromNats () {
 // stream stuff
 // warn if subjects do not match
 // warn if maxAge differs
-async function findOrCreateStream (
+async function findOrCreateStream(
   streamName,
   subjects,
   maxAge = 86400 * 1e9 // 24h  in nanoseconds
@@ -151,7 +151,7 @@ async function findOrCreateStream (
 // This returns an async iterable over JsMsgs
 // assumes that the stream state is recent enough to rely on stream.state.messages > 0
 // if no message is received in the first emptyTimeoutDeadline. it will return an empty iterable
-async function * replayMessages (stream, subject, deltaMS = 0) {
+async function* replayMessages(stream, subject, deltaMS = 0) {
   const emptyTimeoutDeadline = 2e3 // 2 seconds in ms
   const nc = await connectToNats()
   if (!nc) {
@@ -215,7 +215,7 @@ async function * replayMessages (stream, subject, deltaMS = 0) {
 
 // This returns the collection of messages as an array (asychronously)
 //  by invoking the iterable below: scatterIterable
-async function scatter (subject, payload = {}) {
+async function scatter(subject, payload = {}) {
   const jc = JSONCodec()
   const buf = []
 
@@ -227,7 +227,7 @@ async function scatter (subject, payload = {}) {
 }
 
 // This returns an async iterable over JsMsgs
-async function * scatterIterable (subject, payload = {}) {
+async function* scatterIterable(subject, payload = {}) {
   const firstTimeoutDeadline = 1e3 // 1 second
   const subsequentTimeoutDeadline = 200 // 200ms
   const nc = await connectToNats()
@@ -258,8 +258,8 @@ async function * scatterIterable (subject, payload = {}) {
   }
 }
 
-function delay (ms) {
-  return new Promise(resolve => {
+function delay(ms) {
+  return new Promise((resolve) => {
     setTimeout(() => {
       resolve()
     }, ms)
@@ -267,7 +267,7 @@ function delay (ms) {
 }
 
 // from nats utils (not exported)
-function timeout (ms) {
+function timeout(ms) {
   const err = new Error(`timeout after ${ms}ms`)
   let methods
   let timer

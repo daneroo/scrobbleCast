@@ -18,17 +18,17 @@ const globPromise = Promise.promisify(require('glob'))
 const dataDirname = 'data'
 
 // dataDirname relative filename (internal)
-function resolveData (file) {
+function resolveData(file) {
   return path.resolve(dataDirname, file)
 }
 
 // this version is relative to dataDirname
-function loadJSON (file) {
+function loadJSON(file) {
   return jsonl.read(resolveData(file))
 }
 
 // internal (for checking find's results)
-function confirmSorted (files) {
+function confirmSorted(files) {
   let sorted = true
   let lastFile
   files.forEach(function (file) {
@@ -44,7 +44,7 @@ function confirmSorted (files) {
   if (!sorted) {
     const msg = 'files are not sorted'
     log.error(msg)
-    throw (new Error(msg))
+    throw new Error(msg)
   }
   return files
 }
@@ -52,11 +52,12 @@ function confirmSorted (files) {
 // get datestamps with fs.readdir on dataDirname/byUserStamp/user
 // guaranteed to be sorted?
 // basepath default is dataDirname
-function findByUserStamp (user, basepath) {
+function findByUserStamp(user, basepath) {
   basepath = basepath || dataDirname
   // basepath default is dataDirname
   const dir = path.join(basepath, 'byUserStamp', user)
-  return fs.readdirPromise(dir)
+  return fs
+    .readdirPromise(dir)
     .then(confirmSorted)
     .catch(function (err) {
       // log and rethrow
@@ -66,7 +67,7 @@ function findByUserStamp (user, basepath) {
 }
 
 //  just break this into parts by Date
-function find (pattern) {
+function find(pattern) {
   return globPromise(pattern, {
     cwd: dataDirname
   })
@@ -85,12 +86,18 @@ function find (pattern) {
 
 // get datestamps with fs.readdir on dataDirname
 // still used for toUserStamp
-function findByDate () {
+function findByDate() {
   return fs.readdirPromise(path.join(dataDirname, 'byDate'))
 }
 
 // traverse data directory. starting
-function iterator (extrapath, allCredentials, callbackReturningPromise, pattern, fileFilter) {
+function iterator(
+  extrapath,
+  allCredentials,
+  callbackReturningPromise,
+  pattern,
+  fileFilter
+) {
   pattern = pattern || '**/*.json'
   const basepath = path.join(dataDirname, extrapath)
   const counts = {}
@@ -102,41 +109,58 @@ function iterator (extrapath, allCredentials, callbackReturningPromise, pattern,
       ignoredFiles: 0
     }
     const c = counts[credentials.name]
-    return findByUserStamp(credentials.name, basepath)
-      .then(function (stamps) {
-        return Promise.each(stamps, function (stamp) {
-          return find(path.join(extrapath, 'byUserStamp', credentials.name, stamp, pattern))
-            .then(function (files) {
-              c.stamp++
-              return Promise.each(files, function (file) {
-                if (fileFilter && !fileFilter(credentials, stamp, file)) {
-                  c.ignoredFiles++
-                  return Promise.resolve(true)
-                }
-                const items = loadJSON(file)
-                c.file++
-                return Promise.each(items, function (item) {
-                  c.part++
-                  return callbackReturningPromise(credentials, stamp, file, item, counts)
-                })
-              })
+    return findByUserStamp(credentials.name, basepath).then(function (stamps) {
+      return Promise.each(stamps, function (stamp) {
+        return find(
+          path.join(extrapath, 'byUserStamp', credentials.name, stamp, pattern)
+        ).then(function (files) {
+          c.stamp++
+          return Promise.each(files, function (file) {
+            if (fileFilter && !fileFilter(credentials, stamp, file)) {
+              c.ignoredFiles++
+              return Promise.resolve(true)
+            }
+            const items = loadJSON(file)
+            c.file++
+            return Promise.each(items, function (item) {
+              c.part++
+              return callbackReturningPromise(
+                credentials,
+                stamp,
+                file,
+                item,
+                counts
+              )
             })
+          })
         })
       })
-  })
-    .then(function () {
-      return counts
     })
+  }).then(function () {
+    return counts
+  })
 }
 
 // 2015-11-06 Not yet used, first candidate is dedup.js
 // call the iterator with extrapath='rollup'
 // then call the iterator with passed extrapath for subsequent items (by date)
-function iteratorWithRollup (extrapath, allCredentials, callbackReturningPromise, pattern, fileFilter) {
+function iteratorWithRollup(
+  extrapath,
+  allCredentials,
+  callbackReturningPromise,
+  pattern,
+  fileFilter
+) {
   let maxStamp = '1970-01-01T00:00:00Z'
 
   // For the first invocation ('rollup')
-  function wrapCallbackAndGrabDateHandler (credentials, stamp, file, item, counts) {
+  function wrapCallbackAndGrabDateHandler(
+    credentials,
+    stamp,
+    file,
+    item,
+    counts
+  ) {
     maxStamp = item.__stamp
     if (callbackReturningPromise) {
       return callbackReturningPromise(credentials, stamp, file, item, counts)
@@ -147,8 +171,8 @@ function iteratorWithRollup (extrapath, allCredentials, callbackReturningPromise
   // For the second part:
   // compose a dateSkippFilter with any passed in fileFilter (if present)
   // our date filter takes precedence
-  function skippingWrappedFilter (credentials, stamp, file /*, item */) {
-    const shouldProceed = (stamp > maxStamp)
+  function skippingWrappedFilter(credentials, stamp, file /*, item */) {
+    const shouldProceed = stamp > maxStamp
     if (!shouldProceed) {
       return shouldProceed
     }
@@ -157,12 +181,27 @@ function iteratorWithRollup (extrapath, allCredentials, callbackReturningPromise
     }
   }
 
-  return iterator('rollup', allCredentials, wrapCallbackAndGrabDateHandler, pattern, fileFilter)
-    .then(function (/* counts */) {
-      // TODO correct return counts...
-      console.log('Now call iterator with extrapath: %s after: %s', extrapath, maxStamp)
-      return iterator(extrapath, allCredentials, callbackReturningPromise, pattern, skippingWrappedFilter)
-    })
+  return iterator(
+    'rollup',
+    allCredentials,
+    wrapCallbackAndGrabDateHandler,
+    pattern,
+    fileFilter
+  ).then(function (/* counts */) {
+    // TODO correct return counts...
+    console.log(
+      'Now call iterator with extrapath: %s after: %s',
+      extrapath,
+      maxStamp
+    )
+    return iterator(
+      extrapath,
+      allCredentials,
+      callbackReturningPromise,
+      pattern,
+      skippingWrappedFilter
+    )
+  })
 }
 
 // TODO: change API to .read

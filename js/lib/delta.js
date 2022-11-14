@@ -19,7 +19,7 @@ const sinkFile = require('./sink/file')
 // cast boolean field to their truthy value
 // omit null values from comparison
 //   which means that we may not have a merged value for these (duration)
-function normalize (thing) {
+function normalize(thing) {
   // clone thing - or NOT
   // if (param.clone)
   // thing = _.merge({}, thing);
@@ -70,7 +70,7 @@ function normalize (thing) {
 
 // utility - exposed
 // returns a changeset
-function compare (from, to) {
+function compare(from, to) {
   // TODO: shortcut for: from.uuid !== to.uuid
   // TODO: actually this could use the changeset stuff from level too.(later)
 
@@ -127,7 +127,7 @@ function compare (from, to) {
 }
 
 // Constructor
-function Accumulator () {
+function Accumulator() {
   // this.options = _.merge({},defaultOptions,options);
   this.meta = {
     __firstSeen: false,
@@ -251,7 +251,7 @@ Accumulator.prototype.merge = function (item) {
 
 // need a new name:
 // options may include : uuid, ignoreDelete, ..
-function AccumulatorByUuid (/* options */) {
+function AccumulatorByUuid(/* options */) {
   this.accumulators = {} // by uuid
 }
 
@@ -300,7 +300,7 @@ AccumulatorByUuid.prototype.sortAndSave = function (_user, _type) {
 
 // need a new name:
 // Convenience to get AccByUuid per type (podcast/episode)
-function AccumulatorByTypeByUuid (/* options */) {
+function AccumulatorByTypeByUuid(/* options */) {
   this.accumulatorsByType = {} // by uuid
 }
 

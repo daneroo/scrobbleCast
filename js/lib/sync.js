@@ -11,14 +11,14 @@ exports = module.exports = {
   sync
 }
 
-async function sync (baseURI, syncParams) {
+async function sync(baseURI, syncParams) {
   const remoteDigests = await loadFromURL(baseURI, syncParams)
   const localDigests = await loadFromDB(syncParams)
   const counts = compare(baseURI, remoteDigests, localDigests)
   return counts
 }
 
-async function compare (baseURI, remoteDigests, localDigests) {
+async function compare(baseURI, remoteDigests, localDigests) {
   const missingInLocal = []
   remoteDigests.forEach(function (acc, digest) {
     if (!localDigests.has(digest)) {
@@ -33,13 +33,21 @@ async function compare (baseURI, remoteDigests, localDigests) {
       missingInRemote.push(digest)
     }
   })
-  nats.publish('sync.count', { remote: baseURI, missingInLocal: missingInLocal.length, missingInRemote: missingInRemote.length })
-  log.verbose('Sync missing', { remote: baseURI, missingInLocal: missingInLocal.length, missingInRemote: missingInRemote.length })
+  nats.publish('sync.count', {
+    remote: baseURI,
+    missingInLocal: missingInLocal.length,
+    missingInRemote: missingInRemote.length
+  })
+  log.verbose('Sync missing', {
+    remote: baseURI,
+    missingInLocal: missingInLocal.length,
+    missingInRemote: missingInRemote.length
+  })
   const counts = await fetchMissingFromRemote(baseURI, missingInLocal)
   return counts
 }
 
-async function fetchMissingFromRemote (baseURI, missingLocal) {
+async function fetchMissingFromRemote(baseURI, missingLocal) {
   const fetchedItems = []
   for (const digest of missingLocal) {
     const options = {
@@ -62,7 +70,7 @@ async function fetchMissingFromRemote (baseURI, missingLocal) {
   return counts
 }
 
-async function loadFromURL (baseURI, syncParams) {
+async function loadFromURL(baseURI, syncParams) {
   const options = {
     uri: `${baseURI}/digests`,
     qs: syncParams,
@@ -73,7 +81,7 @@ async function loadFromURL (baseURI, syncParams) {
   return new Set(digests)
 }
 
-async function loadFromDB (syncParams) {
+async function loadFromDB(syncParams) {
   // log.debug('loadFromDB')
   const digests = await store.db.digests(syncParams)
   return new Set(digests)

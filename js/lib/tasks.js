@@ -24,16 +24,15 @@ exports = module.exports = {
   scrape
 }
 
-function logcheck () {
+function logcheck() {
   const start = +new Date()
   lifecycle('logcheck', 'start')
-  return logcheckTask()
-    .then(function () {
-      lifecycle('logcheck', 'done', { elapsed: elapsedSince(start) })
-    })
+  return logcheckTask().then(function () {
+    lifecycle('logcheck', 'done', { elapsed: elapsedSince(start) })
+  })
 }
 
-async function sync () {
+async function sync() {
   // poor man's discovery, default dirac...
   const hosts = ['dirac', 'darwin', 'newton']
   const thisHost = config.hostname.split('.')[0]
@@ -54,7 +53,11 @@ async function sync () {
       const baseURI = `http://${remote}.imetrical.com:8000/api`
       lifecycle('sync:host', 'start', { remote })
       const counts = await syncTask(baseURI, syncParams)
-      lifecycle('sync:host', 'done', { remote, ...counts, elapsed: elapsedSince(startRemote) })
+      lifecycle('sync:host', 'done', {
+        remote,
+        ...counts,
+        elapsed: elapsedSince(startRemote)
+      })
     } catch (error) {
       log.error('tasks.sync:host:error:', error)
       lifecycle('sync:host', 'done with error', { remote })
@@ -63,22 +66,30 @@ async function sync () {
   lifecycle('sync', 'done', { elapsed: elapsedSince(start) })
 }
 
-async function dedupStamp (credentials) {
+async function dedupStamp(credentials) {
   const start = +new Date()
   lifecycle('dedupStamp', 'start', { user: credentials.name })
   const counts = await dedupStampTask(credentials)
-  lifecycle('dedupStamp', 'done', { user: credentials.name, ...counts, elapsed: elapsedSince(start) })
+  lifecycle('dedupStamp', 'done', {
+    user: credentials.name,
+    ...counts,
+    elapsed: elapsedSince(start)
+  })
 }
 
-async function dedup (credentials) {
+async function dedup(credentials) {
   const start = +new Date()
   lifecycle('dedup', 'start', { user: credentials.name })
   const counts = await dedupTask(credentials)
-  lifecycle('dedup', 'done', { user: credentials.name, ...counts, elapsed: elapsedSince(start) })
+  lifecycle('dedup', 'done', {
+    user: credentials.name,
+    ...counts,
+    elapsed: elapsedSince(start)
+  })
 }
 
 // get podcasts then foreach: podcastPages->file
-async function scrape (credentials) {
+async function scrape(credentials) {
   const start = +new Date()
   lifecycle('scrape', 'start', { user: credentials.name })
 
@@ -96,7 +107,10 @@ async function scrape (credentials) {
 
     // get recently played podcasts, to scrape them even if not scheduled
     const hoursAgo = 4 // which is the default
-    const recentPodcastUuids = await spread.getRecentPodcastUuids(credentials.name, hoursAgo)
+    const recentPodcastUuids = await spread.getRecentPodcastUuids(
+      credentials.name,
+      hoursAgo
+    )
     // just to log in progress(01-)
     counts01.selectRecent = Object.keys(recentPodcastUuids).length
 
@@ -109,7 +123,8 @@ async function scrape (credentials) {
       // -1,0,1,2: skip,deep,shallow,recent
       const select = spread.select(apiSession.stamp, uuid, recentPodcastUuids) // new schedule method
 
-      if (select >= 0) { // deep, shallow i.e. not skip, no longer any concept of shallow
+      if (select >= 0) {
+        // deep, shallow i.e. not skip, no longer any concept of shallow
         const episodes = await apiSession.episodes(uuid)
         const counts02 = await insertDedup(episodes)
         sumCounts(sums, counts02)
@@ -130,7 +145,11 @@ async function scrape (credentials) {
     sumCounts(sums, counts04)
     progress('04-in_progress', counts04)
 
-    lifecycle('scrape', 'done', { user: apiSession.user, ...sums, elapsed: elapsedSince(start) })
+    lifecycle('scrape', 'done', {
+      user: apiSession.user,
+      ...sums,
+      elapsed: elapsedSince(start)
+    })
   } catch (error) {
     log.error('tasks.scrape:error:', error)
     lifecycle('scrape', 'done with error', { user: credentials.name })
@@ -142,11 +161,11 @@ async function scrape (credentials) {
 // --- Utility functions
 
 // format as %.1f seconds
-function elapsedSince (since) {
+function elapsedSince(since) {
   return Number(((+new Date() - since) / 1000).toFixed(1))
 }
 
-function sumCounts (sums, counts) {
+function sumCounts(sums, counts) {
   for (const key in counts) {
     sums[key] = sums[key] || 0
     sums[key] += counts[key]
@@ -154,7 +173,7 @@ function sumCounts (sums, counts) {
   return sums
 }
 // Task quick: start for daniel
-function lifecycle (task, state, meta) {
+function lifecycle(task, state, meta) {
   meta = {
     task,
     ...meta
@@ -163,7 +182,7 @@ function lifecycle (task, state, meta) {
   nats.publish('task', { state, ...meta })
 }
 
-function progress (step, meta) {
+function progress(step, meta) {
   meta = meta || {}
   log.info(`|${step}|`, meta)
   nats.publish('progress', { step, ...meta })

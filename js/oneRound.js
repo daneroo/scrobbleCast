@@ -10,7 +10,7 @@ const log = require('./lib/log')
 const allCredentials = require('./credentials.json')
 
 main()
-async function main () {
+async function main() {
   for (const credentials of allCredentials) {
     await tasks.scrape(credentials)
     // await tasks.dedup(credentials)

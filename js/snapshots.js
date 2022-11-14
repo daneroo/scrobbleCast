@@ -27,7 +27,7 @@ const basepath = ['data/snapshots/']
 
 main()
 
-async function main () {
+async function main() {
   try {
     for (const credentials of allCredentials) {
       log.info('Snapshots started', { user: credentials.name })
@@ -40,7 +40,7 @@ async function main () {
   await store.db.end()
 }
 
-async function snapshotForUser (credentials) {
+async function snapshotForUser(credentials) {
   const writerCtx = newWriterCtx() //
 
   const user = credentials.name
@@ -81,11 +81,11 @@ async function snapshotForUser (credentials) {
 // - acccumulates items in an {type:[items]} which is passed in.
 // - writes out any completed months
 
-function newWriterCtx () {
+function newWriterCtx() {
   // throw error if item.__stamp's are non-increasing
   let maxStamp = '1970-01-01T00:00:00Z' // to track increasing'ness
 
-  function checkStampOrdering (item) {
+  function checkStampOrdering(item) {
     const stamp = item.__stamp
     if (stamp < maxStamp) {
       log.verbose('Item stamp not increasing', {
@@ -99,7 +99,7 @@ function newWriterCtx () {
 
   let singleUser // used to validate that all items have same user
   // validates that we are always called with a single user, throws on violation
-  function checkUser (item) {
+  function checkUser(item) {
     // validate that all items are for same user
     if (!singleUser) {
       singleUser = item.__user
@@ -115,7 +115,7 @@ function newWriterCtx () {
 
   const historyByType = new delta.AccumulatorByTypeByUuid()
   // Validate that source was properly deduped, and enable history checksum
-  function checkForDedup (item) {
+  function checkForDedup(item) {
     const changeCount = historyByType.merge(item)
     if (changeCount === 0) {
       log.verbose('Item not deduped', {
@@ -133,7 +133,7 @@ function newWriterCtx () {
   let previousMonth = null // stamp for current month
   let itemsForMonth = []
 
-  function writeByMonth (item) {
+  function writeByMonth(item) {
     const __stamp = new Date(Date.parse(item.__stamp))
     // find begining of month (UTC)
     let month = new Date(
@@ -161,7 +161,7 @@ function newWriterCtx () {
   }
 
   // TODO(daneroo) make async
-  function flush () {
+  function flush() {
     // items is the result of the pg-load being passed through the promise chain
     const remaining = itemsForMonth
     log.verbose('Snapshot:flush', { remaining: remaining.length })
@@ -182,7 +182,7 @@ function newWriterCtx () {
 
   let itemCount = 0
   // the actual itemHandler being returned
-  async function handler ({ item }) {
+  async function handler({ item }) {
     // console.log('..stamp',stamp);
     // throw error if item.__stamp's are non-increasing
     checkStampOrdering(item)

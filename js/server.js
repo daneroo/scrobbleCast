@@ -9,7 +9,10 @@ const server = require('./lib/server')
 const store = require('./lib/store')
 const allCredentials = require('./credentials.json')
 
-log.info('Starting server', { hostname: config.hostname, dialect: config.sequelize.settings.dialect })
+log.info('Starting server', {
+  hostname: config.hostname,
+  dialect: config.sequelize.settings.dialect
+})
 nats.connectToNats()
 cron.start(allCredentials)
 server.start()
@@ -21,7 +24,7 @@ process.stdin.resume()
 
 // Graceful shutdown
 // see https://snyk.io/blog/10-best-practices-to-containerize-nodejs-web-applications-with-docker/
-async function closeGracefully (signal) {
+async function closeGracefully(signal) {
   log.info(`Received signal to terminate: ${signal}`)
 
   await Promise.all([

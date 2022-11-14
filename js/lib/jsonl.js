@@ -23,7 +23,7 @@ exports = module.exports = {
 // TODO: make this read gzipped extensions
 // TODO: validate if filename has md5 signature
 
-function read (file) {
+function read(file) {
   if (file.match(/\.jsonl/)) {
     return readLines(file)
   }
@@ -37,7 +37,7 @@ function read (file) {
   return result.episodes || result.podcasts || result
 }
 
-function readLines (file) {
+function readLines(file) {
   let lines = fs.readFileSync(file, 'utf8').toString().split('\n')
   // filter for empty lines
   lines = lines.filter((line) => {
@@ -51,13 +51,13 @@ function readLines (file) {
 
 // write .json/.jsonl depending on filename
 // verbose, will log the action
-function write (filename, items, verbose) {
+function write(filename, items, verbose) {
   const json = makeJSON(filename, items)
   const dir = path.dirname(filename)
   mkdirp.sync(dir)
   fs.writeFileSync(filename, json)
   if (verbose) {
-    const numItems = (items.length) ? items.length : 1
+    const numItems = items.length ? items.length : 1
     // TODO(daneroo): reset to info; verbose to avoid loggly for now
     log.info('jsonl.write', {
       file: path.basename(filename),
@@ -70,7 +70,7 @@ function write (filename, items, verbose) {
 
 // TODO(daneroo) make typed, instead of switching on filename
 // utility function to write json, or jsonl, depending on filename extension
-function makeJSON (filename, items) {
+function makeJSON(filename, items) {
   let json
   if (filename.match(/\.jsonl$/)) {
     if (!Array.isArray(items)) {

@@ -14,7 +14,7 @@ const allCredentials = require('./credentials.json')
 
 main()
 
-async function main () {
+async function main() {
   const iterations = 1
   const intervalMS = 2000
 
@@ -29,18 +29,18 @@ async function main () {
   }
 }
 
-async function iteration () {
+async function iteration() {
   for (const credentials of allCredentials) {
     await tryemall(credentials)
   }
   log.info('Done all')
 }
 
-async function delay (ms) {
-  return new Promise(resolve => setTimeout(resolve, ms))
+async function delay(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms))
 }
 
-async function tryemall (credentials) {
+async function tryemall(credentials) {
   log.info('Start', credentials.name)
 
   // Use apiSession
@@ -54,16 +54,31 @@ async function tryemall (credentials) {
   log.info('  01-podcasts', podcasts.length)
 
   const hoursAgo = 4 // which is the default
-  const recentPodcastUuids = await spread.getRecentPodcastUuids(credentials.name, hoursAgo)
-  log.info('   Recent podcasts for spread.select:', Object.keys(recentPodcastUuids).length)
+  const recentPodcastUuids = await spread.getRecentPodcastUuids(
+    credentials.name,
+    hoursAgo
+  )
+  log.info(
+    '   Recent podcasts for spread.select:',
+    Object.keys(recentPodcastUuids).length
+  )
 
   for (const podcast of podcasts) {
-    const select = spread.select(apiSession.stamp, podcast.uuid, recentPodcastUuids) // new schedule method
+    const select = spread.select(
+      apiSession.stamp,
+      podcast.uuid,
+      recentPodcastUuids
+    ) // new schedule method
 
     const { uuid, title } = podcast
-    if (select >= 0) { // deep, shallow i.e. not skip, no longer any cocept of shallow
+    if (select >= 0) {
+      // deep, shallow i.e. not skip, no longer any cocept of shallow
       const episodes = await apiSession.episodes(uuid)
-      log.info('  02-episodes', episodes.length, { uuid, title, select: spread.selectName(select) })
+      log.info('  02-episodes', episodes.length, {
+        uuid,
+        title,
+        select: spread.selectName(select)
+      })
     } else {
       // log.info('  02-episodes', 0, {uuid, title, select: spread.selectName(select)})
     }

@@ -20,7 +20,7 @@ const dataDirname = 'data'
 // items => <__user>/<__stamp>/__sourceType[-<podast_uuid>].json
 // items should not be empty
 // assert common parts common to all titems
-function pathForItems (items) {
+function pathForItems(items) {
   // take first element as representative
   const item = items[0]
   const keys = {
@@ -65,11 +65,14 @@ function pathForItems (items) {
 //  overwrite:bool allow overwriting of file with different content default:false
 //  log:bool print the md5,size and line count default:false
 // TODO(daneroo) options: pretty=true, gzip=true, sign=true
-function write (filename, items, opts) {
-  opts = _.merge({
-    overwrite: false,
-    log: false
-  }, opts)
+function write(filename, items, opts) {
+  opts = _.merge(
+    {
+      overwrite: false,
+      log: false
+    },
+    opts
+  )
 
   let msg
   // skip verification if opts.overwrite:true
@@ -84,7 +87,9 @@ function write (filename, items, opts) {
         opt: opts
       })
       if (utils.hasSameContent(olditems, items)) {
-        log.error('sink.file.write: verify identical: samecontent policy would have allowed it')
+        log.error(
+          'sink.file.write: verify identical: samecontent policy would have allowed it'
+        )
         // uncomment the next two lines to have the 'samecontent'' behavior
         // jsonl.write(filename, items, opts.log);
         // return;
@@ -108,7 +113,7 @@ function write (filename, items, opts) {
 // write a collection of items into a json file
 // basepath default is dataDirname
 // - <basepath>/byUserStamp/<__user>/<__stamp>/__sourceType[-<podast_uuid>].json
-function writeByUserStamp (items, basepath) {
+function writeByUserStamp(items, basepath) {
   if (!items || !items.length) {
     log.verbose('writeByUserStamp: nothing to write')
     return
@@ -117,7 +122,11 @@ function writeByUserStamp (items, basepath) {
 
   const basename = pathForItems(items)
 
-  const filename = path.join(basepath, 'byUserStamp', [basename, 'json'].join('.'))
+  const filename = path.join(
+    basepath,
+    'byUserStamp',
+    [basename, 'json'].join('.')
+  )
 
   // could turnoff verification
   write(filename, items)

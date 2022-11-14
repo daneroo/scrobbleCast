@@ -66,11 +66,11 @@ if (process.env.NODE_ENV === 'test') {
   })
 }
 
-async function init () {
+async function init() {
   return orm.init()
 }
 
-async function end () {
+async function end() {
   log.debug('sequelize: Closing connections, drain the pool!')
   // slequelize.close seems to be fixed for postgres now (sequelize 4.2.1)
   // https://github.com/sequelize/sequelize/commit/e239a04da62f7fa5bb127743e67da5ff0f80b756
@@ -78,10 +78,10 @@ async function end () {
   log.debug('sequelize: Closed connections, drained the pool!')
 }
 
-function _digest (item) {
+function _digest(item) {
   return utils.digest(JSON.stringify(item), DIGEST_ALGORITHM, false)
 }
-async function _exists (item) {
+async function _exists(item) {
   const digest = _digest(item)
   const count = await orm.Item.count({
     where: {
@@ -92,7 +92,7 @@ async function _exists (item) {
 }
 
 // This detects the specific error from insertion of a duplicate item (by digest primary key)
-function _isErrorDuplicateDigest (error) {
+function _isErrorDuplicateDigest(error) {
   // It seems this test is suffient
   if (error.name === 'SequelizeUniqueConstraintError') {
     // Log if other assumtions are not correct (just in case)
@@ -114,7 +114,7 @@ function _isErrorDuplicateDigest (error) {
 }
 
 // TODO(daneroo): combines both checkThenSave, and saveButVerifyIfDuplicate
-async function save (item) {
+async function save(item) {
   // log.verbose('pg:save saving item', { user: item.__user, stamp: item.__stamp });
 
   // check then save
@@ -147,7 +147,7 @@ async function save (item) {
 // let saver = saveByBatch(3)
 // saver(item1); saver(item2); saver(item3); saver(item4);
 // saver.flush(); // saves any pending items in accumulator
-function saveByBatch (batchSize) {
+function saveByBatch(batchSize) {
   // default batchSize
   batchSize = batchSize || 1000
   // tested with restore 2017-06-24
@@ -176,13 +176,13 @@ function saveByBatch (batchSize) {
   // this is the saved item accumulator
   let tosave = []
 
-  async function flush () {
+  async function flush() {
     // log.verbose('-flush', tosave.length)
     const result = await saveAll(tosave)
     tosave = []
     return result
   }
-  async function saver (item) {
+  async function saver(item) {
     tosave.push(item)
     if (tosave.length >= batchSize) {
       return flush()
@@ -197,8 +197,8 @@ function saveByBatch (batchSize) {
 
 // returns the items which are not already present
 // as determined by digest (primary key) lookup
-async function _filterExisting (wrappedItemsWithDigests) {
-  const digests = wrappedItemsWithDigests.map(i => i.digest)
+async function _filterExisting(wrappedItemsWithDigests) {
+  const digests = wrappedItemsWithDigests.map((i) => i.digest)
 
   const existingDigests = await orm.Item.findAll({
     raw: true,
@@ -208,7 +208,7 @@ async function _filterExisting (wrappedItemsWithDigests) {
         [Op.in]: digests
       }
     }
-  }).map(i => i.digest)
+  }).map((i) => i.digest)
   // if no existing digests, return original array
   if (existingDigests.length === 0) {
     return wrappedItemsWithDigests
@@ -217,21 +217,23 @@ async function _filterExisting (wrappedItemsWithDigests) {
 
   // make a lookup for filtering
   const exists = {}
-  existingDigests.forEach(digest => {
+  existingDigests.forEach((digest) => {
     exists[digest] = true
   })
 
-  const filtered = wrappedItemsWithDigests.filter(item => !exists[item.digest])
+  const filtered = wrappedItemsWithDigests.filter(
+    (item) => !exists[item.digest]
+  )
 
   return filtered
 }
 
-async function saveAll (items) {
+async function saveAll(items) {
   if (items.length === 0) {
     return true
   }
 
-  const wrapped = items.map(i => ({ item: i, digest: _digest(i) }))
+  const wrapped = items.map((i) => ({ item: i, digest: _digest(i) }))
 
   const needSaving = await _filterExisting(wrapped)
   // log.verbose('-needSaving', needSaving.length)
@@ -266,12 +268,12 @@ async function saveAll (items) {
 // order must be one of dedup, or snapshot
 const dedupOrderJStr = JSON.stringify(exports.fieldOrders.dedup)
 const snapshotOrderJStr = JSON.stringify(exports.fieldOrders.snapshot)
-function validFieldOrder (order) {
+function validFieldOrder(order) {
   const orderJStr = JSON.stringify(order)
   return orderJStr === dedupOrderJStr || orderJStr === snapshotOrderJStr
 }
 
-function loadQy ({ user, order = exports.fieldOrders.dedup }) {
+function loadQy({ user, order = exports.fieldOrders.dedup }) {
   if (!user) {
     throw new Error('db:loadQy missing required user')
   }
@@ -294,7 +296,7 @@ function loadQy ({ user, order = exports.fieldOrders.dedup }) {
 //   snapshot: suitable for snapshot file order
 // -No longer returns anything, accumulate your values in the itemHandler
 // -itemHandler should be an async/promise function (it's resolved return value is ignored)
-async function load (
+async function load(
   { user, order = exports.fieldOrders.dedup, pageSize = 10000, where = {} },
   itemHandler
 ) {
@@ -318,7 +320,7 @@ async function load (
 
 // Same as load but breaks the queries by Type/UUID ranges
 // also has a deadline/timeout
-async function loadByRangeWithDeadline (
+async function loadByRangeWithDeadline(
   {
     user,
     order = exports.fieldOrders.dedup,
@@ -375,7 +377,7 @@ async function loadByRangeWithDeadline (
 // returns the offset for the ISO8601 stamp
 // The offset represents an offset from midnight in (ten minute) units
 // returns [0,144)
-function stampOffset (stamp) {
+function stampOffset(stamp) {
   const startOfDay = stamp.substr(0, 10) + 'T00:00:00Z'
 
   const diff = +new Date(stamp) - new Date(startOfDay)
@@ -385,7 +387,7 @@ function stampOffset (stamp) {
 }
 
 // fetch all items with same __user,__type,uuid
-async function loadItemsForHistory (item) {
+async function loadItemsForHistory(item) {
   const items = []
   await load(
     {
@@ -399,7 +401,7 @@ async function loadItemsForHistory (item) {
   return items
 }
 
-async function getByDigest (digest) {
+async function getByDigest(digest) {
   const wrapped = await orm.Item.findOne({
     attributes: ['item'],
     where: {
@@ -409,7 +411,7 @@ async function getByDigest (digest) {
   return wrapped ? wrapped.item : null
 }
 
-function digestsQy ({
+function digestsQy({
   since = '1970-01-01T00:00:00Z',
   before = '2040-01-01T00:00:00Z'
 } = {}) {
@@ -426,21 +428,21 @@ function digestsQy ({
   }
 }
 
-async function digests (syncParams = {}) {
+async function digests(syncParams = {}) {
   const qy = digestsQy(syncParams)
-  const items = await orm.Item.findAll(qy).map(r => r.digest)
+  const items = await orm.Item.findAll(qy).map((r) => r.digest)
   return items
 }
 
 // Refactored to work with Item and History
 // itemDigester takes the "item" return from query (qy) and produces the digest string
-async function digester (Model, qy, itemDigester, pageSize = 100000) {
+async function digester(Model, qy, itemDigester, pageSize = 100000) {
   // for Item and History
   const algorithm = 'sha256'
 
   const hash = crypto.createHash(algorithm)
   let isFirst = true
-  async function handler (item) {
+  async function handler(item) {
     const digest = itemDigester(item)
     const str = (isFirst ? '[' : ',') + JSON.stringify(digest)
     hash.update(str)
@@ -451,21 +453,21 @@ async function digester (Model, qy, itemDigester, pageSize = 100000) {
   return hash.digest('hex')
 }
 
-async function digestOfDigests () {
+async function digestOfDigests() {
   const pageSize = 100000 // tradeoff speed/memory
   const qy = digestsQy()
-  const itemDigester = item => item.digest
+  const itemDigester = (item) => item.digest
   return digester(orm.Item, qy, itemDigester, pageSize)
 }
 
-async function digestOfDigestsHistory () {
+async function digestOfDigestsHistory() {
   const pageSize = 10000 // tradeoff speed/memory
   const qy = {
     raw: true,
     attributes: ['digest'],
     order: ['__user', '__type', 'uuid']
   }
-  const itemDigester = item => item.digest
+  const itemDigester = (item) => item.digest
   return digester(orm.History, qy, itemDigester, pageSize)
 }
 
@@ -473,7 +475,7 @@ async function digestOfDigestsHistory () {
 // you need to specify the user and type
 // you should limit the number of items returned by
 // specifying a date range or a uuid
-function itemQy ({
+function itemQy({
   user,
   type,
   uuid,
@@ -510,13 +512,13 @@ function itemQy ({
   return qy
 }
 
-async function items (params) {
+async function items(params) {
   const qy = itemQy(params)
-  const items = await orm.Item.findAll(qy).map(r => r.item)
+  const items = await orm.Item.findAll(qy).map((r) => r.item)
   return items
 }
 
-function historyQy ({
+function historyQy({
   user,
   type,
   uuid,
@@ -545,16 +547,16 @@ function historyQy ({
   return qy
 }
 
-async function history (params) {
+async function history(params) {
   const qy = historyQy(params)
-  const histories = await orm.History.findAll(qy).map(r => r.history)
+  const histories = await orm.History.findAll(qy).map((r) => r.history)
   return histories
 }
 
 // Delete by digest
 // log.warn if item not found
 // returns: The number of destroyed rows
-async function remove (item) {
+async function remove(item) {
   const digest = _digest(item)
   const rowCount = await orm.Item.destroy({
     attributes: ['item'], // TODO, don't think this is used!!
@@ -572,7 +574,7 @@ async function remove (item) {
 }
 
 // TODO removeByBatch: modelled on saveAll/saveByBatch
-async function removeAll (items) {
+async function removeAll(items) {
   const digests = items.map(_digest)
   const rowCount = await orm.Item.destroy({
     attributes: ['item'], // TODO, don't think this is used!!
@@ -590,7 +592,7 @@ async function removeAll (items) {
 }
 
 // call removeAll above, in batches of maxBatchSize
-async function removeAllByBatch (items) {
+async function removeAllByBatch(items) {
   if (items.length === 0) {
     return
   }
@@ -611,7 +613,7 @@ async function removeAllByBatch (items) {
 // copied from confirmIdentical()
 // not refactored because of detailed error loging in confirmIdentical()
 // exposed for proactive recociliation in sync::saveWithExtraordinaryReconcile
-async function getByKey (item) {
+async function getByKey(item) {
   // throw new Error('db::getByKey deprecated')
   const digest = _digest(item)
   const found = await orm.Item.findOne({

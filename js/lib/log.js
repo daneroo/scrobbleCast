@@ -10,8 +10,9 @@ const config = require('./config')
 
 const packageName = 'pocketscrape'
 
-if (config.loggly) { // in case loggly credentials are not available
-// default levels: { error: 0, warn: 1, info: 2, verbose: 3, debug: 4, silly: 5 }
+if (config.loggly) {
+  // in case loggly credentials are not available
+  // default levels: { error: 0, warn: 1, info: 2, verbose: 3, debug: 4, silly: 5 }
   winston.add(winston.transports.Loggly, {
     token: config.loggly.token,
     subdomain: config.loggly.subdomain,

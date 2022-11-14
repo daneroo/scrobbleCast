@@ -4,7 +4,8 @@ const fs = require('fs')
 
 module.exports = {
   hostname: process.env.HOSTALIAS || process.env.HOSTNAME || os.hostname(),
-  version: { // also exposed as API /version
+  version: {
+    // also exposed as API /version
     pocketscrape: require('../package').version,
     node: process.versions.node
   },
@@ -38,7 +39,8 @@ module.exports = {
       // logging: () => {},
       logging: process.env.DB_LOG ? console.log : () => {},
       // SQLite only
-      storage: process.env.DB_SQLITE_FILENAME ||
+      storage:
+        process.env.DB_SQLITE_FILENAME ||
         (process.env.NODE_ENV !== 'test'
           ? 'data/sqlite/scrobblecast.sqlite'
           : 'data/sqlite/scrobblecast-test.sqlite')
@@ -47,7 +49,7 @@ module.exports = {
 }
 
 // used for loggly credentials
-function getConfig (path, defaultValue) {
+function getConfig(path, defaultValue) {
   try {
     // fs.accessSync(path, fs.constants.R_OK)
     return JSON.parse(fs.readFileSync(path).toString())

@@ -1,17 +1,18 @@
-
 'use strict'
 exports = module.exports = {
   makeItems,
   makeItem
 }
 
-function makeItems (is) {
-  return is.map(i => makeItem(i))
+function makeItems(is) {
+  return is.map((i) => makeItem(i))
 }
 
-function makeItem (i) {
+function makeItem(i) {
   const mod = 16 ** 4 // 4 hex chars
-  const hex = Number(mod + i % mod).toString(16).substr(-4)
+  const hex = Number(mod + (i % mod))
+    .toString(16)
+    .substr(-4)
   const day = `${i}`.padStart(2, '0')
   return {
     __type: 'episode',

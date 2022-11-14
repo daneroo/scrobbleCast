@@ -7,7 +7,7 @@ const log = require('./log')
 
 // expect to be called with '10minutes','minute','second' or no param (millis)
 // return an iso-8601 string
-function stamp (grain, nowStamp) {
+function stamp(grain, nowStamp) {
   const now = nowStamp ? new Date(nowStamp) : new Date()
   if (grain === 'minute') {
     now.setSeconds(0)
@@ -24,19 +24,19 @@ function stamp (grain, nowStamp) {
   return now.toJSON().replace(/\.\d{3}Z$/, 'Z')
 }
 
-function ago (seconds) {
+function ago(seconds) {
   const when = new Date(+new Date() - seconds * 1000)
   return when.toJSON().replace(/\.\d{3}Z$/, 'Z')
 }
 
 // TODO: pubsub would be good
-function logStamp (message) {
+function logStamp(message) {
   // console.log('deprecated: use log.info(\'info\',...)');
   log.info(message)
 }
 
 // parse a stamp from a file/path
-function stampFromFile (file) {
+function stampFromFile(file) {
   let stamp = file.match(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z/)
   if (stamp && stamp.length) {
     stamp = new Date(stamp[0])
@@ -46,7 +46,7 @@ function stampFromFile (file) {
   return stamp
 }
 
-function isEqualWithoutPrototypes (a, b) {
+function isEqualWithoutPrototypes(a, b) {
   if (_.isEqual(a, b)) {
     return true
   }
@@ -57,13 +57,19 @@ function isEqualWithoutPrototypes (a, b) {
 }
 
 // tentative set comparison, for relaxed overwrite rule
-function hasSameContent (a, b) {
+function hasSameContent(a, b) {
   // must be an array
-  log.verbose('hasSameContent:array check:', { a: Array.isArray(a), b: Array.isArray(b) })
+  log.verbose('hasSameContent:array check:', {
+    a: Array.isArray(a),
+    b: Array.isArray(b)
+  })
   if (!Array.isArray(a) || !Array.isArray(b)) {
     return false
   }
-  log.verbose('hasSameContent:array counts check:', { a: a.length, b: b.length })
+  log.verbose('hasSameContent:array counts check:', {
+    a: a.length,
+    b: b.length
+  })
   if (a.length !== b.length) {
     return false
   }
@@ -98,13 +104,13 @@ function hasSameContent (a, b) {
   // }
 }
 
-function md5 (str) {
+function md5(str) {
   const hash = crypto.createHash('md5').update(str).digest('hex')
   return hash
 }
 
 // TODO(daneroo): option object for {algorithm:, prependAlgorithm:bool}
-function digest (str, algorithm, prependAlgorithm) {
+function digest(str, algorithm, prependAlgorithm) {
   algorithm = algorithm || 'sha256'
   let hash = crypto.createHash(algorithm).update(str).digest('hex')
   if (prependAlgorithm) {
@@ -113,7 +119,7 @@ function digest (str, algorithm, prependAlgorithm) {
   return hash
 }
 
-async function memoryUsageInMB () {
+async function memoryUsageInMB() {
   const mu = process.memoryUsage()
   const inMB = {
     mem: {
@@ -126,7 +132,7 @@ async function memoryUsageInMB () {
 }
 
 // Pass --expose-gc when launching node to enable forced garbage collection.
-async function collectGC () {
+async function collectGC() {
   if (global.gc) {
     global.gc()
     global.gc()
@@ -137,8 +143,8 @@ async function collectGC () {
   }
 }
 
-async function logMemAfterGC () {
-  async function showMem (pfx) {
+async function logMemAfterGC() {
+  async function showMem(pfx) {
     const msg = `${pfx}Mem after GC (MB)`
     log.verbose(msg, await memoryUsageInMB())
   }

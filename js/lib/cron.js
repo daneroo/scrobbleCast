@@ -31,7 +31,7 @@ const recurrence = {
 // serial execution of <task> for each credentialed user
 // perform dedup task on all users, after main tasks are completed
 // then perform a checkpoint
-async function scrapeDedupDigest () {
+async function scrapeDedupDigest() {
   try {
     // this should be th same as the generation stamp that is used in scrape task
     const generation = utils.stamp('10minutes')
@@ -65,7 +65,7 @@ async function scrapeDedupDigest () {
     console.error('cron:error', error)
   }
   // local timer utility..
-  async function digestTimer (digester) {
+  async function digestTimer(digester) {
     const start = +new Date()
     const digest = await digester()
     const elapsed = (+new Date() - start) / 1000
@@ -74,7 +74,7 @@ async function scrapeDedupDigest () {
 }
 
 // auto-starts
-function runJob (task, when) {
+function runJob(task, when) {
   const message = `Starting CronJob: ${
     task.name ? task.name : 'anonymous'
   } ${when}`
@@ -89,7 +89,7 @@ function runJob (task, when) {
   return job // if you ever want to stop it.
 }
 
-async function start (injectedCredentials) {
+async function start(injectedCredentials) {
   // set the module global variable
   allCredentials.length = 0 // (const so empty and push)
   allCredentials.push(...injectedCredentials)

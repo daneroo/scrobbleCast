@@ -1,4 +1,3 @@
-
 'use strict'
 const expect = require('chai').expect
 
@@ -12,14 +11,16 @@ describe('sequelize/orm', function () {
   // this.timeout(20000)
   before(async function () {
     if (process.env.NODE_ENV !== 'test') {
-      throw new Error('Tests must be run with NODE_ENV==test to ensure data safety')
+      throw new Error(
+        'Tests must be run with NODE_ENV==test to ensure data safety'
+      )
     }
     await orm.init() // side effect creates storage directory for sqlite
     await orm.sequelize.dropAllSchemas()
     await orm.sequelize.sync({ force: true })
   })
 
-  function create (item) {
+  function create(item) {
     return orm.Item.create({ item })
   }
 
@@ -68,7 +69,9 @@ describe('sequelize/orm', function () {
         { item: helpers.makeItem(4) }
       ])
       expect(items.length).to.equal(2)
-      expect(items[0].get('item', { plain: true })).to.deep.equal(helpers.makeItem(3))
+      expect(items[0].get('item', { plain: true })).to.deep.equal(
+        helpers.makeItem(3)
+      )
     })
 
     it('should find an existing item by digest', async function () {
@@ -102,7 +105,9 @@ describe('sequelize/orm', function () {
 
     // depends on previous items - may be brittle
     it('should find many digests', async function () {
-      const want = [0, 1, 2, 3, 4].map(i => utils.digest(JSON.stringify(helpers.makeItem(i))))
+      const want = [0, 1, 2, 3, 4].map((i) =>
+        utils.digest(JSON.stringify(helpers.makeItem(i)))
+      )
       const digests = await orm.Item.findAll({
         attributes: ['digest'],
         raw: true,
@@ -110,7 +115,7 @@ describe('sequelize/orm', function () {
           __user: 'mock'
         },
         order: [['digest', 'DESC']]
-      }).map(d => d.digest)
+      }).map((d) => d.digest)
 
       digests.sort()
       want.sort()

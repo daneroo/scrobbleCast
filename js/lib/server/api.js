@@ -52,10 +52,10 @@ router.route('/digests').get(function (req, res) {
   const syncParams = req.query // pass on the query params to pg.digests
   store.db
     .digests(syncParams)
-    .then(rows => {
+    .then((rows) => {
       res.json(rows)
     })
-    .catch(err => {
+    .catch((err) => {
       log.info('digests error', err)
       // TODO(daneroo): Errors: https://kostasbariotis.com/rest-api-error-handling-with-express-js/
       res.status(500).json({
@@ -78,10 +78,10 @@ router
     const digest = req.params.digest
     store.db
       .getByDigest(digest)
-      .then(item => {
+      .then((item) => {
         res.json(item)
       })
-      .catch(err => {
+      .catch((err) => {
         log.info('getByDigest error', err)
         // TODO(daneroo): Errors: https://kostasbariotis.com/rest-api-error-handling-with-express-js/
         res.status(404).json({
@@ -101,10 +101,10 @@ router.route('/items').get(function (req, res) {
   const params = req.query // pass on the query params to store.db.items
   store.db
     .items(params)
-    .then(rows => {
+    .then((rows) => {
       res.json(rows)
     })
-    .catch(err => {
+    .catch((err) => {
       log.info('items error', err)
       res.status(500).json({
         name: 'Error',
@@ -121,10 +121,10 @@ router.route('/history').get(function (req, res) {
   const params = req.query // pass on the query params to store.db.history
   store.db
     .history(params)
-    .then(rows => {
+    .then((rows) => {
       res.json(rows)
     })
-    .catch(err => {
+    .catch((err) => {
       log.info('history error', err)
       // TODO(daneroo): Errors: https://kostasbariotis.com/rest-api-error-handling-with-express-js/
       res.status(500).json({

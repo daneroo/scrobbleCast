@@ -19,7 +19,7 @@ const baseURI =
 const since = process.argv.length > 3 ? process.argv[3] : null
 
 // *** Adjust params as needed, default is ALL TIME
-function syncAll () {
+function syncAll() {
   const syncParams = {
     // since: utils.ago(1 * 24 * 3600),
     // before: utils.stamp('10minutes')
@@ -52,8 +52,8 @@ Promise.resolve(true)
 // ************ Utilities
 
 // TODO(daneroo): move to log.debugging module (as Factory?)
-function verboseErrorHandler (shouldRethrow) {
-  return function errorHandler (error) {
+function verboseErrorHandler(shouldRethrow) {
+  return function errorHandler(error) {
     log.error('error', error)
     if (shouldRethrow) {
       throw error

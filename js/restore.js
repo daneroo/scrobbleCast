@@ -17,7 +17,7 @@ const basepaths = ['snapshots/monthly', 'snapshots/current']
 
 main()
 
-async function main () {
+async function main() {
   try {
     await store.db.init()
 
@@ -35,7 +35,7 @@ async function main () {
   await store.db.end()
 }
 
-async function restore (credentials) {
+async function restore(credentials) {
   // const saver = store.db.save;
   // TODO(daneroo) batchSaver(.flush) move to pg
   const batchSize = 1000 // which is the default
@@ -57,22 +57,24 @@ async function restore (credentials) {
   await saver.flush()
 }
 
-async function digestOfDigests () {
+async function digestOfDigests() {
   const dod = await store.db.digestOfDigests()
   // verbose NOT for logcheck
   log.verbose('checkpoint', { digest: dod })
 }
 
-async function accumulateItems (credentials) {
+async function accumulateItems(credentials) {
   const user = credentials.name
   const historyByType = new delta.AccumulatorByTypeByUuid()
   const mergedItemCount = 0
 
-  async function itemHandler ({ item }) {
+  async function itemHandler({ item }) {
     const changeCount = historyByType.merge(item)
     if (changeCount === 0) {
       // throw new Error(`Item Not deduped: |Δ|:${changeCount} ${JSON.stringify(item)}`);
-      log.verbose(`Item Not deduped: |Δ|:${changeCount}  ${item.__sourceType} ${item.title}`)
+      log.verbose(
+        `Item Not deduped: |Δ|:${changeCount}  ${item.__sourceType} ${item.title}`
+      )
     }
   }
 

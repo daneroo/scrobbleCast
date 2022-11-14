@@ -61,6 +61,7 @@
     "istanbul": "^1.1.0-alpha.1",
     "mocha": "^3.5.3",
     "nsp": "^3.2.1",
+    "prettier": "^2.7.1",
     "sinon": "^2.4.1"
   },
   "standard": {

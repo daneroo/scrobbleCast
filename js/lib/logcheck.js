@@ -35,7 +35,7 @@ exports = module.exports = {
 // TODO(daneroo) include latest stamp information
 // convenience to be run from task.
 // run the query, detection and log it!
-async function logcheckTask () {
+async function logcheckTask() {
   try {
     for (const [method, fetcher] of Object.entries({
       loggly: getCheckpointRecords,
@@ -66,7 +66,7 @@ async function logcheckTask () {
 }
 
 //  return an array of {}
-async function getCheckpointRecords () {
+async function getCheckpointRecords() {
   // The search options can be parametrized later (hours,runs...)
   const searchOptions = {
     query:
@@ -84,7 +84,7 @@ async function getCheckpointRecords () {
 }
 
 // same stream is used for digests of scope item and history
-async function getCheckpointRecordsNats (scopeFilter = 'item') {
+async function getCheckpointRecordsNats(scopeFilter = 'item') {
   const records = []
   const streamName = 'scrobblecastDigest'
   const subjects = [
@@ -129,7 +129,7 @@ async function getCheckpointRecordsNats (scopeFilter = 'item') {
 // This detects if hash signatures match across reporting hosts
 //  return false if all match
 // reurn lastDigests if matches fail
-function detectMismatch (records) {
+function detectMismatch(records) {
   const lastDigests = lastReportedDigest(records)
   const allMatch = _.uniq(Object.values(lastDigests)).length === 1
   if (!allMatch) {
@@ -151,12 +151,14 @@ function detectMismatch (records) {
   }
 }
 
-function removeNonReporting (records, nonReporting) {
-  const reportingRecords = records.filter(record => !nonReporting[record.host])
+function removeNonReporting(records, nonReporting) {
+  const reportingRecords = records.filter(
+    (record) => !nonReporting[record.host]
+  )
   return reportingRecords
 }
 // return {host:stamp} that have not reported since (since - howRecent)
-function detectNonReporting (records, since) {
+function detectNonReporting(records, since) {
   since = since || new Date().toISOString()
   const howRecentMS = 20 * 60 * 1000
   const last = lastReportedStamp(records)
@@ -172,7 +174,7 @@ function detectNonReporting (records, since) {
   return nonReporting
 }
 
-function lastReportedStamp (records) {
+function lastReportedStamp(records) {
   const map = lastReportedRecord(records)
   const projected = {}
   for (const host in map) {
@@ -181,7 +183,7 @@ function lastReportedStamp (records) {
   return projected
 }
 
-function lastReportedDigest (records) {
+function lastReportedDigest(records) {
   const map = lastReportedRecord(records)
   const projected = {}
   for (const host in map) {
@@ -191,7 +193,7 @@ function lastReportedDigest (records) {
 }
 
 // host=>record (where record is the most recent entry(by stamp) for host)
-function lastReportedRecord (records) {
+function lastReportedRecord(records) {
   return records.reduce((when, record) => {
     if (when[record.host] && when[record.host].stamp > record.stamp) {
       // early return: already latest stamp
@@ -205,7 +207,7 @@ function lastReportedRecord (records) {
 // receives loggly events for checkpoint.
 // depends on events having {timestamp,tags:['host-,..],event.json.digest}
 // and returns an array of {stamp,host,digest}
-function parseCheckpointEvents (events) {
+function parseCheckpointEvents(events) {
   const records = []
 
   events.forEach(function (event) {
@@ -240,7 +242,7 @@ function parseCheckpointEvents (events) {
 
 // This function uses the node-loggly module directly, instead of winston-loggly
 // This makes this module more independant.
-async function queryLoggly (searchOptions) {
+async function queryLoggly(searchOptions) {
   return new Promise(function (resolve, reject) {
     const client = loggly.createClient(config.loggly)
     client.search(searchOptions).run(function (err, results) {

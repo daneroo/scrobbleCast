@@ -23,16 +23,19 @@ describe('delta', function () {
 
     it('should return changes (new|chg)', function () {
       expect(changes).to.not.equal(null)
-      expect(changes).to.deep.equal([{
-        op: 'chg',
-        key: 'changedfield',
-        from: 1,
-        to: 2
-      }, {
-        op: 'new',
-        key: 'newfield',
-        to: 1
-      }])
+      expect(changes).to.deep.equal([
+        {
+          op: 'chg',
+          key: 'changedfield',
+          from: 1,
+          to: 2
+        },
+        {
+          op: 'new',
+          key: 'newfield',
+          to: 1
+        }
+      ])
     })
   })
 })

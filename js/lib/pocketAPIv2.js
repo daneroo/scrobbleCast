@@ -27,11 +27,11 @@ const paths = {
   episodes: '/user/podcast/episodes' // MIGRATED
 }
 
-function PocketAPI (options) {
+function PocketAPI(options) {
   this.user = null // set by sign_in
   this.token = null // set by sign_in
   // maybe default stamp should be time of fetch not time of session init...
-  this.stamp = (options && options.stamp) ? options.stamp : utils.stamp('minute')
+  this.stamp = options && options.stamp ? options.stamp : utils.stamp('minute')
   log.verbose('PocketAPI:Injecting stamp', {
     stamp: this.stamp
   })
@@ -55,7 +55,7 @@ PocketAPI.prototype._fetch = async function (path, body = {}) {
 }
 
 // promise token.
-function speedLimit (input) {
+function speedLimit(input) {
   return new Promise(function (resolve /*, reject */) {
     limiter.removeTokens(1, function () {
       return resolve(input)
@@ -70,7 +70,7 @@ function speedLimit (input) {
 PocketAPI.prototype.normalize = function (items, sourceType, extra = {}) {
   // prepend our extra descriptor fields (to optionally passed in values)
   extra = {
-    __type: (sourceType === '01-podcasts') ? 'podcast' : 'episode',
+    __type: sourceType === '01-podcasts' ? 'podcast' : 'episode',
     __sourceType: sourceType,
     __user: this.user,
     __stamp: this.stamp,
@@ -154,7 +154,14 @@ PocketAPI.prototype.decorateEpisodes = async function (uuid, incomingEpisodes) {
 
   // moved to static: url,title,published was published_at,duration,file_type,file_size was size
   // duration is copied from static, as it is alway 0 in episode itself
-  const staticProps = ['url', 'title', 'published', 'duration', 'file_type', 'file_size']
+  const staticProps = [
+    'url',
+    'title',
+    'published',
+    'duration',
+    'file_type',
+    'file_size'
+  ]
   let notfound = 0
   for (const episode of incomingEpisodes) {
     let found = false
@@ -288,7 +295,7 @@ PocketAPI.prototype.login = async function (credentials) {
 
 // removes and renames properties, *in place* in the Object array
 // rename fields is map: oldName -> null|newName
-function renameOrRemoveFields (items, renameFields) {
+function renameOrRemoveFields(items, renameFields) {
   for (const item of items) {
     for (const prop in renameFields) {
       if (prop in item) {

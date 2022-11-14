@@ -16,19 +16,22 @@ const api = require('./api')
 const app = express()
 const server = require('http').createServer(app)
 
-app.use(morgan('tiny', { // dev has color - we really want structured logging
-  skip: function (req /*, res */) {
-    return req.url === '/metrics'
-  },
-  stream: log.morganStream
-}))
+app.use(
+  morgan('tiny', {
+    // dev has color - we really want structured logging
+    skip: function (req /*, res */) {
+      return req.url === '/metrics'
+    },
+    stream: log.morganStream
+  })
+)
 
 app.use('/api', api)
 
 // static app
 app.use(express.static(path.join(__dirname, 'public')))
 
-function start () {
+function start() {
   server.listen(config.express.port, function () {
     log.info('Express server listening on port *:' + config.express.port)
   })

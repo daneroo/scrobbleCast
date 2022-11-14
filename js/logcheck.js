@@ -13,7 +13,7 @@ const justTask = false
 
 main()
 
-async function main () {
+async function main() {
   if (justTask) {
     await logcheck.logcheckTask()
   } else {
@@ -23,7 +23,7 @@ async function main () {
   await closeGracefully('normalExit')
 }
 
-async function mainWithMethod (method = 'loggly') {
+async function mainWithMethod(method = 'loggly') {
   log.verbose('Starting LogCheck', { method })
   if (!['nats', 'loggly'].includes(method)) {
     log.error('unknown method', { method })
@@ -70,10 +70,10 @@ async function mainWithMethod (method = 'loggly') {
 // group by stamp rounded to 10min
 // deduplicate, or find first match
 // this function assumes that incoming records are descending
-function aggRecords (records) {
+function aggRecords(records) {
   const hosts = distinct(records, 'host') // these are sorted
   const NOVALUE = '-no value-'
-  function emptyHostMap () {
+  function emptyHostMap() {
     // function bound to hosts, which is an array
     return _.reduce(
       hosts,
@@ -87,7 +87,7 @@ function aggRecords (records) {
 
   // map [{stamp, host, digest}] - array of obj
   // to [[ stamp, host1-digest,.. hostn-digest]] - array of arrays
-  function makeTableStampByHost () {
+  function makeTableStampByHost() {
     // function is bound to records
     const digestbyStampByHost = {}
     _(records).each(function (r) {
@@ -125,11 +125,11 @@ function aggRecords (records) {
   let rows = makeTableStampByHost()
 
   // reformat
-  function shortDate (stampStr) {
+  function shortDate(stampStr) {
     return stampStr.substr(11, 9)
   }
 
-  rows = rows.map(row => {
+  rows = rows.map((row) => {
     // adjust the output each row in stamp, digest,digest,..
     return row.map((v, idx) => {
       if (idx === 0) {
@@ -142,7 +142,7 @@ function aggRecords (records) {
 
   // keep only until first match
   let foundIdentical = false
-  rows = rows.filter(row => {
+  rows = rows.filter((row) => {
     // is all digests's are equal (1 distinct vale)
     if (!foundIdentical && _.uniq(row.slice(1)).length === 1) {
       foundIdentical = true
@@ -153,18 +153,18 @@ function aggRecords (records) {
   })
 
   // now the ouput - as table
-  const shortHosts = hosts.map(host => {
+  const shortHosts = hosts.map((host) => {
     return host.split('.')[0] // shortHost
   })
   const header = ['checkpoint'].concat(shortHosts)
   const table = newTable(header)
-  rows.forEach(row => {
+  rows.forEach((row) => {
     table.push(row)
   })
   console.log(table.toString())
 }
 
-function distinct (records, field) {
+function distinct(records, field) {
   const values = {}
   records.forEach(function (r) {
     const value = r[field]
@@ -174,7 +174,7 @@ function distinct (records, field) {
 }
 
 // Just print th records in a table, possible elipse to remove middle rows...
-function showRecords (records) {
+function showRecords(records) {
   // console.log(records)
   const origRecords = records // needs to be returned to the promise chain
   if (!records || !records.length) {
@@ -199,7 +199,7 @@ function showRecords (records) {
 }
 
 // Utility to create an object with same keys, but default values
-function blankedObject (obj, defaultValue) {
+function blankedObject(obj, defaultValue) {
   defaultValue = defaultValue === undefined ? '' : defaultValue
   return _.reduce(
     obj,
@@ -212,7 +212,7 @@ function blankedObject (obj, defaultValue) {
 }
 
 // Utility to create our formatted table
-function newTable (head) {
+function newTable(head) {
   // var table = new Table();
   const table = new Table({
     head: head || [],
@@ -228,7 +228,7 @@ function newTable (head) {
 
 // Graceful shutdown
 // see https://snyk.io/blog/10-best-practices-to-containerize-nodejs-web-applications-with-docker/
-async function closeGracefully (signal) {
+async function closeGracefully(signal) {
   log.info(`Received signal to terminate: ${signal}`)
 
   await Promise.all([nats.disconnectFromNats()])

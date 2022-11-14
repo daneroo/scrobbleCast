@@ -17,7 +17,7 @@ exports = module.exports = {
 }
 
 // TODO:daneroo
-async function insertDedup (items) {
+async function insertDedup(items) {
   // sort items in dedup order, group by {__user, __type, uuid}
   // dedup order: db.
   const allInserts = []
@@ -51,7 +51,7 @@ async function insertDedup (items) {
   return counts
 }
 
-async function dedupWithNewItem (item, hitems) {
+async function dedupWithNewItem(item, hitems) {
   const toInsert = []
   const duplicates = []
   hitems.push(item)
@@ -78,7 +78,7 @@ async function dedupWithNewItem (item, hitems) {
 
 // comparator which implements sorting by: db.fieldOrders.dedup
 // must calculate it's own digest
-function dedupOrderComparator (item) {
+function dedupOrderComparator(item) {
   const { __user, __type, uuid, __stamp, __sourceType } = item
   const digest = utils.digest(JSON.stringify(item))
   return [__user, __type, uuid, __stamp, __sourceType, digest]

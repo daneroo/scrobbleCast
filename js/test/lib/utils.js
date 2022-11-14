@@ -26,10 +26,26 @@ describe('utils', function () {
   describe('stamp(grain,stamp)', function () {
     it('should verify specific dates', function () {
       const test = [
-        { stamp: '2018-01-01T00:00:00Z', grain: 'minute', rounded: '2018-01-01T00:00:00Z' },
-        { stamp: '2018-01-01T00:10:00Z', grain: '10minutes', rounded: '2018-01-01T00:10:00Z' },
-        { stamp: '2018-01-01T12:34:56.789Z', grain: 'minute', rounded: '2018-01-01T12:34:00Z' },
-        { stamp: '2018-01-01T12:34:56.789Z', grain: '10minutes', rounded: '2018-01-01T12:30:00Z' }
+        {
+          stamp: '2018-01-01T00:00:00Z',
+          grain: 'minute',
+          rounded: '2018-01-01T00:00:00Z'
+        },
+        {
+          stamp: '2018-01-01T00:10:00Z',
+          grain: '10minutes',
+          rounded: '2018-01-01T00:10:00Z'
+        },
+        {
+          stamp: '2018-01-01T12:34:56.789Z',
+          grain: 'minute',
+          rounded: '2018-01-01T12:34:00Z'
+        },
+        {
+          stamp: '2018-01-01T12:34:56.789Z',
+          grain: '10minutes',
+          rounded: '2018-01-01T12:30:00Z'
+        }
       ]
       for (const t of test) {
         const rounded = utils.stamp(t.grain, t.stamp)

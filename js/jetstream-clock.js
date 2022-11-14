@@ -7,7 +7,7 @@ const nats = require('./lib/nats')
 const { JSONCodec } = require('nats')
 
 main()
-async function main () {
+async function main() {
   log.info('JetStream Clock Test')
 
   const streamName = 'clockstream'
@@ -36,7 +36,7 @@ async function main () {
 
 // Graceful shutdown
 // see https://snyk.io/blog/10-best-practices-to-containerize-nodejs-web-applications-with-docker/
-async function closeGracefully (signal) {
+async function closeGracefully(signal) {
   log.info(`Received signal to terminate: ${signal}`)
 
   await Promise.all([nats.disconnectFromNats()])

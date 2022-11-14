@@ -13,7 +13,7 @@ exports = module.exports = {
   iface: {
     init: async () => {},
     end: async () => {},
-    save: (/* item, opts */) => { }, // returns (Promise)(status in insert,duplicate,error)
-    load: (/* opts, cb */) => { } // foreach item, cb(item);
+    save: (/* item, opts */) => {}, // returns (Promise)(status in insert,duplicate,error)
+    load: (/* opts, cb */) => {} // foreach item, cb(item);
   }
 }

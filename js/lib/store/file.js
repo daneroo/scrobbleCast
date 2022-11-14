@@ -4,19 +4,19 @@
 
 // dependencies - core-public-internal
 // var fs = require('fs');
-var path = require('path')
+const path = require('path')
 // var mkdirp = require('mkdirp');
-var Promise = require('bluebird')
+const Promise = require('bluebird')
 // var _ = require('lodash');
-var log = require('../log')
-var srcFile = require('../source/file')
+const log = require('../log')
+const srcFile = require('../source/file')
 // var sinkFile = require('../sink/file');
 
 // Exported API
 exports = module.exports = {
   // save: (item, opts) => {}, // returns (Promise)(status in insert,duplicate,error)
   // load: (opts, cb) => {} // foreach item, cb(item);
-  load: load // foreach item, cb(item);
+  load // foreach item, cb(item);
 }
 
 // TODO filter:{__type,__stamp:[start,end]}
@@ -54,7 +54,7 @@ function load (opts, itemHandler) {
       })
   }
 
-  var counts = {
+  const counts = {
     item: 0,
     file: 0
   }
@@ -65,7 +65,7 @@ function load (opts, itemHandler) {
         counts.file += files.length
 
         return Promise.each(files, function (file) {
-          var items = srcFile.loadJSON(file)
+          const items = srcFile.loadJSON(file)
           counts.item += items.length
           return Promise.each(items, function (item) {
             // return Promise.resolve(true);
@@ -124,16 +124,16 @@ function combineAssertions (opts) {
 function progress () {
   const logEvery = 10000
   // bound scope variables
-  var soFar = 0
-  var start = +new Date()
+  let soFar = 0
+  const start = +new Date()
 
   // the function we are returning, bound to local variables
   return (item) => {
     soFar++
     // if (elapsed > 2 ) {
     if (soFar % logEvery === 0) {
-      var elapsed = (+new Date() - start) / 1000
-      var rate = (soFar / elapsed).toFixed(0) + 'r/s'
+      const elapsed = (+new Date() - start) / 1000
+      const rate = (soFar / elapsed).toFixed(0) + 'r/s'
       // log('Progress %s: %s', soFar, elapsed, rate);
       log.verbose('Progress: %s %s %s (%d)', rate, item.__user, item.__stamp, soFar)
       // soFar = 0;
@@ -143,9 +143,9 @@ function progress () {
 }
 
 function checkStampOrdering () {
-  var maxStamp = '1970-01-01T00:00:00Z' // to track increasing'ness
+  let maxStamp = '1970-01-01T00:00:00Z' // to track increasing'ness
   return (item) => {
-    var stamp = item.__stamp
+    const stamp = item.__stamp
     log.debug('Checking stamp ordering: %s >=? %s', item.__stamp, maxStamp)
     if (stamp < maxStamp) {
       log.error(`Item stamp not increasing: ${stamp} < ${maxStamp}`, item)
@@ -156,7 +156,7 @@ function checkStampOrdering () {
 }
 
 function singleUser () {
-  var user // used to validate that all items have same user
+  let user // used to validate that all items have same user
   // validates that we are always called with a single user, throws on violation
   return (item) => {
     // validate that all items are for same user
@@ -176,9 +176,9 @@ function reportCounts (opts) {
 
   return (counts) => {
     log.verbose('+file.load', {
-      prefix: prefix,
-      user: user,
-      counts: counts
+      prefix,
+      user,
+      counts
     })
     return Promise.resolve(counts)
   }

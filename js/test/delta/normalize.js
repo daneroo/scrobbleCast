@@ -2,12 +2,12 @@
 
 const expect = require('chai').expect
 
-var delta = require('../../lib/delta')
+const delta = require('../../lib/delta')
 
 describe('delta', function () {
   describe('normalize', function () {
     it('should cast certain boolean fields', function () {
-      var n = delta.normalize({
+      const n = delta.normalize({
         uuid: 'a',
         othernullable: null,
         is_deleted: null,
@@ -24,7 +24,7 @@ describe('delta', function () {
     })
 
     it('should remove certain nullable fields', function () {
-      var n = delta.normalize({
+      const n = delta.normalize({
         uuid: 'a',
         othernullable: null,
         duration: null,
@@ -39,7 +39,7 @@ describe('delta', function () {
   })
 
   it('should be awesome', function () {
-    var thing = 'awesome'
+    const thing = 'awesome'
     expect(thing).to.equal('awesome')
   })
 })

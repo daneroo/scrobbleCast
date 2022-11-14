@@ -4,9 +4,9 @@
 // pg implementation (save only)
 
 // dependencies - core-public-internal
-var crypto = require('crypto')
-var log = require('../log')
-var utils = require('../utils')
+const crypto = require('crypto')
+const log = require('../log')
+const utils = require('../utils')
 const orm = require('../model/orm')
 const Op = orm.Op
 // these might be moved or exposed
@@ -59,10 +59,10 @@ exports = module.exports = {
 // TODO(daneroo): is this a bad idea?
 if (process.env.NODE_ENV === 'test') {
   Object.assign(exports, {
-    _digest: _digest,
-    _exists: _exists,
-    _isErrorDuplicateDigest: _isErrorDuplicateDigest,
-    _filterExisting: _filterExisting
+    _digest,
+    _exists,
+    _isErrorDuplicateDigest,
+    _filterExisting
   })
 }
 
@@ -85,7 +85,7 @@ async function _exists (item) {
   const digest = _digest(item)
   const count = await orm.Item.count({
     where: {
-      digest: digest
+      digest
     }
   })
   return count === 1
@@ -123,7 +123,7 @@ async function save (item) {
   }
 
   try {
-    await orm.Item.create({ item: item })
+    await orm.Item.create({ item })
     return true
   } catch (error) {
     // saveButVerifyIfDuplicate : should never happen because of check above
@@ -403,7 +403,7 @@ async function getByDigest (digest) {
   const wrapped = await orm.Item.findOne({
     attributes: ['item'],
     where: {
-      digest: digest
+      digest
     }
   })
   return wrapped ? wrapped.item : null
@@ -559,13 +559,13 @@ async function remove (item) {
   const rowCount = await orm.Item.destroy({
     attributes: ['item'], // TODO, don't think this is used!!
     where: {
-      digest: digest
+      digest
     }
   })
   if (rowCount !== 1) {
     log.warn('remove unexpected rowCount!=1', {
-      rowCount: rowCount,
-      digest: digest
+      rowCount,
+      digest
     })
   }
   return rowCount
@@ -582,7 +582,7 @@ async function removeAll (items) {
   })
   if (rowCount !== items.length) {
     log.warn('removeAll unexpected rowCount!=items', {
-      rowCount: rowCount,
+      rowCount,
       items: items.length
     })
   }
@@ -617,7 +617,7 @@ async function getByKey (item) {
   const found = await orm.Item.findOne({
     attributes: ['item'],
     where: {
-      digest: digest
+      digest
     }
   })
   // console.log('found', found)

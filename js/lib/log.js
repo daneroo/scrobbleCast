@@ -4,9 +4,9 @@
 // TODO(daneroo): figure out how to control default level (which is info) from ENV (verbose,debug)
 
 // dependencies - core-public-internal
-var winston = require('winston')
+const winston = require('winston')
 require('winston-loggly')
-var config = require('./config')
+const config = require('./config')
 
 const packageName = 'pocketscrape'
 
@@ -46,5 +46,5 @@ exports = module.exports = {
   info: winston.info,
   verbose: winston.verbose,
   debug: winston.debug,
-  morganStream: morganStream
+  morganStream
 }

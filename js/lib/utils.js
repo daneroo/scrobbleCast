@@ -1,9 +1,9 @@
 'use strict'
 
 // dependencies - core-public-internal
-var crypto = require('crypto')
-var _ = require('lodash')
-var log = require('./log')
+const crypto = require('crypto')
+const _ = require('lodash')
+const log = require('./log')
 
 // expect to be called with '10minutes','minute','second' or no param (millis)
 // return an iso-8601 string
@@ -25,7 +25,7 @@ function stamp (grain, nowStamp) {
 }
 
 function ago (seconds) {
-  var when = new Date(+new Date() - seconds * 1000)
+  const when = new Date(+new Date() - seconds * 1000)
   return when.toJSON().replace(/\.\d{3}Z$/, 'Z')
 }
 
@@ -37,7 +37,7 @@ function logStamp (message) {
 
 // parse a stamp from a file/path
 function stampFromFile (file) {
-  var stamp = file.match(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z/)
+  let stamp = file.match(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z/)
   if (stamp && stamp.length) {
     stamp = new Date(stamp[0])
     stamp.setSeconds(0)
@@ -99,14 +99,14 @@ function hasSameContent (a, b) {
 }
 
 function md5 (str) {
-  var hash = crypto.createHash('md5').update(str).digest('hex')
+  const hash = crypto.createHash('md5').update(str).digest('hex')
   return hash
 }
 
 // TODO(daneroo): option object for {algorithm:, prependAlgorithm:bool}
 function digest (str, algorithm, prependAlgorithm) {
   algorithm = algorithm || 'sha256'
-  var hash = crypto.createHash(algorithm).update(str).digest('hex')
+  let hash = crypto.createHash(algorithm).update(str).digest('hex')
   if (prependAlgorithm) {
     hash = algorithm + ':' + hash
   }
@@ -139,7 +139,7 @@ async function collectGC () {
 
 async function logMemAfterGC () {
   async function showMem (pfx) {
-    var msg = `${pfx}Mem after GC (MB)`
+    const msg = `${pfx}Mem after GC (MB)`
     log.verbose(msg, await memoryUsageInMB())
   }
   showMem('-')

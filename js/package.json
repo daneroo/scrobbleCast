@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node server.js",
     "unit": "NODE_ENV=test mocha --recursive test/",
-    "lint": "standard",
+    "lint": "eslint '**/*.js'",
+    "format:write": "prettier --write '**/*.js'",
     "secscan": "npm audit || true",
     "coverage": "NODE_ENV=test istanbul cover node_modules/.bin/_mocha -- --recursive test/",
     "test": "npm run lint && npm run secscan && npm run unit",
@@ -50,11 +51,17 @@
   "devDependencies": {
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
+    "eslint": "^8.27.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-mocha": "^10.1.0",
+    "eslint-plugin-n": "^15.5.1",
+    "eslint-plugin-promise": "^6.1.1",
     "istanbul": "^1.1.0-alpha.1",
     "mocha": "^3.5.3",
     "nsp": "^3.2.1",
-    "sinon": "^2.4.1",
-    "standard": "^14.3.4"
+    "sinon": "^2.4.1"
   },
   "standard": {
     "ignore": [],

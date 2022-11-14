@@ -48,7 +48,7 @@ async function logcheckTask () {
       const nonReporting = detectNonReporting(checkpointRecords, new Date())
       for (const host in nonReporting) {
         log.error('logcheck.noreport', {
-          host: host,
+          host,
           since: nonReporting[host]
         })
       }
@@ -68,7 +68,7 @@ async function logcheckTask () {
 //  return an array of {}
 async function getCheckpointRecords () {
   // The search options can be parametrized later (hours,runs...)
-  var searchOptions = {
+  const searchOptions = {
     query:
       'tag:pocketscrape AND json.message:checkpoint AND json.scope:item AND json.digest:*',
     from: '-24h',
@@ -142,9 +142,9 @@ function detectMismatch (records) {
     log.warn('logcheck.mismatch', pretty)
     return lastDigests
   } else {
-    var hostCount = Object.values(lastDigests).length
+    const hostCount = Object.values(lastDigests).length
     log.info('logcheck.match', {
-      hostCount: hostCount,
+      hostCount,
       logRecords: records.length
     })
     return false
@@ -206,7 +206,7 @@ function lastReportedRecord (records) {
 // depends on events having {timestamp,tags:['host-,..],event.json.digest}
 // and returns an array of {stamp,host,digest}
 function parseCheckpointEvents (events) {
-  var records = []
+  const records = []
 
   events.forEach(function (event) {
     // log.debug('event', event)
@@ -226,10 +226,10 @@ function parseCheckpointEvents (events) {
     if (event.event && event.event.json && event.event.json.digest) {
       const digest = event.event.json.digest
 
-      var record = {
-        stamp: stamp,
-        host: host,
-        digest: digest
+      const record = {
+        stamp,
+        host,
+        digest
       }
 
       records.push(record)

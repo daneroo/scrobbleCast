@@ -13,15 +13,15 @@
 // - externalize dedup verification...
 
 // dependencies - core-public-internal
-var config = require('./lib/config')
-var log = require('./lib/log')
-var sinkFile = require('./lib/sink/file')
-var delta = require('./lib/delta')
-var store = require('./lib/store')
+const config = require('./lib/config')
+const log = require('./lib/log')
+const sinkFile = require('./lib/sink/file')
+const delta = require('./lib/delta')
+const store = require('./lib/store')
 const { Op } = require('sequelize')
 
 // globals
-var allCredentials = require('./credentials.json')
+const allCredentials = require('./credentials.json')
 
 const basepath = ['data/snapshots/']
 
@@ -86,11 +86,11 @@ function newWriterCtx () {
   let maxStamp = '1970-01-01T00:00:00Z' // to track increasing'ness
 
   function checkStampOrdering (item) {
-    var stamp = item.__stamp
+    const stamp = item.__stamp
     if (stamp < maxStamp) {
       log.verbose('Item stamp not increasing', {
-        maxStamp: maxStamp,
-        item: item
+        maxStamp,
+        item
       })
       throw new Error('Item stamp not increasing')
     }
@@ -104,7 +104,7 @@ function newWriterCtx () {
     if (!singleUser) {
       singleUser = item.__user
     } else if (singleUser !== item.__user) {
-      var msg = 'Mixing users in loader'
+      const msg = 'Mixing users in loader'
       log.error(msg, {
         expected: singleUser,
         found: item.__user
@@ -113,16 +113,16 @@ function newWriterCtx () {
     }
   }
 
-  var historyByType = new delta.AccumulatorByTypeByUuid()
+  const historyByType = new delta.AccumulatorByTypeByUuid()
   // Validate that source was properly deduped, and enable history checksum
   function checkForDedup (item) {
-    var changeCount = historyByType.merge(item)
+    const changeCount = historyByType.merge(item)
     if (changeCount === 0) {
       log.verbose('Item not deduped', {
-        changeCount: changeCount,
-        item: item
+        changeCount,
+        item
       })
-      var msg = `* Item Not deduped: ${changeCount} ${item}`
+      const msg = `* Item Not deduped: ${changeCount} ${item}`
       throw new Error(msg)
     }
   }
@@ -130,26 +130,26 @@ function newWriterCtx () {
   // accumulate items by month, and write out
   // since we are not writing the last month, it is not a problem,
   // that the last accumulated month will never be written out
-  var previousMonth = null // stamp for current month
-  var itemsForMonth = []
+  let previousMonth = null // stamp for current month
+  let itemsForMonth = []
 
   function writeByMonth (item) {
-    var __stamp = new Date(Date.parse(item.__stamp))
+    const __stamp = new Date(Date.parse(item.__stamp))
     // find begining of month (UTC)
-    var month = new Date(
+    let month = new Date(
       Date.UTC(__stamp.getUTCFullYear(), __stamp.getUTCMonth())
     ).toJSON()
     // iso8601, remove millis
     month = month.replace(/\.\d{3}Z$/, 'Z')
 
-    var shouldWrite = previousMonth !== null && month !== previousMonth
+    const shouldWrite = previousMonth !== null && month !== previousMonth
     if (shouldWrite) {
       // actually write out the month: all types;
-      var _user = item.__user
-      var suffix = 'jsonl'
+      const _user = item.__user
+      const suffix = 'jsonl'
 
       // TODO(daneroo) make async
-      var outfile = `${basepath}/monthly/${_user}/monthly-${_user}-${previousMonth}.${suffix}`
+      const outfile = `${basepath}/monthly/${_user}/monthly-${_user}-${previousMonth}.${suffix}`
       sinkFile.write(outfile, itemsForMonth, {
         overwrite: false,
         log: true
@@ -166,12 +166,12 @@ function newWriterCtx () {
     const remaining = itemsForMonth
     log.verbose('Snapshot:flush', { remaining: remaining.length })
     if (remaining.length > 0) {
-      var _user = remaining[0].__user
-      var suffix = 'jsonl'
-      var hostname = config.hostname
+      const _user = remaining[0].__user
+      const suffix = 'jsonl'
+      const hostname = config.hostname
 
       // TODO(daneroo) make async
-      var outfile = `${basepath}/current/${_user}/current-${hostname}.${_user}.${suffix}`
+      const outfile = `${basepath}/current/${_user}/current-${hostname}.${_user}.${suffix}`
       sinkFile.write(outfile, itemsForMonth, {
         overwrite: true,
         log: true

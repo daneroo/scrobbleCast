@@ -1,8 +1,8 @@
 
 'use strict'
 exports = module.exports = {
-  makeItems: makeItems,
-  makeItem: makeItem
+  makeItems,
+  makeItem
 }
 
 function makeItems (is) {

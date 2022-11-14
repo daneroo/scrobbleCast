@@ -28,7 +28,7 @@ async function dedupTask (credentials) {
 
   let historyForSingleUuid = null
   const user = credentials.name
-  var counts = {
+  const counts = {
     total: 0,
     duplicates: 0,
     keepers: 0,
@@ -101,7 +101,7 @@ async function dedupTask (credentials) {
   } catch (error) {
     // TODO: might remove this altogether
     log.error('Dedup', {
-      error: error
+      error
     })
     throw error
   }

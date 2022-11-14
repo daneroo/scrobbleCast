@@ -6,9 +6,9 @@
 
 // dependencies - core-public-internal
 const nats = require('./lib/nats')
-var log = require('./lib/log')
-var sync = require('./lib/sync')
-var store = require('./lib/store')
+const log = require('./lib/log')
+const sync = require('./lib/sync')
+const store = require('./lib/store')
 
 // globals
 const baseURI =

@@ -3,15 +3,15 @@
 // Re-implementation of pocket API for v2
 // dependencies - core-public-internal
 
-var Promise = require('bluebird')
-var RateLimiter = require('limiter').RateLimiter
+const Promise = require('bluebird')
+const RateLimiter = require('limiter').RateLimiter
 
-var rp = require('request-promise')
-var log = require('./log')
-var utils = require('./utils')
+const rp = require('request-promise')
+const log = require('./log')
+const utils = require('./utils')
 
 // globals limiter might be configured, injected, credentials as well...
-var limiter = new RateLimiter(5, 1000) // chosen
+const limiter = new RateLimiter(5, 1000) // chosen
 // var limiter = new RateLimiter(20, 1000)
 // var limiter = new RateLimiter(1, 1000)
 
@@ -47,7 +47,7 @@ PocketAPI.prototype._fetch = async function (path, body = {}) {
     headers: {
       authorization: `Bearer ${this.token}`
     },
-    body: body,
+    body,
     json: true // Automatically stringifies the body to JSON
   })
 

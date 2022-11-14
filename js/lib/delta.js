@@ -5,10 +5,10 @@
 // --> a.merged, a.changes,
 
 // dependencies - core-public-internal
-var path = require('path')
-var util = require('util')
-var _ = require('lodash')
-var sinkFile = require('./sink/file')
+const path = require('path')
+const util = require('util')
+const _ = require('lodash')
+const sinkFile = require('./sink/file')
 
 // This is to remove noise from comparison
 //  -destructive if not cloned...(param?)
@@ -26,7 +26,7 @@ function normalize (thing) {
   // thing = _.clone(thing);
 
   // cast to boolean if !undefined
-  var booleanFields = ['is_deleted', 'starred', 'is_video']
+  const booleanFields = ['is_deleted', 'starred', 'is_video']
   booleanFields.forEach(function (field) {
     if (!_.isUndefined(thing[field])) {
       if (!_.isBoolean(thing[field])) {
@@ -37,7 +37,7 @@ function normalize (thing) {
   })
 
   // omit field if null
-  var nullableFields = ['duration', 'played_up_to', 'playing_status']
+  const nullableFields = ['duration', 'played_up_to', 'playing_status']
   nullableFields.forEach(function (field) {
     // cast to boolean if !undefined
     if (_.isNull(thing[field])) {
@@ -78,17 +78,17 @@ function compare (from, to) {
   // from = normalize(from);
   // to = normalize(to);
 
-  var changes = []
+  const changes = []
   if (!_.isEqual(from, to)) {
-    var toKeys = _.keys(to)
-    var fromKeys = _.keys(from)
-    var allKeys = _.union(fromKeys, toKeys)
+    const toKeys = _.keys(to)
+    const fromKeys = _.keys(from)
+    const allKeys = _.union(fromKeys, toKeys)
 
     allKeys.forEach(function (key) {
-      var f = from[key]
-      var t = to[key]
-      var change = {
-        key: key
+      const f = from[key]
+      const t = to[key]
+      const change = {
+        key
       }
       if (_.isUndefined(f)) {
         // new key
@@ -144,15 +144,15 @@ Accumulator.prototype.appendHistory = function (
   if (!changes || !changes.length) {
     return
   }
-  var self = this
-  var h = this.history
+  const self = this
+  const h = this.history
   // var ignoredChangeKeys = ['url']; // for sure: too much dns noise
   //  other noisy fields
   // var ignoredChangeKeys = ['url', 'uuid', 'title', 'published_at', 'size', 'duration', 'file_type', 'podcast_id', 'id', 'podcast_uuid'];
   // could also include thumbnail_url for __type:podcast
   // var ignoredChangeKeys = ['url', 'uuid', 'title', 'published_at', 'size', 'duration', 'file_type', 'podcast_id', 'id', 'podcast_uuid', 'thumbnail_url'];
   // keep uuid!
-  var ignoredChangeKeys = [
+  const ignoredChangeKeys = [
     'url',
     'title',
     'published_at',
@@ -204,8 +204,8 @@ Accumulator.prototype.merge = function (item) {
   // -normalize attributes,
   // -delete __stamp,__sourceType property for compare
 
-  var from = this
-  var to = normalize(_.clone(item))
+  const from = this
+  const to = normalize(_.clone(item))
   // no need to delete __user, and __type, but will make compare faster.
   delete to.__type
   delete to.__sourceType
@@ -233,7 +233,7 @@ Accumulator.prototype.merge = function (item) {
     })
   }
 
-  var changes = compare(from, to)
+  const changes = compare(from, to)
   // rewrite compare to make this smoother
   this.appendHistory(changes, item.__stamp, item.__sourceType)
 
@@ -242,7 +242,7 @@ Accumulator.prototype.merge = function (item) {
   _.merge(this, to)
 
   // delete and re-attach the history attribute: makes it appear at the end of the object (usually)
-  var h = this.history
+  const h = this.history
   delete this.history
   this.history = h
 
@@ -258,23 +258,23 @@ function AccumulatorByUuid (/* options */) {
 AccumulatorByUuid.prototype.getAccumulator = function (uuid) {
   if (!this.accumulators[uuid]) {
     this.accumulators[uuid] = new Accumulator({
-      uuid: uuid
+      uuid
     })
   }
   return this.accumulators[uuid]
 }
 
 AccumulatorByUuid.prototype.merge = function (item) {
-  var acc = this.getAccumulator(item.uuid)
-  var changes = acc.merge(item)
-  var changeCount = changes.length
+  const acc = this.getAccumulator(item.uuid)
+  const changes = acc.merge(item)
+  const changeCount = changes.length
   return changeCount
 }
 
 AccumulatorByUuid.prototype.sortAndSave = function (_user, _type) {
   // console.log('|' + outfile + '|=', _.size(history.accumulators));
   // just write out the accumulators dictionary, it is the only attribute!
-  var sorted = _.sortBy(this.accumulators, function (item) {
+  const sorted = _.sortBy(this.accumulators, function (item) {
     // should this use sortByAll ? not in 2.4.2
     // careful sorting by [__changeCount], compare by string when returning an array
     // this sorts by a numerically
@@ -287,7 +287,7 @@ AccumulatorByUuid.prototype.sortAndSave = function (_user, _type) {
     return [item.meta.__lastUpdated, item.uuid]
   }).reverse()
 
-  var outfile = path.join(
+  const outfile = path.join(
     sinkFile.dataDirname,
     util.format('history-%s-%s.json', _user, _type)
   )
@@ -314,22 +314,22 @@ AccumulatorByTypeByUuid.prototype.getAccumulatorByUuidForType = function (
 }
 
 AccumulatorByTypeByUuid.prototype.merge = function (item) {
-  var accByUuid = this.getAccumulatorByUuidForType(item.__type)
-  var changeCount = accByUuid.merge(item) // already returns changeCount
+  const accByUuid = this.getAccumulatorByUuidForType(item.__type)
+  const changeCount = accByUuid.merge(item) // already returns changeCount
   return changeCount
 }
 
 AccumulatorByTypeByUuid.prototype.sortAndSave = function (_user) {
-  var self = this
+  const self = this
   Object.keys(this.accumulatorsByType).forEach(function (_type) {
     self.getAccumulatorByUuidForType(_type).sortAndSave(_user, _type)
   })
 }
 
 exports = module.exports = {
-  normalize: normalize,
-  compare: compare,
-  Accumulator: Accumulator,
-  AccumulatorByUuid: AccumulatorByUuid,
-  AccumulatorByTypeByUuid: AccumulatorByTypeByUuid
+  normalize,
+  compare,
+  Accumulator,
+  AccumulatorByUuid,
+  AccumulatorByTypeByUuid
 }

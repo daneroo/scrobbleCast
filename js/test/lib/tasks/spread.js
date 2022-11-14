@@ -4,7 +4,7 @@ const spread = require('../../../lib/tasks/spread')
 
 describe('spread', function () {
   describe('stampOffset', function () {
-    it('should calculate offset (specific stamps)', async () => {
+    it('should calculate offset (specific stamps)', async function () {
       const test = [
         { stamp: '2018-01-01T00:00:00Z', offset: 0 },
         { stamp: '2018-01-01T00:10:00Z', offset: 1 },
@@ -26,9 +26,11 @@ describe('spread', function () {
         expect(offset).to.equal(t.offset)
       }
     })
-    it('should calculate all offsets in [0,200)', async () => {
+    it('should calculate all offsets in [0,200)', async function () {
       for (let off = 0; off < 200; off++) {
-        const stamp = new Date(+new Date('2018-07-01T00:00:00Z') + off * 10 * 60 * 1000).toISOString()
+        const stamp = new Date(
+          +new Date('2018-07-01T00:00:00Z') + off * 10 * 60 * 1000
+        ).toISOString()
         const expected = off % 144
         const offset = spread.stampOffset(stamp)
         expect(offset).to.equal(expected)
@@ -37,74 +39,230 @@ describe('spread', function () {
   })
 
   describe('uuidOffset', function () {
-    it('should calculate offset (specific uidds)', async () => {
+    it('should calculate offset (specific uidds)', async function () {
       const test = [
-        { uuid: '00000000-0000-0000-0000-000000000000', offset: 138, alg: 'md5' },
-        { uuid: '00000000-0000-0000-0000-000000000000', offset: 28, alg: 'sha256' },
-        { uuid: 'e6e92380-2c46-012e-0984-00163e1b201c', offset: 124, alg: 'md5' },
-        { uuid: 'e6e92380-2c46-012e-0984-00163e1b201c', offset: 130, alg: 'sha256' },
-        { uuid: 'e4ff94b0-8686-0130-0b07-723c91aeae46', offset: 30, alg: 'md5' },
-        { uuid: 'e4ff94b0-8686-0130-0b07-723c91aeae46', offset: 22, alg: 'sha256' },
-        { uuid: 'e4b6efd0-0424-012e-f9a0-00163e1b201c', offset: 116, alg: 'md5' },
-        { uuid: 'e4b6efd0-0424-012e-f9a0-00163e1b201c', offset: 52, alg: 'sha256' },
-        { uuid: 'e0b82010-83df-012e-3c4d-00163e1b201c', offset: 38, alg: 'md5' },
-        { uuid: 'e0b82010-83df-012e-3c4d-00163e1b201c', offset: 49, alg: 'sha256' },
-        { uuid: 'df86cd70-5e91-0133-cd9f-0d11918ab357', offset: 46, alg: 'md5' },
-        { uuid: 'df86cd70-5e91-0133-cd9f-0d11918ab357', offset: 61, alg: 'sha256' },
-        { uuid: 'dde6abe0-04fe-012e-f9d3-00163e1b201c', offset: 11, alg: 'md5' },
-        { uuid: 'dde6abe0-04fe-012e-f9d3-00163e1b201c', offset: 132, alg: 'sha256' },
-        { uuid: 'bb16e6b0-1469-0134-a447-13e6b3913b15', offset: 114, alg: 'md5' },
-        { uuid: 'bb16e6b0-1469-0134-a447-13e6b3913b15', offset: 41, alg: 'sha256' },
-        { uuid: 'b4eb8a20-5ec6-012e-25a0-00163e1b201c', offset: 51, alg: 'md5' },
-        { uuid: 'b4eb8a20-5ec6-012e-25a0-00163e1b201c', offset: 101, alg: 'sha256' },
-        { uuid: 'b4d12f70-636c-0135-902c-63f4b61a9224', offset: 57, alg: 'md5' },
-        { uuid: 'b4d12f70-636c-0135-902c-63f4b61a9224', offset: 141, alg: 'sha256' },
-        { uuid: 'b1ccb690-fd97-0130-c6ee-723c91aeae46', offset: 79, alg: 'md5' },
-        { uuid: 'b1ccb690-fd97-0130-c6ee-723c91aeae46', offset: 63, alg: 'sha256' },
-        { uuid: 'ac371bd0-094f-0134-9ce1-59d98c6b72b8', offset: 36, alg: 'md5' },
-        { uuid: 'ac371bd0-094f-0134-9ce1-59d98c6b72b8', offset: 119, alg: 'sha256' },
-        { uuid: 'abb0ba60-2eac-0135-52f9-452518e2d253', offset: 37, alg: 'md5' },
-        { uuid: 'abb0ba60-2eac-0135-52f9-452518e2d253', offset: 124, alg: 'sha256' },
-        { uuid: 'a56c9e00-5332-0132-d11f-5f4c86fd3263', offset: 94, alg: 'md5' },
-        { uuid: 'a56c9e00-5332-0132-d11f-5f4c86fd3263', offset: 87, alg: 'sha256' },
-        { uuid: '9bae7500-ab3a-0133-2e1c-6dc413d6d41d', offset: 81, alg: 'md5' },
-        { uuid: '9bae7500-ab3a-0133-2e1c-6dc413d6d41d', offset: 130, alg: 'sha256' },
-        { uuid: '9a290c90-4a11-0135-902b-63f4b61a9224', offset: 127, alg: 'md5' },
-        { uuid: '9a290c90-4a11-0135-902b-63f4b61a9224', offset: 140, alg: 'sha256' },
-        { uuid: '97388eb0-db99-012e-da14-525400c11844', offset: 99, alg: 'md5' },
-        { uuid: '97388eb0-db99-012e-da14-525400c11844', offset: 107, alg: 'sha256' },
-        { uuid: '8d728390-249c-0131-73be-723c91aeae46', offset: 37, alg: 'md5' },
-        { uuid: '8d728390-249c-0131-73be-723c91aeae46', offset: 34, alg: 'sha256' }]
+        {
+          uuid: '00000000-0000-0000-0000-000000000000',
+          offset: 138,
+          alg: 'md5'
+        },
+        {
+          uuid: '00000000-0000-0000-0000-000000000000',
+          offset: 28,
+          alg: 'sha256'
+        },
+        {
+          uuid: 'e6e92380-2c46-012e-0984-00163e1b201c',
+          offset: 124,
+          alg: 'md5'
+        },
+        {
+          uuid: 'e6e92380-2c46-012e-0984-00163e1b201c',
+          offset: 130,
+          alg: 'sha256'
+        },
+        {
+          uuid: 'e4ff94b0-8686-0130-0b07-723c91aeae46',
+          offset: 30,
+          alg: 'md5'
+        },
+        {
+          uuid: 'e4ff94b0-8686-0130-0b07-723c91aeae46',
+          offset: 22,
+          alg: 'sha256'
+        },
+        {
+          uuid: 'e4b6efd0-0424-012e-f9a0-00163e1b201c',
+          offset: 116,
+          alg: 'md5'
+        },
+        {
+          uuid: 'e4b6efd0-0424-012e-f9a0-00163e1b201c',
+          offset: 52,
+          alg: 'sha256'
+        },
+        {
+          uuid: 'e0b82010-83df-012e-3c4d-00163e1b201c',
+          offset: 38,
+          alg: 'md5'
+        },
+        {
+          uuid: 'e0b82010-83df-012e-3c4d-00163e1b201c',
+          offset: 49,
+          alg: 'sha256'
+        },
+        {
+          uuid: 'df86cd70-5e91-0133-cd9f-0d11918ab357',
+          offset: 46,
+          alg: 'md5'
+        },
+        {
+          uuid: 'df86cd70-5e91-0133-cd9f-0d11918ab357',
+          offset: 61,
+          alg: 'sha256'
+        },
+        {
+          uuid: 'dde6abe0-04fe-012e-f9d3-00163e1b201c',
+          offset: 11,
+          alg: 'md5'
+        },
+        {
+          uuid: 'dde6abe0-04fe-012e-f9d3-00163e1b201c',
+          offset: 132,
+          alg: 'sha256'
+        },
+        {
+          uuid: 'bb16e6b0-1469-0134-a447-13e6b3913b15',
+          offset: 114,
+          alg: 'md5'
+        },
+        {
+          uuid: 'bb16e6b0-1469-0134-a447-13e6b3913b15',
+          offset: 41,
+          alg: 'sha256'
+        },
+        {
+          uuid: 'b4eb8a20-5ec6-012e-25a0-00163e1b201c',
+          offset: 51,
+          alg: 'md5'
+        },
+        {
+          uuid: 'b4eb8a20-5ec6-012e-25a0-00163e1b201c',
+          offset: 101,
+          alg: 'sha256'
+        },
+        {
+          uuid: 'b4d12f70-636c-0135-902c-63f4b61a9224',
+          offset: 57,
+          alg: 'md5'
+        },
+        {
+          uuid: 'b4d12f70-636c-0135-902c-63f4b61a9224',
+          offset: 141,
+          alg: 'sha256'
+        },
+        {
+          uuid: 'b1ccb690-fd97-0130-c6ee-723c91aeae46',
+          offset: 79,
+          alg: 'md5'
+        },
+        {
+          uuid: 'b1ccb690-fd97-0130-c6ee-723c91aeae46',
+          offset: 63,
+          alg: 'sha256'
+        },
+        {
+          uuid: 'ac371bd0-094f-0134-9ce1-59d98c6b72b8',
+          offset: 36,
+          alg: 'md5'
+        },
+        {
+          uuid: 'ac371bd0-094f-0134-9ce1-59d98c6b72b8',
+          offset: 119,
+          alg: 'sha256'
+        },
+        {
+          uuid: 'abb0ba60-2eac-0135-52f9-452518e2d253',
+          offset: 37,
+          alg: 'md5'
+        },
+        {
+          uuid: 'abb0ba60-2eac-0135-52f9-452518e2d253',
+          offset: 124,
+          alg: 'sha256'
+        },
+        {
+          uuid: 'a56c9e00-5332-0132-d11f-5f4c86fd3263',
+          offset: 94,
+          alg: 'md5'
+        },
+        {
+          uuid: 'a56c9e00-5332-0132-d11f-5f4c86fd3263',
+          offset: 87,
+          alg: 'sha256'
+        },
+        {
+          uuid: '9bae7500-ab3a-0133-2e1c-6dc413d6d41d',
+          offset: 81,
+          alg: 'md5'
+        },
+        {
+          uuid: '9bae7500-ab3a-0133-2e1c-6dc413d6d41d',
+          offset: 130,
+          alg: 'sha256'
+        },
+        {
+          uuid: '9a290c90-4a11-0135-902b-63f4b61a9224',
+          offset: 127,
+          alg: 'md5'
+        },
+        {
+          uuid: '9a290c90-4a11-0135-902b-63f4b61a9224',
+          offset: 140,
+          alg: 'sha256'
+        },
+        {
+          uuid: '97388eb0-db99-012e-da14-525400c11844',
+          offset: 99,
+          alg: 'md5'
+        },
+        {
+          uuid: '97388eb0-db99-012e-da14-525400c11844',
+          offset: 107,
+          alg: 'sha256'
+        },
+        {
+          uuid: '8d728390-249c-0131-73be-723c91aeae46',
+          offset: 37,
+          alg: 'md5'
+        },
+        {
+          uuid: '8d728390-249c-0131-73be-723c91aeae46',
+          offset: 34,
+          alg: 'sha256'
+        }
+      ]
       for (const t of test) {
         const offset = spread.uuidOffset(t.uuid, { algorithm: t.alg })
         expect(offset).to.equal(t.offset)
         // console.log(`{ uuid: '${t.uuid}', offset: ${offset}, alg:'${t.alg}' },`)
       }
     })
-    it.skip('(deprecated parameter preModOffset) should calculate all preModOffsets in [0,200)', async () => {
+    // eslint-disable-next-line mocha/no-skipped-tests
+    it.skip('(deprecated parameter preModOffset) should calculate all preModOffsets in [0,200)', async function () {
       for (let off = 0; off < 200; off++) {
         // const t = { uuid: '00000000-0000-0000-0000-000000000000', offset: 28, alg: 'sha256' }
-        const t = { uuid: '00000000-0000-0000-0000-000000000000', offset: 138, alg: 'md5' }
+        const t = {
+          uuid: '00000000-0000-0000-0000-000000000000',
+          offset: 138,
+          alg: 'md5'
+        }
 
-        const offset = spread.uuidOffset(t.uuid, { algorithm: t.alg, preModOffset: off })
+        const offset = spread.uuidOffset(t.uuid, {
+          algorithm: t.alg,
+          preModOffset: off
+        })
         const expectedOffset = (t.offset + off) % 144
         expect(offset).to.equal(expectedOffset)
       }
     })
   })
 
-  describe('select (deep,shallow,skip)', () => {
+  describe('select (deep,shallow,skip)', function () {
     it('should show select name', function () {
       expect(spread.selectName(0)).to.equal('deep')
       expect(spread.selectName(1)).to.equal('shallow')
       expect(spread.selectName(-1)).to.equal('skip')
     })
-    describe('with offsets', () => {
+    describe('with offsets', function () {
       it('should correctly select with uuidOffset=0', function () {
-      // this is the old cron behavior
+        // this is the old cron behavior
         for (let stampOffset = 0; stampOffset < 144; stampOffset++) {
-          const expected = (stampOffset === 0) ? 0 // deep
-            : (stampOffset % 6 === 0) ? 1 // shallow
+          const expected =
+            stampOffset === 0
+              ? 0 // deep
+              : stampOffset % 6 === 0
+              ? 1 // shallow
               : -1 // skip
 
           const selected = spread.selectFromOffsets(stampOffset, 0)
@@ -112,10 +270,13 @@ describe('spread', function () {
         }
       })
       it('should correctly select with uuidOffset=72', function () {
-      // this is the old cron behavior
+        // this is the old cron behavior
         for (let stampOffset = 0; stampOffset < 144; stampOffset++) {
-          const expected = (stampOffset === 72) ? 0 // deep
-            : (stampOffset % 6 === 0) ? 1 // shallow
+          const expected =
+            stampOffset === 72
+              ? 0 // deep
+              : stampOffset % 6 === 0
+              ? 1 // shallow
               : -1 // skip
 
           const selected = spread.selectFromOffsets(stampOffset, 72)
@@ -124,12 +285,46 @@ describe('spread', function () {
       })
 
       const test = [
-        { uuidOffset: 0, deep: [0], shallow: [6, 12, 18, 24, 30, 36, 42, 48, 54, 60, 66, 72, 78, 84, 90, 96, 102, 108, 114, 120, 126, 132, 138] },
-        { uuidOffset: 72, deep: [72], shallow: [0, 6, 12, 18, 24, 30, 36, 42, 48, 54, 60, 66, 78, 84, 90, 96, 102, 108, 114, 120, 126, 132, 138] },
-        { uuidOffset: 7, deep: [7], shallow: [1, 13, 19, 25, 31, 37, 43, 49, 55, 61, 67, 73, 79, 85, 91, 97, 103, 109, 115, 121, 127, 133, 139] },
-        { uuidOffset: 17, deep: [17], shallow: [5, 11, 23, 29, 35, 41, 47, 53, 59, 65, 71, 77, 83, 89, 95, 101, 107, 113, 119, 125, 131, 137, 143] },
-        { uuidOffset: 89, deep: [89], shallow: [5, 11, 17, 23, 29, 35, 41, 47, 53, 59, 65, 71, 77, 83, 95, 101, 107, 113, 119, 125, 131, 137, 143] }
-
+        {
+          uuidOffset: 0,
+          deep: [0],
+          shallow: [
+            6, 12, 18, 24, 30, 36, 42, 48, 54, 60, 66, 72, 78, 84, 90, 96, 102,
+            108, 114, 120, 126, 132, 138
+          ]
+        },
+        {
+          uuidOffset: 72,
+          deep: [72],
+          shallow: [
+            0, 6, 12, 18, 24, 30, 36, 42, 48, 54, 60, 66, 78, 84, 90, 96, 102,
+            108, 114, 120, 126, 132, 138
+          ]
+        },
+        {
+          uuidOffset: 7,
+          deep: [7],
+          shallow: [
+            1, 13, 19, 25, 31, 37, 43, 49, 55, 61, 67, 73, 79, 85, 91, 97, 103,
+            109, 115, 121, 127, 133, 139
+          ]
+        },
+        {
+          uuidOffset: 17,
+          deep: [17],
+          shallow: [
+            5, 11, 23, 29, 35, 41, 47, 53, 59, 65, 71, 77, 83, 89, 95, 101, 107,
+            113, 119, 125, 131, 137, 143
+          ]
+        },
+        {
+          uuidOffset: 89,
+          deep: [89],
+          shallow: [
+            5, 11, 17, 23, 29, 35, 41, 47, 53, 59, 65, 71, 77, 83, 95, 101, 107,
+            113, 119, 125, 131, 137, 143
+          ]
+        }
       ]
       for (const t of test) {
         it(`should correctly select with uuidOffset=${t.uuidOffset}`, function () {
@@ -148,13 +343,11 @@ describe('spread', function () {
         })
       }
     })
-    describe('with stamps, uuids for day of 2018-02-23', () => {
+    describe('with stamps, uuids for day of 2018-02-23', function () {
       const test = [
         {
           uuid: '00000000-0000-0000-0000-000000000000', // 138
-          deep: [
-            '2018-02-23T23:00:00.000Z'
-          ],
+          deep: ['2018-02-23T23:00:00.000Z'],
           shallow: [
             '2018-02-23T00:00:00.000Z',
             '2018-02-23T01:00:00.000Z',
@@ -180,11 +373,10 @@ describe('spread', function () {
             '2018-02-23T21:00:00.000Z',
             '2018-02-23T22:00:00.000Z'
           ]
-        }, {
+        },
+        {
           uuid: 'e6e92380-2c46-012e-0984-00163e1b201c', // 124
-          deep: [
-            '2018-02-23T20:40:00.000Z'
-          ],
+          deep: ['2018-02-23T20:40:00.000Z'],
           shallow: [
             '2018-02-23T00:40:00.000Z',
             '2018-02-23T01:40:00.000Z',
@@ -210,11 +402,10 @@ describe('spread', function () {
             '2018-02-23T22:40:00.000Z',
             '2018-02-23T23:40:00.000Z'
           ]
-        }, {
+        },
+        {
           uuid: 'dde6abe0-04fe-012e-f9d3-00163e1b201c', // 11
-          deep: [
-            '2018-02-23T01:50:00.000Z'
-          ],
+          deep: ['2018-02-23T01:50:00.000Z'],
           shallow: [
             '2018-02-23T00:50:00.000Z',
             '2018-02-23T02:50:00.000Z',
@@ -241,14 +432,14 @@ describe('spread', function () {
             '2018-02-23T23:50:00.000Z'
           ]
         }
-
       ]
       for (const t of test) {
         it(`should correctly select with uuid=${t.uuid}`, function () {
           const deep = []
           const shallow = []
           for (let stampOffset = 0; stampOffset < 144; stampOffset++) {
-            const stampMS = +new Date('2018-02-23T00:00:00Z') + stampOffset * 10 * 60 * 1000 // 10 minute bins
+            const stampMS =
+              +new Date('2018-02-23T00:00:00Z') + stampOffset * 10 * 60 * 1000 // 10 minute bins
             const stamp = new Date(stampMS).toISOString()
 
             const selected = spread.select(stamp, t.uuid)
@@ -267,6 +458,7 @@ describe('spread', function () {
     })
   })
 
+  // eslint-disable-next-line mocha/no-skipped-tests
   describe.skip('simulations (skip)', function () {
     describe('find a uuid ', function () {
       const uuidDesiredOffset = 0
@@ -322,7 +514,10 @@ describe('spread', function () {
                 for (const { uuid, items } of podcasts) {
                   const uuidAndSalt = uuid + salt
                   // console.log('  ', {uuidAndSalt, items})
-                  const offset = spread.uuidOffset(uuidAndSalt + user, { algorithm, numBytes })
+                  const offset = spread.uuidOffset(uuidAndSalt + user, {
+                    algorithm,
+                    numBytes
+                  })
 
                   itz.addDeep(offset, items)
                   for (let secondary = 6; secondary < 144; secondary += 6) {
@@ -332,7 +527,12 @@ describe('spread', function () {
                 }
               }
               const ma = itz.maxAndAverage()
-              const line = JSON.stringify({ numBytes, algorithm, salt, ...ma }).replace(/"/g, '')
+              const line = JSON.stringify({
+                numBytes,
+                algorithm,
+                salt,
+                ...ma
+              }).replace(/"/g, '')
               // console.log(line)
               if (minPages >= ma.pages.max) {
                 minPages = ma.pages.max
@@ -353,24 +553,27 @@ describe('spread', function () {
 // helpers
 class Itemizer {
   // counts pages and items, per offset bin (10minutes intervals)
-  constructor () {
+  constructor() {
     this.itemCounts = array144()
     this.pageCounts = array144()
   }
 
-  maxAndAverage () {
-    return { items: maxAndAverage(this.itemCounts), pages: maxAndAverage(this.pageCounts) }
+  maxAndAverage() {
+    return {
+      items: maxAndAverage(this.itemCounts),
+      pages: maxAndAverage(this.pageCounts)
+    }
   }
 
-  addDeep (offset, items) {
+  addDeep(offset, items) {
     this.addItems(offset, items)
   }
 
-  addShallow (offset, items) {
+  addShallow(offset, items) {
     this.addItems(offset, Math.min(items, 100)) // implies only first page
   }
 
-  addItems (offset, items) {
+  addItems(offset, items) {
     const pageSize = 100
     this.itemCounts[offset] += items
     this.pageCounts[offset] += Math.ceil(items / pageSize)
@@ -379,24 +582,24 @@ class Itemizer {
 class Histogram {
   // counts hits, per offset bin (10minutes intervals)
   // histogram method return the number of bins which have 0,1,2,3,.. hts
-  constructor () {
+  constructor() {
     this.offsetCounts = array144()
   }
 
-  add (offset) {
+  add(offset) {
     this.offsetCounts[offset]++
   }
 
-  histogram () {
+  histogram() {
     return histogram(this.offsetCounts)
   }
 }
 
-function array144 () {
-  return Array.apply(null, Array(144)).map(x => 0)
+function array144() {
+  return Array.apply(null, Array(144)).map((x) => 0)
 }
 
-function histogram (values) {
+function histogram(values) {
   const histo = values.reduce((histo, count) => {
     const countStr = `${count}`
     // console.log('--', {histo, count})
@@ -407,14 +610,17 @@ function histogram (values) {
   return histo
 }
 
-function maxAndAverage (counts) {
-  const ma = counts.reduce((ma, count) => {
-    if (count > ma.max) {
-      ma.max = count
-    }
-    ma.avg += count
-    return ma
-  }, { max: 0, avg: 0 })
+function maxAndAverage(counts) {
+  const ma = counts.reduce(
+    (ma, count) => {
+      if (count > ma.max) {
+        ma.max = count
+      }
+      ma.avg += count
+      return ma
+    },
+    { max: 0, avg: 0 }
+  )
   ma.avg /= counts.length
   ma.avg = Math.round(ma.avg)
   return ma

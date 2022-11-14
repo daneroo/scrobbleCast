@@ -2,7 +2,7 @@
 
 const expect = require('chai').expect
 
-var delta = require('../../lib/delta')
+const delta = require('../../lib/delta')
 
 function reify (obj) {
   return JSON.parse(JSON.stringify(obj))
@@ -10,8 +10,8 @@ function reify (obj) {
 
 describe('delta', function () {
   describe('Accumulator', function () {
-    var acc
-    var first = {
+    let acc
+    const first = {
       uuid: 'a',
       __sourceType: 'type.1',
       __stamp: '2015-01-01T01:23:45Z',
@@ -19,7 +19,7 @@ describe('delta', function () {
       __user: 'listener',
       description: 'Show A'
     }
-    var second = {
+    const second = {
       uuid: 'a',
       __sourceType: 'type.2',
       __stamp: '2015-01-02T02:34:56Z',
@@ -48,7 +48,7 @@ describe('delta', function () {
       acc.merge(second)
 
       // strip away two levels of class!
-      var expected = {
+      const expected = {
         history: {
           __sourceType: {
             '2015-01-01T01:23:45Z': 'type.1',
@@ -78,7 +78,7 @@ describe('delta', function () {
     // skip until insert dedup is properly fixed
     it('should pass a reality check - pre dedupStamp behavior fixed', function () {
       // sqlite3 scrobblecast-scratch.sqlite "select item from items where uuid='a1a9876e-5804-482c-b57a-4e694fe802d1'"
-      var data = [
+      const data = [
         { __type: 'episode', __sourceType: '03-new_releases', __user: 'daniel', __stamp: '2021-10-01T04:20:00Z', uuid: 'a1a9876e-5804-482c-b57a-4e694fe802d1', url: 'https://cbc.mc.tritondigital.com/CBC_QUIRKSAIO_P/media/quirksaio-RAopE1rb-20210930.mp3', duration: 3251, title: 'Indigenous archeology and unmarked graves, footprints of first peoples, laser cooked food, monkeys choke under pressure, vampire bats meet for a drink and spider learning', size: '52133222', starred: false, podcast_uuid: '52905800-287d-012e-0725-00163e1b201c', published_at: '2021-10-01T04:10:00Z', file_type: 'audio/mp3', playing_status: 1, played_up_to: 0, is_deleted: false },
         { __type: 'episode', __sourceType: '03-new_releases', __user: 'daniel', __stamp: '2021-10-01T05:50:00Z', uuid: 'a1a9876e-5804-482c-b57a-4e694fe802d1', url: 'https://cbc.mc.tritondigital.com/CBC_QUIRKSAIO_P/media/quirksaio-RAopE1rb-20210930.mp3', duration: 3312, title: 'Indigenous archeology and unmarked graves, footprints of first peoples, laser cooked food, monkeys choke under pressure, vampire bats meet for a drink and spider learning', size: '52133222', starred: false, podcast_uuid: '52905800-287d-012e-0725-00163e1b201c', published_at: '2021-10-01T04:10:00Z', file_type: 'audio/mp3', playing_status: 1, played_up_to: 0, is_deleted: false },
         { __type: 'episode', __sourceType: '02-podcasts', __user: 'daniel', __stamp: '2021-10-01T06:20:00Z', podcast_uuid: '52905800-287d-012e-0725-00163e1b201c', uuid: 'a1a9876e-5804-482c-b57a-4e694fe802d1', starred: false, duration: 3251, url: 'https://cbc.mc.tritondigital.com/CBC_QUIRKSAIO_P/media/quirksaio-RAopE1rb-20210930.mp3', title: 'Indigenous archeology and unmarked graves, footprints of first peoples, laser cooked food, monkeys choke under pressure, vampire bats meet for a drink and spider learning', file_type: 'audio/mp3', published_at: '2021-10-01T04:10:00Z', size: 52133222, playing_status: 0, played_up_to: 0, is_deleted: false },

@@ -23,7 +23,7 @@ module.exports = defineModels()
 function defineModels () {
   const creds = config.sequelize.credentials
   const settings = config.sequelize.settings
-  var sequelize = new Sequelize(creds.database, creds.username, creds.password, settings)
+  const sequelize = new Sequelize(creds.database, creds.username, creds.password, settings)
 
   const Item = sequelize.define('item', {
     digest: { type: Sequelize.STRING, primaryKey: true, allowNull: false },
@@ -35,7 +35,7 @@ function defineModels () {
     item: {
       type: Sequelize.TEXT,
       get: function () {
-        var currentValue = this.getDataValue('item')
+        const currentValue = this.getDataValue('item')
         if (typeof currentValue === 'string') {
           this.dataValues.item = JSON.parse(currentValue)
         }
@@ -97,7 +97,7 @@ function defineModels () {
     history: {
       type: Sequelize.TEXT,
       get: function () {
-        var currentValue = this.getDataValue('history')
+        const currentValue = this.getDataValue('history')
         if (typeof currentValue === 'string') {
           this.dataValues.history = JSON.parse(currentValue)
         }

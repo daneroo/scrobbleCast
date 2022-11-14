@@ -8,7 +8,7 @@ const logcheck = require('../../lib/logcheck')
 describe('logcheck', function () {
   // detectMismatch
   describe('detectMismatch', function () {
-    it('should detect mismatches', async () => {
+    it('should detect mismatches', async function () {
       const input = [
         {
           stamp: '2017-07-07T17:00:00Z',
@@ -28,7 +28,7 @@ describe('logcheck', function () {
       const got = logcheck.detectMismatch(input)
       expect(got).to.deep.equal(want)
     })
-    it('should acknowledg identical digests on all reporting hosts', async () => {
+    it('should acknowledg identical digests on all reporting hosts', async function () {
       const input = [
         {
           stamp: '2017-07-07T17:00:00Z',
@@ -47,7 +47,7 @@ describe('logcheck', function () {
     })
   })
   describe('removeNonReporting', function () {
-    it('should remove records for hosts that have not reported recently', async () => {
+    it('should remove records for hosts that have not reported recently', async function () {
       const input = [
         {
           stamp: '2017-07-07T17:20Z',
@@ -76,7 +76,7 @@ describe('logcheck', function () {
       const got = logcheck.removeNonReporting(input, notReporting)
       expect(got).to.deep.equal(want)
     })
-    it('should return non reporting hosts', async () => {
+    it('should return non reporting hosts', async function () {
       const since = '2017-07-07T17:33:25.454Z'
       const input = [
         {
@@ -161,7 +161,7 @@ describe('logcheck', function () {
     })
   })
   describe('detectNonReporting', function () {
-    it('should return a host that has not reported recently', async () => {
+    it('should return a host that has not reported recently', async function () {
       const since = '2017-07-07T17:40Z'
       const input = [
         {
@@ -181,7 +181,7 @@ describe('logcheck', function () {
       const got = logcheck.detectNonReporting(input, since)
       expect(got).to.deep.equal(want)
     })
-    it('should return non reporting hosts', async () => {
+    it('should return non reporting hosts', async function () {
       const since = '2017-07-07T17:33:25.454Z'
       const input = [
         {
@@ -266,7 +266,7 @@ describe('logcheck', function () {
     })
   })
   describe('lastReportedStamp', function () {
-    it('should return last time each host reported', async () => {
+    it('should return last time each host reported', async function () {
       const input = [
         {
           stamp: '2017-07-07T17:00:00Z',
@@ -298,7 +298,7 @@ describe('logcheck', function () {
     })
   })
   describe('lastReportedDigest', function () {
-    it('should return last time each host reported', async () => {
+    it('should return last time each host reported', async function () {
       const input = [
         {
           stamp: '2017-07-07T17:00:00Z',
@@ -330,7 +330,7 @@ describe('logcheck', function () {
     })
   })
   describe('lastReportedRecord', function () {
-    it('should return last time each host reported', async () => {
+    it('should return last time each host reported', async function () {
       const input = [
         {
           stamp: '2017-07-07T17:00:00Z',
@@ -370,7 +370,7 @@ describe('logcheck', function () {
     })
   })
   describe('parseCheckpointEvents', function () {
-    it('should parse checkpoint entries', async () => {
+    it('should parse checkpoint entries', async function () {
       const input = [
         {
           timestamp: 1499113293331,
@@ -412,7 +412,7 @@ describe('logcheck', function () {
       expect(got).to.deep.equal(want)
     })
 
-    it('should return unknown if host-* not found', async () => {
+    it('should return unknown if host-* not found', async function () {
       const input = [
         {
           timestamp: 0,
@@ -468,7 +468,7 @@ describe('logcheck', function () {
       const got = logcheck.parseCheckpointEvents(input)
       expect(got).to.deep.equal(want)
     })
-    it('should filter out records with event.json.digest missing', async () => {
+    it('should filter out records with event.json.digest missing', async function () {
       const input = [
         {
           timestamp: 0,

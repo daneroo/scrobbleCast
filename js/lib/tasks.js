@@ -64,14 +64,14 @@ async function sync () {
 }
 
 async function dedupStamp (credentials) {
-  var start = +new Date()
+  const start = +new Date()
   lifecycle('dedupStamp', 'start', { user: credentials.name })
   const counts = await dedupStampTask(credentials)
   lifecycle('dedupStamp', 'done', { user: credentials.name, ...counts, elapsed: elapsedSince(start) })
 }
 
 async function dedup (credentials) {
-  var start = +new Date()
+  const start = +new Date()
   lifecycle('dedup', 'start', { user: credentials.name })
   const counts = await dedupTask(credentials)
   lifecycle('dedup', 'done', { user: credentials.name, ...counts, elapsed: elapsedSince(start) })
@@ -79,11 +79,11 @@ async function dedup (credentials) {
 
 // get podcasts then foreach: podcastPages->file
 async function scrape (credentials) {
-  var start = +new Date()
+  const start = +new Date()
   lifecycle('scrape', 'start', { user: credentials.name })
 
   // this should be isolated/shared in Session: return by sign_in.
-  var apiSession = new PocketAPI({
+  const apiSession = new PocketAPI({
     stamp: utils.stamp('10minutes')
   })
 
@@ -102,7 +102,7 @@ async function scrape (credentials) {
 
     progress('01-podcasts', counts01)
 
-    var podcastByUuid = _.groupBy(podcasts, 'uuid')
+    const podcastByUuid = _.groupBy(podcasts, 'uuid')
 
     for (const uuid of _.pluck(podcasts, 'uuid')) {
       // Scrape scheduling: shallow is no longer distinct from deep

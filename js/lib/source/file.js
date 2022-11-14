@@ -3,19 +3,19 @@
 // dependencies - core-public-internal
 // var fs = require('fs');
 // for fs.readdirPromise
-var Promise = require('bluebird')
-var fs = Promise.promisifyAll(require('fs'), {
+const Promise = require('bluebird')
+const fs = Promise.promisifyAll(require('fs'), {
   suffix: 'Promise'
 })
-var path = require('path')
-var log = require('../log')
-var jsonl = require('../jsonl')
+const path = require('path')
+const log = require('../log')
+const jsonl = require('../jsonl')
 
 // a-la suffix: 'Promise'
-var globPromise = Promise.promisify(require('glob'))
+const globPromise = Promise.promisify(require('glob'))
 
 // globals - candidate for config
-var dataDirname = 'data'
+const dataDirname = 'data'
 
 // dataDirname relative filename (internal)
 function resolveData (file) {
@@ -29,11 +29,11 @@ function loadJSON (file) {
 
 // internal (for checking find's results)
 function confirmSorted (files) {
-  var sorted = true
-  var lastFile
+  let sorted = true
+  let lastFile
   files.forEach(function (file) {
     if (lastFile) {
-      var ok = file >= lastFile
+      const ok = file >= lastFile
       if (!ok) {
         log.verbose('confirmSorted unexpected %s < %s', file, lastFile)
         sorted = false
@@ -42,7 +42,7 @@ function confirmSorted (files) {
     lastFile = file
   })
   if (!sorted) {
-    var msg = 'files are not sorted'
+    const msg = 'files are not sorted'
     log.error(msg)
     throw (new Error(msg))
   }
@@ -55,7 +55,7 @@ function confirmSorted (files) {
 function findByUserStamp (user, basepath) {
   basepath = basepath || dataDirname
   // basepath default is dataDirname
-  var dir = path.join(basepath, 'byUserStamp', user)
+  const dir = path.join(basepath, 'byUserStamp', user)
   return fs.readdirPromise(dir)
     .then(confirmSorted)
     .catch(function (err) {
@@ -92,8 +92,8 @@ function findByDate () {
 // traverse data directory. starting
 function iterator (extrapath, allCredentials, callbackReturningPromise, pattern, fileFilter) {
   pattern = pattern || '**/*.json'
-  var basepath = path.join(dataDirname, extrapath)
-  var counts = {}
+  const basepath = path.join(dataDirname, extrapath)
+  const counts = {}
   return Promise.each(allCredentials, function (credentials) {
     counts[credentials.name] = counts[credentials.name] || {
       part: 0,
@@ -101,7 +101,7 @@ function iterator (extrapath, allCredentials, callbackReturningPromise, pattern,
       stamp: 0,
       ignoredFiles: 0
     }
-    var c = counts[credentials.name]
+    const c = counts[credentials.name]
     return findByUserStamp(credentials.name, basepath)
       .then(function (stamps) {
         return Promise.each(stamps, function (stamp) {
@@ -113,7 +113,7 @@ function iterator (extrapath, allCredentials, callbackReturningPromise, pattern,
                   c.ignoredFiles++
                   return Promise.resolve(true)
                 }
-                var items = loadJSON(file)
+                const items = loadJSON(file)
                 c.file++
                 return Promise.each(items, function (item) {
                   c.part++
@@ -133,7 +133,7 @@ function iterator (extrapath, allCredentials, callbackReturningPromise, pattern,
 // call the iterator with extrapath='rollup'
 // then call the iterator with passed extrapath for subsequent items (by date)
 function iteratorWithRollup (extrapath, allCredentials, callbackReturningPromise, pattern, fileFilter) {
-  var maxStamp = '1970-01-01T00:00:00Z'
+  let maxStamp = '1970-01-01T00:00:00Z'
 
   // For the first invocation ('rollup')
   function wrapCallbackAndGrabDateHandler (credentials, stamp, file, item, counts) {
@@ -148,7 +148,7 @@ function iteratorWithRollup (extrapath, allCredentials, callbackReturningPromise
   // compose a dateSkippFilter with any passed in fileFilter (if present)
   // our date filter takes precedence
   function skippingWrappedFilter (credentials, stamp, file /*, item */) {
-    var shouldProceed = (stamp > maxStamp)
+    const shouldProceed = (stamp > maxStamp)
     if (!shouldProceed) {
       return shouldProceed
     }
@@ -167,11 +167,11 @@ function iteratorWithRollup (extrapath, allCredentials, callbackReturningPromise
 
 // TODO: change API to .read
 exports = module.exports = {
-  dataDirname: dataDirname,
-  loadJSON: loadJSON,
-  find: find,
-  findByDate: findByDate,
-  findByUserStamp: findByUserStamp,
-  iterator: iterator,
-  iteratorWithRollup: iteratorWithRollup
+  dataDirname,
+  loadJSON,
+  find,
+  findByDate,
+  findByUserStamp,
+  iterator,
+  iteratorWithRollup
 }

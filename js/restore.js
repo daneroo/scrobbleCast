@@ -5,12 +5,12 @@
 // and restores them into store.db
 
 // dependencies - core-public-internal
-var log = require('./lib/log')
-var delta = require('./lib/delta')
-var store = require('./lib/store')
+const log = require('./lib/log')
+const delta = require('./lib/delta')
+const store = require('./lib/store')
 
 // globals
-var allCredentials = require('./credentials.json') // .slice(0, 1);
+const allCredentials = require('./credentials.json') // .slice(0, 1);
 
 // const basepaths = ['snapshots'];
 const basepaths = ['snapshots/monthly', 'snapshots/current']

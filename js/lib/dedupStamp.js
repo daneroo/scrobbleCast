@@ -22,7 +22,7 @@ exports = module.exports = {
 // This task removes all but the last item for a given stamp (as sorted by dedup order, which includes __sourceType).
 async function dedupStampTask (credentials) {
   const user = credentials.name
-  var counts = {
+  const counts = {
     total: 0,
     duplicates: 0, // duplicated items (different __sourceType) for same stamp
     keepers: 0
@@ -79,7 +79,7 @@ async function dedupStampTask (credentials) {
   } catch (error) {
     // TODO: might remove this altogether
     log.error('Dedup', {
-      error: error
+      error
     })
     throw error
   }

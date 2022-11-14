@@ -5,7 +5,7 @@ const _ = require('lodash')
 const Table = require('cli-table')
 const colors = require('colors/safe') // don't touch String prototype
 const log = require('./lib/log')
-var logcheck = require('./lib/logcheck')
+const logcheck = require('./lib/logcheck')
 const nats = require('./lib/nats')
 
 const showRawRecords = false
@@ -50,7 +50,7 @@ async function mainWithMethod (method = 'loggly') {
     )
     for (const host in nonReporting) {
       log.error('logcheck.noreport', {
-        host: host,
+        host,
         since: nonReporting[host]
       })
     }
@@ -89,10 +89,10 @@ function aggRecords (records) {
   // to [[ stamp, host1-digest,.. hostn-digest]] - array of arrays
   function makeTableStampByHost () {
     // function is bound to records
-    var digestbyStampByHost = {}
+    const digestbyStampByHost = {}
     _(records).each(function (r) {
       // stamp is rounded to 10min so we can match entries.
-      var stamp = r.stamp.replace(/[0-9]:[0-9]{2}(\.[0-9]*)?Z$/, '0:00Z') // round down to 10:00
+      const stamp = r.stamp.replace(/[0-9]:[0-9]{2}(\.[0-9]*)?Z$/, '0:00Z') // round down to 10:00
 
       digestbyStampByHost[stamp] = digestbyStampByHost[stamp] || emptyHostMap()
       if (digestbyStampByHost[stamp][r.host] === NOVALUE) {
@@ -105,7 +105,7 @@ function aggRecords (records) {
     })
 
     // [stamp, digestOfHost1, digestOfHost2, digestOfHost3,...]
-    var rows = []
+    const rows = []
     // keep the table in reverse chronological order
     _.keys(digestbyStampByHost)
       .sort()
@@ -122,7 +122,7 @@ function aggRecords (records) {
     return rows
   }
 
-  var rows = makeTableStampByHost()
+  let rows = makeTableStampByHost()
 
   // reformat
   function shortDate (stampStr) {
@@ -141,7 +141,7 @@ function aggRecords (records) {
   })
 
   // keep only until first match
-  var foundIdentical = false
+  let foundIdentical = false
   rows = rows.filter(row => {
     // is all digests's are equal (1 distinct vale)
     if (!foundIdentical && _.uniq(row.slice(1)).length === 1) {
@@ -153,11 +153,11 @@ function aggRecords (records) {
   })
 
   // now the ouput - as table
-  var shortHosts = hosts.map(host => {
+  const shortHosts = hosts.map(host => {
     return host.split('.')[0] // shortHost
   })
-  var header = ['checkpoint'].concat(shortHosts)
-  var table = newTable(header)
+  const header = ['checkpoint'].concat(shortHosts)
+  const table = newTable(header)
   rows.forEach(row => {
     table.push(row)
   })
@@ -165,9 +165,9 @@ function aggRecords (records) {
 }
 
 function distinct (records, field) {
-  var values = {}
+  const values = {}
   records.forEach(function (r) {
-    var value = r[field]
+    const value = r[field]
     values[value] = true
   })
   return Object.keys(values).sort()
@@ -176,7 +176,7 @@ function distinct (records, field) {
 // Just print th records in a table, possible elipse to remove middle rows...
 function showRecords (records) {
   // console.log(records)
-  var origRecords = records // needs to be returned to the promise chain
+  const origRecords = records // needs to be returned to the promise chain
   if (!records || !records.length) {
     return origRecords
   }
@@ -184,15 +184,15 @@ function showRecords (records) {
   const ellipsis = false
   const howMany = 3
   if (ellipsis && records.length > howMany * 2) {
-    var dotdotdot = blankedObject(records[0], '.')
+    const dotdotdot = blankedObject(records[0], '.')
     records = records
       .slice(0, howMany)
       .concat(dotdotdot, records.slice(-howMany))
   }
 
-  var table = newTable(['stamp', 'host', 'digest'])
+  const table = newTable(['stamp', 'host', 'digest'])
   records.forEach(function (r) {
-    var record = [r.stamp, r.host, r.digest]
+    const record = [r.stamp, r.host, r.digest]
     table.push(record)
   })
   console.log(table.toString())
@@ -214,7 +214,7 @@ function blankedObject (obj, defaultValue) {
 // Utility to create our formatted table
 function newTable (head) {
   // var table = new Table();
-  var table = new Table({
+  const table = new Table({
     head: head || [],
     chars: {
       mid: '',

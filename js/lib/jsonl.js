@@ -4,19 +4,19 @@
 
 // dependencies - core-public-internal
 // for fs.readdirPromise
-var Promise = require('bluebird')
-var fs = Promise.promisifyAll(require('fs'), {
+const Promise = require('bluebird')
+const fs = Promise.promisifyAll(require('fs'), {
   suffix: 'Promise'
 })
-var path = require('path')
-var mkdirp = require('mkdirp')
-var log = require('./log')
-var utils = require('./utils')
+const path = require('path')
+const mkdirp = require('mkdirp')
+const log = require('./log')
+const utils = require('./utils')
 
 // used to make and parse json for reading and writing to files either in .json, or .jsonl format
 exports = module.exports = {
-  read: read,
-  write: write
+  read,
+  write
 }
 
 // TODO: make these Async/Promised
@@ -27,23 +27,23 @@ function read (file) {
   if (file.match(/\.jsonl/)) {
     return readLines(file)
   }
-  var result = JSON.parse(fs.readFileSync(file))
+  const result = JSON.parse(fs.readFileSync(file))
   // this should be depreacted:
   if (result.episodes || result.podcasts) {
     log.warn('jsonl.read: deprecated casting', {
-      result: result
+      result
     })
   }
   return result.episodes || result.podcasts || result
 }
 
 function readLines (file) {
-  var lines = fs.readFileSync(file, 'utf8').toString().split('\n')
+  let lines = fs.readFileSync(file, 'utf8').toString().split('\n')
   // filter for empty lines
   lines = lines.filter((line) => {
     return line.trim().length > 0
   })
-  for (var i in lines) {
+  for (const i in lines) {
     lines[i] = JSON.parse(lines[i])
   }
   return lines
@@ -52,12 +52,12 @@ function readLines (file) {
 // write .json/.jsonl depending on filename
 // verbose, will log the action
 function write (filename, items, verbose) {
-  var json = makeJSON(filename, items)
-  var dir = path.dirname(filename)
+  const json = makeJSON(filename, items)
+  const dir = path.dirname(filename)
   mkdirp.sync(dir)
   fs.writeFileSync(filename, json)
   if (verbose) {
-    var numItems = (items.length) ? items.length : 1
+    const numItems = (items.length) ? items.length : 1
     // TODO(daneroo): reset to info; verbose to avoid loggly for now
     log.info('jsonl.write', {
       file: path.basename(filename),
@@ -71,16 +71,16 @@ function write (filename, items, verbose) {
 // TODO(daneroo) make typed, instead of switching on filename
 // utility function to write json, or jsonl, depending on filename extension
 function makeJSON (filename, items) {
-  var json
+  let json
   if (filename.match(/\.jsonl$/)) {
     if (!Array.isArray(items)) {
-      var msg = 'jsonl.makeJSON:items is not an array'
+      const msg = 'jsonl.makeJSON:items is not an array'
       log.error(msg, {
         file: filename
       })
       throw new Error(msg)
     }
-    var lines = []
+    const lines = []
     items.forEach(function (el) {
       lines.push(JSON.stringify(el))
     })

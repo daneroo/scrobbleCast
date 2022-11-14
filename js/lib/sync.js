@@ -8,7 +8,7 @@ const store = require('./store')
 const insertDedup = require('./tasks/insertDedup').insertDedup
 
 exports = module.exports = {
-  sync: sync
+  sync
 }
 
 async function sync (baseURI, syncParams) {

@@ -1,21 +1,21 @@
 'use strict'
 
 const expect = require('chai').expect
-var delta = require('../../lib/delta')
+const delta = require('../../lib/delta')
 
 describe('delta', function () {
   describe('compare', function () {
-    var from = {
+    const from = {
       uuid: 'a',
       changedfield: 1,
       deletedfield: 1
     }
-    var to = {
+    const to = {
       uuid: 'a',
       newfield: 1,
       changedfield: 2
     }
-    var changes
+    let changes
 
     beforeEach(function () {
       changes = delta.compare(from, to)

@@ -8,7 +8,7 @@ const helpers = require('../../helpers')
 
 describe('store', function () {
   // this.timeout(20000)
-  before(async () => {
+  before(async function () {
     if (process.env.NODE_ENV !== 'test') {
       throw new Error(
         'Tests must be run with NODE_ENV==test to ensure data safety'
@@ -16,15 +16,17 @@ describe('store', function () {
     }
     await orm.init() // side effect creates storage directory for sqlite
   })
-  beforeEach(async () => {
+  beforeEach(async function () {
     await orm.sequelize.dropAllSchemas()
     await orm.sequelize.sync({ force: true })
   })
 
   describe('db', function () {
-    it.skip('should initialise (open connections) the store', async () => {})
-    it.skip('should end (close connections) the store', async () => {})
-    it('should save an item', async () => {
+    // eslint-disable-next-line mocha/no-skipped-tests
+    it.skip('should initialise (open connections) the store', async function () {})
+    // eslint-disable-next-line mocha/no-skipped-tests
+    it.skip('should end (close connections) the store', async function () {})
+    it('should save an item', async function () {
       const item = helpers.makeItem(1)
       const ok = await db.save(item)
       expect(ok).to.equal(true)
@@ -32,7 +34,7 @@ describe('store', function () {
       const got = await db.getByDigest(db._digest(item))
       expect(got).to.deep.equal(item)
     })
-    it('should save an item without error if it already exists', async () => {
+    it('should save an item without error if it already exists', async function () {
       const item1 = helpers.makeItem(1)
       const ok1 = await db.save(item1)
       expect(ok1).to.equal(true)
@@ -46,7 +48,7 @@ describe('store', function () {
       expect(got).to.deep.equal(item2)
     })
 
-    it('should saveAll', async () => {
+    it('should saveAll', async function () {
       const items = helpers.makeItems([1, 2, 3])
       const ok = await db.saveAll(items)
       expect(ok).to.equal(true)
@@ -62,7 +64,7 @@ describe('store', function () {
     // invoke item-wise save on duplicates
     // which I think is impossible because of deduplidcation
     // so actually should test that filtered has only 1 item in second save
-    it('should saveAll with duplicates', async () => {
+    it('should saveAll with duplicates', async function () {
       const items = helpers.makeItems([1, 2])
       const ok = await db.saveAll(items)
       expect(ok).to.equal(true)
@@ -81,7 +83,7 @@ describe('store', function () {
       ])
     })
 
-    it('should saveByBatch is correct', async () => {
+    it('should saveByBatch is correct', async function () {
       const items = helpers.makeItems([1, 2, 3, 4])
       const saver = await db.saveByBatch(3)
       for (const item of items) {
@@ -103,7 +105,7 @@ describe('store', function () {
 
     // use spy to confirm saveAll called once per batch
     // TODO(daneroo): cannot decorate the inner implemtation of flush or saveAll
-    it('should saveByBatch with spies', async () => {
+    it('should saveByBatch with spies', async function () {
       const items = helpers.makeItems([1, 2, 3, 4])
       const saver = sinon.spy(db.saveByBatch(3))
       sinon.spy(saver, 'flush')
@@ -133,7 +135,7 @@ describe('store', function () {
       ])
     })
 
-    it('should load and handle each item in the right order (snapshot|file)', async () => {
+    it('should load and handle each item in the right order (snapshot|file)', async function () {
       // create in inverse order as expected to be load'ed
       const items = helpers.makeItems([3, 2, 1])
       const ok = await db.saveAll(items)
@@ -157,7 +159,7 @@ describe('store', function () {
         'handler called 3rd with item 0'
       ).to.deep.equal(items[0])
     })
-    it('should load and handle each item in the right order (dedup|default)', async () => {
+    it('should load and handle each item in the right order (dedup|default)', async function () {
       // create in invers order as expected to be load'ed
       const items = helpers.makeItems([3, 2, 1])
       // adjust data to show uuid,stamp ordering
@@ -186,7 +188,7 @@ describe('store', function () {
       ).to.deep.equal(items[1])
     })
 
-    it('should load with appropriate filter by __user', async () => {
+    it('should load with appropriate filter by __user', async function () {
       const items = helpers.makeItems([1, 2])
       const ok = await db.saveAll(items)
       expect(ok).to.equal(true)
@@ -197,7 +199,7 @@ describe('store', function () {
       expect(handler.callCount, 'handler not be called').to.equal(0)
     })
 
-    it('should throw an error if load has missing user property', async () => {
+    it('should throw an error if load has missing user property', async function () {
       const items = helpers.makeItems([1, 2])
       const ok = await db.saveAll(items)
       expect(ok).to.equal(true)
@@ -213,7 +215,7 @@ describe('store', function () {
       expect(handler.callCount, 'handler not be called').to.equal(0)
     })
 
-    it('should getByDigest when exists', async () => {
+    it('should getByDigest when exists', async function () {
       const item = helpers.makeItem(1)
       const ok = await db.save(item)
       expect(ok).to.equal(true)
@@ -222,13 +224,13 @@ describe('store', function () {
       expect(got).to.deep.equal(item)
     })
 
-    it('should return null when getByDigest not found', async () => {
+    it('should return null when getByDigest not found', async function () {
       const notexist = helpers.makeItem(2)
       const got = await db.getByDigest(db._digest(notexist))
       expect(got).to.equal(null)
     })
 
-    it('should get digests', async () => {
+    it('should get digests', async function () {
       const items = helpers.makeItems([1, 2, 3, 4])
       await db.saveAll(items)
 
@@ -240,7 +242,7 @@ describe('store', function () {
         '2eaafe32f069588325a2487f23999506b5619f3c0e8a7113f7effa511dd95173'
       ])
     })
-    it('should get digests with time ranges', async () => {
+    it('should get digests with time ranges', async function () {
       const items = helpers.makeItems([1, 2, 3, 4])
       // console.log('makeItems', items)
       await db.saveAll(items)
@@ -302,7 +304,7 @@ describe('store', function () {
       }
     })
 
-    it('should get digests of digests', async () => {
+    it('should get digests of digests', async function () {
       const items = helpers.makeItems([1, 2, 3, 4])
       await db.saveAll(items)
 
@@ -323,7 +325,7 @@ describe('store', function () {
     //   }
     // })
 
-    it('should find an item with getByKey', async () => {
+    it('should find an item with getByKey', async function () {
       const item = helpers.makeItem(1)
       const ok = await db.save(item)
       expect(ok).to.equal(true)
@@ -331,7 +333,7 @@ describe('store', function () {
       const got = await db.getByKey(item)
       expect(got).to.deep.equal(item)
     })
-    it('should return null getByKey(item) is not found', async () => {
+    it('should return null getByKey(item) is not found', async function () {
       const item = helpers.makeItem(2)
       try {
         const got = await db.getByKey(item)
@@ -341,7 +343,7 @@ describe('store', function () {
       }
     })
 
-    it("should remove an item if it exists and if it does'nt", async () => {
+    it("should remove an item if it exists and if it does'nt", async function () {
       const items = helpers.makeItems([1, 2])
       const ok = await db.saveAll(items)
       expect(ok).to.equal(true)
@@ -374,7 +376,7 @@ describe('store', function () {
       expect(await db.digests()).to.deep.equal([])
     })
 
-    it('should remove an multiple items even if some are not present', async () => {
+    it('should remove an multiple items even if some are not present', async function () {
       const items = helpers.makeItems([0, 1, 2, 3, 4, 5, 6, 7])
       const ok = await db.saveAll(items)
       expect(ok).to.equal(true)
@@ -391,7 +393,7 @@ describe('store', function () {
       ])
 
       // removeAll(2,4,6) // items[1,3,5]
-      let count = await db.removeAll([2, 4, 6].map(i => items[i]))
+      let count = await db.removeAll([2, 4, 6].map((i) => items[i]))
       expect(count).to.equal(3)
       expect(await db.digests()).to.deep.equal([
         'f6015930b9b4c8dfeaec33902f835711407fa3e0ad63f7c4daafeaa3b55c505a', // 7
@@ -402,7 +404,7 @@ describe('store', function () {
       ])
 
       // removeAll(2,3,4,5,6) // items
-      count = await db.removeAll([2, 3, 4, 5, 6].map(i => items[i]))
+      count = await db.removeAll([2, 3, 4, 5, 6].map((i) => items[i]))
       expect(count).to.equal(2)
       expect(await db.digests()).to.deep.equal([
         'f6015930b9b4c8dfeaec33902f835711407fa3e0ad63f7c4daafeaa3b55c505a', // 7
@@ -412,31 +414,31 @@ describe('store', function () {
     })
 
     describe('private', function () {
-      it('should calculate the _digest of an item', async () => {
+      it('should calculate the _digest of an item', async function () {
         const item = helpers.makeItem(0)
         const want =
           '39b3d1263027fefa1b881599a099e9096a5cdab12eb156f336225de68e747f62'
         const got = db._digest(item)
         expect(got).to.equal(want)
       })
-      it('should verify an item _exists', async () => {
+      it('should verify an item _exists', async function () {
         const item = helpers.makeItem(0)
-        await orm.Item.create({ item: item })
+        await orm.Item.create({ item })
 
         const exists = await db._exists(item)
         expect(exists).to.equal(true)
       })
 
-      it('should detect a digest duplicate error: _isErrorDuplicateDigest', async () => {
+      it('should detect a digest duplicate error: _isErrorDuplicateDigest', async function () {
         const item = helpers.makeItem(0)
         try {
-          await orm.Item.create({ item: item })
+          await orm.Item.create({ item })
         } catch (error) {
           const detect = db._isErrorDuplicateDigest(error)
           expect(detect).to.equal(true)
         }
       })
-      it('should ignore a non digest duplicate error: _isErrorDuplicateDigest', async () => {
+      it('should ignore a non digest duplicate error: _isErrorDuplicateDigest', async function () {
         const error = new Error('Some other error')
         const detect = db._isErrorDuplicateDigest(error)
         expect(detect).to.equal(false)

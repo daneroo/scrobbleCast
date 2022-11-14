@@ -80,7 +80,7 @@ function runJob (task, when) {
   } ${when}`
   log.info(message)
 
-  var job = new CronJob({
+  const job = new CronJob({
     // timeZone: "America/Montreal" // npm install time, if you want to use TZ
     cronTime: when,
     onTick: task,
@@ -102,5 +102,5 @@ async function start (injectedCredentials) {
   runJob(tasks.sync, recurrence.everyTenMinutesOffsetByFive) // var sync =
 }
 exports = module.exports = {
-  start: start
+  start
 }

@@ -3,27 +3,27 @@
 // dependencies - core-public-internal
 // var fs = require('fs');
 // for fs.readdirPromise
-var Promise = require('bluebird')
-var fs = Promise.promisifyAll(require('fs'), {
+const Promise = require('bluebird')
+const fs = Promise.promisifyAll(require('fs'), {
   suffix: 'Promise'
 })
-var path = require('path')
-var _ = require('lodash')
-var log = require('../log')
-var utils = require('../utils')
+const path = require('path')
+const _ = require('lodash')
+const log = require('../log')
+const utils = require('../utils')
 // unfortunate but nee loadJSON for parsing .jsonl, for overwrite verification
-var jsonl = require('../jsonl')
+const jsonl = require('../jsonl')
 
 // globals - candidate for config
-var dataDirname = 'data'
+const dataDirname = 'data'
 
 // items => <__user>/<__stamp>/__sourceType[-<podast_uuid>].json
 // items should not be empty
 // assert common parts common to all titems
 function pathForItems (items) {
   // take first element as representative
-  var item = items[0]
-  var keys = {
+  const item = items[0]
+  const keys = {
     __user: item.__user,
     __stamp: item.__stamp,
     __sourceType: item.__sourceType
@@ -48,7 +48,7 @@ function pathForItems (items) {
     throw new Error('pathForItems: nonuniform key items.')
   }
 
-  var paths = [keys.__user, keys.__stamp]
+  const paths = [keys.__user, keys.__stamp]
   if (keys.podcast_uuid) {
     paths.push(keys.__sourceType + '-' + keys.podcast_uuid)
   } else {
@@ -71,10 +71,10 @@ function write (filename, items, opts) {
     log: false
   }, opts)
 
-  var msg
+  let msg
   // skip verification if opts.overwrite:true
   if (!opts.overwrite && fs.existsSync(filename)) {
-    var olditems = jsonl.read(filename)
+    const olditems = jsonl.read(filename)
     if (!utils.isEqualWithoutPrototypes(olditems, items)) {
       jsonl.write('bad-olditems.json', olditems)
       jsonl.write('bad-newitems.json', items)
@@ -115,9 +115,9 @@ function writeByUserStamp (items, basepath) {
   }
   basepath = basepath || dataDirname
 
-  var basename = pathForItems(items)
+  const basename = pathForItems(items)
 
-  var filename = path.join(basepath, 'byUserStamp', [basename, 'json'].join('.'))
+  const filename = path.join(basepath, 'byUserStamp', [basename, 'json'].join('.'))
 
   // could turnoff verification
   write(filename, items)
@@ -125,7 +125,7 @@ function writeByUserStamp (items, basepath) {
 
 // TODO: change API to .read/.write
 exports = module.exports = {
-  dataDirname: dataDirname,
-  write: write,
-  writeByUserStamp: writeByUserStamp
+  dataDirname,
+  write,
+  writeByUserStamp
 }

@@ -33,7 +33,7 @@ async function main () {
 }
 
 async function noteTask (credentials) {
-  var start = +new Date()
+  const start = +new Date()
   // lifecycle('notes', 'start', { user: credentials.name })
 
   const sums = {
@@ -44,7 +44,7 @@ async function noteTask (credentials) {
   }
 
   // this should be isolated/shared in Session: return by sign_in.
-  var apiSession = new PocketAPI({
+  const apiSession = new PocketAPI({
     stamp: utils.stamp('10minutes')
   })
   try {

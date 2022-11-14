@@ -2,13 +2,13 @@
 
 const expect = require('chai').expect
 
-var delta = require('../../lib/delta')
-var _ = require('lodash')
+const delta = require('../../lib/delta')
+const _ = require('lodash')
 
 describe('delta', function () {
   describe('AccumulatorByUuid', function () {
-    var acc
-    var first = {
+    let acc
+    const first = {
       uuid: 'a',
       __sourceType: 'type.1',
       __stamp: '2015-01-01T01:23:45Z',
@@ -16,7 +16,7 @@ describe('delta', function () {
       __user: 'listener',
       description: 'Show A'
     }
-    var second = {
+    const second = {
       uuid: 'a',
       __sourceType: 'type.2',
       __stamp: '2015-01-02T02:34:56Z',
@@ -24,7 +24,7 @@ describe('delta', function () {
       __user: 'listener',
       description: 'Show A.1'
     }
-    var other = {
+    const other = {
       uuid: 'b',
       __sourceType: 'type.1',
       __stamp: '2015-01-01T01:23:45Z',
@@ -48,8 +48,8 @@ describe('delta', function () {
       acc.merge(other)
 
       // strip away two levels of class!
-      var noclass = JSON.parse(JSON.stringify(acc.accumulators))
-      var expected = {
+      const noclass = JSON.parse(JSON.stringify(acc.accumulators))
+      const expected = {
         a: {
           history: {
             __sourceType: {
@@ -100,12 +100,13 @@ describe('delta', function () {
       expect(noclass).to.deep.equal(expected)
     })
 
+    // eslint-disable-next-line mocha/no-skipped-tests
     xit('should be invariant to merge order', function () {
       // This fails because merge of values is not order invariant
       acc.merge(second)
       acc.merge(first)
-      var noclass = _.merge({}, acc.accumulators.a)
-      var expected = {
+      const noclass = _.merge({}, acc.accumulators.a)
+      const expected = {
         history: {
           __sourceType: {
             '2015-01-01T01:23:45Z': 'type.1',
@@ -131,8 +132,8 @@ describe('delta', function () {
   })
 
   describe('AccumulatorByType', function () {
-    var acc
-    var first = {
+    let acc
+    const first = {
       uuid: 'a',
       __sourceType: 'type.1',
       __stamp: '2015-01-01T01:23:45Z',
@@ -140,7 +141,7 @@ describe('delta', function () {
       __user: 'listener',
       description: 'Show A'
     }
-    var second = {
+    const second = {
       uuid: 'a',
       __sourceType: 'type.2',
       __stamp: '2015-01-02T02:34:56Z',
@@ -148,7 +149,7 @@ describe('delta', function () {
       __user: 'listener',
       description: 'Show A.1'
     }
-    var other = {
+    const other = {
       uuid: 'b',
       __sourceType: 'type.1',
       __stamp: '2015-01-01T01:23:45Z',
@@ -173,8 +174,8 @@ describe('delta', function () {
       acc.merge(other)
 
       // strip away two levels of class!
-      var noclass = JSON.parse(JSON.stringify(acc.accumulatorsByType))
-      var expected = {
+      const noclass = JSON.parse(JSON.stringify(acc.accumulatorsByType))
+      const expected = {
         podcast: {
           accumulators: {
             a: {
@@ -235,12 +236,13 @@ describe('delta', function () {
       expect(noclass).to.deep.equal(expected)
     })
 
+    // eslint-disable-next-line mocha/no-skipped-tests
     xit('should be invariant to merge order', function () {
       // This fails becaus merge of values is not order invariant
       acc.merge(second)
       acc.merge(first)
-      var noclass = _.merge({}, acc.accumulators.a)
-      var expected = {
+      const noclass = _.merge({}, acc.accumulators.a)
+      const expected = {
         history: {
           __sourceType: {
             '2015-01-01T01:23:45Z': 'type.1',

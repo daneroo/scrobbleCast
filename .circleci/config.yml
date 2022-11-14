@@ -1,4 +1,4 @@
-version: '2.1'
+version: "2.1"
 orbs:
   node: circleci/node@5.0.3
 
@@ -7,23 +7,23 @@ jobs:
     working_directory: ~/daneroo/scrobbleCast
     parallelism: 1
     docker:
-      - image: 'cimg/base:stable'
+      - image: "cimg/base:stable"
 
     steps:
       - checkout
       - restore_cache:
-          key: dependency-cache-{{ checksum "js/package-lock.json" }}
+          key: dependency-cache-{{ checksum "js/pnpm-lock.json" }}
       - node/install:
-          node-version: '18'
+          node-version: "18"
       - run:
           working_directory: ~/daneroo/scrobbleCast/js
-          name: npm-install
-          command: npm ci
+          name: pnpm-install
+          command: pnpm install --frozen-lockfile --loglevel error
       - save_cache:
-          key: dependency-cache-{{ checksum "js/package-lock.json" }}
+          key: dependency-cache-{{ checksum "js/pnpm-lock.json" }}
           paths:
             - ./js/node_modules
       - run:
           working_directory: ~/daneroo/scrobbleCast/js
           name: test
-          command: npm test
+          command: pnpm test

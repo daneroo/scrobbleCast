@@ -28,16 +28,29 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 7 # required
+
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-          cache: "npm" # comment out for local `act` run
-          cache-dependency-path: ./js/package-lock.json
+          cache: "pnpm" # comment out for local `act` run
+          cache-dependency-path: ./js/pnpm-lock.json
 
-      - run: |
-          npm ci
-          npm test
+      - name: Report versions
+        run: |
+          echo "node: $(node --version)"
+          echo "pnpm: $(pnpm --version)"
+
+      - name: install dependencies
+        # --frozen-lockfile should already be default on CI
+        run: pnpm install --frozen-lockfile --loglevel error
+
+      - name: Test
+        run: pnpm test
 
   # https://github.com/marketplace/actions/publish-docker
   #  i.e. https://github.com/elgohr/Publish-Docker-Github-Action

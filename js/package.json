@@ -4,13 +4,14 @@
   "description": "Fetch Pocketcast feed",
   "main": "index.js",
   "scripts": {
+    "preinstall": "npx only-allow pnpm",
     "start": "node server.js",
     "unit": "NODE_ENV=test mocha --recursive test/",
     "lint": "eslint '**/*.js'",
     "format:write": "prettier --write '**/*.js'",
-    "secscan": "npm audit || true",
+    "secscan": "pnpm audit || true",
     "coverage": "NODE_ENV=test istanbul cover node_modules/.bin/_mocha -- --recursive test/",
-    "test": "npm run lint && npm run secscan && npm run unit",
+    "test": "pnpm run lint && pnpm run secscan && pnpm run unit",
     "snapshot": "docker run -it --rm --env-file s3cfg.env -v $(pwd)/data/snapshots:/data/snapshots amazon/aws-cli s3 sync /data/snapshots/ s3://scrobblecast/snapshots",
     "restore": "docker run -it --rm --env-file s3cfg.env -v $(pwd)/data/snapshots:/data/snapshots amazon/aws-cli s3 sync s3://scrobblecast/snapshots /data/snapshots/"
   },

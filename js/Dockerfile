@@ -3,10 +3,11 @@
 
 # Build the image, in case we need build tools
 # Is it ok to mix npm insta;; in node:lts and use it in node:alpine?
-FROM node:lts AS build  
+FROM node:lts AS build
+RUN corepack enable && corepack prepare pnpm@latest
 WORKDIR /usr/src/app
-COPY package*.json /usr/src/app/
-RUN npm ci --only=production
+COPY package.json pnpm-lock.yaml /usr/src/app/
+RUN pnpm install --frozen-lockfile --loglevel error
 
 # --------------------------------------------------
 # Production image

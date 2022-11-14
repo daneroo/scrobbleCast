@@ -2,12 +2,8 @@
 
 - Github Actions:
   - main: [![Scrape-CI](https://github.com/daneroo/scrobbleCast/actions/workflows/scrape-ci.yml/badge.svg)](https://github.com/daneroo/scrobbleCast/actions/workflows/scrape-ci.yml)
-  - develop: [![Scrape-CI](https://github.com/daneroo/scrobbleCast/actions/workflows/scrape-ci.yml/badge.svg?branch=develop)](https://github.com/daneroo/scrobbleCast/actions/workflows/scrape-ci.yml)
 - CircleCI:
-  - master: [![Build Status](https://circleci.com/gh/daneroo/scrobbleCast.svg?&style=shield)](https://circleci.com/gh/daneroo/scrobbleCast)
-  - develop: [![Build Status](https://circleci.com/gh/daneroo/scrobbleCast/tree/develop.svg?style=shield)](https://circleci.com/gh/daneroo/scrobbleCast)
-- CodeShip (CloudBees): removed on 2021-09-13
-- Travis-ci.org: deprecated since 2021-06-15
+  - main: [![Build Status](https://circleci.com/gh/daneroo/scrobbleCast.svg?&style=shield)](https://circleci.com/gh/daneroo/scrobbleCast)
 
 ## TODO
 

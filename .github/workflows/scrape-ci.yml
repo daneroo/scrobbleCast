@@ -38,7 +38,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: "pnpm" # comment out for local `act` run
-          cache-dependency-path: ./js/pnpm-lock.json
+          cache-dependency-path: ./js/pnpm-lock.yaml
 
       - name: Report versions
         run: |

@@ -12,7 +12,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: dependency-cache-{{ checksum "js/pnpm-lock.json" }}
+          key: dependency-cache-{{ checksum "js/pnpm-lock.yaml" }}
       - node/install:
           node-version: "18"
       - run:
@@ -20,7 +20,7 @@ jobs:
           name: pnpm-install
           command: pnpm install --frozen-lockfile --loglevel error
       - save_cache:
-          key: dependency-cache-{{ checksum "js/pnpm-lock.json" }}
+          key: dependency-cache-{{ checksum "js/pnpm-lock.yaml" }}
           paths:
             - ./js/node_modules
       - run:

@@ -165,6 +165,7 @@ export function validatorForEpisode() { // : (data: any) => boolean {
   return validatorFunction;
 }
 
+// deno-lint-ignore no-explicit-any
 export function validateJSONSchema(validatorFunction: any, data: any): void {
   const valid = validatorFunction(data);
   if (valid) {

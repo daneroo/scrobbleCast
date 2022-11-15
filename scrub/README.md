@@ -9,6 +9,7 @@ We also have a NDJson, or `.jsonl` archive of all items. e.g.:
 
 ## TODO
 
+- compare hosts: walk by day, and compare the items
 - compare fetched history, with merged objects : podcasts first
 - validate: make single stream, use AJV parser
   - annotate the source from ? jsonl/api
@@ -34,15 +35,16 @@ We also have a NDJson, or `.jsonl` archive of all items. e.g.:
 ## Deno land
 
 ```bash
-deno run -A --unstable validate.ts
+deno run -A --unstable validateFiles.ts
 deno run -A --unstable walkAndFetch.ts
+deno run -A --unstable comparePodcastHistory.ts
 
 deno test --unstable
 ```
 
 ### Dependency Management
 
-See [Deno: Locks and Integraity](https://deno.land/manual/linking_to_external_code/integrity_checking)
+See [Deno: Locks and Integrity](https://deno.land/manual/linking_to_external_code/integrity_checking)
 
 Check outdated deps
 

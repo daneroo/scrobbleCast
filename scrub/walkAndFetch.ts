@@ -42,7 +42,7 @@ for (const user of ["daniel", "stephane"]) {
         if (type === "podcast") {
           counts.podcasts.items++;
           uuidSets.podcasts.add(item.uuid);
-        } else {
+        } else if (type === "episode") {
           counts.episodes.items++;
           uuidSets.episodes.add(item.uuid);
         }

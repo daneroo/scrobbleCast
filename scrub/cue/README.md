@@ -55,7 +55,7 @@ time for cue in $(find data/snapshots/monthly -name "monthly*20*.cue" | sort); d
   cue vet -c scrobble-schema.cue $cue
 done
 
-# Working incrementally
+# Working incrementally e.g. year==2019 
 time for cue in $(find data/snapshots/monthly -name "monthly*2019*.cue" | sort); do
   echo Vetting $cue
   cue vet -c scrobble-schema.cue $cue

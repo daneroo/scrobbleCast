@@ -4,6 +4,7 @@ const fs = require('fs')
 
 module.exports = {
   hostname: process.env.HOSTALIAS || process.env.HOSTNAME || os.hostname(),
+  peers: process.env.PEERS || 'dirac, darwin, newton, d1-px1',
   version: {
     // also exposed as API /version
     pocketscrape: require('../package').version,

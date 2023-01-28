@@ -34,7 +34,8 @@ function logcheck() {
 
 async function sync() {
   // poor man's discovery, default dirac...
-  const hosts = ['dirac', 'darwin', 'newton']
+  // const hosts = ['dirac', 'darwin', 'newton', 'd1-px1']
+  const hosts = config.peers.split(',').map((host) => host.trim())
   const thisHost = config.hostname.split('.')[0]
   const syncParams = {
     since: utils.ago(24 * 3600),

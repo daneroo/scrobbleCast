@@ -29,12 +29,12 @@ natsboard:
 sync:
 	@echo "Synching peer -> DB  (can take a since date as 2nd param)"
 	docker compose run --rm scrape node sync.js http://darwin.imetrical.com:8000/api
-	docker compose run --rm scrape node sync.js http://newton.imetrical.com:8000/api
+	docker compose run --rm scrape node sync.js http://d1-px1.imetrical.com:8000/api
 
 check:
-	for h in darwin dirac newton; do echo $$h `curl -s http://$$h.imetrical.com:8000/api/version`; done
-	for h in darwin dirac newton; do echo $$h `curl -s http://$$h.imetrical.com:8000/api/status`; done
-	for h in darwin dirac newton; do echo $$h `curl -s http://$$h.imetrical.com:8000/api/digests|shasum -a 256`; done
+	for h in darwin dirac d1-px1; do echo $$h `curl -s http://$$h.imetrical.com:8000/api/version`; done
+	for h in darwin dirac d1-px1; do echo $$h `curl -s http://$$h.imetrical.com:8000/api/status`; done
+	for h in darwin dirac d1-px1; do echo $$h `curl -s http://$$h.imetrical.com:8000/api/digests|shasum -a 256`; done
 
 snapshot:
 	@echo "Taking a snapshot DB -> data/snapshots -> s3"

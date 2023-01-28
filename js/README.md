@@ -202,7 +202,7 @@ docker compose run --rm scrape npm run snapshot
 # check monthly sums after restore/snapshots...
 md5sum $(find data/snapshots -type f -not -name current\*)|cut -d \  -f 1|sort|md5sum
 
-docker exec -it js_scrape_1 bash -c 'md5sum $(find data/snapshots -type f -not -name current\*)|cut -d \  -f 1|sort|md5sum'
+docker exec -it js-scrape-1 bash -c 'md5sum $(find data/snapshots -type f -not -name current\*)|cut -d \  -f 1|sort|md5sum'
 
 docker compose run --rm scrape bash -c 'md5sum $(find data/snapshots -type f -not -name current\*)|cut -d \  -f 1|sort|md5sum'
 ```
@@ -296,9 +296,9 @@ Before Now v2, we used to run docker containers on Zeit.
 _dirac clock running fast in docker:_
 
 ```bash
-date;docker exec -it js_scrape_1 date; date
+date;docker exec -it js-scrape-1 date; date
 docker run --rm --privileged alpine hwclock -s
-date +%Y-%m-%dT%H:%M:%S%z ;docker exec -it js_scrape_1 date -Isec; date +%Y-%m-%dT%H:%M:%S%z
+date +%Y-%m-%dT%H:%M:%S%z ;docker exec -it js-scrape-1 date -Isec; date +%Y-%m-%dT%H:%M:%S%z
 
 # while true; do sleep 600; done
 AHEAD=$(expr $(docker run --rm alpine date +%s) - $(date +%s)); echo $(date +%Y-%m-%dT%H:%M:%S) Docker clock is ahead by ${AHEAD}

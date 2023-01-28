@@ -56,7 +56,7 @@ Until npm run sescan/audit passes!
 npm run unit
 
 # - postgres
-docker-compose -f docker-compose-services.yml up -d
+docker compose -f docker compose-services.yml up -d
 DB_DIALECT=postgres npm run unit
 
 # - or more verbose
@@ -190,21 +190,21 @@ You gotta be kidding, separate statement for list, and put/get/delete
 # e.g. rm -rf data/
 
 # restore from s3 -> data/snapshots -> DB
-docker-compose run --rm scrape npm run restore
-docker-compose run --rm scrape node restore.js
+docker compose run --rm scrape npm run restore
+docker compose run --rm scrape node restore.js
 
 # take a snapshot DB -> data/snapshots -> s3
 # -optionally, to avoid pushing other hosts 'current'
 #  rm -rf data/snapshots/current/
-export HOSTNAME; docker-compose run --rm scrape node snapshots.js
-docker-compose run --rm scrape npm run snapshot
+export HOSTNAME; docker compose run --rm scrape node snapshots.js
+docker compose run --rm scrape npm run snapshot
 
 # check monthly sums after restore/snapshots...
 md5sum $(find data/snapshots -type f -not -name current\*)|cut -d \  -f 1|sort|md5sum
 
 docker exec -it js_scrape_1 bash -c 'md5sum $(find data/snapshots -type f -not -name current\*)|cut -d \  -f 1|sort|md5sum'
 
-docker-compose run --rm scrape bash -c 'md5sum $(find data/snapshots -type f -not -name current\*)|cut -d \  -f 1|sort|md5sum'
+docker compose run --rm scrape bash -c 'md5sum $(find data/snapshots -type f -not -name current\*)|cut -d \  -f 1|sort|md5sum'
 ```
 
 ## SQLite Snippets
@@ -227,13 +227,13 @@ sqlite3 scrobblecast.sqlite "select __user, __type, uuid, count(*) as Z from ite
 Start a container and connect to it
 
 ```bash
-docker-compose -f docker-compose-services.yml up -d
+docker compose -f docker compose-services.yml up -d
 
-docker-compose exec postgres bash
+docker compose exec postgres bash
   psql -U postgres scrobblecast
   psql -U postgres scrobblecast -c "select count(*) from items"
 
-docker-compose exec postgres psql -U postgres scrobblecast
+docker compose exec postgres psql -U postgres scrobblecast
 
 scrobblecast=#
 select __user,__type,count(*),count(distinct uuid) as dist,max(__stamp) from items group by __user,__type;
@@ -249,9 +249,9 @@ select item->>'podcast_uuid' as puuid, count(distinct uuid) as neuuid from items
 select * from pg_stat_activity
 
 # time selective queries for __stamp
-time docker-compose exec postgres psql -U postgres scrobblecast -c "select count(*) from items"
-time docker-compose exec postgres psql -U postgres scrobblecast -q -P pager=off -c "select encode(digest(item::text, 'md5'), 'hex') as digest FROM items"
-time docker-compose exec postgres psql -U postgres scrobblecast -q -P pager=off -c "select encode(digest(item::text, 'md5'), 'hex') as digest FROM items where __stamp>'2016-12-22 17:10'"
+time docker compose exec postgres psql -U postgres scrobblecast -c "select count(*) from items"
+time docker compose exec postgres psql -U postgres scrobblecast -q -P pager=off -c "select encode(digest(item::text, 'md5'), 'hex') as digest FROM items"
+time docker compose exec postgres psql -U postgres scrobblecast -q -P pager=off -c "select encode(digest(item::text, 'md5'), 'hex') as digest FROM items where __stamp>'2016-12-22 17:10'"
 ```
 
 ## Auth Notes

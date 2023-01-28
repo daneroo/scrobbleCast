@@ -11,7 +11,8 @@ const allCredentials = require('./credentials.json')
 
 log.info('Starting server', {
   hostname: config.hostname,
-  dialect: config.sequelize.settings.dialect
+  dialect: config.sequelize.settings.dialect,
+  peers: config.peers
 })
 nats.connectToNats()
 cron.start(allCredentials)

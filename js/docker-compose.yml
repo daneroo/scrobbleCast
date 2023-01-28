@@ -8,11 +8,12 @@ services:
     init: true # Tini forwards signals and reaps processes
     environment:
       - HOSTALIAS # no value inherits from ENV, which is set in Makefile
-      - NATSURL=nats://nats.ts.imetrical.com:4222
+      - PEERS=dirac,darwin,d1-px1
+      - NATSURL=nats://nats.ts.imsetrical.com:4222
       - DB_DIALECT=sqlite
     # command: npm start
     ports:
-      - "8000:8000"
+      - '8000:8000'
 
     volumes:
       - ./credentials.json:/usr/src/app/credentials.json:ro
@@ -24,7 +25,5 @@ services:
     logging:
       driver: json-file
       options:
-        max-size: "2m"
+        max-size: '2m'
         # max-file: "2"
-
-

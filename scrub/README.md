@@ -37,7 +37,7 @@ We also have a NDJson, or `.jsonl` archive of all items. e.g.:
 ```bash
 deno run -A --unstable validateFiles.ts
 deno run -A --unstable walkAndFetch.ts
-deno run -A --unstable comparePodcastHistory.ts
+deno run -A --unstable compareHosts.ts
 
 deno test --unstable
 ```

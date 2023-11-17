@@ -1,5 +1,5 @@
 import { fetchAPI } from "./src/api.ts";
-import { addDaysUTC, epoch, walkDaysUTC } from "./src/timewalker.ts";
+import { addDaysUTC, startOfDayUTC, walkDaysUTC } from "./src/timewalker.ts";
 
 // host [ "dirac", "darwin", "newton" ]
 // problems:
@@ -33,15 +33,19 @@ import { addDaysUTC, epoch, walkDaysUTC } from "./src/timewalker.ts";
 //     ]
 //   }
 
-// const tomorrow = addDaysUTC(new Date().toISOString(), 1);
+const yesterday = startOfDayUTC(addDaysUTC(new Date().toISOString(), -1));
+const tomorrow = startOfDayUTC(addDaysUTC(new Date().toISOString(), 1));
 // const [since, before] = [epoch, tomorrow];
-const [since, before] = ["2018-11-18", "2018-11-19T00:00:01Z"];
+const [since, before] = [yesterday, tomorrow];
+// const [since, before] = ["2018-11-18", "2018-11-19T00:00:01Z"];
 // const [since, before] = ["2022-02-04", "2022-02-05T00:00:01Z"];
 // const [since, before] = ["2022-11-16", "2022-11-17T00:00:01Z"];
 // const since = "2022-11-16";
 
+console.log(`-= Interval: [${since},${before})`);
+
 // const baseURI = "http://dirac:8000/api";
-const hosts = ["dirac", "darwin", "newton"];
+const hosts = ["darwin", "d1-px1", "dirac"];
 const users = ["daniel", "stephane"].slice(0, 1);
 const types = ["podcast", "episode"];
 for (const user of users) {
@@ -75,13 +79,9 @@ async function compare(
   );
   const ok = allEqual(digests);
   if (ok) {
-    console.log(
-      `[${qs.since},${qs.before}) :  ok (${lengths.join(",")}))`,
-    );
+    console.log(`[${qs.since},${qs.before}) :  ok (${lengths.join(",")}))`);
   } else {
-    console.log(
-      `[${qs.since},${qs.before}) :  !ok (${lengths.join(",")}))`,
-    );
+    console.log(`[${qs.since},${qs.before}) :  !ok (${lengths.join(",")}))`);
     console.log("host", Object.keys(itemsByHost));
     console.log(
       "length",
@@ -102,9 +102,9 @@ async function fetchItemsForHosts(
   qs: ItemQuery,
 ): Promise<Record<string, unknown[]>> {
   // fetch items from hosts in parallel
-  const itemsByIndex = (await Promise.all(
+  const itemsByIndex = await Promise.all(
     hosts.map((host) => fetchItems(host, qs)),
-  ));
+  );
   const itemsByHost: Record<string, unknown[]> = {};
   hosts.forEach((host, index) => {
     itemsByHost[host] = itemsByIndex[index];
@@ -125,8 +125,8 @@ async function digest(
   const input = new TextEncoder().encode(str);
   const hashBuffer = await crypto.subtle.digest(algorithm, input); // hash the message
   const hashArray = Array.from(new Uint8Array(hashBuffer)); // convert buffer to byte array
-  const hashHex = hashArray.map((b) => b.toString(16).padStart(2, "0")).join(
-    "",
-  ); // convert bytes to hex string
+  const hashHex = hashArray
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join(""); // convert bytes to hex string
   return prependAlgorithm ? `${algorithm}:${hashHex}` : hashHex;
 }

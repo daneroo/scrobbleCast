@@ -1,5 +1,10 @@
 import { fetchAPI } from "./src/api.ts";
-import { addDaysUTC, startOfDayUTC, walkDaysUTC } from "./src/timewalker.ts";
+import {
+  addDaysUTC,
+  epoch,
+  startOfDayUTC,
+  walkDaysUTC,
+} from "./src/timewalker.ts";
 
 // host [ "dirac", "darwin", "newton" ]
 // problems:
@@ -33,10 +38,10 @@ import { addDaysUTC, startOfDayUTC, walkDaysUTC } from "./src/timewalker.ts";
 //     ]
 //   }
 
-const yesterday = startOfDayUTC(addDaysUTC(new Date().toISOString(), -1));
+// const yesterday = startOfDayUTC(addDaysUTC(new Date().toISOString(), -1));
 const tomorrow = startOfDayUTC(addDaysUTC(new Date().toISOString(), 1));
-// const [since, before] = [epoch, tomorrow];
-const [since, before] = [yesterday, tomorrow];
+const [since, before] = [epoch, tomorrow];
+// const [since, before] = [yesterday, tomorrow];
 // const [since, before] = ["2018-11-18", "2018-11-19T00:00:01Z"];
 // const [since, before] = ["2022-02-04", "2022-02-05T00:00:01Z"];
 // const [since, before] = ["2022-11-16", "2022-11-17T00:00:01Z"];

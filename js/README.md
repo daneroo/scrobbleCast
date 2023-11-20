@@ -65,7 +65,9 @@ DB_LOG=1 DB_DIALECT=postgres npm run unit
 
 ## TODO
 
-- pnpm workspaces - just this directory for now
+- [ ] update to node 20 (GHAct matrix), and figure out how to pin corepack pnpm (just moved to 8)
+  - pnpm version is in Dockerfile,CircleCI, and GitHub Action
+- [x] pnpm workspaces - just this directory for now
 - [Dockerfile corepack pnpm ] <https://stackoverflow.com/questions/68650325/how-to-pnpm-and-next-js-in-multi-stage-docker-file>
   - `corepack enable && corepack prepare pnpm@latest` or pin pmpm@7.15.0
 - diff command : sync from api, n hosts

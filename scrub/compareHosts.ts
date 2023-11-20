@@ -38,10 +38,10 @@ import {
 //     ]
 //   }
 
-// const yesterday = startOfDayUTC(addDaysUTC(new Date().toISOString(), -1));
+const yesterday = startOfDayUTC(addDaysUTC(new Date().toISOString(), -1));
 const tomorrow = startOfDayUTC(addDaysUTC(new Date().toISOString(), 1));
-const [since, before] = [epoch, tomorrow];
-// const [since, before] = [yesterday, tomorrow];
+// const [since, before] = [epoch, tomorrow];
+const [since, before] = [yesterday, tomorrow];
 // const [since, before] = ["2018-11-18", "2018-11-19T00:00:01Z"];
 // const [since, before] = ["2022-02-04", "2022-02-05T00:00:01Z"];
 // const [since, before] = ["2022-11-16", "2022-11-17T00:00:01Z"];
@@ -51,7 +51,7 @@ console.log(`-= Interval: [${since},${before})`);
 
 // const baseURI = "http://dirac:8000/api";
 const hosts = ["darwin", "d1-px1", "dirac"];
-const users = ["daniel", "stephane"].slice(0, 1);
+const users = ["daniel", "stephane"]; //.slice(0, 1);
 const types = ["podcast", "episode"];
 for (const user of users) {
   for (const type of types) {
@@ -75,22 +75,22 @@ interface ItemQuery {
 
 async function compare(
   qs: ItemQuery,
-  itemsByHost: Record<string, unknown[]>,
+  itemsByHost: Record<string, unknown[]>
 ): Promise<void> {
   const lengths = Object.values(itemsByHost).map((items) => items.length);
 
   const digests = await Promise.all(
-    Object.values(itemsByHost).map((items) => digest(JSON.stringify(items))),
+    Object.values(itemsByHost).map((items) => digest(JSON.stringify(items)))
   );
   const ok = allEqual(digests);
   if (ok) {
-    console.log(`[${qs.since},${qs.before}) :  ok (${lengths.join(",")}))`);
+    console.log(`[${qs.since},${qs.before}) :  ok (${lengths.join(",")})`);
   } else {
-    console.log(`[${qs.since},${qs.before}) :  !ok (${lengths.join(",")}))`);
+    console.log(`[${qs.since},${qs.before}) :  !ok (${lengths.join(",")})`);
     console.log("host", Object.keys(itemsByHost));
     console.log(
       "length",
-      Object.values(itemsByHost).map((items) => items.length),
+      Object.values(itemsByHost).map((items) => items.length)
     );
     console.log({ digests });
   }
@@ -104,11 +104,11 @@ function allEqual<T>(arr: T[]): boolean {
 // Returns a map of items by Host
 async function fetchItemsForHosts(
   hosts: string[],
-  qs: ItemQuery,
+  qs: ItemQuery
 ): Promise<Record<string, unknown[]>> {
   // fetch items from hosts in parallel
   const itemsByIndex = await Promise.all(
-    hosts.map((host) => fetchItems(host, qs)),
+    hosts.map((host) => fetchItems(host, qs))
   );
   const itemsByHost: Record<string, unknown[]> = {};
   hosts.forEach((host, index) => {
@@ -125,7 +125,7 @@ async function fetchItems(host: string, qs: ItemQuery): Promise<unknown[]> {
 async function digest(
   str: string,
   algorithm = "SHA-256",
-  prependAlgorithm = true,
+  prependAlgorithm = true
 ) {
   const input = new TextEncoder().encode(str);
   const hashBuffer = await crypto.subtle.digest(algorithm, input); // hash the message

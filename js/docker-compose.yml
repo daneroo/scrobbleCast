@@ -5,6 +5,8 @@ services:
   scrape:
     # container_name: scrape
     build: .
+    # so I can build on Mac Mini M2 / arm64
+    platform: linux/amd64
     init: true # Tini forwards signals and reaps processes
     environment:
       - HOSTALIAS # no value inherits from ENV, which is set in Makefile

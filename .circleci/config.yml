@@ -17,7 +17,8 @@ jobs:
           node-version: "18"
       - run:
           name: Install pnpm
-          command: corepack enable && corepack prepare pnpm@latest
+          # pnpm version should match the GitHub action pnpm version and be pinned
+          command: corepack enable && corepack prepare pnpm@8
       - run:
           working_directory: ~/daneroo/scrobbleCast/js
           name: Install dependencies

@@ -31,7 +31,8 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v2
         with:
-          version: 7 # required
+          # pnpm version should match the CircleCI pnpm version and be pinned
+          version: 8 # required
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3

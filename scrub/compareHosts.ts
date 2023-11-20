@@ -39,7 +39,7 @@ import {
 //   }
 
 const yesterday = startOfDayUTC(addDaysUTC(new Date().toISOString(), -1));
-const tomorrow = startOfDayUTC(addDaysUTC(new Date().toISOString(), 1));
+const tomorrow = startOfDayUTC(addDaysUTC(new Date().toISOString(), 2));
 // const [since, before] = [epoch, tomorrow];
 const [since, before] = [yesterday, tomorrow];
 // const [since, before] = ["2018-11-18", "2018-11-19T00:00:01Z"];

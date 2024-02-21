@@ -7,6 +7,7 @@
 
 ## TODO
 
+- upgrade to node 20, next 14, (github actions too)
 - nx (move to typescript)
 - ipfs
 - Github Actions - only need to get working-directory to work with npm cache
@@ -14,8 +15,8 @@
 
 ## Overview
 
-- __Idea__: capture and present podcast metadata about *listening events*, as well as *rating* and *categorization*. This can extend to a social network of participants' influence stream.
-- __Stretch Goal__: Distributed consensus and processing; sharing influence, directing serendipity.
+- **Idea**: capture and present podcast metadata about _listening events_, as well as _rating_ and _categorization_. This can extend to a social network of participants' influence stream.
+- **Stretch Goal**: Distributed consensus and processing; sharing influence, directing serendipity.
 
 ## Objectives
 
@@ -46,4 +47,3 @@ To do that we could first:
 - web app
   - Angular.io (deprecated)
   - React (nextjs)
-  

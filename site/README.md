@@ -8,6 +8,16 @@ npx create-next-app my-chakra-app
 npm i @chakra-ui/react @emotion/react @emotion/styled framer-motion
 ```
 
+## Usage
+
+2024-02-21 Need to upgrade node: crypto broke
+So I added NODE_OPTIONS=--openssl-legacy-provider to vercel, and bumped node runtime to 18
+
+```bash
+export NODE_OPTIONS=--openssl-legacy-provider
+npm run dev
+```
+
 ## TODO
 
 - Styling

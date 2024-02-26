@@ -121,40 +121,48 @@ export async function getPodcasts() {
 
 // https://raw.githubusercontent.com/daneroo/scrobble-books-data/main/goodreads-rss.json
 export async function getBooksFeed() {
-  if (cache.booksFeed) {
-    const { booksFeed } = cache;
-    console.log("|Books (hit)|", booksFeed.items.length);
+  // wrap the entire previous method in a try catch
+  try {
+    if (cache.booksFeed) {
+      const { booksFeed } = cache;
+      console.log("|Books (hit)|", booksFeed.items.length);
+      return booksFeed;
+    }
+
+    // Get books data from latest `scrobble-books-data` Github Actions run
+    const url =
+      "https://raw.githubusercontent.com/daneroo/scrobble-books-data/main/goodreads-rss.json";
+    // eslint-disable-next-line no-undef
+    const now = +new Date();
+    const results = await fetch(url);
+    const booksFeed = await results.json();
+    const jsonSize = JSON.stringify(booksFeed).length;
+    console.log(
+      `server fetched size:${jsonSize} in ${+new Date() - now}ms url:${url}`
+    );
+
+    // Move this upstream to scrobble-books-data
+    booksFeed.items = booksFeed.items.map((b) => ({
+      ...b,
+      userShelves: b?.userShelves || "read",
+    }));
+
+    cache.booksFeed = booksFeed;
+    for (const b of booksFeed.items) {
+      cache.bookById[b.bookId] = b;
+    }
+    console.log(
+      `|Books (miss)| = ${booksFeed.items.length} == uuids: ${
+        Object.keys(cache.bookById).length
+      }`
+    );
+    return booksFeed;
+  } catch (error) {
+    // this is the returned value if we get the lambda error
+    console.error("Error fetching books:", error.message);
+    const booksFeed = { title: "Fallback empty bookshelf", items: [] };
     return booksFeed;
   }
-
-  // Get books data from latest `scrobble-books-data` Github Actions run
-  const url =
-    "https://raw.githubusercontent.com/daneroo/scrobble-books-data/main/goodreads-rss.json";
-  // eslint-disable-next-line no-undef
-  const now = +new Date();
-  const results = await fetch(url);
-  const booksFeed = await results.json();
-  const jsonSize = JSON.stringify(booksFeed).length;
-  console.log(
-    `server fetched size:${jsonSize} in ${+new Date() - now}ms url:${url}`
-  );
-
-  // Move this upstream to scrobble-books-data
-  booksFeed.items = booksFeed.items.map((b) => ({
-    ...b,
-    userShelves: b?.userShelves || "read",
-  }));
-
-  cache.booksFeed = booksFeed;
-  for (const b of booksFeed.items) {
-    cache.bookById[b.bookId] = b;
-  }
-  console.log(
-    `|Books (miss)| = ${booksFeed.items.length} == uuids: ${
-      Object.keys(cache.bookById).length
-    }`
-  );
-  return booksFeed;
 }
 
 export async function getBook(bookId) {

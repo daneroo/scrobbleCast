@@ -188,13 +188,7 @@ function BookList({ books }) {
 export async function getStaticProps(context) {
   const apiSignature = await getApiSignature();
 
-  // this is the returned value if we get the lambda error
-  let booksFeed = { title: "Fallback empty bookshelf", items: [] };
-  try {
-    booksFeed = await getBooksFeed();
-  } catch (error) {
-    console.error("Error fetching books:", error.message);
-  }
+  const booksFeed = await getBooksFeed();
   return {
     props: { books: booksFeed.items, apiSignature }, // will be passed to the page component as props
     // currently this is being re-fetched by a client side - refetch - because of the lambda error

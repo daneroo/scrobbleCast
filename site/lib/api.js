@@ -145,7 +145,11 @@ export async function getBooksFeed() {
   for (const b of booksFeed.items) {
     cache.bookById[b.bookId] = b;
   }
-  // console.log(`|Books (miss)| = ${booksFeed.items.length} == uuids: ${Object.keys(cache.bookById).length}`)
+  console.log(
+    `|Books (miss)| = ${booksFeed.items.length} == uuids: ${
+      Object.keys(cache.bookById).length
+    }`
+  );
   return booksFeed;
 }
 

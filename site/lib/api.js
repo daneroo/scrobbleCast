@@ -132,8 +132,11 @@ export async function getBooksFeed() {
   const url =
     "https://raw.githubusercontent.com/daneroo/scrobble-books-data/main/goodreads-rss.json";
   // eslint-disable-next-line no-undef
+  const now = +new Date();
   const results = await fetch(url);
   const booksFeed = await results.json();
+  const jsonSize = JSON.stringify(booksFeed).length;
+  console.log(`fetched size:${jsonSize} in ${+new Date() - now}ms url:${url}`);
 
   // Move this upstream to scrobble-books-data
   booksFeed.items = booksFeed.items.map((b) => ({

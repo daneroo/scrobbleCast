@@ -120,26 +120,24 @@ export async function getPodcasts() {
 }
 
 // https://raw.githubusercontent.com/daneroo/scrobble-books-data/main/goodreads-rss.json
-// https://bafybeidvfxtlc7shkroulfadcf3dc7lz64pv63ipowdvtdkslsyxee4bue.ipfs.w3s.link/goodreads-rss.json
 export async function getBooksFeed() {
-  // TODO(daneroo) re-enable cache, disable for now, completely
-  // if (cache.booksFeed) {
-  //   const { booksFeed } = cache;
-  //   // console.log('|Books (hit)|', booksFeed.items.length)
-  //   return booksFeed;
-  // }
+  if (cache.booksFeed) {
+    const { booksFeed } = cache;
+    console.log("|Books (hit)|", booksFeed.items.length);
+    return booksFeed;
+  }
 
   // Get books data from latest `scrobble-books-data` Github Actions run
-  // const url =
-  //   "https://raw.githubusercontent.com/daneroo/scrobble-books-data/main/goodreads-rss.json";
   const url =
-    "https://bafybeidvfxtlc7shkroulfadcf3dc7lz64pv63ipowdvtdkslsyxee4bue.ipfs.w3s.link/goodreads-rss.json";
+    "https://raw.githubusercontent.com/daneroo/scrobble-books-data/main/goodreads-rss.json";
   // eslint-disable-next-line no-undef
   const now = +new Date();
   const results = await fetch(url);
   const booksFeed = await results.json();
   const jsonSize = JSON.stringify(booksFeed).length;
-  console.log(`fetched size:${jsonSize} in ${+new Date() - now}ms url:${url}`);
+  console.log(
+    `server fetched size:${jsonSize} in ${+new Date() - now}ms url:${url}`
+  );
 
   // Move this upstream to scrobble-books-data
   booksFeed.items = booksFeed.items.map((b) => ({

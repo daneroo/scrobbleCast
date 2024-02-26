@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import { Heading, Text, VStack, HStack, Select, Input } from "@chakra-ui/react";
@@ -15,6 +15,40 @@ export default function BooksPage({
   loadedIndexes,
   addLoadedIndex,
 }) {
+  const [liveBooks, setLiveBooks] = useState([]);
+
+  // TODO(daneroo): this is a temporary fix for the lambda error
+  useEffect(() => {
+    // Fetch the books here - this is because lambda is failing (sometimes) to fetch the books
+    //  which it shouldn't because we are still under the max payload size of 4.5MB
+    // [ERROR] [1708922254682] LAMBDA_RUNTIME Failed to post handler success response. Http response code: 413.
+    //  build time doesn;t have a problem though
+    const fetchBooks = async () => {
+      try {
+        const url =
+          "https://raw.githubusercontent.com/daneroo/scrobble-books-data/main/goodreads-rss.json";
+        const now = +new Date();
+        const results = await fetch(url);
+        const booksFeed = await results.json();
+        const jsonSize = JSON.stringify(booksFeed).length;
+        console.log(
+          `client fetched size:${jsonSize} in ${+new Date() - now}ms url:${url}`
+        );
+
+        // Move this upstream to scrobble-books-data
+        booksFeed.items = booksFeed.items.map((b) => ({
+          ...b,
+          userShelves: b?.userShelves || "read",
+        }));
+        setLiveBooks(booksFeed.items);
+      } catch (error) {
+        console.error("Error fetching books:", error);
+      }
+    };
+
+    fetchBooks();
+  }, []);
+  const switchBooks = liveBooks?.length ? liveBooks : books;
   return (
     <>
       <Head>
@@ -28,7 +62,7 @@ export default function BooksPage({
           <Text fontSize="2xl" mt="2">
             List of Books
           </Text>
-          <BookList books={books} />
+          <BookList books={switchBooks} />
         </VStack>
       </PageLayout>
     </>
@@ -153,10 +187,17 @@ function BookList({ books }) {
 
 export async function getStaticProps(context) {
   const apiSignature = await getApiSignature();
-  const booksFeed = await getBooksFeed();
+
+  // this is the returned value if we get the lambda error
+  let booksFeed = { title: "Fallback empty bookshelf", items: [] };
+  try {
+    booksFeed = await getBooksFeed();
+  } catch (error) {
+    console.error("Error fetching books:", error.message);
+  }
   return {
     props: { books: booksFeed.items, apiSignature }, // will be passed to the page component as props
-    // revalidate: 600, // will cause the page to revalidate every 10 minutes
-    revalidate: 5, // will cause the page to revalidate every 10 minutes
+    // currently this is being re-fetched by a client side - refetch - because of the lambda error
+    revalidate: 1, // will cause the page to revalidate every 1 second - used to be 600
   };
 }

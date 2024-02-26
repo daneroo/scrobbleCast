@@ -120,6 +120,7 @@ export async function getPodcasts() {
 }
 
 // https://raw.githubusercontent.com/daneroo/scrobble-books-data/main/goodreads-rss.json
+// https://bafybeidvfxtlc7shkroulfadcf3dc7lz64pv63ipowdvtdkslsyxee4bue.ipfs.w3s.link/goodreads-rss.json
 export async function getBooksFeed() {
   // TODO(daneroo) re-enable cache, disable for now, completely
   // if (cache.booksFeed) {
@@ -129,8 +130,10 @@ export async function getBooksFeed() {
   // }
 
   // Get books data from latest `scrobble-books-data` Github Actions run
+  // const url =
+  //   "https://raw.githubusercontent.com/daneroo/scrobble-books-data/main/goodreads-rss.json";
   const url =
-    "https://raw.githubusercontent.com/daneroo/scrobble-books-data/main/goodreads-rss.json";
+    "https://bafybeidvfxtlc7shkroulfadcf3dc7lz64pv63ipowdvtdkslsyxee4bue.ipfs.w3s.link/goodreads-rss.json";
   // eslint-disable-next-line no-undef
   const now = +new Date();
   const results = await fetch(url);

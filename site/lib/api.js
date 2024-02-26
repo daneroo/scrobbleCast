@@ -121,11 +121,12 @@ export async function getPodcasts() {
 
 // https://raw.githubusercontent.com/daneroo/scrobble-books-data/main/goodreads-rss.json
 export async function getBooksFeed() {
-  if (cache.booksFeed) {
-    const { booksFeed } = cache;
-    // console.log('|Books (hit)|', booksFeed.items.length)
-    return booksFeed;
-  }
+  // TODO(daneroo) re-enable cache, disable for now, completely
+  // if (cache.booksFeed) {
+  //   const { booksFeed } = cache;
+  //   // console.log('|Books (hit)|', booksFeed.items.length)
+  //   return booksFeed;
+  // }
 
   // Get books data from latest `scrobble-books-data` Github Actions run
   const url =

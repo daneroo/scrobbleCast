@@ -10,6 +10,7 @@ npm i @chakra-ui/react @emotion/react @emotion/styled framer-motion
 
 ## Usage
 
+2024-02-25 Remove all caching from books (temprary HA!)
 2024-02-21 Need to upgrade node: crypto broke
 So I added NODE_OPTIONS=--openssl-legacy-provider to vercel, and bumped node runtime to 18
 

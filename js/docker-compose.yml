@@ -1,6 +1,3 @@
-# Bumped to 2.2 - for init support
-version: '2.2'
-
 services:
   scrape:
     # container_name: scrape

@@ -2,7 +2,7 @@
 # https://snyk.io/blog/10-best-practices-to-containerize-nodejs-web-applications-with-docker/
 
 # Build the image, in case we need build tools
-# Is it ok to mix npm insta;; in node:lts and use it in node:alpine?
+# Is it ok to mix npm install in node:lts and use it in node:alpine?
 FROM node:lts AS build
 # Corepack needs to be pinned (at least to major version) - and should Match CI (CircleCI and GitHub Actions)
 RUN corepack enable && corepack prepare pnpm@8
@@ -15,8 +15,8 @@ RUN pnpm install --frozen-lockfile --loglevel error
 # To refresh the image
 # - Find the latest lts alpine tag (like 16.14.0-alpine3.15)
 # - Find the SHA: docker pull node:lts-alpine|grep Digest
-# 16.14.0-alpine3.15 == lts-alpine @ 2022-02-24
-FROM node:18.12.1-alpine3.16@sha256:67373bd5d90ea600cb5f0fa58d7a5a4e6ebf50b6e05c50c1d1cc22df5134db43
+# node:22.11.0-alpine3.20 == node:lts-alpine @ 2024-11-22
+FROM node:22.11.0-alpine3.20@sha256:b64ced2e7cd0a4816699fe308ce6e8a08ccba463c757c00c14cd372e3d2c763e
 
 RUN apk add dumb-init
 ENV NODE_ENV production

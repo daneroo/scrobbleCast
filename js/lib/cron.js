@@ -23,8 +23,9 @@ const recurrence = {
   // everyHourOnTheHour: '10 0 * * * *',
   everyTenMinutes: '10 */10 * * * *',
   // everyTenMinutesOffsetByThree: '10 3-59/10 * * * *',
-  everyTenMinutesOffsetByFour: '10 4-59/10 * * * *',
-  everyTenMinutesOffsetByFive: '10 5-59/10 * * * *'
+  // everyTenMinutesOffsetByFour: '10 4-59/10 * * * *',
+  everyTenMinutesOffsetByFive: '10 5-59/10 * * * *',
+  everyTenMinutesOffsetBySix: '10 5-59/10 * * * *'
   // everyMinute: '10 * * * * *'
 }
 
@@ -98,8 +99,8 @@ async function start(injectedCredentials) {
   await store.db.init()
   // auto-start all three
   runJob(scrapeDedupDigest, recurrence.everyTenMinutes) // var scrape = ...
-  runJob(tasks.logcheck, recurrence.everyTenMinutesOffsetByFour) // var logcheck =
-  runJob(tasks.sync, recurrence.everyTenMinutesOffsetByFive) // var sync =
+  runJob(tasks.logcheck, recurrence.everyTenMinutesOffsetByFive) // var logcheck =
+  runJob(tasks.sync, recurrence.everyTenMinutesOffsetBySix) // var sync =
 }
 exports = module.exports = {
   start

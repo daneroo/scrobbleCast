@@ -25,7 +25,7 @@ const recurrence = {
   // everyTenMinutesOffsetByThree: '10 3-59/10 * * * *',
   // everyTenMinutesOffsetByFour: '10 4-59/10 * * * *',
   everyTenMinutesOffsetByFive: '10 5-59/10 * * * *',
-  everyTenMinutesOffsetBySix: '10 5-59/10 * * * *'
+  everyTenMinutesOffsetBySix: '10 6-59/10 * * * *'
   // everyMinute: '10 * * * * *'
 }
 

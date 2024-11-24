@@ -2,8 +2,11 @@
 
 SSH_KEY="$HOME/.ssh/scrobble-galois"
 
-# Set 'since' to the first script argument, or use a default value if not provided
-since="${1:-2024-11-01}"
+# How many days ago to sync from by default
+SYNC_DAYS_AGO=1
+
+# Set 'since' to the first script argument, or SYNC_DAYS_AGO days ago if not provided
+since="${1:-$(date -v-${SYNC_DAYS_AGO}d +%Y-%m-%d)}"
 hosts=("dirac" "darwin" "d1-px1")
 
 echo "## Checking SSH Key"

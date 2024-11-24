@@ -21,10 +21,16 @@ fi
 # If not show the command to copy the key over to the destination hosts(s)
 hosts=("dirac" "darwin" "d1-px1")
 
-echo 
-echo "## Checking Hosts: ${hosts[@]}"
+echo
+echo "## Checking SSH Connectivity to Hosts: ${hosts[@]}"
 
 for host in "${hosts[@]}"; do
+    # Try SSH connection with:
+    #   -i "$SSH_KEY"         : Use our specific SSH key
+    #   -o BatchMode=yes      : Don't allow password auth, fail immediately if key auth fails
+    #   -o ConnectTimeout=5   : Don't hang, timeout after 5 seconds if host unreachable
+    #   exit                  : Just try to connect and exit immediately
+    #   2>/dev/null          : Hide SSH error messages
     if ssh -i "$SSH_KEY" -o BatchMode=yes -o ConnectTimeout=5 "$host" exit 2>/dev/null; then
         echo "✓ - SSH connection successful to $host"
     else

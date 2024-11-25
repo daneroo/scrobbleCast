@@ -12,7 +12,9 @@ red := `printf "\033[31m"`
 reset := `printf "\033[0m"`
 green_check := green + "✔" + reset
 red_xmark := red + "✗" + reset
+
 # centralize the format command to style (theme=lignt)
+# don't use this in the "local targets", may not be installed
 gum_fmt_cmd := "gum format --theme=light"
 
 # List all available commands
@@ -21,8 +23,6 @@ default:
 
 # Build local Docker containers (--pull)
 build:
-    #!/usr/bin/env bash
-    echo "## Building Containers (--pull)" | {{ gum_fmt_cmd }}
     docker compose build --pull
 
 # Start local Docker containers
@@ -38,7 +38,7 @@ logs:
     docker compose logs -f scrape
 
 # Alias for check-status-remote
-check: check-status-remote
+alias check := check-status-remote
 
 # Check SSH connectivity to all remote hosts
 check-ssh-remote:

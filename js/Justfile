@@ -12,60 +12,70 @@ red_xmark := red + "✗" + reset
 # centralize the format command to style (theme=lignt)
 gum_fmt_cmd := "gum format --theme=light"
 
-
 # List all available commands
 default:
     @just --list
 
-check-ssh:
-    #!/usr/bin/env bash
-    echo "# Validating SSH Connectivity" | {{ gum_fmt_cmd }}
-
-    if ./scripts/check-ssh.sh; then
-        echo "{{ green_check }} - SSH key found and configured correctly"
-    else
-        echo "{{ red_xmark }} - SSH key check failed"
-        exit 1
-    fi
-
-
-# Docker build (--pull)
+# Build local Docker containers (--pull)
 build:
     #!/usr/bin/env bash
     echo "## Building Containers (--pull)" | {{ gum_fmt_cmd }}
     docker compose build --pull
 
+# Start local Docker containers
 start:
     docker compose up -d
 
+# Stop local Docker containers
 stop:
     docker compose stop
 
+# Show local Docker logs
 logs:
     docker compose logs -f scrape
 
-# NATS related commands
+# Check SSH connectivity to all remote hosts
+check-ssh-remote:
+    #!/usr/bin/env bash
+    echo "# Checking SSH Connectivity" | {{ gum_fmt_cmd }}
+
+    if ./scripts/check-ssh.sh; then
+        echo
+        echo "{{ green_check }} - SSH key found and configured correctly"
+    else
+        echo
+        echo "{{ red_xmark }} - SSH key check failed"
+        exit 1
+    fi
+
+# Check versions and digests across all remote hosts
+check-status-remote:
+    #!/usr/bin/env bash
+    echo "# Checking Status, Versions and Digests" | {{ gum_fmt_cmd }}
+    ./scripts/check-sync.sh
+
+# Show recent logs from all remote hosts
+logs-remote:
+    ./scripts/show-recent-logs.sh
+
+# Subscribe to NATS messages
 nats:
     nats -s nats.ts.imetrical.com sub -r "im.scrobblecast.>"
 
+# Show NATS monitoring dashboard
 nats-top:
     nats-top -s nats.ts.imetrical.com
 
+# Show NATS board interface
 natsboard:
     npx natsboard --nats-mon-url http://nats.ts.imetrical.com:8222
 
-# Use our new scripts for monitoring
-check:
-    ./scripts/check-sync.sh
-
-show-logs:
-    ./scripts/show-recent-logs.sh
-
-# Data management
+# Sync data between hosts
 sync *ARGS:
     docker compose run --rm scrape node sync.js http://darwin.imetrical.com:8000/api {{ARGS}}
     docker compose run --rm scrape node sync.js http://d1-px1.imetrical.com:8000/api {{ARGS}}
 
+# Create and upload database snapshot
 snapshot:
     #!/usr/bin/env bash
     echo "Taking a snapshot DB -> data/snapshots -> s3"
@@ -74,6 +84,7 @@ snapshot:
     docker compose run --rm scrape node snapshots.js
     npm run snapshot
 
+# Restore database from snapshot
 restore:
     #!/usr/bin/env bash
     echo "Restoring from s3 -> data/snapshots -> DB"

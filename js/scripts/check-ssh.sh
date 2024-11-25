@@ -20,9 +20,10 @@ fi
 # If the key exists, validate that we can ssh without a password, using our key
 # If not show the command to copy the key over to the destination hosts(s)
 hosts=("dirac" "darwin" "d1-px1")
+originator=$(hostname -s)
 
 echo
-echo "## Checking SSH Connectivity to Hosts: ${hosts[@]}"
+echo "## Checking SSH Connectivity from ${originator} to Hosts: ${hosts[@]}"
 
 for host in "${hosts[@]}"; do
     # Try SSH connection with:

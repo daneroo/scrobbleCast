@@ -3,6 +3,9 @@
 # Install just on macOS:
 # brew install just
 
+# Set HOSTALIAS for docker compose commands
+export HOSTALIAS := `hostname -s`
+
 # weird escape for Just, could not get octal 33 any other way
 green := `printf "\033[32m"`
 red := `printf "\033[31m"`
@@ -61,9 +64,13 @@ check-status-remote:
 logs-remote:
     ./scripts/logs-remote.sh
 
-# Subscribe to NATS messages
-nats:
+# Subscribe to  NATS messages
+nats-logs:
     nats -s nats.ts.imetrical.com sub -r "im.scrobblecast.>"
+
+# Subscribe to NATS messages with pretty printing
+nats-logs-pretty:
+    nats -s nats.ts.imetrical.com sub -r "im.scrobblecast.>" | pino-pretty -a stamp -m title -S
 
 # Show NATS monitoring dashboard
 nats-top:

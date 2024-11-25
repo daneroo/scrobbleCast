@@ -1,0 +1,83 @@
+# Install just on Ubuntu:
+# curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | sudo bash -s -- --to /usr/local/bin/
+# Install just on macOS:
+# brew install just
+
+# weird escape for Just, could not get octal 33 any other way
+green := `printf "\033[32m"`
+red := `printf "\033[31m"`
+reset := `printf "\033[0m"`
+green_check := green + "✔" + reset
+red_xmark := red + "✗" + reset
+# centralize the format command to style (theme=lignt)
+gum_fmt_cmd := "gum format --theme=light"
+
+
+# List all available commands
+default:
+    @just --list
+
+check-ssh:
+    #!/usr/bin/env bash
+    echo "# Validating SSH Connectivity" | {{ gum_fmt_cmd }}
+
+    if ./scripts/check-ssh.sh; then
+        echo "{{ green_check }} - SSH key found and configured correctly"
+    else
+        echo "{{ red_xmark }} - SSH key check failed"
+        exit 1
+    fi
+
+
+# Docker build (--pull)
+build:
+    #!/usr/bin/env bash
+    echo "## Building Containers (--pull)" | {{ gum_fmt_cmd }}
+    docker compose build --pull
+
+start:
+    docker compose up -d
+
+stop:
+    docker compose stop
+
+logs:
+    docker compose logs -f scrape
+
+# NATS related commands
+nats:
+    nats -s nats.ts.imetrical.com sub -r "im.scrobblecast.>"
+
+nats-top:
+    nats-top -s nats.ts.imetrical.com
+
+natsboard:
+    npx natsboard --nats-mon-url http://nats.ts.imetrical.com:8222
+
+# Use our new scripts for monitoring
+check:
+    ./scripts/check-sync.sh
+
+show-logs:
+    ./scripts/show-recent-logs.sh
+
+# Data management
+sync *ARGS:
+    docker compose run --rm scrape node sync.js http://darwin.imetrical.com:8000/api {{ARGS}}
+    docker compose run --rm scrape node sync.js http://d1-px1.imetrical.com:8000/api {{ARGS}}
+
+snapshot:
+    #!/usr/bin/env bash
+    echo "Taking a snapshot DB -> data/snapshots -> s3"
+    echo "  ..optionally, to avoid pushing other hosts 'current':"
+    echo "  sudo rm -rf data/snapshots/current/"
+    docker compose run --rm scrape node snapshots.js
+    npm run snapshot
+
+restore:
+    #!/usr/bin/env bash
+    echo "Restoring from s3 -> data/snapshots -> DB"
+    echo "Optionally, you could:"
+    echo "  sudo rm -rf data/"
+    docker compose run --rm scrape npm run restore
+    npm run restore 

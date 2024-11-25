@@ -34,12 +34,15 @@ stop:
 logs:
     docker compose logs -f scrape
 
+# Alias for check-status-remote
+check: check-status-remote
+
 # Check SSH connectivity to all remote hosts
 check-ssh-remote:
     #!/usr/bin/env bash
     echo "# Checking SSH Connectivity" | {{ gum_fmt_cmd }}
 
-    if ./scripts/check-ssh.sh; then
+    if ./scripts/check-ssh-remote.sh; then
         echo
         echo "{{ green_check }} - SSH key found and configured correctly"
     else
@@ -52,11 +55,11 @@ check-ssh-remote:
 check-status-remote:
     #!/usr/bin/env bash
     echo "# Checking Status, Versions and Digests" | {{ gum_fmt_cmd }}
-    ./scripts/check-sync.sh
+    ./scripts/check-status-remote.sh
 
 # Show recent logs from all remote hosts
 logs-remote:
-    ./scripts/show-recent-logs.sh
+    ./scripts/logs-remote.sh
 
 # Subscribe to NATS messages
 nats:

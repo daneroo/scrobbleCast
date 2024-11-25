@@ -2,6 +2,13 @@
 # curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | sudo bash -s -- --to /usr/local/bin/
 # Install just on macOS:
 # brew install just
+# Install gum on Ubuntu:
+# sudo mkdir -p /etc/apt/keyrings
+# curl -fsSL https://repo.charm.sh/apt/gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/charm.gpg
+# echo "deb [signed-by=/etc/apt/keyrings/charm.gpg] https://repo.charm.sh/apt/ * *" | sudo tee /etc/apt/sources.list.d/charm.list
+# sudo apt update && sudo apt install gum
+# Install gum on macOS:
+# brew install gum
 
 # Set HOSTALIAS for docker compose commands
 export HOSTALIAS := `hostname -s`
@@ -14,7 +21,6 @@ green_check := green + "✔" + reset
 red_xmark := red + "✗" + reset
 
 # centralize the format command to style (theme=lignt)
-# don't use this in the "local targets", may not be installed
 gum_fmt_cmd := "gum format --theme=light"
 
 # List all available commands
@@ -23,18 +29,26 @@ default:
 
 # Build local Docker containers (--pull)
 build:
+    #!/usr/bin/env bash
+    echo "# Building Containers (--pull)" | {{ gum_fmt_cmd }}
     docker compose build --pull
 
 # Start local Docker containers
 start:
+    #!/usr/bin/env bash
+    echo "# Starting Containers" | {{ gum_fmt_cmd }}
     docker compose up -d
 
 # Stop local Docker containers
 stop:
+    #!/usr/bin/env bash
+    echo "# Stopping Containers" | {{ gum_fmt_cmd }}
     docker compose stop
 
 # Show local Docker logs
 logs:
+    #!/usr/bin/env bash
+    echo "# Showing Local Docker Logs" | {{ gum_fmt_cmd }}
     docker compose logs -f scrape
 
 # Alias for check-status-remote
@@ -85,19 +99,17 @@ sync *ARGS:
     docker compose run --rm scrape node sync.js http://darwin.imetrical.com:8000/api {{ARGS}}
     docker compose run --rm scrape node sync.js http://d1-px1.imetrical.com:8000/api {{ARGS}}
 
-# Create and upload database snapshot
+# Create database snapshot and upload to S3
 snapshot:
     #!/usr/bin/env bash
-    echo "Taking a snapshot DB -> data/snapshots -> s3"
-    echo "  ..optionally, to avoid pushing other hosts 'current':"
-    echo "  sudo rm -rf data/snapshots/current/"
-    docker compose run --rm scrape node snapshots.js
-    npm run snapshot
+    echo "# Taking a snapshot DB -> data/snapshots -> S3" | {{ gum_fmt_cmd }}
+
+    ./scripts/snapshot-local.sh
 
 # Restore database from snapshot
 restore:
     #!/usr/bin/env bash
-    echo "Restoring from s3 -> data/snapshots -> DB"
+    echo "# Restoring from S3 -> data/snapshots -> DB" | {{ gum_fmt_cmd }}
     echo "Optionally, you could:"
     echo "  sudo rm -rf data/"
     docker compose run --rm scrape npm run restore

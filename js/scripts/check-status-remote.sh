@@ -3,9 +3,6 @@
 # Source common functions and variables
 source "$(dirname "$0")/common.sh"
 
-# Check SSH key first
-check_ssh_key || exit 1
-
 format "## Checking versions"
 for host in "${HOSTS[@]}"; do
     version=$(curl -s "http://${host}.imetrical.com:8000/api/version")

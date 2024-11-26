@@ -14,12 +14,7 @@ main()
 async function main() {
   await store.db.init()
   for (const credentials of allCredentials) {
-    log.info('scrub', credentials)
-    const start = +new Date()
-    const counts = await scrubTask(credentials)
-    const elapsed = (+new Date() - start) / 1000
-    const rate = (counts.total / elapsed).toFixed(0) + 'r/s'
-    log.info('scrubbed', { items: counts.total, elapsed, rate })
+    await scrubTask(credentials)
   }
   await store.db.end()
   await nats.disconnectFromNats()
@@ -90,11 +85,14 @@ async function scrubTask(credentials) {
   }
 
   const elapsed = ((+new Date() - start) / 1000).toFixed(1)
+  const rate = (counts.total / elapsed).toFixed(0) + 'r/s'
+
   log.info(`Task done`, {
     task: 'scrub',
     user,
     ...counts,
-    elapsed
+    elapsed,
+    rate
   })
   return counts
 }

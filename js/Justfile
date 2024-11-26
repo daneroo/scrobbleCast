@@ -113,4 +113,12 @@ restore:
     echo "Optionally, you could:"
     echo "  sudo rm -rf data/"
     docker compose run --rm scrape npm run restore
-    npm run restore 
+    npm run restore
+
+scrub:
+    docker compose run --rm scrape node scrub.js
+
+scrub-remote:
+    #!/usr/bin/env bash
+    echo "# Scrub Digests on Remote Hosts" | {{ gum_fmt_cmd }}
+    ./scripts/scrub-remote.sh

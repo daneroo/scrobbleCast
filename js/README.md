@@ -16,6 +16,29 @@ make archive # after snapshot
 make restore
 ```
 
+Using a `Justfile` with targets:
+
+```bash
+> just
+Available recipes:
+    build               # Build local Docker containers (--pull)
+    check-ssh-remote    # Check SSH connectivity to all remote hosts
+    check-status-remote # Check versions and digests across all remote hosts
+    check               # alias for `check-status-remote`
+    default             # List all available commands
+    logs                # Show local Docker logs
+    logs-remote         # Show recent logs from all remote hosts
+    nats-logs           # Subscribe to  NATS messages
+    nats-logs-pretty    # Subscribe to NATS messages with pretty printing
+    nats-top            # Show NATS monitoring dashboard
+    natsboard           # Show NATS board interface
+    restore             # Restore database from snapshot
+    snapshot            # Create database snapshot and upload to S3
+    start               # Start local Docker containers
+    stop                # Stop local Docker containers
+    sync *ARGS          # Sync data between hosts
+```
+
 ## CI/CD
 
 CI is performed by GitHub Actions, (as well as CircleCI for now).
@@ -43,9 +66,6 @@ nats pub test.clock.2 --count=3600 --sleep 1s "{origin:\"2\" stamp:\"{{TimeStamp
 export NATSURL=nats://nats.ts.imetrical.com:4222
 export NATSURL=nats://localhost:4222
 node jetstream-clock.js
-
-
-
 ```
 
 ## Test
@@ -65,6 +85,13 @@ DB_LOG=1 DB_DIALECT=postgres npm run unit
 
 ## TODO
 
+- [ ] scrub: confirm digests are correct
+  - [ ] darwin-monthly-daniel-2023-05-01-line-1201: has a bad `uuid`
+  - [ ] run on darwin,dirac,d1-px1
+- [ ] finish just scripts
+  - [ ] restore
+  - [ ] syncAllPAirs: gum to pick date and pair(s)
+- [x] restart 2024-11-26
 - [ ] update to node 20 (GHAct matrix), and figure out how to pin corepack pnpm (just moved to 8)
   - pnpm version is in Dockerfile,CircleCI, and GitHub Action
 - Move the copy/dedup scripts from LOG-2023-11-17.md file to scripts/ (with syncAllPairs.sh)
@@ -100,7 +127,7 @@ DB_LOG=1 DB_DIALECT=postgres npm run unit
     - bluebird
     - lodash
     - mocha / (jest, replace istanbul?)
-    - pg (jsut pass tests)
+    - pg (just pass tests)
 - log (and check) scrape calculations)
 - <https://github.com/JoshuaWise/better-sqlite3>
 - expose status for tasks (recently completed too)

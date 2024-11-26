@@ -3,22 +3,107 @@
 # Source common functions and variables
 source "$(dirname "$0")/common.sh"
 
-format '## Validating presence of `data/snapshots/current/`'
-echo "  ..optionally, to avoid pushing other hosts 'current':"
-echo "  sudo rm -rf data/snapshots/current/"
+# Determine base and data directories
+BASE_DIR=$(realpath "$(dirname "$0")/..")
+DATA_DIR="${BASE_DIR}/data"
+S3_CONFIG="${BASE_DIR}/s3cfg.env"
+
+# Define S3 command with common options
+S3_CMD="docker run --rm --env-file $S3_CONFIG -v ${DATA_DIR}/snapshots:/data/snapshots amazon/aws-cli s3"
+
+format '## Validating environment'
+
+# Initialize validation status
+validation_failed=0
+
+# Check for s3cfg.env
+if [ ! -f "$S3_CONFIG" ]; then
+    x_mark "S3 config file not found: $S3_CONFIG"
+    echo "This script requires s3cfg.env with AWS credentials"
+    validation_failed=1
+else
+    check_mark "S3 config file found: $S3_CONFIG"
+fi
+
+# Verify data directory exists
+if [ ! -d "$DATA_DIR" ]; then
+    x_mark "Data directory not found: $DATA_DIR"
+    echo "This script should be run from the directory containing the Justfile"
+    validation_failed=1
+else
+    check_mark "Data directory confirmed: $DATA_DIR"
+fi
+
+# Test S3 access
+format '## Testing S3 connectivity'
+if ! $S3_CMD ls s3://scrobblecast/snapshots/ >/dev/null 2>&1; then
+    x_mark "S3 access failed. Check your credentials in s3cfg.env"
+    validation_failed=1
+else
+    check_mark "S3 access confirmed"
+fi
+
+# Exit if any validation failed
+if [ $validation_failed -ne 0 ]; then
+    x_mark "Environment validation failed"
+    exit 1
+fi
+
+format '## Cleaning up presence of files in `data/snapshots/current/`'
+
+# Store find results first
+current_files=$(cd "$DATA_DIR" 2>/dev/null && find snapshots/current -type f -exec stat -f "%z|%Sm|%N" -t "%Y-%m-%dT%H:%M:%S" {} \; 2>/dev/null)
+
+if [ -n "$current_files" ]; then
+    # Create markdown table of files
+    (
+        echo "| Size | Modified | Path |"
+        echo "|------|----------|------|"
+        echo "$current_files" | \
+            awk -F'|' '{print "| " $1 " | " $2 " | " $3 " |"}'
+    ) | $GUM_FMT_CMD
+    
+    if gum confirm "Remove existing files in data/snapshots/current? (you should)"; then
+        rm -rf "$DATA_DIR/snapshots/current"
+        check_mark "Removed data/snapshots/current"
+    else
+        echo "Keeping existing data/snapshots/current"
+    fi
+else
+    check_mark "No files found in data/snapshots/current"
+fi
 
 format '## Creating snapshot DB -> `./data/snapshots`'
-echo docker compose run --rm scrape node snapshots.js
+docker compose run --rm scrape node snapshots.js
+
 if [ $? -ne 0 ]; then
-    echo "${red_xmark} Snapshot creation failed"
+    x_mark "Snapshot creation failed"
+    exit 1
+else
+    check_mark "Snapshot creation completed"
+fi
+
+format '## Previewing S3 upload'
+$S3_CMD sync --dryrun /data/snapshots/ s3://scrobblecast/snapshots
+
+if [ $? -ne 0 ]; then
+    x_mark "S3 sync preview failed"
+    exit 1
+fi
+
+if ! gum confirm "Proceed with S3 upload?"; then
+    echo "Upload cancelled"
     exit 1
 fi
 
 format '## Uploading `./data/snapshots/` to S3'
-echo npm run snapshot
+$S3_CMD sync /data/snapshots/ s3://scrobblecast/snapshots
+
 if [ $? -ne 0 ]; then
-    echo "${red_xmark} Snapshot upload failed"
+    x_mark "Snapshot upload failed"
     exit 1
+else
+    check_mark "Snapshot upload completed"
 fi
 
-echo "${green_check} Snapshot process completed successfully"
+check_mark "Snapshot process completed successfully"

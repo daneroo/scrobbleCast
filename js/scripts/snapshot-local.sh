@@ -51,8 +51,8 @@ fi
 
 format '## Cleaning up presence of files in `data/snapshots/current/`'
 
-# Store find results first
-current_files=$(cd "$DATA_DIR" 2>/dev/null && find snapshots/current -type f -exec stat -f "%z|%Sm|%N" -t "%Y-%m-%dT%H:%M:%S" {} \; 2>/dev/null)
+# Store find results first - using ls for portability
+current_files=$(cd "$DATA_DIR" 2>/dev/null && find snapshots/current -type f -exec ls -lh {} \; | awk '{print $5 "|" $6 " " $7 " " $8 "|" $9}')
 
 if [ -n "$current_files" ]; then
     # Create markdown table of files

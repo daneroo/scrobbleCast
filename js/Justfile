@@ -2,7 +2,7 @@
 # curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | sudo bash -s -- --to /usr/local/bin/
 # Install just on macOS:
 # brew install just
-# Install gum on Ubuntu:
+# Install gum on Ubuntu: (from the docs: https://github.com/charmbracelet/gum#installation)
 # sudo mkdir -p /etc/apt/keyrings
 # curl -fsSL https://repo.charm.sh/apt/gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/charm.gpg
 # echo "deb [signed-by=/etc/apt/keyrings/charm.gpg] https://repo.charm.sh/apt/ * *" | sudo tee /etc/apt/sources.list.d/charm.list

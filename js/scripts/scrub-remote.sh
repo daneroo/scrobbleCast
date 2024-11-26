@@ -10,5 +10,5 @@ format "## Running scrub on remote hosts"
 
 for host in "${HOSTS[@]}"; do
     format "### Host: ${host}"
-    ssh -i "$SSH_KEY" "$host" "cd js-scrape && node scrub.js"
+    ssh -i "$SSH_KEY" "$host" "docker exec -t js-scrape-1 node scrub.js"
 done

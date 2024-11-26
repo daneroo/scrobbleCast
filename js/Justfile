@@ -115,9 +115,11 @@ restore:
     docker compose run --rm scrape npm run restore
     npm run restore
 
+# Scrub DB digests (Local)
 scrub:
     docker compose run --rm scrape node scrub.js
 
+# Scrub DB digests (Remote)
 scrub-remote:
     #!/usr/bin/env bash
     echo "# Scrub Digests on Remote Hosts" | {{ gum_fmt_cmd }}

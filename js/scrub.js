@@ -1,6 +1,28 @@
 'use strict'
 
-// const tasks = require('./lib/tasks')
+/*
+ - to check for digest mismatches, i.e. digest(item json) !== digest
+ - to check for invalid uuids, i.e. uuid.length !== 36 || !/^[0-9a-f-]+$/.test(uuid)
+ Why?
+ Taking snapshots on 2024-11-24, while synch'ing to S3, it became apparent that
+a single (monthly) file had a discrepancy between hosts, furthermore, 
+digest field matched the digest of the correct json, 
+which means the json alone was corrupted,
+but after it was digested, either in memory or in the database file itself.
+
+So we made this script to scrub the database for corruption.
+
+**Note:** It could be enhanced to validate an entore schema.
+This was also started in the parallel project: `../scrub/`
+
+darwin-monthly-daniel-2023-05-01:line-1201:
+  "uuid": "f13e�4d1-cf81-4bd6-b4d5-55f314e580fc",
+  bad char ....^
+dirac-monthly-daniel-2023-05-01:line-1201: 
+  "uuid": "f13e84d1-cf81-4bd6-b4d5-55f314e580fc",
+
+ */
+
 const store = require('./lib/store')
 const log = require('./lib/log')
 const nats = require('./lib/nats')

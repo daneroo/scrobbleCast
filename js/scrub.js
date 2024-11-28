@@ -12,7 +12,7 @@ but after it was digested, either in memory or in the database file itself.
 
 So we made this script to scrub the database for corruption.
 
-**Note:** It could be enhanced to validate an entore schema.
+**Note:** It could be enhanced to validate an entire schema.
 This was also started in the parallel project: `../scrub/`
 
 darwin-monthly-daniel-2023-05-01:line-1201:
@@ -21,6 +21,17 @@ darwin-monthly-daniel-2023-05-01:line-1201:
 dirac-monthly-daniel-2023-05-01:line-1201: 
   "uuid": "f13e84d1-cf81-4bd6-b4d5-55f314e580fc",
 
+  Or a live proof from the database
+  $ sqlite3 data/sqlite/scrobblecast-darwin-corrupted-uuid-2024-11-24.sqlite  "SELECT item FROM items WHERE digest = '06073ce9a43119ee3bc046b792ea4542cf357839555f3ae745832a0b950f8e47';" | jq .uuid
+  "f13e�4d1-cf81-4bd6-b4d5-55f314e580fc"
+
+  $ sqlite3 data/sqlite/scrobblecast-dirac-2024-11-24.sqlite  "SELECT item FROM items WHERE digest = '06073ce9a43119ee3bc046b792ea4542cf357839555f3ae745832a0b950f8e47';" | jq .uuid
+  "f13e84d1-cf81-4bd6-b4d5-55f314e580fc"
+
+  The fix was to
+  sqlite3 data/sqlite/scrobblecast.sqlite   "DELETE FROM items WHERE digest = '06073ce9a43119ee3bc046b792ea4542cf357839555f3ae745832a0b950f8e47';"
+  and then re-run the sync with uncorrupted machine dirac.
+  $ node sync.js http://dirac.imetrical.com:8000/api 2023-05-01
  */
 
 const store = require('./lib/store')

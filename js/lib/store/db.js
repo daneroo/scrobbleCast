@@ -441,11 +441,20 @@ async function digester(Model, qy, itemDigester, pageSize = 100000) {
   // for Item and History
   const algorithm = 'sha256'
 
+  // We want to hash a JSON array of digests: e.g. '[]' for empty, '[digest]' for one item
+  // '[digest1,digest2]' for multiple items
+  // The previous implementation only added ']' for empty arrays, resulting in
+  // different hashes for empty arrays vs the string '[]'
   const hash = crypto.createHash(algorithm)
   let isFirst = true
+
+  // Initialize with '[' for all cases
+  hash.update('[')
+
   async function handler(item) {
     const digest = itemDigester(item)
-    const str = (isFirst ? '[' : ',') + JSON.stringify(digest)
+    // Now we only need the comma for non-first items
+    const str = (isFirst ? '' : ',') + JSON.stringify(digest)
     hash.update(str)
     isFirst = false
   }

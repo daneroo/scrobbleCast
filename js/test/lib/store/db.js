@@ -314,6 +314,15 @@ describe('store', function () {
       )
     })
 
+    it('should get digest of digests for empty array', async function () {
+      // No items saved - empty database
+      const got = await db.digestOfDigests()
+      // This should match sha256('[]')
+      expect(got).to.equal(
+        '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945'
+      )
+    })
+
     // This was to test deprecation notice of getByKey
     // it.skip('should thrown an error when deprecated getByKey is called', async () => {
     //   const item = helpers.makeItem(1)

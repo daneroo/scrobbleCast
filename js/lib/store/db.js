@@ -41,6 +41,7 @@ exports = module.exports = {
 
   digestsQy,
   digests,
+  digester,
   digestOfDigests,
   digestOfDigestsHistory,
 

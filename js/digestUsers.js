@@ -14,21 +14,34 @@ const nats = require('./lib/nats')
 
 // globals
 // const allCredentials = require('./credentials.json')
-const Op = orm.Op
+// const Op = orm.Op
 
 main()
 async function main() {
   await store.db.init()
   for (const user of [null, 'daniel', 'stephane']) {
     const { digest, elapsed } = await digestTimer(() =>
-      digestOfDigestsForUser(user)
+      digestOfItemDigestsForUser(user)
     )
-    log.info('digest:user', { digest, scope: 'item', user, elapsed })
+    log.info('digest:user', { user, scope: 'item', digest, elapsed })
+  }
+  for (const user of [null, 'daniel', 'stephane']) {
+    const { digest, elapsed } = await digestTimer(() =>
+      digestOfHistoryDigestsForUser(user)
+    )
+    log.info('digest:user', { user, scope: 'history', digest, elapsed })
   }
   {
     const { digest, elapsed } = await digestTimer(store.db.digestOfDigests)
     log.info('checkpoint', { digest, scope: 'item', elapsed })
   }
+  {
+    const { digest, elapsed } = await digestTimer(
+      store.db.digestOfDigestsHistory
+    )
+    log.info('checkpoint', { digest, scope: 'history', elapsed })
+  }
+
   await store.db.end()
   await nats.disconnectFromNats()
 }
@@ -40,31 +53,30 @@ async function digestTimer(digester) {
   return { digest, elapsed }
 }
 
-async function digestOfDigestsForUser(user) {
+async function digestOfItemDigestsForUser(user) {
   const pageSize = 100000 // tradeoff speed/memory
-  const qy = digestsQyForUser({ user })
+  const qy = {
+    raw: true,
+    attributes: ['digest', '__stamp'],
+    order: [['__stamp', 'DESC'], 'digest'] // __stamp DESC is causing extra time, even with index
+  }
+  if (user) {
+    qy.where = { __user: user }
+  }
   const itemDigester = (item) => item.digest
   return store.db.digester(orm.Item, qy, itemDigester, pageSize)
 }
 
-function digestsQyForUser({
-  user,
-  since = '1970-01-01T00:00:00Z',
-  before = '2040-01-01T00:00:00Z'
-} = {}) {
+async function digestOfHistoryDigestsForUser(user) {
+  const pageSize = 100000 // tradeoff speed/memory
   const qy = {
     raw: true,
-    attributes: ['digest', '__stamp'],
-    where: {
-      __stamp: {
-        [Op.gte]: since, // >= since (inclusive)
-        [Op.lt]: before // < before (strict)
-      }
-    },
-    order: [['__stamp', 'DESC'], 'digest'] // __stamp DESC is causing extra time, even with index
+    attributes: ['digest'],
+    order: ['__user', '__type', 'uuid']
   }
   if (user) {
-    qy.where.__user = user
+    qy.where = { __user: user }
   }
-  return qy
+  const itemDigester = (item) => item.digest
+  return store.db.digester(orm.History, qy, itemDigester, pageSize)
 }

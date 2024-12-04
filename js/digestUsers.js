@@ -31,16 +31,18 @@ async function main() {
     )
     log.info('digest:user', { user, scope: 'history', digest, elapsed })
   }
-  {
-    const { digest, elapsed } = await digestTimer(store.db.digestOfDigests)
-    log.info('checkpoint', { digest, scope: 'item', elapsed })
-  }
-  {
-    const { digest, elapsed } = await digestTimer(
-      store.db.digestOfDigestsHistory
-    )
-    log.info('checkpoint', { digest, scope: 'history', elapsed })
-  }
+
+  // same as user=null
+  // {
+  //   const { digest, elapsed } = await digestTimer(store.db.digestOfDigests)
+  //   log.info('checkpoint', { digest, scope: 'item', elapsed })
+  // }
+  // {
+  //   const { digest, elapsed } = await digestTimer(
+  //     store.db.digestOfDigestsHistory
+  //   )
+  //   log.info('checkpoint', { digest, scope: 'history', elapsed })
+  // }
 
   await store.db.end()
   await nats.disconnectFromNats()

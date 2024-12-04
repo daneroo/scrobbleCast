@@ -8,7 +8,7 @@
 # 3. History entries are also uniquely identified by their digest (content-addressed)
 # 4. dedup.js can fully regenerate histories by streaming all items (in dedupOrder)
 #
-# This is why we can:
+# This is why we could have:
 #   a) DROP the entire histories table
 #   b) Run dedup to regenerate it from items
 #   c) Get back exactly the same histories (enforced by content addressing)

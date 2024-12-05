@@ -81,22 +81,63 @@ fi
 
 format '## Checking presence of files in `data/snapshots/current/`'
 
-# Store find results first - using ls for portability
-current_files=$(cd "$DATA_DIR" 2>/dev/null && find snapshots/current -type f -name "*.jsonl" -exec ls -lh {} \; | awk '{print $5 "|" $9}')
-
-if [ -n "$current_files" ]; then
-    # Create markdown table header
-    (
-        echo "| Size | Last Record | Path |"
-        echo "|------|-------------|------|"
-        # For each file, get size and last record timestamp
-        echo "$current_files" | while IFS='|' read -r size path; do
-            last_stamp=$(tail -1 "$DATA_DIR/$path" | jq -r '.__stamp // "N/A"')
-            echo "| $size | $last_stamp | $path |"
-        done
-    ) | $GUM_FMT_CMD
+# First check if we have any current files at all
+if [ ! -d "$DATA_DIR/snapshots/current" ]; then
+    check_mark "No current directory found"
 else
-    check_mark "No .jsonl files found in data/snapshots/current"
+    # Iterate over each user directory
+    for user_dir in "$DATA_DIR/snapshots/current"/*/ ; do
+        if [ ! -d "$user_dir" ]; then
+            continue
+        fi
+        user=$(basename "$user_dir")
+        format "### Processing user: ${user}"
+
+        # Store find results for this user
+        current_files=$(cd "$DATA_DIR" 2>/dev/null && find "snapshots/current/${user}" -type f -name "*.jsonl" -exec ls -lh {} \; | awk '{print $5 "|" $9}')
+
+        if [ -n "$current_files" ]; then
+            # Create markdown table of files
+            (
+                echo "| Size | Last Record | Path |"
+                echo "|------|-------------|------|"
+                echo "$current_files" | while IFS='|' read -r size path; do
+                    last_stamp=$(tail -1 "$DATA_DIR/$path" | jq -r '.__stamp // "N/A"')
+                    echo "| $size | $last_stamp | $path |"
+                done
+            ) | $GUM_FMT_CMD
+
+            # Create array of choices with timestamps
+            choices=()
+            while IFS='|' read -r size path; do
+                last_stamp=$(tail -1 "$DATA_DIR/$path" | jq -r '.__stamp // "N/A"')
+                choices+=("$path ($last_stamp)")
+            done <<< "$current_files"
+
+            echo "Select which current file to keep for ${user}:"
+            selected=$(printf "%s\n" "${choices[@]}" | gum choose)
+            
+            if [ -n "$selected" ]; then
+                # Extract just the path from the selection (remove timestamp)
+                selected_path=$(echo "$selected" | sed 's/ (.*)$//')
+                
+                # Remove all other files for this user
+                while IFS='|' read -r size path; do
+                    if [ "$path" != "$selected_path" ]; then
+                        rm -f "$DATA_DIR/$path"
+                        check_mark "Removed $path"
+                    else
+                        check_mark "Keeping $path"
+                    fi
+                done <<< "$current_files"
+            else
+                echo "No file selected for ${user}"
+                exit 1
+            fi
+        else
+            check_mark "No .jsonl files found for ${user}"
+        fi
+    done
 fi
 
 format '## Restoring snapshot `./data/snapshots` -> DB'

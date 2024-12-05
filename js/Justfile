@@ -100,21 +100,22 @@ sync *ARGS:
     docker compose run --rm scrape node sync.js http://darwin.imetrical.com:8000/api {{ARGS}}
     docker compose run --rm scrape node sync.js http://d1-px1.imetrical.com:8000/api {{ARGS}}
 
+# (just echo) Archive data/snapshots for /archive/mirror/scrobbleCast/
+archive:
+	@echo "Archiving data/snapshots for /archive"
+	@echo tar cjvf scrobbleCast-data-snapshots-`date -u +%Y%m%d.%H%MZ`.tar.bz2 data/snapshots/monthly/
+	@echo "scp -p scrobbleCast-data-snapshots-20.. maybe-galois:/Volumes/Space/archive/mirror/scrobbleCast/"
 # Create database snapshot and upload to S3
 snapshot:
     #!/usr/bin/env bash
-    echo "# Taking a snapshot DB -> data/snapshots -> S3" | {{ gum_fmt_cmd }}
-
+    echo "# Taking a snapshot DB -> ./data/snapshots -> S3" | {{ gum_fmt_cmd }}
     ./scripts/snapshot-local.sh
 
 # Restore database from snapshot
 restore:
     #!/usr/bin/env bash
-    echo "# Restoring from S3 -> data/snapshots -> DB" | {{ gum_fmt_cmd }}
-    echo "Optionally, you could:"
-    echo "  sudo rm -rf data/"
-    docker compose run --rm scrape npm run restore
-    npm run restore
+    echo "# Restoring from S3 -> ./data/snapshots -> DB" | {{ gum_fmt_cmd }}
+    ./scripts/restore-local.sh
 
 # Scrub DB digests (Local)
 scrub:

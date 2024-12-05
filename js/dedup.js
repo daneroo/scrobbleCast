@@ -18,13 +18,15 @@ async function main() {
 
   {
     const { digest, elapsed } = await digestTimer(store.db.digestOfDigests)
-    log.info('checkpoint', { digest, scope: 'item', elapsed })
+    // rename to digest (from checkpoint) to avoid interference with sync (while we still have loggly)
+    log.info('digest', { digest, scope: 'item', elapsed })
   }
   {
     const { digest, elapsed } = await digestTimer(
       store.db.digestOfDigestsHistory
     )
-    log.info('checkpoint', { digest, scope: 'history', elapsed })
+    // rename to digest (from checkpoint) to avoid interference with sync (while we still have loggly)
+    log.info('digest', { digest, scope: 'history', elapsed })
   }
   await store.db.end()
   await nats.disconnectFromNats()

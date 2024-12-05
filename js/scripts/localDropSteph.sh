@@ -29,6 +29,8 @@ fi
 
 format "## Validate Drop Stephane"
 
+# HOSTS=("dirac")
+
 for host in "${HOSTS[@]}"; do
     format "### Host: ${host}"
     
@@ -37,14 +39,14 @@ for host in "${HOSTS[@]}"; do
     scp -p data/sqlite/scrobblecast-${host}-preDropSteph.sqlite data/sqlite/scrobblecast.sqlite;
     echo "- Confirm integrity host:${host} sha256sum:$(sha256sum data/sqlite/scrobblecast.sqlite)"
     
-    echo "- Digest Users before"
-    node digestUsers.js 2>&1|grep 'digest='
+    # echo "- Digest Users before"| $GUM_FMT_CMD
+    # node digestUsers.js 2>&1|grep 'digest='
 
-    format "#### Counts before DROP"
-    echo "- Items table counts by user:"
-    sqlite3 data/sqlite/scrobblecast.sqlite "SELECT __user, COUNT(*) FROM items GROUP BY __user;"
-    echo "- Histories table counts by user:"
-    sqlite3 data/sqlite/scrobblecast.sqlite "SELECT __user, COUNT(*) FROM histories GROUP BY __user;"
+    # format "#### Counts before DROP and dedup"
+    # echo "- Items - counts by user and type:"| $GUM_FMT_CMD
+    # sqlite3 --column --header data/sqlite/scrobblecast.sqlite "SELECT __user, __type, COUNT(*) as count FROM items GROUP BY __user, __type ORDER BY __user, __type;"    
+    # echo "- Histories - counts by user and type:"| $GUM_FMT_CMD
+    # sqlite3 --column --header data/sqlite/scrobblecast.sqlite "SELECT __user, __type, COUNT(*) as count FROM histories GROUP BY __user, __type ORDER BY __user, __type;"
 
     format "#### Performing DROP operations"
     echo "- Deleting from items..."
@@ -52,11 +54,21 @@ for host in "${HOSTS[@]}"; do
     echo "- Deleting from histories..."
     sqlite3 data/sqlite/scrobblecast.sqlite "DELETE FROM histories WHERE __user='stephane' OR __user='stephAne';"
 
+    echo "- Database size before VACUUM:"
+    du -sk data/sqlite/scrobblecast.sqlite
+
+    echo "- Running VACUUM to reclaim space..."
+    sqlite3 data/sqlite/scrobblecast.sqlite "VACUUM;"
+
+    echo "- Database size after VACUUM:"
+    du -sk data/sqlite/scrobblecast.sqlite
+
     format "#### Counts after DROP"
-    echo "- Items table counts by user:"
-    sqlite3 data/sqlite/scrobblecast.sqlite "SELECT __user, COUNT(*) FROM items GROUP BY __user;"
-    echo "- Histories table counts by user:"
-    sqlite3 data/sqlite/scrobblecast.sqlite "SELECT __user, COUNT(*) FROM histories GROUP BY __user;"
+    echo "- Items - counts by user and type:"| $GUM_FMT_CMD
+    sqlite3 --column --header data/sqlite/scrobblecast.sqlite "SELECT __user, __type, COUNT(*) as count FROM items GROUP BY __user, __type ORDER BY __user, __type;"
+    
+    echo "- Histories - counts by user and type:"| $GUM_FMT_CMD
+    sqlite3 --column --header data/sqlite/scrobblecast.sqlite "SELECT __user, __type, COUNT(*) as count FROM histories GROUP BY __user, __type ORDER BY __user, __type;"
 
     echo "- Digest Users after"
     node digestUsers.js 2>&1|grep 'digest='
@@ -78,11 +90,12 @@ for host in "${HOSTS[@]}"; do
     echo "- Restoring from snapshots..."
     gum spin --title "Restoring from snapshots" --show-error -- node restore.js
     
+    # Need to dedup after restore, if you want histories
     format "#### Counts after restore"
-    echo "- Items table counts by user:"
-    sqlite3 data/sqlite/scrobblecast.sqlite "SELECT __user, COUNT(*) FROM items GROUP BY __user;"
-    echo "- Histories table counts by user:"
-    sqlite3 data/sqlite/scrobblecast.sqlite "SELECT __user, COUNT(*) FROM histories GROUP BY __user;"
+    echo "- Items - counts by user and type:"| $GUM_FMT_CMD
+    sqlite3 --column --header data/sqlite/scrobblecast.sqlite "SELECT __user, __type, COUNT(*) as count FROM items GROUP BY __user, __type ORDER BY __user, __type;"
+    echo "- Histories - counts by user and type:"| $GUM_FMT_CMD
+    sqlite3 --column --header data/sqlite/scrobblecast.sqlite "SELECT __user, __type, COUNT(*) as count FROM histories GROUP BY __user, __type ORDER BY __user, __type;"
     
     echo "- Verifying restored digests..."
     node digestUsers.js 2>&1|grep 'digest='

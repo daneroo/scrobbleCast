@@ -16,16 +16,19 @@ const nats = require('./lib/nats')
 // const allCredentials = require('./credentials.json')
 // const Op = orm.Op
 
+// const allUsers = [null, 'daniel', 'stephane']
+const allUsers = [null, 'daniel']
+
 main()
 async function main() {
   await store.db.init()
-  for (const user of [null, 'daniel', 'stephane']) {
+  for (const user of allUsers) {
     const { digest, elapsed } = await digestTimer(() =>
       digestOfItemDigestsForUser(user)
     )
     log.info('digest:user', { user, scope: 'item', digest, elapsed })
   }
-  for (const user of [null, 'daniel', 'stephane']) {
+  for (const user of allUsers) {
     const { digest, elapsed } = await digestTimer(() =>
       digestOfHistoryDigestsForUser(user)
     )

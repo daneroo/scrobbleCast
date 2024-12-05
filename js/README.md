@@ -85,10 +85,11 @@ DB_LOG=1 DB_DIALECT=postgres npm run unit
 
 ## TODO
 
-- [ ] scrub: confirm digests are correct
-  - [ ] darwin-monthly-daniel-2023-05-01-line-1201: has a bad `uuid`
-  - [ ] run on darwin,dirac,d1-px1
-- [ ] finish just scripts
+- [x] scrub: confirm digests are correct
+  - [x] darwin-monthly-daniel-2023-05-01-line-1201: has a bad `uuid`
+  - [x] run on darwin,dirac,d1-px1
+- [ ] finish just scripts - and rename local-, remote-..
+  - [x] error if script not started from JUST?
   - [ ] restore
   - [ ] syncAllPAirs: gum to pick date and pair(s)
 - [x] restart 2024-11-26

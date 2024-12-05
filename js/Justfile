@@ -12,6 +12,7 @@
 
 # Set HOSTALIAS for docker compose commands
 export HOSTALIAS := `hostname -s`
+export FROM_JUSTFILE := "true"
 
 # weird escape for Just, could not get octal 33 any other way
 green := `printf "\033[32m"`

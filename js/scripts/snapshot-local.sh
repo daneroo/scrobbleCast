@@ -16,6 +16,14 @@ format '## Validating environment'
 # Initialize validation status
 validation_failed=0
 
+# Ensure script is called from Justfile
+if [[ "${FROM_JUSTFILE}" != "true" ]]; then
+    x_mark "This script should only be run via 'just snapshot'"
+    validation_failed=1
+else
+    check_mark "Script invoked correctly via Justfile"
+fi
+
 # Check for s3cfg.env
 if [ ! -f "$S3_CONFIG" ]; then
     x_mark "S3 config file not found: $S3_CONFIG"
@@ -35,7 +43,6 @@ else
 fi
 
 # Test S3 access
-format '## Testing S3 connectivity'
 if ! $S3_CMD ls s3://scrobblecast/snapshots/ >/dev/null 2>&1; then
     x_mark "S3 access failed. Check your credentials in s3cfg.env"
     validation_failed=1

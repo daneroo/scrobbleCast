@@ -59,15 +59,17 @@ fi
 format '## Cleaning up presence of files in `data/snapshots/current/`'
 
 # Store find results first - using ls for portability
-current_files=$(cd "$DATA_DIR" 2>/dev/null && find snapshots/current -type f -exec ls -lh {} \; | awk '{print $5 "|" $6 " " $7 " " $8 "|" $9}')
+current_files=$(cd "$DATA_DIR" 2>/dev/null && find snapshots/current -type f -name "*.jsonl" -exec ls -lh {} \; | awk '{print $5 "|" $9}')
 
 if [ -n "$current_files" ]; then
     # Create markdown table of files
     (
-        echo "| Size | Modified | Path |"
-        echo "|------|----------|------|"
-        echo "$current_files" | \
-            awk -F'|' '{print "| " $1 " | " $2 " | " $3 " |"}'
+        echo "| Size | Last Record | Path |"
+        echo "|------|-------------|------|"
+        echo "$current_files" | while IFS='|' read -r size path; do
+            last_stamp=$(tail -1 "$DATA_DIR/$path" | jq -r '.__stamp // "N/A"')
+            echo "| $size | $last_stamp | $path |"
+        done
     ) | $GUM_FMT_CMD
     
     if gum confirm "Remove existing files in data/snapshots/current? (you should)"; then
@@ -75,6 +77,10 @@ if [ -n "$current_files" ]; then
         check_mark "Removed data/snapshots/current"
     else
         echo "Keeping existing data/snapshots/current"
+        if ! gum confirm --default=No "Continue with snapshot creation despite existing files?"; then
+            echo "Operation cancelled"
+            exit 1
+        fi
     fi
 else
     check_mark "No files found in data/snapshots/current"
@@ -88,6 +94,14 @@ if [ $? -ne 0 ]; then
     exit 1
 else
     check_mark "Snapshot creation completed"
+fi
+
+format '## Checking directory digests'
+if [ -x "./directory-digester-reference" ]; then
+    ./directory-digester-reference --verbose data/snapshots/ 2>/dev/null | grep '/ -'
+    check_mark "Directory digests calculated"
+else
+    x_mark "directory-digester-reference not found"
 fi
 
 format '## Previewing S3 upload'

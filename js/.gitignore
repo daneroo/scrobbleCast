@@ -1,8 +1,14 @@
+# credentials
 credentials.json
 credentials.loggly.json
 s3cfg.env
+#  go binary: directory-digester-reference
+directory-digester-reference
+# node_modules
 node_modules/
+# coverage
 coverage/
+# data
 data/
 data.201[45]-*.tgz
 pouchdb/

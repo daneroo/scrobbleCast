@@ -2,25 +2,12 @@
 
 ## Operation
 
-Using a `Makefile`, with targets:
-
-```bash
-make build
-make start
-make logs
-make nats-top
-make nats
-make sync ## add options for since (arg[2])
-make snapshot
-make archive # after snapshot
-make restore
-```
-
 Using a `Justfile` with targets:
 
 ```bash
 > just
 Available recipes:
+    archive             # (just echo) Archive data/snapshots for /archive/mirror/scrobbleCast/
     build               # Build local Docker containers (--pull)
     check-ssh-remote    # Check SSH connectivity to all remote hosts
     check-status-remote # Check versions and digests across all remote hosts
@@ -33,10 +20,12 @@ Available recipes:
     nats-top            # Show NATS monitoring dashboard
     natsboard           # Show NATS board interface
     restore             # Restore database from snapshot
+    scrub               # Scrub DB digests (Local)
+    scrub-remote        # Scrub DB digests (Remote)
     snapshot            # Create database snapshot and upload to S3
     start               # Start local Docker containers
     stop                # Stop local Docker containers
-    sync *ARGS          # Sync data between hosts
+    sync *ARGS          # Sync (remotely) data between hosts
 ```
 
 ## CI/CD
@@ -85,16 +74,8 @@ DB_LOG=1 DB_DIALECT=postgres npm run unit
 
 ## TODO
 
-- [x] scrub: confirm digests are correct
-  - [x] darwin-monthly-daniel-2023-05-01-line-1201: has a bad `uuid`
-  - [x] run on darwin,dirac,d1-px1
 - [ ] finish just scripts - and rename local-, remote-..
-  - [x] error if script not started from JUST?
-  - [ ] restore
-  - [ ] syncAllPAirs: gum to pick date and pair(s)
-- [x] restart 2024-11-26
-- [ ] update to node 20 (GHAct matrix), and figure out how to pin corepack pnpm (just moved to 8)
-  - pnpm version is in Dockerfile,CircleCI, and GitHub Action
+  - [ ] sync-remote.sh: gum to pick date and pair(s)
 - Move the copy/dedup scripts from LOG-2023-11-17.md file to scripts/ (with syncAllPairs.sh)
 - [x] pnpm workspaces - just this directory for now
 - [Dockerfile corepack pnpm ] <https://stackoverflow.com/questions/68650325/how-to-pnpm-and-next-js-in-multi-stage-docker-file>
@@ -119,7 +100,6 @@ DB_LOG=1 DB_DIALECT=postgres npm run unit
 - Update sequelize v6 (and other deps)
   - [Update to winston@3](https://github.com/winstonjs/winston/blob/HEAD/UPGRADE-3.0.md)
 - added (temporary) `./showNotes.js` script - to produce static documents for stork
-
   - added 2 methods to pocketAPIv2
 
 - cleanup

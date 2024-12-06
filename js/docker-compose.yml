@@ -6,7 +6,7 @@ services:
     platform: linux/amd64
     init: true # Tini forwards signals and reaps processes
     environment:
-      - HOSTALIAS # no value inherits from ENV, which is set in Makefile
+      - HOSTALIAS # no value inherits from ENV, which is set in Justfile
       - PEERS=dirac,darwin,d1-px1
       - NATSURL=nats://nats.ts.imetrical.com:4222
       - DB_DIALECT=sqlite

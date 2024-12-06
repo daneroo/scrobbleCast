@@ -11,9 +11,7 @@
     "format:write": "prettier --write '**/*.js'",
     "secscan": "pnpm audit || true",
     "coverage": "NODE_ENV=test istanbul cover node_modules/.bin/_mocha -- --recursive test/",
-    "test": "pnpm run lint && pnpm run secscan && pnpm run unit",
-    "snapshot": "docker run -it --rm --env-file s3cfg.env -v $(pwd)/data/snapshots:/data/snapshots amazon/aws-cli s3 sync /data/snapshots/ s3://scrobblecast/snapshots",
-    "restore": "docker run -it --rm --env-file s3cfg.env -v $(pwd)/data/snapshots:/data/snapshots amazon/aws-cli s3 sync s3://scrobblecast/snapshots /data/snapshots/"
+    "test": "pnpm run lint && pnpm run secscan && pnpm run unit"
   },
   "author": {
     "name": "Daniel Lauzon"

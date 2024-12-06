@@ -5,7 +5,7 @@
 # Is it ok to mix npm install in node:lts and use it in node:alpine?
 FROM node:lts AS build
 # Corepack needs to be pinned (at least to major version) - and should Match CI (CircleCI and GitHub Actions)
-RUN corepack enable && corepack prepare pnpm@8
+RUN corepack enable && corepack prepare pnpm@9
 WORKDIR /usr/src/app
 COPY package.json pnpm-lock.yaml /usr/src/app/
 RUN pnpm install --frozen-lockfile --loglevel error

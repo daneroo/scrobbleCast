@@ -74,7 +74,7 @@ jobs:
           workdir: js
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-          #  problem with linux/arm64, which was the point
+          #  problem with linux/arm64, error on pnpm install sqlite: solved by using sqlite3@5.1.7
           platforms: linux/amd64,linux/arm64
           registry: ghcr.io
           snapshot: true # add a tag like: 2021091401115446b3b3

@@ -41,7 +41,7 @@
     "pg-hstore": "^2.3.2",
     "request-promise": "^4.2.2",
     "sequelize": "^4.33.4",
-    "sqlite3": "^5.0.2",
+    "sqlite3": "^5.1.7",
     "type-is": "^1.6.16",
     "ulid": "^2.3.0",
     "winston": "^2.4.0",
@@ -68,5 +68,6 @@
     "env": [
       "mocha"
     ]
-  }
+  },
+  "packageManager": "pnpm@9.14.4+sha512.c8180b3fbe4e4bca02c94234717896b5529740a6cbadf19fa78254270403ea2f27d4e1d46a08a0f56c89b63dc8ebfd3ee53326da720273794e6200fcf0d184ab"
 }

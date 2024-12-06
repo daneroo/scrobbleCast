@@ -121,6 +121,107 @@ DB_LOG=1 DB_DIALECT=postgres npm run unit
 - data driven tests (dedup)
 - npm run mirror: s3:// -> `/archive/mirror/scrobbleCast`
 
+## Snapshot/Restore Process
+
+The snapshot/restore process allows transferring a database state from a production host to a development machine via S3. 
+The process preserves data integrity through digest verification at multiple levels: database checkpoints and directory content.
+This is particularly useful for testing database operations in a safe environment with production data.
+
+| On Production Host (darwin/dirac/d1-px1)       | On Restore Dev Host (galois)                |
+|------------------------------------------------|---------------------------------------------|
+| 1. `just stop` (optional)                      |                                             |
+| 2. Record checkpoint digests                   |                                             |
+| 3. `just snapshot` and record directory digest |                                             |
+| 4. `just start` (if stopped)                   |                                             |
+|                                                | 5. Remove local DB                          |
+|                                                | 6. `just restore`                           |
+|                                                | 7. Select current file from production host |
+|                                                | 8. Verify checkpoint digests                |
+|                                                | 9. `just dedup-digest` to restore histories |
+
+### On Production Host
+
+#### 1. `just stop` (optional)
+
+For now we stop/start the scrape container,
+because the snapshot takes longer than the scrape/dedup/digest cycle (barely).
+This guarantees that our snapshot will be consistent
+
+#### 2. Record checkpoint digests
+
+This allows us to verify the integrity of the restored database.
+e.g.
+
+```txt
+2024-12-06T04:32:33Z - info: checkpoint generation=2024-12-06T04:30:00Z, digest=4355..199d, scope=item
+2024-12-06T04:32:34Z - info: checkpoint generation=2024-12-06T04:30:00Z, digest=ad4f..1e9f9, scope=history
+`
+
+####3. `just snapshot` and record directory digest
+
+- accept Remove existing files in data/snapshots/current
+- record the directory-digest if present
+
+```txt
+  ## Checking directory digests
+
+snapshots                                      / -  416753684 bytes digest:f3f6b7ec..b2b50eea
+  current                                      / -    1786043 bytes digest:ff197384..f995091a
+    daniel                                     / -    1786043 bytes digest:c5422f20..888267c1
+  monthly                                      / -  414967641 bytes digest:2c2e30f4..1f4bc990
+    daniel                                     / -  414967641 bytes digest:fe5973e0..a5cfc3a9
+✓ - Directory digests calculated
+```
+
+#### 4. `just start` (if stopped)
+
+#### Back on the test restore machine (galois)
+
+#### 5. Remove local DB
+
+This is to ensure that the restore process is idempotent.
+
+```bash
+rm -rf data/sqlite/scrobblecast.sqlite
+```
+
+#### 6. `just restore`
+
+- accept the download from S3
+
+#### 7. Select current file from production host
+
+```txt
+Select which current file to keep for daniel:
+✓ - Keeping snapshots/current/daniel/current-d1-px1.daniel.jsonl
+✓ - Removed snapshots/current/daniel/current-dirac.daniel.jsonl
+```
+
+- accept proceed with database restore
+
+#### 8. Verify checkpoint digests
+
+```txt
+2024-12-06T04:27:06.356Z - verbose: checkpoint digest=dbf49a...
+```
+
+```bash
+> ./directory-digester-reference --verbose data/snapshots/ 2>/dev/null | grep '/ -'
+snapshots                       / -  416731679 bytes digest:891d4690..7173ff31
+  current                       / -    1764038 bytes digest:a95485c0..1eb59a24
+    daniel                      / -    1764038 bytes digest:8813bda6..7bff4aab
+  monthly                       / -  414967641 bytes digest:2c2e30f4..1f4bc990
+    daniel                      / -  414967641 bytes digest:fe5973e0..a5cfc3a9
+```
+
+#### 9. `just dedup-digest` to restore histories
+
+```bash
+> just dedup-digest 
+2024-12-06T04:48:16.385Z - info: digest digest=dbf49..9723, scope=item, elapsed=2.112
+2024-12-06T04:48:16.813Z - info: digest digest=5bee..7785, scope=history, elapsed=0.428
+```
+
 ## Sync paths
 
 Scenario:

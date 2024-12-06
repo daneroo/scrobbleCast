@@ -125,3 +125,7 @@ scrub-remote:
     #!/usr/bin/env bash
     echo "# Scrub Digests on Remote Hosts" | {{ gum_fmt_cmd }}
     ./scripts/scrub-remote.sh
+
+# Dedup DB, restore histories and calculate digests
+dedup-digest:
+    node dedup.js

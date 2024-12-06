@@ -95,10 +95,9 @@ nats-top:
 natsboard:
     npx natsboard --nats-mon-url http://nats.ts.imetrical.com:8222
 
-# Sync data between hosts
+# Sync (remotely) data between hosts
 sync *ARGS:
-    docker compose run --rm scrape node sync.js http://darwin.imetrical.com:8000/api {{ARGS}}
-    docker compose run --rm scrape node sync.js http://d1-px1.imetrical.com:8000/api {{ARGS}}
+    ./scripts/sync-remote.sh {{ARGS}}
 
 # (just echo) Archive data/snapshots for /archive/mirror/scrobbleCast/
 archive:

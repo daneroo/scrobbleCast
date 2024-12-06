@@ -68,6 +68,7 @@ jobs:
           workdir: js
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+          platforms: linux/amd64,linux/arm64
           registry: ghcr.io
           snapshot: true # add a tag like: 2021091401115446b3b3
           tag_names: true # includes refs (branch and tags)

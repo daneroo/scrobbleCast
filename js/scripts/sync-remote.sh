@@ -1,37 +1,37 @@
 #!/usr/bin/env bash
 
-SSH_KEY="$HOME/.ssh/scrobble-galois"
+# Source common functions and variables
+source "$(dirname "$0")/common.sh"
 
 # How many days ago to sync from by default
 SYNC_DAYS_AGO=1
 
 # Set 'since' to the first script argument, or SYNC_DAYS_AGO days ago if not provided
 since="${1:-$(date -v-${SYNC_DAYS_AGO}d +%Y-%m-%d)}"
-hosts=("dirac" "darwin" "d1-px1")
 
-echo "## Checking SSH Key"
-if [ ! -f "$SSH_KEY" ]; then
-    echo "✗ - SSH key not found: $SSH_KEY"
-    echo "Please run check-ssh.sh first to set up SSH keys"
-    exit 1
-else
-    echo "✓ - SSH key found: $SSH_KEY"
-    echo
-fi
+# Function to sync target pulling from source
+sync_host() {
+    local target=$1
+    local source=$2
+    format "- ${target} <- ${source}"
+    command="docker exec -t js-scrape-1 node sync http://${source}.imetrical.com:8000/api ${since}"
+    echo "    ssh -i \"$SSH_KEY\" \"$target\" \"$command\""
+    ssh -i "$SSH_KEY" "$target" "$command" | grep 'Sync missing'
+}
 
-echo "Syncing all pairs since ${since}"
-echo "Hosts: ${hosts[@]}"
+# Check SSH key first
+check_ssh_key || exit 1
 
-for host in "${hosts[@]}"; do
-    echo "## From Host: ${host}"
-    for client in "${hosts[@]}"; do
-        if [ "$host" != "$client" ]; then
-            echo "  Sync with: ${client}"
-            command="docker exec -t js-scrape-1 time node sync http://${client}.imetrical.com:8000/api ${since}"
-            echo "    ssh -i \"$SSH_KEY\" \"$host\" \"$command\""
-            ssh -i "$SSH_KEY" "$host" "$command"
-        else
-            echo "  Skipping self: ${host}"
-        fi
+format "## Syncing Hosts"
+echo -e "- Hosts: $(IFS=, ; echo "${HOSTS[*]}")\n- Since: ${since}" | $GUM_FMT_CMD
+
+# Generate all distinct pairs from $HOSTS
+for ((i=0; i<${#HOSTS[@]}; i++)); do
+    for ((j=i+1; j<${#HOSTS[@]}; j++)); do
+        host1="${HOSTS[i]}"
+        host2="${HOSTS[j]}"
+        format "## Syncing pair: ${host1} <-> ${host2}"
+        sync_host "$host1" "$host2"
+        sync_host "$host2" "$host1"
     done
 done

@@ -12,6 +12,8 @@
 
 # Set HOSTALIAS for docker compose commands
 export HOSTALIAS := `hostname -s`
+# Set GIT_REVISION for docker build args (only needed during build)
+export GIT_REVISION := `git describe --always --dirty`
 export FROM_JUSTFILE := "true"
 
 # weird escape for Just, could not get octal 33 any other way

@@ -1,7 +1,10 @@
 services:
   scrape:
     # container_name: scrape
-    build: .
+    build:
+      context: .
+      args:
+        - GIT_REVISION # no value inherits from ENV, which is set in Justfile
     # now build on both linux/amd64 and linux/arm64
     # platform: linux/amd64
     init: true # Tini forwards signals and reaps processes

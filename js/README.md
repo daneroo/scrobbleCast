@@ -15,10 +15,11 @@ Available recipes:
     default             # List all available commands
     logs                # Show local Docker logs
     logs-remote         # Show recent logs from all remote hosts
+    nats-board          # Show NATS board interface
     nats-logs           # Subscribe to  NATS messages
     nats-logs-pretty    # Subscribe to NATS messages with pretty printing
     nats-top            # Show NATS monitoring dashboard
-    natsboard           # Show NATS board interface
+    pin-docker-tags     # Check and test Docker base image tags and their SHA equivalents
     restore             # Restore database from snapshot
     scrub               # Scrub DB digests (Local)
     scrub-remote        # Scrub DB digests (Remote)

@@ -36,6 +36,12 @@ build:
     echo "# Building Containers (--pull)" | {{ gum_fmt_cmd }}
     docker compose build --pull
 
+# Check and test Docker base image tags and their SHA equivalents
+pin-docker-tags:
+    #!/usr/bin/env bash
+    echo "# Docker base image tags and their SHA equivalents" | {{ gum_fmt_cmd }}
+    ./scripts/pin-docker-tags.sh
+
 # Start local Docker containers
 start:
     #!/usr/bin/env bash
@@ -94,7 +100,7 @@ nats-top:
     nats-top -s nats.ts.imetrical.com
 
 # Show NATS board interface
-natsboard:
+nats-board:
     npx natsboard --nats-mon-url http://nats.ts.imetrical.com:8222
 
 # Sync (remotely) data between hosts

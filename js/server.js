@@ -9,6 +9,7 @@ const server = require('./lib/server')
 const store = require('./lib/store')
 const allCredentials = require('./credentials.json')
 
+log.info('Version', config.version)
 log.info('Starting server', {
   hostname: config.hostname,
   dialect: config.sequelize.settings.dialect,

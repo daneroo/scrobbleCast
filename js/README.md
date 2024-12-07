@@ -75,12 +75,7 @@ DB_LOG=1 DB_DIALECT=postgres npm run unit
 
 ## TODO
 
-- [ ] finish just scripts - and rename local-, remote-..
-  - [ ] sync-remote.sh: gum to pick date and pair(s)
-- Move the copy/dedup scripts from LOG-2023-11-17.md file to scripts/ (with syncAllPairs.sh)
 - [x] pnpm workspaces - just this directory for now
-- [Dockerfile corepack pnpm ] <https://stackoverflow.com/questions/68650325/how-to-pnpm-and-next-js-in-multi-stage-docker-file>
-  - `corepack enable && corepack prepare pnpm@latest` or pin pmpm@7.15.0
 - diff command : sync from api, n hosts
 - consolidate all top level commands
 - add discovery through nats

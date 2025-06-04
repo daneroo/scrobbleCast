@@ -75,6 +75,13 @@ DB_LOG=1 DB_DIALECT=postgres npm run unit
 
 ## TODO
 
+- [ ] Move `dirac` to `scast-hilbert`
+  - [x] copy credentials to `scast-hilbert`
+  - [x] replace `dirac` with `scast-hilbert` in `lib/config.js`, `docker-compose.yml` and `scripts/common.sh`
+  - [x] stop on dirac
+  - [ ] rebuild on darwin, d1-px1
+  - [ ] build on `scast-hilbert`
+
 - [x] pnpm workspaces - just this directory for now
 - diff command : sync from api, n hosts
 - consolidate all top level commands
@@ -123,17 +130,17 @@ The snapshot/restore process allows transferring a database state from a product
 The process preserves data integrity through digest verification at multiple levels: database checkpoints and directory content.
 This is particularly useful for testing database operations in a safe environment with production data.
 
-| On Production Host (darwin/dirac/d1-px1)       | On Restore Dev Host (galois)                |
-|------------------------------------------------|---------------------------------------------|
-| 1. `just stop` (optional)                      |                                             |
-| 2. Record checkpoint digests                   |                                             |
-| 3. `just snapshot` and record directory digest |                                             |
-| 4. `just start` (if stopped)                   |                                             |
-|                                                | 5. Remove local DB                          |
-|                                                | 6. `just restore`                           |
-|                                                | 7. Select current file from production host |
-|                                                | 8. Verify checkpoint digests                |
-|                                                | 9. `just dedup-digest` to restore histories |
+| On Production Host (darwin/d1-px1/scast-hilbert) | On Restore Dev Host (galois)                |
+|--------------------------------------------------|---------------------------------------------|
+| 1. `just stop` (optional)                        |                                             |
+| 2. Record checkpoint digests                     |                                             |
+| 3. `just snapshot` and record directory digest   |                                             |
+| 4. `just start` (if stopped)                     |                                             |
+|                                                  | 5. Remove local DB                          |
+|                                                  | 6. `just restore`                           |
+|                                                  | 7. Select current file from production host |
+|                                                  | 8. Verify checkpoint digests                |
+|                                                  | 9. `just dedup-digest` to restore histories |
 
 ### On Production Host
 

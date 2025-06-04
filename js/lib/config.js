@@ -5,7 +5,7 @@ const { execSync } = require('child_process')
 
 module.exports = {
   hostname: process.env.HOSTALIAS || process.env.HOSTNAME || os.hostname(),
-  peers: process.env.PEERS || 'dirac,darwin,d1-px1',
+  peers: process.env.PEERS || 'darwin,d1-px1,scast-hilbert',
   version: {
     // also exposed as API /version
     pocketscrape: require('../package').version,

@@ -10,7 +10,7 @@ services:
     init: true # Tini forwards signals and reaps processes
     environment:
       - HOSTALIAS # no value inherits from ENV, which is set in Justfile
-      - PEERS=dirac,darwin,d1-px1
+      - PEERS=darwin,d1-px1,scast-hilbert
       - NATSURL=nats://nats.ts.imetrical.com:4222
       - DB_DIALECT=sqlite
     # command: npm start

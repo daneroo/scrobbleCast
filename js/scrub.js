@@ -8,8 +8,8 @@
 
  Why?
  Taking snapshots on 2024-11-24, while synch'ing to S3, it became apparent that
-a single (monthly) file had a discrepancy between hosts, furthermore, 
-digest field matched the digest of the correct json, 
+a single (monthly) file had a discrepancy between hosts, furthermore,
+digest field matched the digest of the correct json,
 which means the json alone was corrupted,
 but after it was digested, either in memory or in the database file itself.
 
@@ -21,7 +21,7 @@ This was also started in the parallel project: `../scrub/`
 darwin-monthly-daniel-2023-05-01:line-1201:
   "uuid": "f13e�4d1-cf81-4bd6-b4d5-55f314e580fc",
   bad char ....^
-dirac-monthly-daniel-2023-05-01:line-1201: 
+dirac-monthly-daniel-2023-05-01:line-1201:
   "uuid": "f13e84d1-cf81-4bd6-b4d5-55f314e580fc",
 
   Or a live proof from the database
@@ -34,7 +34,7 @@ dirac-monthly-daniel-2023-05-01:line-1201:
   The fix was to
   sqlite3 data/sqlite/scrobblecast.sqlite   "DELETE FROM items WHERE digest = '06073ce9a43119ee3bc046b792ea4542cf357839555f3ae745832a0b950f8e47';"
   and then re-run the sync with uncorrupted machine dirac.
-  $ node sync.js http://dirac.imetrical.com:8000/api 2023-05-01
+  $ node sync.js http://darwin.imetrical.com:8000/api 2023-05-01
  */
 
 const store = require('./lib/store')
@@ -77,9 +77,9 @@ async function scrubGlobalTask() {
   const query = `
     SELECT h.__user, h.__type, h.uuid
     FROM histories h
-    LEFT JOIN items i ON 
-        h.__user = i.__user AND 
-        h.__type = i.__type AND 
+    LEFT JOIN items i ON
+        h.__user = i.__user AND
+        h.__type = i.__type AND
         h.uuid = i.uuid
     WHERE i.__user IS NULL
     ORDER BY h.__user, h.__type, h.uuid
@@ -129,9 +129,9 @@ async function scrubItemsTask(credentials) {
     // log.debug(`Items page`, { offset })
 
     const query = `
-      SELECT digest, item 
-      FROM items 
-      WHERE __user = ? 
+      SELECT digest, item
+      FROM items
+      WHERE __user = ?
       ORDER BY ${store.db.fieldOrders.dedup.join(', ')}
       LIMIT ${PAGE_SIZE} OFFSET ${offset}
     `
@@ -203,9 +203,9 @@ async function scrubHistoriesTask(credentials) {
   let lastDigest = '0'
   while (true) {
     const query = `
-      SELECT digest, history, uuid 
-      FROM histories 
-      WHERE __user = ? 
+      SELECT digest, history, uuid
+      FROM histories
+      WHERE __user = ?
         AND digest > ?
       ORDER BY digest ASC
       LIMIT ${PAGE_SIZE}

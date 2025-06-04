@@ -14,7 +14,7 @@ const store = require('./lib/store')
 const baseURI =
   process.argv.length > 2
     ? process.argv[2]
-    : 'http://dirac.imetrical.com:8000/api'
+    : 'http://darwin.imetrical.com:8000/api'
 
 const since = process.argv.length > 3 ? process.argv[3] : null
 

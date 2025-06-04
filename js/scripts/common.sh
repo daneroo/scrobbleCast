@@ -2,9 +2,13 @@
 
 # Common SSH configuration
 SSH_KEY="$HOME/.ssh/scrobble-galois"
-HOSTS=("dirac" "darwin" "d1-px1")
+HOSTS=("darwin" "d1-px1" "scast-hilbert")
 
 # Formatting configuration
+# could use this ENV for gum format theme
+# export GUM_FORMAT_THEME="light"
+#  gum confirm --help to see THEME
+#  gum choose --help to see THEME
 GUM_FMT_CMD="gum format --theme=light"
 
 # Check for gum once
@@ -45,4 +49,4 @@ check_ssh_key() {
         return 1
     fi
     return 0
-} 
+}

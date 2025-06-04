@@ -81,7 +81,8 @@ DB_LOG=1 DB_DIALECT=postgres npm run unit
   - [x] stop on dirac
   - [ ] rebuild on darwin, d1-px1
   - [ ] build on `scast-hilbert`
-
+  - deploy on all three
+- [ ] remove corepack from Dockerfile?
 - [x] pnpm workspaces - just this directory for now
 - diff command : sync from api, n hosts
 - consolidate all top level commands

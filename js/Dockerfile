@@ -29,11 +29,8 @@ ARG BASE_NODE_IMAGE=node:22-alpine
 # Build stage - includes build tools and pnpm
 FROM ${BASE_NODE_IMAGE} AS build
 
-# Add build dependencies for native modules if using Alpine and modules require it.
-# Currently no modules require it.
-# RUN if [ -f /etc/alpine-release ]; then \
-#         apk add --no-cache python3 make g++; \
-#     fi
+# Add build dependencies for native modules (sqlite3 requires these)
+RUN apk add --no-cache python3 py3-setuptools make g++
 
 # Corepack needs to be pinned (at least to major version) - and should Match CI (CircleCI and GitHub Actions)
 RUN corepack enable && corepack prepare pnpm@9

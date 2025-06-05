@@ -31,7 +31,7 @@ Available recipes:
 
 ## CI/CD
 
-CI is performed by GitHub Actions, (as well as CircleCI for now).
+CI is performed by GitHub Actions.
 
 There is a job for running tests, and if they pass an image (`ghcr.io/daneroo/scrobblecast/scrape:TAG`) is built and pushed to Github Container Registry.
 

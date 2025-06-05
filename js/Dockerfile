@@ -32,7 +32,7 @@ FROM ${BASE_NODE_IMAGE} AS build
 # Add build dependencies for native modules (sqlite3 requires these)
 RUN apk add --no-cache python3 py3-setuptools make g++
 
-# Corepack needs to be pinned (at least to major version) - and should Match CI (CircleCI and GitHub Actions)
+# Corepack needs to be pinned (at least to major version) - and should Match CI (GitHub Actions)
 RUN corepack enable && corepack prepare pnpm@9
 WORKDIR /usr/src/app
 COPY package.json pnpm-lock.yaml /usr/src/app/

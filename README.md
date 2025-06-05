@@ -2,8 +2,6 @@
 
 - Github Actions:
   - main: [![Scrape-CI](https://github.com/daneroo/scrobbleCast/actions/workflows/scrape-ci.yml/badge.svg)](https://github.com/daneroo/scrobbleCast/actions/workflows/scrape-ci.yml)
-- CircleCI:
-  - main: [![CircleCI](https://dl.circleci.com/status-badge/img/gh/daneroo/scrobbleCast/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/daneroo/scrobbleCast/tree/main)
 
 ## TODO
 

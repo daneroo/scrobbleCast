@@ -26,9 +26,9 @@ red_xmark := red + "✗" + reset
 # centralize the format command to style (theme=lignt)
 gum_fmt_cmd := "gum format --theme=light"
 
-# List all available commands
+# List all available commands (ordered as they appear in this file)
 default:
-    @just --list
+    @just --list --unsorted
 
 # Build local Docker containers (--pull)
 build:

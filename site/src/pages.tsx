@@ -1,7 +1,8 @@
 import { Link } from '@tanstack/react-router'
 import { useState } from 'react'
 import type { ReactNode } from 'react'
-import { day, playedPercent, recentDays } from './data'
+import { episodePageSize, episodePageStep, recentDays } from './config'
+import { day, playedPercent } from './data'
 import type { Book, Episode, Podcast } from './data'
 import { Table, useSearch } from './table'
 import type { Column } from './table'
@@ -86,7 +87,7 @@ export function Home({ counts }: { counts: { books: number; podcasts: number; ep
   const sections = [
     { to: '/books', title: 'Books', count: counts.books, label: 'read', style: 'books' },
     { to: '/podcasts', title: 'Podcasts', count: counts.podcasts, label: 'in the catalog', style: 'podcasts' },
-    { to: '/episodes', title: 'Episodes', count: counts.episodes, label: 'played in the last 7 days', style: 'episodes' },
+    { to: '/episodes', title: 'Episodes', count: counts.episodes, label: `played in the last ${recentDays} days`, style: 'episodes' },
   ] as const
 
   return (
@@ -151,7 +152,7 @@ export function Podcasts({ podcasts }: { podcasts: Podcast[] }) {
 export function Episodes({ episodes }: { episodes: Episode[] }) {
   const [query, setQuery] = useState('')
   const [playedOnly, setPlayedOnly] = useState(true)
-  const [limit, setLimit] = useState(5)
+  const [limit, setLimit] = useState(episodePageSize)
   const results = useSearch(episodes, episodeKeys, query)
     .filter((episode) => !playedOnly || episode.playedSeconds > 0)
   const shown = Math.min(results.length, limit)
@@ -159,16 +160,16 @@ export function Episodes({ episodes }: { episodes: Episode[] }) {
     <Collection title="Recent episodes" count={results.length}>
       <p className="section-note">Last {recentDays} days</p>
       <div className="controls">
-        <SearchBox value={query} onChange={(value) => { setQuery(value); setLimit(5) }} label="Search episodes" />
+        <SearchBox value={query} onChange={(value) => { setQuery(value); setLimit(episodePageSize) }} label="Search episodes" />
         <label className="check">
-          <input type="checkbox" checked={playedOnly} onChange={(event) => { setPlayedOnly(event.target.checked); setLimit(5) }} />
+          <input type="checkbox" checked={playedOnly} onChange={(event) => { setPlayedOnly(event.target.checked); setLimit(episodePageSize) }} />
           Played only
         </label>
       </div>
       <Table items={results} columns={episodeColumns} id={(episode) => episode.uuid} limit={limit} />
       {shown < results.length && (
         <div className="more">
-          <button className="button" type="button" onClick={() => setLimit(limit + 20)}>Show more</button>
+          <button className="button" type="button" onClick={() => setLimit(limit + episodePageStep)}>Show more</button>
           <span>{shown} of {results.length}</span>
         </div>
       )}

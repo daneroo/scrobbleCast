@@ -1,11 +1,12 @@
 import Fuse from 'fuse.js'
 import { useMemo, useState } from 'react'
 import type { ReactNode } from 'react'
+import { searchThreshold } from './config'
 
 // Every word in the query must fuzzy-match some key, so "culture banks" finds
-// Culture novels by Banks. Fuse's default threshold (0.6) matches almost anything.
+// Culture novels by Banks.
 export function useSearch<T>(items: T[], keys: string[], query: string) {
-  const fuse = useMemo(() => new Fuse(items, { keys, threshold: 0.4 }), [items, keys])
+  const fuse = useMemo(() => new Fuse(items, { keys, threshold: searchThreshold }), [items, keys])
   const term = query.trim()
   return useMemo(() => {
     if (!term) return items

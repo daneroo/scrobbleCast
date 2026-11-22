@@ -1,7 +1,4 @@
-const booksUrl = 'https://im-scrobble-books.s3.amazonaws.com/goodreads.json'
-const historyUrl = 'https://scrobblecast.dl.imetrical.com/api/history'
-
-export const recentDays = 7
+import { booksUrl, cacheTtlMs, historyUrl, recentDays, user } from './config'
 
 export interface Book {
   bookId: string
@@ -58,7 +55,7 @@ function history<T>(params: Record<string, string>) {
 }
 
 // Share in-flight and recent requests across routes in the current tab.
-function cached<T>(load: () => Promise<T>, ttl = 5 * 60 * 1000) {
+function cached<T>(load: () => Promise<T>, ttl = cacheTtlMs) {
   let entry: { expires: number; promise: Promise<T> } | undefined
   return () => {
     if (entry && entry.expires > Date.now()) return entry.promise
@@ -106,7 +103,7 @@ function toPodcast(podcast: PodcastRecord): Podcast {
 }
 
 export const getPodcasts = cached(async () => {
-  const podcasts = await history<PodcastRecord>({ type: 'podcast', user: 'daniel' })
+  const podcasts = await history<PodcastRecord>({ type: 'podcast', user })
   return podcasts.map(toPodcast)
 })
 
@@ -154,7 +151,7 @@ function toEpisode(episode: EpisodeRecord, podcastTitle?: string): Episode {
 export const getEpisodes = cached(async () => {
   const since = new Date(Date.now() - recentDays * 24 * 60 * 60 * 1000).toISOString()
   const [episodes, podcasts] = await Promise.all([
-    history<EpisodeRecord>({ type: 'episode', user: 'daniel', since }),
+    history<EpisodeRecord>({ type: 'episode', user, since }),
     getPodcasts().catch(() => []),
   ])
   const titles = new Map(podcasts.map((podcast) => [podcast.uuid, podcast.title]))

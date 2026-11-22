@@ -11,4 +11,7 @@ Half-baked ideas, not yet issues.
 - **Version**: the old app was v10.0.6, the new one starts at 0.1.0. Pick a scheme.
 - **Repo setup**: AGENTS.md and a development process.
 - **Lint, test and CI**: add markdownlint (see `ai-garden/prosodio/.markdownlint-cli2.jsonc`), code lint/format and tests, behind one `ci` script run before deploys. Vite+ is new to us; start from what `vp` provides (`vp check`, `vp lint`, `vp fmt`, `vp test`, `vp hooks`/`vp staged`).
+  - Formatting: `vp fmt` (Oxfmt, Prettier-compatible) formats code and Markdown. Today all 11 code files fail `vp fmt --check` only on semicolons and quotes; adopting the defaults (as in prosodio) is one format-only commit.
+  - Markdown: Oxlint doesn't lint Markdown, so markdownlint is still needed (e.g. bare URLs).
+  - Editor: Vite+ recommends the Vite Plus Extension Pack (Oxc + Vitest) for VS Code; keep the markdownlint extension for Markdown.
 - **Vercel workaround**: drop the `npm_config_cache_dir` unset in `vercel.json` once Vercel fixes the bug.

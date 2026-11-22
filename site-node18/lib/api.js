@@ -39,7 +39,7 @@ export async function getApiSignature() {
 
 export async function getCounts() {
   const booksFeed = await getBooksFeed();
-  const books = booksFeed.items.filter((b) => b.userShelves === "read").length;
+  const books = booksFeed.items.filter((b) => b.userShelf === "read").length;
   const podcasts = (await getPodcasts()).length; // filter for subscribed?
   const episodes = (await getDecoratedEpisodes()).filter(
     (episode) => episode.playedTime > 0
@@ -119,7 +119,6 @@ export async function getPodcasts() {
   return podcasts;
 }
 
-// https://raw.githubusercontent.com/daneroo/scrobble-books-data/main/goodreads-rss.json
 export async function getBooksFeed() {
   // wrap the entire previous method in a try catch
   try {
@@ -129,23 +128,18 @@ export async function getBooksFeed() {
       return booksFeed;
     }
 
-    // Get books data from latest `scrobble-books-data` Github Actions run
+    // Get the latest scraped Goodreads data published by scrobble-books-data.
     const url =
-      "https://raw.githubusercontent.com/daneroo/scrobble-books-data/main/goodreads-rss.json";
+      "https://im-scrobble-books.s3.amazonaws.com/goodreads.json";
     // eslint-disable-next-line no-undef
     const now = +new Date();
     const results = await fetch(url);
-    const booksFeed = await results.json();
+    if (!results.ok) throw new Error(`Books fetch failed: ${results.status}`);
+    const booksFeed = { items: await results.json() };
     const jsonSize = JSON.stringify(booksFeed).length;
     console.log(
       `server fetched size:${jsonSize} in ${+new Date() - now}ms url:${url}`
     );
-
-    // Move this upstream to scrobble-books-data
-    booksFeed.items = booksFeed.items.map((b) => ({
-      ...b,
-      userShelves: b?.userShelves || "read",
-    }));
 
     cache.booksFeed = booksFeed;
     for (const b of booksFeed.items) {

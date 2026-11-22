@@ -26,21 +26,17 @@ export default function BooksPage({
     const fetchBooks = async () => {
       try {
         const url =
-          "https://raw.githubusercontent.com/daneroo/scrobble-books-data/main/goodreads-rss.json";
+          "https://im-scrobble-books.s3.amazonaws.com/goodreads.json";
         const now = +new Date();
         const results = await fetch(url);
-        const booksFeed = await results.json();
-        const jsonSize = JSON.stringify(booksFeed).length;
+        if (!results.ok) throw new Error(`Books fetch failed: ${results.status}`);
+        const books = await results.json();
+        const jsonSize = JSON.stringify(books).length;
         console.log(
           `client fetched size:${jsonSize} in ${+new Date() - now}ms url:${url}`
         );
 
-        // Move this upstream to scrobble-books-data
-        booksFeed.items = booksFeed.items.map((b) => ({
-          ...b,
-          userShelves: b?.userShelves || "read",
-        }));
-        setLiveBooks(booksFeed.items);
+        setLiveBooks(books);
       } catch (error) {
         console.error("Error fetching books:", error);
       }
@@ -89,7 +85,7 @@ function BookList({ books }) {
   const shelves = useMemo(() => {
     const shelves = new Set();
     books.forEach((b) => {
-      shelves.add(b.userShelves);
+      shelves.add(b.userShelf);
     });
     // prepend 'All'
     return ["All", ...Array.from(shelves)];
@@ -126,12 +122,12 @@ function BookList({ books }) {
     const shelfFiltered =
       shelf === "All"
         ? searchFiltered
-        : searchFiltered.filter((b) => b?.userShelves === shelf);
+        : searchFiltered.filter((b) => b?.userShelf === shelf);
 
     // Finally, make the dates safe
     return shelfFiltered.map((b) => ({
       ...b,
-      userReadAt: safeDate(b?.userReadAt),
+      userLastReadAt: safeDate(b?.userLastReadAt),
     }));
   }, [books, shelf, searchTerm]);
 
@@ -159,11 +155,11 @@ function BookList({ books }) {
       },
       {
         Header: "Shelf",
-        accessor: "userShelves",
+        accessor: "userShelf",
       },
       {
         Header: "Read",
-        accessor: "userReadAt",
+        accessor: "userLastReadAt",
       },
     ],
     []

@@ -1,5 +1,7 @@
 # scrobbleCast
 
+_Note_: NATS tests: [`nats-compat-313`](https://github.com/daneroo/scrobbleCast/tree/nats-compat-313).
+
 - Github Actions:
   - main: [![Scrape-CI](https://github.com/daneroo/scrobbleCast/actions/workflows/scrape-ci.yml/badge.svg)](https://github.com/daneroo/scrobbleCast/actions/workflows/scrape-ci.yml)
 

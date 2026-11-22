@@ -2,9 +2,10 @@ import { Link } from '@tanstack/react-router'
 import { useState } from 'react'
 import type { ReactNode } from 'react'
 import { episodePageSize, episodePageStep, recentDays } from './config'
-import { day, playedPercent } from './data'
 import type { Book, Episode, Podcast } from './data'
-import { Table, useSearch } from './table'
+import { day, playedPercent } from './format'
+import { useSearch } from './search'
+import { Table } from './table'
 import type { Column } from './table'
 
 const bookKeys = ['title', 'authorName', 'bookDescription']

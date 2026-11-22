@@ -1,6 +1,10 @@
 import { HeadContent, Link, Outlet, useRouter } from '@tanstack/react-router'
+import { useEffect, useRef, useState } from 'react'
+import type { RefObject } from 'react'
+import { version } from '../package.json'
 
 export function Layout() {
+  const content = useRef<HTMLElement>(null)
   return (
     <>
       <HeadContent />
@@ -17,7 +21,8 @@ export function Layout() {
           </nav>
         </div>
       </header>
-      <main className="content"><Outlet /></main>
+      <main className="content" ref={content}><Outlet /></main>
+      <Footer content={content} />
     </>
   )
 }
@@ -39,5 +44,25 @@ export function LoadError({ error, reset }: { error: unknown; reset: () => void 
       <p>{error instanceof Error ? error.message : String(error)}</p>
       <button className="button" type="button" onClick={() => { reset(); void router.invalidate() }}>Try again</button>
     </section>
+  )
+}
+
+// Shows when the page content last changed: navigation, data loading, search,
+// sorting or "Show more". A placeholder until the footer can show how fresh the
+// upstream data is.
+function Footer({ content }: { content: RefObject<HTMLElement | null> }) {
+  const [updatedAt, setUpdatedAt] = useState(() => new Date())
+  useEffect(() => {
+    if (!content.current) return
+    const observer = new MutationObserver(() => setUpdatedAt(new Date()))
+    observer.observe(content.current, { childList: true, subtree: true, characterData: true })
+    return () => observer.disconnect()
+  }, [content])
+  return (
+    <footer className="site-footer">
+      <span>Scrobble Cast v{version}</span>
+      {/* The sv-SE locale formats local time as "YYYY-MM-DD HH:mm:ss". */}
+      <time dateTime={updatedAt.toISOString()}>{updatedAt.toLocaleString('sv-SE')}</time>
+    </footer>
   )
 }

@@ -12,7 +12,7 @@ export function Layout() {
       <header className="site-header">
         <div className="header-content">
           <Link to="/" className="brand">
-            <img src="/scrobble-cast-icon.svg" alt="" width="42" height="42" />
+            <span className="brand-mark" aria-hidden="true" />
             Scrobble Cast
           </Link>
           <nav aria-label="Main">

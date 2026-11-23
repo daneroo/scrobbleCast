@@ -270,7 +270,7 @@ function Artwork({ src, kind }: { src: string; kind: 'book' | 'podcast' }) {
     <div className={`artwork ${kind}`}>
       {src && !failed
         ? <img src={src} alt="" referrerPolicy="no-referrer" onError={() => setFailed(true)} />
-        : <img className="artwork-placeholder" src="/scrobble-cast-icon.svg" alt="" />}
+        : <img className="artwork-placeholder" src="/scrobble-cast.svg" alt="" />}
     </div>
   )
 }

@@ -6,8 +6,6 @@
 
   <title>Scrobble Cast</title>
 
-  <!--  family=Roboto+Condensed  family=Indie+Flower-->
-  <style type="text/css">@import url(http://fonts.googleapis.com/css?family=Droid+Sans);</style>
   <style type="text/css">
     /* http://www.pantone.com/pages/fcr/?season=spring&amp;year=2015&amp;pid=4 
      PANTONE 19-4052 Classic Blue
@@ -44,8 +42,6 @@
 
     .round { stroke-width:0.25; stroke-linecap:round; }
 
-    /* Droid text*/
-    .blurb { font-size:16px; font-family: 'Droid Sans',sans-serif;}
   </style>
 
   <defs>
@@ -62,9 +58,6 @@
   </defs>
 
   <rect class="lapsisblue" x="-1" y="-1" width="2" height="2" rx="0.1" />
-
-  <use xlink:href="#rss" transform="translate(0,-.1) scale(.6) rotate(-45) rotate(0)"/>
-
-  <text class="blurb islandparadise" transform="translate(0,0.9) scale(0.015)" text-anchor="middle">Scrobble Cast</text>
+  <use xlink:href="#rss" transform="translate(0,0) scale(.7) rotate(-45) rotate (0)"/>
 
 </svg>

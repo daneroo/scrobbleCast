@@ -140,3 +140,28 @@ test('settling a feed that fails raises the error, and nothing else', async () =
 
   await expect(shared.settled()).rejects.toThrow('Could not load books (HTTP 503).')
 })
+
+test('a retry renews the feed’s expiry, so it isn’t loaded twice at once', async () => {
+  const { savedCopies } = fakeSavedCopies({ [url]: [first] })
+  const ttl = 100
+  let downloads = 0
+  let arrive!: () => void
+  const slow = new Promise<void>((resolve) => { arrive = resolve })
+  const download = async () => {
+    downloads++
+    if (downloads === 1) return fail()
+    await slow
+    return new Response(JSON.stringify([second]))
+  }
+  const shared = shareFeed(() => loadFeed(books, { download, savedCopies, notices: noticeBoard() }), ttl)
+  await shared.settled()
+
+  await new Promise((resolve) => setTimeout(resolve, ttl * 0.8))
+  void shared() // The retry starts just before the expiry.
+  await new Promise((resolve) => setTimeout(resolve, ttl * 0.4))
+  void shared() // After the old expiry, while the retry runs.
+  arrive()
+
+  expect((await shared.settled()).source).toBe('fresh')
+  expect(downloads).toBe(2)
+})

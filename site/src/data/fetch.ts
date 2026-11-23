@@ -156,6 +156,7 @@ export function shareFeed<T>(load: () => AsyncIterable<Feed<T>>, ttl = cacheTtlM
   // is skipped, and a failure keeps the copy shown.
   function run(target: Entry, first?: Deferred<Feed<T>>) {
     target.retry = false
+    target.expires = Date.now() + ttl // A retry isn't overlapped by a new load.
     const done = deferred<Feed<T>>()
     done.promise.catch(() => {}) // Awaited only by `settled()` callers.
     target.done = done.promise

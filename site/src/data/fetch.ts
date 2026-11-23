@@ -3,7 +3,7 @@ import { cacheTtlMs } from '../config'
 
 // Parse failures list only the first few issues: one upstream change can
 // break every record.
-const shownIssues = 3
+const maxShownIssues = 3
 
 export function plainText(html: string) {
   if (!html) return ''
@@ -18,8 +18,8 @@ export async function fetchJson<T>(url: string, label: string, schema: z.ZodType
   const result = schema.safeParse(await response.json())
   if (result.success) return result.data
   const { issues } = result.error
-  const more = issues.length > shownIssues ? `\n…and ${issues.length - shownIssues} more` : ''
-  throw new Error(`The ${label} don't match the schema:\n${z.prettifyError(new z.ZodError(issues.slice(0, shownIssues)))}${more}`)
+  const more = issues.length > maxShownIssues ? `\n…and ${issues.length - maxShownIssues} more` : ''
+  throw new Error(`The ${label} don't match the schema:\n${z.prettifyError(new z.ZodError(issues.slice(0, maxShownIssues)))}${more}`)
 }
 
 // Share in-flight and recent requests across routes in the current tab.

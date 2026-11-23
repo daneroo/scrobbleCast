@@ -3,9 +3,20 @@ import { historyUrl, recentDays, user } from '../config'
 import { EpisodeRecords, PodcastRecords, type EpisodeRecord, type PodcastRecord } from '../schema/podcast'
 import { cached, fetchJson, plainText } from './fetch'
 
-function history<T>(params: Record<string, string>, label: string, schema: z.ZodType<T>) {
+// What the history API returns for each type, and how errors name it.
+interface Records {
+  podcast: PodcastRecord[]
+  episode: EpisodeRecord[]
+}
+const recordTypes: { [K in keyof Records]: { label: string; schema: z.ZodType<Records[K]> } } = {
+  podcast: { label: 'podcasts', schema: PodcastRecords },
+  episode: { label: 'episodes', schema: EpisodeRecords },
+}
+
+function history<K extends keyof Records>(type: K, params: Record<string, string>) {
+  const { label, schema } = recordTypes[type]
   const url = new URL(historyUrl)
-  url.search = new URLSearchParams(params).toString()
+  url.search = new URLSearchParams({ type, ...params }).toString()
   return fetchJson(url.href, label, schema)
 }
 
@@ -30,7 +41,7 @@ function toPodcast(podcast: PodcastRecord): Podcast {
 }
 
 export const getPodcasts = cached(async () => {
-  const podcasts = await history({ type: 'podcast', user }, 'podcasts', PodcastRecords)
+  const podcasts = await history('podcast', { user })
   return podcasts.map(toPodcast)
 })
 
@@ -38,7 +49,7 @@ export async function getPodcast(uuid: string) {
   const podcasts = await getPodcasts()
   const known = podcasts.find((podcast) => podcast.uuid === uuid)
   if (known) return known
-  const [podcast] = await history({ type: 'podcast', uuid }, 'podcasts', PodcastRecords)
+  const [podcast] = await history('podcast', { uuid })
   return podcast ? toPodcast(podcast) : undefined
 }
 
@@ -78,7 +89,7 @@ function toEpisode(episode: EpisodeRecord, podcastTitle = ''): Episode {
 export const getEpisodes = cached(async () => {
   const since = new Date(Date.now() - recentDays * 24 * 60 * 60 * 1000).toISOString()
   const [episodes, podcasts] = await Promise.all([
-    history({ type: 'episode', user, since }, 'episodes', EpisodeRecords),
+    history('episode', { user, since }),
     getPodcasts().catch(() => []),
   ])
   const titles = new Map(podcasts.map((podcast) => [podcast.uuid, podcast.title]))
@@ -87,7 +98,7 @@ export const getEpisodes = cached(async () => {
 
 export async function getEpisode(uuid: string) {
   // A detail URL can point to an episode outside the recent listing.
-  const [episode] = await history({ type: 'episode', uuid }, 'episodes', EpisodeRecords)
+  const [episode] = await history('episode', { uuid })
   if (!episode) return undefined
   const podcast = await getPodcast(episode.podcast_uuid).catch(() => undefined)
   return toEpisode(episode, podcast?.title)

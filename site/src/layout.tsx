@@ -1,8 +1,9 @@
 import { HeadContent, Link, Outlet, useMatches, useRouter } from '@tanstack/react-router'
 import { useSyncExternalStore } from 'react'
 import { version } from '../package.json'
-import { getShownCopies, subscribeShownCopies, type FeedName } from './data/fetch'
+import { feedTitles, getShownCopies, subscribeShownCopies } from './data/fetch'
 import { localTime } from './format'
+import { notices } from './notices'
 
 export function Layout() {
   return (
@@ -21,6 +22,7 @@ export function Layout() {
           </nav>
         </div>
       </header>
+      <NoticeArea />
       <main className="content"><Outlet /></main>
       <Footer />
     </>
@@ -47,7 +49,22 @@ export function LoadError({ error, reset }: { error: unknown; reset: () => void 
   )
 }
 
-const feedTitles: Record<FeedName, string> = { books: 'Books', podcasts: 'Podcasts', episodes: 'Episodes' }
+// A thin bar of notices under the site header, each with × to dismiss it.
+// Nothing while there are none.
+function NoticeArea() {
+  const shown = Object.entries(useSyncExternalStore(notices.subscribe, notices.get))
+  if (shown.length === 0) return null
+  return (
+    <ul className="notices" aria-label="Notices">
+      {shown.map(([key, { kind, text }]) => (
+        <li key={key} className={`notice notice-${kind}`} role={kind === 'warning' ? 'alert' : 'status'}>
+          <span>{text}</span>
+          <button type="button" aria-label="Dismiss" onClick={() => notices.clear(key)}>×</button>
+        </li>
+      ))}
+    </ul>
+  )
+}
 
 // Lists each feed the page shows, with its time once it has loaded, marked
 // `(saved)` while its saved copy is shown.

@@ -3,6 +3,7 @@ import { expect, test } from 'vite-plus/test'
 import { Goodreads } from '../schema/goodreads'
 import example from '../schema/goodreads-example.json'
 import { fakeSavedCopies } from './fake-saved-copies'
+import { noticeBoard } from '../notices'
 import { loadFeed, type Feed, type FeedConfig } from './fetch'
 
 const url = 'https://example.com/goodreads.json'
@@ -46,11 +47,42 @@ test('a failed refresh keeps the saved data', async () => {
   expect(bodies[url]).toEqual([first])
 })
 
+test('a failed refresh posts a refresh failed notice with the saved copy’s time', async () => {
+  const { savedCopies } = fakeSavedCopies({ [url]: [first] })
+  const notices = noticeBoard()
+  const at = new Date(2026, 10, 23, 0, 23, 33)
+
+  await copies(loadFeed({ ...books, time: () => ({ label: 'updated', at }) }, { download: fail, savedCopies, notices }))
+
+  expect(notices.get()).toEqual({
+    books: { kind: 'warning', text: 'Books: refresh failed, showing saved copy from 2026-11-23 00:23:33' },
+  })
+})
+
 test('a saved copy that fails the schema check is discarded, and the fresh data is used', async () => {
   const { bodies, savedCopies } = fakeSavedCopies({ [url]: [{ title: 'no longer a book' }] })
 
   expect(await copies(loadFeed(books, { download: respond([second]), savedCopies }))).toEqual([['fresh', second.title]])
   await expect.poll(() => bodies[url]).toEqual([second])
+})
+
+test('a discarded saved copy posts a notice that stays after the fresh data', async () => {
+  const { savedCopies } = fakeSavedCopies({ [url]: [{ title: 'no longer a book' }] })
+  const notices = noticeBoard()
+
+  await copies(loadFeed(books, { download: respond([second]), savedCopies, notices }))
+
+  expect(notices.get()).toEqual({ books: { kind: 'warning', text: 'Books: saved copy discarded (schema mismatch)' } })
+})
+
+test('a notice clears when its feed next loads its fresh data', async () => {
+  const { savedCopies } = fakeSavedCopies({ [url]: [first] })
+  const notices = noticeBoard()
+  await copies(loadFeed(books, { download: fail, savedCopies, notices }))
+
+  await copies(loadFeed(books, { download: respond([second]), savedCopies, notices }))
+
+  expect(notices.get()).toEqual({})
 })
 
 test('with no saved copy, a failed fetch raises', async () => {

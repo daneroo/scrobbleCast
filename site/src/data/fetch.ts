@@ -1,5 +1,7 @@
 import { z } from 'zod'
 import { cacheTtlMs } from '../config'
+import { localTime } from '../format'
+import { notices as appNotices, type NoticeBoard } from '../notices'
 import { browserSavedCopies, type SavedCopies } from './saved-copies'
 
 // Parse failures list only the first few issues: one upstream change can
@@ -33,12 +35,17 @@ export async function loadJson<T>(url: string, label: string, schema: z.ZodType<
   return { data: await parse(response, label, schema), headers: response.headers }
 }
 
+// Where a feed's notices go: the app's notice area, or a board of its own in
+// tests.
 export interface FeedOptions {
   download?: Download
   savedCopies?: SavedCopies
+  notices?: Pick<NoticeBoard, 'post' | 'clear'>
 }
 
 export type FeedName = 'books' | 'podcasts' | 'episodes'
+
+export const feedTitles: Record<FeedName, string> = { books: 'Books', podcasts: 'Podcasts', episodes: 'Episodes' }
 
 // How fresh a feed is: `updated` when it was generated, or its `last change`,
 // the newest change the scraper saw. `at` is missing if the feed doesn't say.
@@ -67,11 +74,14 @@ export interface FeedConfig<T> {
 
 // Load a whole feed: its saved copy at once if there is a usable one, then the
 // fresh copy, which replaces the saved copy. A failed refresh keeps the saved
-// copy; with no saved copy it raises.
+// copy; with no saved copy it raises. Each feed posts its notices under its
+// name.
 export async function* loadFeed<T>(
   config: FeedConfig<T>,
-  { download = fetch, savedCopies = browserSavedCopies }: FeedOptions = {},
+  { download = fetch, savedCopies = browserSavedCopies, notices = appNotices }: FeedOptions = {},
 ): AsyncGenerator<Feed<T>> {
+  const warn = (text: string) => notices.post(config.name, { kind: 'warning', text: `${feedTitles[config.name]}: ${text}` })
+
   const copy = async (response: Response, source: Feed<T>['source']): Promise<Feed<T>> => {
     const data = await parse(response, config.name, config.schema)
     return { name: config.name, data, time: config.time(data, response.headers), source }
@@ -85,7 +95,7 @@ export async function* loadFeed<T>(
   fresh.catch(() => {}) // Awaited below, after the saved copy.
 
   let saved: Feed<T> | undefined
-  let discarded: Promise<unknown> = Promise.resolve()
+  let discarded: Promise<unknown> | undefined
   if (config.save) {
     const response = await savedCopies.get(config.url).catch(() => undefined)
     if (response) {
@@ -94,6 +104,7 @@ export async function* loadFeed<T>(
       } catch {
         // It no longer matches the schema.
         discarded = savedCopies.delete(config.url).catch(() => {})
+        warn('saved copy discarded (schema mismatch)')
       }
     }
   }
@@ -103,11 +114,15 @@ export async function* loadFeed<T>(
   try {
     ({ feed, raw } = await fresh)
   } catch (error) {
-    if (saved) return
-    throw error
+    if (!saved) throw error
+    const { at } = saved.time
+    warn(`refresh failed, showing saved copy${at ? ` from ${localTime(at)}` : ''}`)
+    return
   }
   // Saved once any bad copy is gone, so discarding it can't remove this one.
-  if (raw) void discarded.then(() => savedCopies.put(config.url, raw)).catch(() => {})
+  if (raw) void Promise.resolve(discarded).then(() => savedCopies.put(config.url, raw)).catch(() => {})
+  // A fresh copy clears the feed's notice, except the one this load posted.
+  if (!discarded) notices.clear(config.name)
   yield feed
 }
 

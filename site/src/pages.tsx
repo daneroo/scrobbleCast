@@ -174,6 +174,11 @@ export function Home({ feeds }: {
 export function Books({ books }: { books: Promise<Feed<Book[]>> }) {
   const [query, setQuery] = useState('')
   const [shelf, setShelf] = useState<string>()
+  // The first copy shown sets the default shelf, so a fresh copy replacing a
+  // saved copy doesn't change the view.
+  useEffect(() => {
+    books.then(({ data }) => setShelf((shelf) => shelf ?? defaultShelf(data)), () => {})
+  }, [books])
   const results = (books: Book[]) => {
     const shown = shelf ?? defaultShelf(books)
     return search(books, bookKeys, query).filter((book) => !shown || book.userShelf === shown)
@@ -186,12 +191,17 @@ export function Books({ books }: { books: Promise<Feed<Book[]>> }) {
         <label>
           <span>Shelf</span>
           <Await promise={books} fallback={<select disabled><option>All shelves</option></select>}>
-            {({ data }) => (
-              <select value={shelf ?? defaultShelf(data)} onChange={(event) => setShelf(event.target.value)}>
-                <option value="">All shelves</option>
-                {[...new Set(data.map((book) => book.userShelf))].map((name) => <option key={name} value={name}>{shelfName(name)}</option>)}
-              </select>
-            )}
+            {({ data }) => {
+              const shown = shelf ?? defaultShelf(data)
+              // A fresh copy may have no book left on the shelf shown.
+              const shelves = new Set([...data.map((book) => book.userShelf), ...(shown ? [shown] : [])])
+              return (
+                <select value={shown} onChange={(event) => setShelf(event.target.value)}>
+                  <option value="">All shelves</option>
+                  {[...shelves].map((name) => <option key={name} value={name}>{shelfName(name)}</option>)}
+                </select>
+              )
+            }}
           </Await>
         </label>
       </div>

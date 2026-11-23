@@ -1,7 +1,7 @@
 import { HeadContent, Link, Outlet, useMatches, useRouter } from '@tanstack/react-router'
 import { useSyncExternalStore } from 'react'
 import { version } from '../package.json'
-import { getFeedTimes, subscribeFeedTimes, type FeedName } from './data/fetch'
+import { getShownFeeds, subscribeShownFeeds, type FeedName } from './data/fetch'
 import { localTime } from './format'
 
 export function Layout() {
@@ -49,22 +49,25 @@ export function LoadError({ error, reset }: { error: unknown; reset: () => void 
 
 const feedTitles: Record<FeedName, string> = { books: 'Books', podcasts: 'Podcasts', episodes: 'Episodes' }
 
-// Lists each feed the page shows, with its time once it has loaded.
+// Lists each feed the page shows, with its time once it has loaded, marked
+// `(saved)` while its saved copy is shown.
 function Footer() {
   const feeds = useMatches().flatMap((match) => match.staticData.feeds ?? [])
-  const times = useSyncExternalStore(subscribeFeedTimes, getFeedTimes)
+  const shown = useSyncExternalStore(subscribeShownFeeds, getShownFeeds)
   return (
     <footer className="site-footer">
       <span>Scrobble Cast v{version}</span>
       {feeds.length > 0 && (
         <ul className="feed-times" aria-label="Feeds">
           {feeds.map((feed) => {
-            const time = times[feed]
-            if (!time) return null
+            const copy = shown[feed]
+            if (!copy) return null
+            const { time } = copy
             return (
               <li key={feed}>
                 {feedTitles[feed]} {time.label}{' '}
                 {time.at ? <time dateTime={time.at.toISOString()}>{localTime(time.at)}</time> : '—'}
+                {copy.source === 'saved' && ' (saved)'}
               </li>
             )
           })}

@@ -1,6 +1,7 @@
 // @vitest-environment happy-dom
 import { expect, test } from 'vite-plus/test'
 import example from '../schema/podcast-example.json'
+import { fakeSavedCopies } from './fake-saved-copies'
 import { podcastFeeds } from './podcasts'
 
 const [syntax] = example.podcasts
@@ -22,7 +23,7 @@ function fakeHistory() {
 
 test('without the podcast feed loaded, finding one podcast fetches it by uuid', async () => {
   const { requests, download } = fakeHistory()
-  const { getPodcast } = podcastFeeds(download)
+  const { getPodcast } = podcastFeeds({ download })
 
   const podcast = await getPodcast(syntax.uuid)
 
@@ -32,7 +33,7 @@ test('without the podcast feed loaded, finding one podcast fetches it by uuid', 
 
 test('with the podcast feed loaded, finding one podcast makes no request', async () => {
   const { requests, download } = fakeHistory()
-  const { getPodcasts, getPodcast } = podcastFeeds(download)
+  const { getPodcasts, getPodcast } = podcastFeeds({ download })
   await getPodcasts()
   requests.length = 0
 
@@ -43,7 +44,7 @@ test('with the podcast feed loaded, finding one podcast makes no request', async
 })
 
 test('an unknown podcast uuid finds nothing', async () => {
-  const { getPodcasts, getPodcast } = podcastFeeds(fakeHistory().download)
+  const { getPodcasts, getPodcast } = podcastFeeds({ download: fakeHistory().download })
   await getPodcasts()
 
   expect(await getPodcast('no-such-uuid')).toBeUndefined()
@@ -52,7 +53,7 @@ test('an unknown podcast uuid finds nothing', async () => {
 test('finding one episode fetches only that episode and its podcast', async () => {
   const [played] = example.episodes
   const { requests, download } = fakeHistory()
-  const { getEpisode } = podcastFeeds(download)
+  const { getEpisode } = podcastFeeds({ download })
 
   const episode = await getEpisode(played.uuid)
 
@@ -64,7 +65,7 @@ test('finding one episode fetches only that episode and its podcast', async () =
 })
 
 test('the podcast feed’s last change is its newest __lastUpdated', async () => {
-  const { getPodcasts } = podcastFeeds(fakeHistory().download)
+  const { getPodcasts } = podcastFeeds({ download: fakeHistory().download })
 
   const feed = await getPodcasts()
 
@@ -72,7 +73,7 @@ test('the podcast feed’s last change is its newest __lastUpdated', async () =>
 })
 
 test('the episode feed’s last change is its newest __lastUpdated', async () => {
-  const { getEpisodes } = podcastFeeds(fakeHistory().download)
+  const { getEpisodes } = podcastFeeds({ download: fakeHistory().download })
 
   const feed = await getEpisodes()
 
@@ -81,8 +82,9 @@ test('the episode feed’s last change is its newest __lastUpdated', async () =>
 
 test('the episode feed loads without waiting for the podcast feed', async () => {
   const { download } = fakeHistory()
-  const { getEpisodeFeed } = podcastFeeds((url) =>
-    new URL(url).searchParams.get('type') === 'podcast' ? new Promise(() => {}) : download(url))
+  const { getEpisodeFeed } = podcastFeeds({
+    download: (url) => new URL(url).searchParams.get('type') === 'podcast' ? new Promise(() => {}) : download(url),
+  })
 
   const feed = await getEpisodeFeed()
 
@@ -91,8 +93,17 @@ test('the episode feed loads without waiting for the podcast feed', async () => 
 
 // React's `use()` reads a promise's `status` and `value` without suspending.
 test('with the podcast feed loaded, a podcast is ready at once', async () => {
-  const { getPodcasts, getPodcast } = podcastFeeds(fakeHistory().download)
+  const { getPodcasts, getPodcast } = podcastFeeds({ download: fakeHistory().download })
   await getPodcasts()
 
   expect(getPodcast(syntax.uuid)).toMatchObject({ status: 'fulfilled', value: { title: syntax.title } })
+})
+
+test('the podcast feed is saved, the episode feed never', async () => {
+  const { used, saved } = fakeSavedCopies()
+  const { getPodcasts, getEpisodeFeed } = podcastFeeds({ download: fakeHistory().download, saved })
+
+  await Promise.all([getPodcasts(), getEpisodeFeed()])
+
+  expect(used.map((url) => new URL(url).searchParams.get('type'))).toEqual(['podcast', 'podcast'])
 })

@@ -1,6 +1,6 @@
 import { createRootRoute, createRoute, createRouter } from '@tanstack/react-router'
 import { getBook, getBooks } from './data/books'
-import type { FeedName } from './data/fetch'
+import { subscribeShownFeeds, type FeedName } from './data/fetch'
 import { getEpisode, getEpisodeFeed, getEpisodes, getPodcast, getPodcasts } from './data/podcasts'
 import { documentTitle } from './format'
 import { Layout, LoadError, NotFound } from './layout'
@@ -85,6 +85,13 @@ export const router = createRouter({
   routeTree: root.addChildren([home, books, book, podcasts, podcast, episodes, episode]),
   scrollRestoration: true,
   defaultErrorComponent: LoadError,
+})
+
+// When a feed shows a new copy, e.g. a fresh copy replacing a saved copy, the
+// pages showing that feed load again: their loaders get the new copy ready at
+// once, and their state (search text, shelf, "Show more") stays.
+subscribeShownFeeds((name) => {
+  void router.invalidate({ filter: (match) => match.staticData.feeds?.includes(name) ?? false })
 })
 
 declare module '@tanstack/react-router' {

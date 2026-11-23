@@ -95,6 +95,7 @@ tbody tr:last-child td { border: 0; }
 .button:hover { background: color-mix(in srgb, var(--classic-blue) 80%, black); }
 .empty { padding: 1.4rem; background: white; border: 1px solid var(--line); border-radius: 0.6rem; }
 .empty h1 { margin-bottom: 0.8rem; }
+.empty p { white-space: pre-line; }
 
 .detail { max-width: 56rem; }
 .back { display: inline-block; margin-bottom: 1.5rem; }

@@ -8,7 +8,7 @@ npm ci
 npm run dev
 ```
 
-Open <http://127.0.0.1:3015>. Use `npm run typecheck` and `npm run build` to check the app, or `npm run preview` to serve the production build locally.
+Open <http://127.0.0.1:3015>. Use `npm run typecheck`, `npm test` and `npm run build` to check the app, or `npm run preview` to serve the production build locally.
 
 ## Deploy
 

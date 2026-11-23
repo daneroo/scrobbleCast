@@ -1,10 +1,11 @@
-import { HeadContent, Link, Outlet, useRouter } from '@tanstack/react-router'
-import { useEffect, useRef, useState } from 'react'
-import type { RefObject } from 'react'
+import { HeadContent, Link, Outlet, useMatches, useRouter } from '@tanstack/react-router'
+import { useSyncExternalStore } from 'react'
 import { version } from '../package.json'
+import { feedTitles, getShownCopies, subscribeShownCopies } from './data/fetch'
+import { localTime } from './format'
+import { notices } from './notices'
 
 export function Layout() {
-  const content = useRef<HTMLElement>(null)
   return (
     <>
       <HeadContent />
@@ -21,8 +22,9 @@ export function Layout() {
           </nav>
         </div>
       </header>
-      <main className="content" ref={content}><Outlet /></main>
-      <Footer content={content} />
+      <NoticeArea />
+      <main className="content"><Outlet /></main>
+      <Footer />
     </>
   )
 }
@@ -47,22 +49,47 @@ export function LoadError({ error, reset }: { error: unknown; reset: () => void 
   )
 }
 
-// Shows when the page content last changed: navigation, data loading, search,
-// sorting or "Show more". A placeholder until the footer can show how fresh the
-// upstream data is.
-function Footer({ content }: { content: RefObject<HTMLElement | null> }) {
-  const [updatedAt, setUpdatedAt] = useState(() => new Date())
-  useEffect(() => {
-    if (!content.current) return
-    const observer = new MutationObserver(() => setUpdatedAt(new Date()))
-    observer.observe(content.current, { childList: true, subtree: true, characterData: true })
-    return () => observer.disconnect()
-  }, [content])
+// A thin bar of notices under the site header, each with × to dismiss it.
+// Nothing while there are none.
+function NoticeArea() {
+  const shown = Object.entries(useSyncExternalStore(notices.subscribe, notices.get))
+  if (shown.length === 0) return null
+  return (
+    <ul className="notices" aria-label="Notices">
+      {shown.map(([key, { kind, text }]) => (
+        <li key={key} className={`notice notice-${kind}`} role={kind === 'warning' ? 'alert' : 'status'}>
+          <span>{text}</span>
+          <button type="button" aria-label="Dismiss" onClick={() => notices.clear(key)}>×</button>
+        </li>
+      ))}
+    </ul>
+  )
+}
+
+// Lists each feed the page shows, with its time once it has loaded, marked
+// `(saved)` while its saved copy is shown.
+function Footer() {
+  const feeds = useMatches().flatMap((match) => match.staticData.feeds ?? [])
+  const shown = useSyncExternalStore(subscribeShownCopies, getShownCopies)
   return (
     <footer className="site-footer">
       <span>Scrobble Cast v{version}</span>
-      {/* The sv-SE locale formats local time as "YYYY-MM-DD HH:mm:ss". */}
-      <time dateTime={updatedAt.toISOString()}>{updatedAt.toLocaleString('sv-SE')}</time>
+      {feeds.length > 0 && (
+        <ul className="feed-times" aria-label="Feeds">
+          {feeds.map((feed) => {
+            const copy = shown[feed]
+            if (!copy) return null
+            const { time } = copy
+            return (
+              <li key={feed}>
+                {feedTitles[feed]} {time.label}{' '}
+                {time.at ? <time dateTime={time.at.toISOString()}>{localTime(time.at)}</time> : '—'}
+                {copy.source === 'saved' && ' (saved)'}
+              </li>
+            )
+          })}
+        </ul>
+      )}
     </footer>
   )
 }

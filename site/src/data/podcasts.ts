@@ -1,23 +1,26 @@
 import type { z } from 'zod'
 import { historyUrl, recentDays, user } from '../config'
 import { EpisodeRecords, PodcastRecords, type EpisodeRecord, type PodcastRecord } from '../schema/podcast'
-import { cached, fetchJson, plainText } from './fetch'
+import { loadFeed, loadJson, mapData, plainText, ready, shareFeed, type Feed, type FeedName, type FeedOptions, type FeedTime } from './fetch'
 
-// What the history API returns for each type, and how errors name it.
+// What the history API returns for each type, and the feed of that type.
 interface Records {
   podcast: PodcastRecord[]
   episode: EpisodeRecord[]
 }
-const recordTypes: { [K in keyof Records]: { label: string; schema: z.ZodType<Records[K]> } } = {
-  podcast: { label: 'podcasts', schema: PodcastRecords },
-  episode: { label: 'episodes', schema: EpisodeRecords },
+const recordTypes: { [K in keyof Records]: { feedName: FeedName; schema: z.ZodType<Records[K]> } } = {
+  podcast: { feedName: 'podcasts', schema: PodcastRecords },
+  episode: { feedName: 'episodes', schema: EpisodeRecords },
 }
 
-function history<K extends keyof Records>(type: K, params: Record<string, string>) {
-  const { label, schema } = recordTypes[type]
-  const url = new URL(historyUrl)
-  url.search = new URLSearchParams({ type, ...params }).toString()
-  return fetchJson(url.href, label, schema)
+// The history API doesn't say when it last ran; a feed's last change is the
+// newest change the scraper saw across its records.
+function lastChange(records: { meta: { __lastUpdated: string } }[]): FeedTime {
+  let newest: string | undefined
+  for (const { meta } of records) {
+    if (!newest || Date.parse(meta.__lastUpdated) > Date.parse(newest)) newest = meta.__lastUpdated
+  }
+  return { label: 'last change', at: newest ? new Date(newest) : undefined }
 }
 
 export interface Podcast {
@@ -38,19 +41,6 @@ function toPodcast(podcast: PodcastRecord): Podcast {
     thumbnail: podcast.thumbnail_url ?? '',
     firstSeen: podcast.meta.__firstSeen,
   }
-}
-
-export const getPodcasts = cached(async () => {
-  const podcasts = await history('podcast', { user })
-  return podcasts.map(toPodcast)
-})
-
-export async function getPodcast(uuid: string) {
-  const podcasts = await getPodcasts()
-  const known = podcasts.find((podcast) => podcast.uuid === uuid)
-  if (known) return known
-  const [podcast] = await history('podcast', { uuid })
-  return podcast ? toPodcast(podcast) : undefined
 }
 
 export interface Episode {
@@ -86,20 +76,71 @@ function toEpisode(episode: EpisodeRecord, podcastTitle = ''): Episode {
   }
 }
 
-export const getEpisodes = cached(async () => {
-  const since = new Date(Date.now() - recentDays * 24 * 60 * 60 * 1000).toISOString()
-  const [episodes, podcasts] = await Promise.all([
-    history('episode', { user, since }),
-    getPodcasts().catch(() => []),
-  ])
-  const titles = new Map(podcasts.map((podcast) => [podcast.uuid, podcast.title]))
-  return episodes.map((episode) => toEpisode(episode, titles.get(episode.podcast_uuid)))
-})
+// The podcast and episode feeds, and lookups of one podcast or episode by
+// `uuid`, all from the history API. A lookup is not a feed: it has no feed
+// time. Only the podcast feed has a saved copy: the episode feed's URL changes
+// with every load, and it's small.
+export function podcastFeeds(options: FeedOptions = {}) {
+  function historyUrlFor(type: keyof Records, params: Record<string, string>) {
+    const url = new URL(historyUrl)
+    url.search = new URLSearchParams({ type, ...params }).toString()
+    return url.href
+  }
 
-export async function getEpisode(uuid: string) {
-  // A detail URL can point to an episode outside the recent listing.
-  const [episode] = await history('episode', { uuid })
-  if (!episode) return undefined
-  const podcast = await getPodcast(episode.podcast_uuid).catch(() => undefined)
-  return toEpisode(episode, podcast?.title)
+  function feed<K extends keyof Records>(type: K, params: Record<string, string>) {
+    const { feedName: name, schema } = recordTypes[type]
+    return loadFeed({ name, url: historyUrlFor(type, params), schema, time: lastChange, save: type === 'podcast' }, options)
+  }
+
+  async function lookup<K extends keyof Records>(type: K, uuid: string): Promise<Records[K][number] | undefined> {
+    const { schema } = recordTypes[type]
+    const { data } = await loadJson(historyUrlFor(type, { uuid }), `${type} records`, schema, options.download)
+    return data.at(0)
+  }
+
+  const getPodcasts = shareFeed(() => mapData(feed('podcast', { user }), (podcasts) => podcasts.map(toPodcast)))
+
+  // Use the podcast feed if this tab already has it; never download it whole.
+  function getPodcast(uuid: string): Promise<Podcast | undefined> {
+    const known = getPodcasts.loaded()?.data.find((podcast) => podcast.uuid === uuid)
+    if (known) return ready(known)
+    return lookup('podcast', uuid).then((podcast) => podcast && toPodcast(podcast))
+  }
+
+  // The episode feed alone, without podcast titles: it doesn't wait for the
+  // podcast feed.
+  const getEpisodeFeed = shareFeed(() => {
+    const since = new Date(Date.now() - recentDays * 24 * 60 * 60 * 1000).toISOString()
+    return mapData(feed('episode', { user, since }), (episodes) => episodes.map((episode) => toEpisode(episode)))
+  })
+
+  // The episode feed with titles from the podcast feed shown now: worked out
+  // again on each call, so a fresh podcast feed brings fresh titles. Ready at
+  // once if this tab has both feeds.
+  function getEpisodes(): Promise<Feed<Episode[]>> {
+    // Ask both feeds first: that starts a load, or retries a failed refresh.
+    const episodeFeed = getEpisodeFeed()
+    const podcastFeed = getPodcasts().then((podcasts) => podcasts.data, () => [])
+    const episodes = getEpisodeFeed.loaded()
+    const podcasts = getPodcasts.loaded()
+    if (episodes && podcasts) return ready(withTitles(episodes, podcasts.data))
+    return Promise.all([episodeFeed, podcastFeed]).then(([episodes, podcasts]) => withTitles(episodes, podcasts))
+  }
+
+  function withTitles(episodes: Feed<Episode[]>, podcasts: Podcast[]) {
+    const titles = new Map(podcasts.map((podcast) => [podcast.uuid, podcast.title]))
+    return { ...episodes, data: episodes.data.map((episode) => ({ ...episode, podcastTitle: titles.get(episode.podcastId) ?? '' })) }
+  }
+
+  async function getEpisode(uuid: string) {
+    // A detail URL can point to an episode outside the recent listing.
+    const episode = await lookup('episode', uuid)
+    if (!episode) return undefined
+    const podcast = await getPodcast(episode.podcast_uuid).catch(() => undefined)
+    return toEpisode(episode, podcast?.title)
+  }
+
+  return { getPodcasts, getPodcast, getEpisodeFeed, getEpisodes, getEpisode }
 }
+
+export const { getPodcasts, getPodcast, getEpisodeFeed, getEpisodes, getEpisode } = podcastFeeds()

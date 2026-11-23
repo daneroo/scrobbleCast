@@ -17,6 +17,7 @@ export const PodcastRecord = z.looseObject({
   meta: z.looseObject({
     __type: z.literal('podcast'),
     __firstSeen: z.iso.datetime(),
+    __lastUpdated: z.iso.datetime(),
   }),
 })
 export type PodcastRecord = z.infer<typeof PodcastRecord>
@@ -31,6 +32,8 @@ export const EpisodeRecord = z.looseObject({
   played_up_to: z.number().optional(),
   meta: z.looseObject({
     __type: z.literal('episode'),
+    // the scraper sets it when it first sees a record, and on each change
+    __lastUpdated: z.iso.datetime(),
     // on 31,890 of 167,014
     __lastPlayed: z.iso.datetime().optional(),
   }),

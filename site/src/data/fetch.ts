@@ -1,5 +1,8 @@
 import { z } from 'zod'
 import { cacheTtlMs } from '../config'
+import { localTime } from '../format'
+import { notices as appNotices, type NoticeBoard } from '../notices'
+import { browserSavedCopies, type SavedCopies } from './saved-copies'
 
 // Parse failures list only the first few issues: one upstream change can
 // break every record.
@@ -12,8 +15,11 @@ export function plainText(html: string) {
   return template.content.textContent?.trim() ?? ''
 }
 
-export async function fetchJson<T>(url: string, label: string, schema: z.ZodType<T>): Promise<T> {
-  const response = await fetch(url)
+// How a URL is downloaded: `fetch` in the app, a fake in tests.
+export type Download = (url: string) => Promise<Response>
+
+// Check a response against its schema.
+async function parse<T>(response: Response, label: string, schema: z.ZodType<T>) {
   if (!response.ok) throw new Error(`Could not load ${label} (HTTP ${response.status}).`)
   const result = schema.safeParse(await response.json())
   if (result.success) return result.data
@@ -22,16 +28,218 @@ export async function fetchJson<T>(url: string, label: string, schema: z.ZodType
   throw new Error(`The ${label} don't match the schema:\n${z.prettifyError(new z.ZodError(issues.slice(0, maxShownIssues)))}${more}`)
 }
 
-// Share in-flight and recent requests across routes in the current tab.
-export function cached<T>(load: () => Promise<T>, ttl = cacheTtlMs) {
-  let entry: { expires: number; promise: Promise<T> } | undefined
-  return () => {
-    if (entry && entry.expires > Date.now()) return entry.promise
-    const promise = load().catch((error) => {
-      if (entry?.promise === promise) entry = undefined
-      throw error
-    })
-    entry = { expires: Date.now() + ttl, promise }
-    return promise
+// Download a URL and check it against its schema: a whole feed, or one record
+// looked up by `uuid`.
+export async function loadJson<T>(url: string, label: string, schema: z.ZodType<T>, download: Download = fetch) {
+  const response = await download(url)
+  return { data: await parse(response, label, schema), headers: response.headers }
+}
+
+export interface FeedOptions {
+  download?: Download
+  savedCopies?: SavedCopies
+  // Where a feed's notices go: the app's notice area, or a board of its own.
+  notices?: Pick<NoticeBoard, 'post' | 'clear'>
+}
+
+export type FeedName = 'books' | 'podcasts' | 'episodes'
+
+export const feedTitles: Record<FeedName, string> = { books: 'Books', podcasts: 'Podcasts', episodes: 'Episodes' }
+
+// How fresh a feed is: `updated` when it was generated, or its `last change`,
+// the newest change the scraper saw. `at` is missing if the feed doesn't say.
+export interface FeedTime {
+  label: 'updated' | 'last change'
+  at: Date | undefined
+}
+
+// One copy of a feed: from the browser's saved copy, or freshly downloaded.
+export interface Feed<T> {
+  name: FeedName
+  data: T
+  time: FeedTime
+  source: 'saved' | 'fresh'
+}
+
+// Where a feed comes from, how to tell its time from its headers or data, and
+// whether the browser keeps a saved copy of it.
+export interface FeedConfig<T> {
+  name: FeedName
+  url: string
+  schema: z.ZodType<T>
+  time: (data: T, headers: Headers) => FeedTime
+  save?: boolean
+}
+
+// Load a whole feed: its saved copy at once if there is a usable one, then the
+// fresh copy, which replaces the saved copy. A failed refresh keeps the saved
+// copy; with no saved copy it raises. Each feed posts its notices under its
+// name.
+export async function* loadFeed<T>(
+  config: FeedConfig<T>,
+  { download = fetch, savedCopies = browserSavedCopies, notices = appNotices }: FeedOptions = {},
+): AsyncGenerator<Feed<T>> {
+  const warn = (text: string) => notices.post(config.name, { kind: 'warning', text: `${feedTitles[config.name]}: ${text}` })
+
+  const copy = async (response: Response, source: Feed<T>['source']): Promise<Feed<T>> => {
+    const data = await parse(response, config.name, config.schema)
+    return { name: config.name, data, time: config.time(data, response.headers), source }
   }
+
+  // Always fetch the feed, even while the saved copy is read.
+  const fresh = download(config.url).then(async (response) => {
+    const raw = config.save ? response.clone() : undefined
+    return { feed: await copy(response, 'fresh'), raw }
+  })
+  fresh.catch(() => {}) // Awaited below, after the saved copy.
+
+  let saved: Feed<T> | undefined
+  let discarded = false
+  let deleted: Promise<unknown> = Promise.resolve()
+  if (config.save) {
+    const response = await savedCopies.get(config.url).catch(() => undefined)
+    if (response) {
+      try {
+        saved = await copy(response, 'saved')
+      } catch {
+        // It no longer matches the schema.
+        discarded = true
+        deleted = savedCopies.delete(config.url).catch(() => {})
+        warn('saved copy discarded (schema mismatch)')
+      }
+    }
+  }
+  if (saved) yield saved
+
+  let feed: Feed<T>, raw: Response | undefined
+  try {
+    ({ feed, raw } = await fresh)
+  } catch (error) {
+    if (!saved) throw error
+    const { at } = saved.time
+    warn(`refresh failed, showing saved copy${at ? ` from ${localTime(at)}` : ''}`)
+    return
+  }
+  // Saved once any bad copy is gone, so discarding it can't remove this one.
+  if (raw) void deleted.then(() => savedCopies.put(config.url, raw)).catch(() => {})
+  // A fresh copy clears the feed's notice. A discard notice stays until the
+  // next load, or the fresh copy right behind it would hide it at once.
+  if (!discarded) notices.clear(config.name)
+  yield feed
+}
+
+// Change the data of each copy of a feed, keeping its time and source.
+export async function* mapData<T, U>(copies: AsyncIterable<Feed<T>>, change: (data: T) => U): AsyncGenerator<Feed<U>> {
+  for await (const feed of copies) yield { ...feed, data: change(feed.data) }
+}
+
+// A promise of data already loaded: React's `use()` reads its `status` and
+// `value` without suspending, so the page shows it at once.
+export function ready<T>(value: T): Promise<T> {
+  return Object.assign(Promise.resolve(value), { status: 'fulfilled', value })
+}
+
+// Share a feed's copies across routes in the current tab. `get()` gives the
+// copy shown now: while the first copy loads, a promise of it; then each copy
+// as a promise ready at once, so a fresh copy replacing a saved copy doesn't
+// suspend the page again. `loaded()` gives the copy shown, if any. A load
+// starts again `ttl` after the last copy was shown. If the refresh failed, the
+// next `get()` tries it again in the background, keeping the copy shown.
+// `settled()` gives the last copy once the load is over: the fresh copy, or
+// the copy shown if the refresh failed.
+export function shareFeed<T>(load: () => AsyncIterable<Feed<T>>, ttl = cacheTtlMs) {
+  interface Entry { expires: number; promise: Promise<Feed<T>>; done: Promise<Feed<T>>; feed?: Feed<T>; retry?: boolean }
+  let entry: Entry | undefined
+  const current = () => (entry && entry.expires > Date.now() ? entry : undefined)
+
+  // Load into `target`. When it already shows a copy (a retry), the saved copy
+  // is skipped, and a failure keeps the copy shown.
+  function run(target: Entry, first?: Deferred<Feed<T>>) {
+    target.retry = false
+    target.expires = Date.now() + ttl // A retry isn't overlapped by a new load.
+    const done = deferred<Feed<T>>()
+    done.promise.catch(() => {}) // Awaited only by `settled()` callers.
+    target.done = done.promise
+    void (async () => {
+      let error: unknown
+      try {
+        for await (const feed of load()) {
+          const replaced = target.feed !== undefined
+          if (replaced && feed.source === 'saved') continue
+          if (replaced) target.promise = ready(feed)
+          else Object.assign(target.promise, { status: 'fulfilled', value: feed })
+          target.feed = feed
+          target.expires = Date.now() + ttl
+          first?.resolve(feed)
+          if (entry === target) setShown(feed, replaced)
+        }
+      } catch (caught) {
+        error = caught
+      }
+      const shown = target.feed
+      if (!shown) {
+        if (entry === target) entry = undefined
+        first?.reject(error)
+        done.reject(error)
+        return
+      }
+      target.retry = shown.source === 'saved'
+      done.resolve(shown)
+    })()
+  }
+
+  const get = () => {
+    const found = current()
+    if (found) {
+      if (found.retry) run(found)
+      return found.promise
+    }
+    const first = deferred<Feed<T>>()
+    const next: Entry = { expires: Date.now() + ttl, promise: first.promise, done: first.promise }
+    entry = next
+    run(next, first)
+    return first.promise
+  }
+
+  const settled = () => {
+    get().catch(() => {}) // The caller handles `done` instead.
+    return entry!.done
+  }
+
+  return Object.assign(get, { loaded: () => current()?.feed, settled })
+}
+
+interface Deferred<T> {
+  promise: Promise<T>
+  resolve: (value: T) => void
+  reject: (error: unknown) => void
+}
+
+function deferred<T>(): Deferred<T> {
+  let resolve!: Deferred<T>['resolve']
+  let reject!: Deferred<T>['reject']
+  const promise = new Promise<T>((...settle) => { [resolve, reject] = settle })
+  return { promise, resolve, reject }
+}
+
+// The copy of each feed shown in this tab, for the footer: its time and
+// source. Listeners hear which feed changed, and whether its new copy
+// replaced one already shown, e.g. a fresh copy replacing a saved copy.
+export type ShownCopy = Pick<Feed<unknown>, 'time' | 'source'>
+type ShownListener = (name: FeedName, replaced: boolean) => void
+let shownCopies: Partial<Record<FeedName, ShownCopy>> = {}
+const listeners = new Set<ShownListener>()
+
+function setShown({ name, time, source }: Feed<unknown>, replaced: boolean) {
+  shownCopies = { ...shownCopies, [name]: { time, source } }
+  for (const listener of listeners) listener(name, replaced)
+}
+
+export function getShownCopies() {
+  return shownCopies
+}
+
+export function subscribeShownCopies(listener: ShownListener) {
+  listeners.add(listener)
+  return () => { listeners.delete(listener) }
 }

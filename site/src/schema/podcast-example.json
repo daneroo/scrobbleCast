@@ -8,7 +8,8 @@
       "url": "https://syntax.fm",
       "meta": {
         "__type": "podcast",
-        "__firstSeen": "2017-07-02T08:00:00Z"
+        "__firstSeen": "2017-07-02T08:00:00Z",
+        "__lastUpdated": "2026-11-20T17:20:00Z"
       },
       "thumbnail_url": "http://static.libsyn.com/p/assets/7/9/0/7/790703531a3c8eca/iTunes_Artwork.png"
     },
@@ -20,7 +21,8 @@
       "url": "http://therestispolitics.com/",
       "meta": {
         "__type": "podcast",
-        "__firstSeen": "2022-03-02T09:50:00Z"
+        "__firstSeen": "2022-03-02T09:50:00Z",
+        "__lastUpdated": "2026-11-17T20:40:00Z"
       }
     }
   ],
@@ -35,6 +37,7 @@
       "meta": {
         "__type": "episode",
         "__firstSeen": "2026-11-21T13:10:00Z",
+        "__lastUpdated": "2026-11-23T00:10:00Z",
         "__lastPlayed": "2026-11-23T00:10:00Z"
       },
       "history": {
@@ -52,7 +55,8 @@
       "duration": "2557",
       "meta": {
         "__type": "episode",
-        "__firstSeen": "2018-12-12T16:40:00Z"
+        "__firstSeen": "2018-12-12T16:40:00Z",
+        "__lastUpdated": "2018-12-12T16:40:00Z"
       },
       "history": {}
     }

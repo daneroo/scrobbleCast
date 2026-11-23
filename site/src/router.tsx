@@ -1,5 +1,6 @@
 import { createRootRoute, createRoute, createRouter, notFound } from '@tanstack/react-router'
 import { getBooks } from './data/books'
+import type { FeedName } from './data/fetch'
 import { getEpisode, getEpisodes, getPodcast, getPodcasts } from './data/podcasts'
 import { Layout, LoadError, NotFound } from './layout'
 import { BookDetail, Books, EpisodeDetail, Episodes, Home, PodcastDetail, Podcasts } from './pages'
@@ -13,12 +14,13 @@ const root = createRootRoute({
 const home = createRoute({
   getParentRoute: () => root,
   path: '/',
+  staticData: { feeds: ['books', 'podcasts', 'episodes'] },
   loader: async () => {
     const [books, podcasts, episodes] = await Promise.all([getBooks(), getPodcasts(), getEpisodes()])
     return {
-      books: books.filter((book) => book.userShelf === 'read').length,
-      podcasts: podcasts.length,
-      episodes: episodes.filter((episode) => episode.playedSeconds > 0).length,
+      books: books.data.filter((book) => book.userShelf === 'read').length,
+      podcasts: podcasts.data.length,
+      episodes: episodes.data.filter((episode) => episode.playedSeconds > 0).length,
     }
   },
   component: () => <Home counts={home.useLoaderData()} />,
@@ -27,16 +29,18 @@ const home = createRoute({
 const books = createRoute({
   getParentRoute: () => root,
   path: '/books',
+  staticData: { feeds: ['books'] },
   head: () => pageTitle('Books'),
-  loader: () => getBooks(),
+  loader: async () => (await getBooks()).data,
   component: () => <Books books={books.useLoaderData()} />,
 })
 
 const book = createRoute({
   getParentRoute: () => root,
   path: '/books/$bookId',
+  staticData: { feeds: ['books'] },
   loader: async ({ params }) => {
-    const found = (await getBooks()).find((book) => book.bookId === params.bookId)
+    const found = (await getBooks()).data.find((book) => book.bookId === params.bookId)
     if (!found) throw notFound()
     return found
   },
@@ -47,8 +51,9 @@ const book = createRoute({
 const podcasts = createRoute({
   getParentRoute: () => root,
   path: '/podcasts',
+  staticData: { feeds: ['podcasts'] },
   head: () => pageTitle('Podcasts'),
-  loader: () => getPodcasts(),
+  loader: async () => (await getPodcasts()).data,
   component: () => <Podcasts podcasts={podcasts.useLoaderData()} />,
 })
 
@@ -67,8 +72,10 @@ const podcast = createRoute({
 const episodes = createRoute({
   getParentRoute: () => root,
   path: '/episodes',
+  // Episode titles come from the podcast feed.
+  staticData: { feeds: ['episodes', 'podcasts'] },
   head: () => pageTitle('Recent episodes'),
-  loader: () => getEpisodes(),
+  loader: async () => (await getEpisodes()).data,
   component: () => <Episodes episodes={episodes.useLoaderData()} />,
 })
 
@@ -99,5 +106,10 @@ export const router = createRouter({
 declare module '@tanstack/react-router' {
   interface Register {
     router: typeof router
+  }
+  // The feeds a page shows, listed in the footer. Detail pages that look one
+  // record up by `uuid` use no feed.
+  interface StaticDataRouteOption {
+    feeds?: FeedName[]
   }
 }

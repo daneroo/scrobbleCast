@@ -1,10 +1,10 @@
-import { HeadContent, Link, Outlet, useRouter } from '@tanstack/react-router'
-import { useEffect, useRef, useState } from 'react'
-import type { RefObject } from 'react'
+import { HeadContent, Link, Outlet, useMatches, useRouter } from '@tanstack/react-router'
+import { useSyncExternalStore } from 'react'
 import { version } from '../package.json'
+import { getFeedTimes, subscribeFeedTimes, type FeedName } from './data/fetch'
+import { localTime } from './format'
 
 export function Layout() {
-  const content = useRef<HTMLElement>(null)
   return (
     <>
       <HeadContent />
@@ -21,8 +21,8 @@ export function Layout() {
           </nav>
         </div>
       </header>
-      <main className="content" ref={content}><Outlet /></main>
-      <Footer content={content} />
+      <main className="content"><Outlet /></main>
+      <Footer />
     </>
   )
 }
@@ -47,22 +47,29 @@ export function LoadError({ error, reset }: { error: unknown; reset: () => void 
   )
 }
 
-// Shows when the page content last changed: navigation, data loading, search,
-// sorting or "Show more". A placeholder until the footer can show how fresh the
-// upstream data is.
-function Footer({ content }: { content: RefObject<HTMLElement | null> }) {
-  const [updatedAt, setUpdatedAt] = useState(() => new Date())
-  useEffect(() => {
-    if (!content.current) return
-    const observer = new MutationObserver(() => setUpdatedAt(new Date()))
-    observer.observe(content.current, { childList: true, subtree: true, characterData: true })
-    return () => observer.disconnect()
-  }, [content])
+const feedTitles: Record<FeedName, string> = { books: 'Books', podcasts: 'Podcasts', episodes: 'Episodes' }
+
+// Lists each feed the page shows, with its time once it has loaded.
+function Footer() {
+  const feeds = useMatches().flatMap((match) => match.staticData.feeds ?? [])
+  const times = useSyncExternalStore(subscribeFeedTimes, getFeedTimes)
   return (
     <footer className="site-footer">
       <span>Scrobble Cast v{version}</span>
-      {/* The sv-SE locale formats local time as "YYYY-MM-DD HH:mm:ss". */}
-      <time dateTime={updatedAt.toISOString()}>{updatedAt.toLocaleString('sv-SE')}</time>
+      {feeds.length > 0 && (
+        <ul className="feed-times" aria-label="Feeds">
+          {feeds.map((feed) => {
+            const time = times[feed]
+            if (!time) return null
+            return (
+              <li key={feed}>
+                {feedTitles[feed]} {time.label}{' '}
+                {time.at ? <time dateTime={time.at.toISOString()}>{localTime(time.at)}</time> : '—'}
+              </li>
+            )
+          })}
+        </ul>
+      )}
     </footer>
   )
 }

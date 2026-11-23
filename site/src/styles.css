@@ -34,7 +34,8 @@ nav a:hover, nav a[data-status="active"] { background: #ffffff18; text-decoratio
 .site-header :focus-visible { outline-color: var(--sandstone); }
 
 .content { padding-block: clamp(1.5rem, 6vw, 4rem); }
-.site-footer { display: flex; justify-content: center; gap: 1rem; padding: 1rem; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.875rem; font-variant-numeric: tabular-nums; }
+.site-footer { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.25rem 1rem; padding: 1rem; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.875rem; font-variant-numeric: tabular-nums; }
+.feed-times { display: contents; list-style: none; }
 .hero {
   display: flex;
   align-items: center;

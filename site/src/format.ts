@@ -7,3 +7,8 @@ export function playedPercent(episode: Episode) {
 export function day(value: string) {
   return value ? value.slice(0, 10) : '—'
 }
+
+// The sv-SE locale formats local time as "YYYY-MM-DD HH:mm:ss".
+export function localTime(date: Date) {
+  return date.toLocaleString('sv-SE')
+}

@@ -62,3 +62,19 @@ test('finding one episode fetches only that episode and its podcast', async () =
     `podcast ${played.podcast_uuid}`,
   ])
 })
+
+test('the podcast feed’s last change is its newest __lastUpdated', async () => {
+  const { getPodcasts } = podcastFeeds(fakeHistory().download)
+
+  const feed = await getPodcasts()
+
+  expect(feed.time).toEqual({ label: 'last change', at: new Date('2026-11-20T17:20:00Z') })
+})
+
+test('the episode feed’s last change is its newest __lastUpdated', async () => {
+  const { getEpisodes } = podcastFeeds(fakeHistory().download)
+
+  const feed = await getEpisodes()
+
+  expect(feed.time).toEqual({ label: 'last change', at: new Date('2026-11-23T00:10:00Z') })
+})

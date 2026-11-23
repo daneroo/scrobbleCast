@@ -102,22 +102,33 @@ function SearchBox({ value, onChange, label }: { value: string; onChange: (value
   )
 }
 
-function Collection({
-  title, count, children,
-}: { title: string; count: ReactNode; children: ReactNode }) {
+// A count from a feed, once the feed has loaded.
+function FeedCount<T>({
+  feed, count, unit,
+}: { feed: Promise<Feed<T>>; count: (data: T) => number; unit?: [one: string, many: string] }) {
+  return (
+    <Await promise={feed} fallback={<Loading />}>
+      {({ data }) => {
+        const n = count(data)
+        return unit ? `${n.toLocaleString()} ${n === 1 ? unit[0] : unit[1]}` : n.toLocaleString()
+      }}
+    </Await>
+  )
+}
+
+// A list page: its title and the number of results from its feed.
+function Collection<T>({
+  title, feed, results, children,
+}: { title: string; feed: Promise<Feed<T>>; results: (data: T) => unknown[]; children: ReactNode }) {
   return (
     <>
       <header className="page-title">
         <h1>{title}</h1>
-        <p aria-live="polite">{count}</p>
+        <p aria-live="polite"><FeedCount feed={feed} count={(data) => results(data).length} unit={['result', 'results']} /></p>
       </header>
       {children}
     </>
   )
-}
-
-function ResultCount({ count }: { count: number }) {
-  return <>{count.toLocaleString()} {count === 1 ? 'result' : 'results'}</>
 }
 
 export function Home({ feeds }: {
@@ -126,15 +137,15 @@ export function Home({ feeds }: {
   const sections = [
     {
       to: '/books', title: 'Books', label: 'read', style: 'books',
-      count: <Await promise={feeds.books} fallback={<Loading />}>{({ data }) => data.filter((book) => book.userShelf === 'read').length.toLocaleString()}</Await>,
+      count: <FeedCount feed={feeds.books} count={(books) => books.filter((book) => book.userShelf === 'read').length} />,
     },
     {
       to: '/podcasts', title: 'Podcasts', label: 'in the catalog', style: 'podcasts',
-      count: <Await promise={feeds.podcasts} fallback={<Loading />}>{({ data }) => data.length.toLocaleString()}</Await>,
+      count: <FeedCount feed={feeds.podcasts} count={(podcasts) => podcasts.length} />,
     },
     {
       to: '/episodes', title: 'Episodes', label: `played in the last ${recentDays} days`, style: 'episodes',
-      count: <Await promise={feeds.episodes} fallback={<Loading />}>{({ data }) => data.filter((episode) => episode.playedSeconds > 0).length.toLocaleString()}</Await>,
+      count: <FeedCount feed={feeds.episodes} count={(episodes) => episodes.filter((episode) => episode.playedSeconds > 0).length} />,
     },
   ] as const
 
@@ -169,7 +180,7 @@ export function Books({ books }: { books: Promise<Feed<Book[]>> }) {
   }
 
   return (
-    <Collection title="Books" count={<Await promise={books} fallback={<Loading />}>{({ data }) => <ResultCount count={results(data).length} />}</Await>}>
+    <Collection title="Books" feed={books} results={results}>
       <div className="controls">
         <SearchBox value={query} onChange={setQuery} label="Search books" />
         <label>
@@ -195,7 +206,7 @@ export function Podcasts({ podcasts }: { podcasts: Promise<Feed<Podcast[]>> }) {
   const [query, setQuery] = useState('')
   const results = (podcasts: Podcast[]) => search(podcasts, podcastKeys, query)
   return (
-    <Collection title="Podcasts" count={<Await promise={podcasts} fallback={<Loading />}>{({ data }) => <ResultCount count={results(data).length} />}</Await>}>
+    <Collection title="Podcasts" feed={podcasts} results={results}>
       <div className="controls">
         <SearchBox value={query} onChange={setQuery} label="Search podcasts" />
       </div>
@@ -213,7 +224,7 @@ export function Episodes({ episodes }: { episodes: Promise<Feed<Episode[]>> }) {
   const results = (episodes: Episode[]) => search(episodes, episodeKeys, query)
     .filter((episode) => !playedOnly || episode.playedSeconds > 0)
   return (
-    <Collection title="Recent episodes" count={<Await promise={episodes} fallback={<Loading />}>{({ data }) => <ResultCount count={results(data).length} />}</Await>}>
+    <Collection title="Recent episodes" feed={episodes} results={results}>
       <p className="section-note">Last {recentDays} days</p>
       <div className="controls">
         <SearchBox value={query} onChange={(value) => { setQuery(value); setLimit(episodePageSize) }} label="Search episodes" />

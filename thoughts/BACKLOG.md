@@ -6,10 +6,9 @@ Idea inbox, grouped by theme: snippets worth not forgetting, not yet worth an is
 
 Items for the web app in `site/`.
 
-- [ ] data-loading — the home page downloads the whole 3 MB books feed just to count books. Load less, or precompute counts.
-- [ ] footer-freshness — the footer time should say when the data on screen was generated or fetched. For now it shows when the page content last changed.
 - [ ] theming — light/dark themes, maybe with Claude Design; maybe move to Tailwind.
 - [ ] tanstack-start — server rendering would make a "generated at" time meaningful again.
+- [ ] history-api-generated-at — the history API returns a bare array with no generation time. Have it say when the scraper last ran (e.g. `Last-Modified` or an envelope) so the footer can show it.
 - [ ] history-api-params — the old app sent `ts` (cache busting) and `origin` to the history API. Decide whether we need them.
 - [ ] rich-descriptions — show book and podcast descriptions as sanitized HTML (e.g. DOMPurify); keep indexing plain text for search.
 - [ ] search-threshold — the Fuse threshold (0.4) is shared by books, podcasts and episodes; tune per collection if needed.

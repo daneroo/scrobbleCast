@@ -1,43 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg"
-     xmlns:xlink="http://www.w3.org/1999/xlink"
-     id="scrobbleCast"
-     viewBox="-1 -1 2 2" width="256" height="256">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="6 6 88 88" width="256" height="256">
 
   <title>Scrobble Cast</title>
 
-  <style type="text/css">
-    /* http://www.pantone.com/pages/fcr/?season=spring&amp;year=2015&amp;pid=4 
-     PANTONE 19-4052 Classic Blue
-         #1d4e89  #259 darkslateblue hsl(212,65,32) rgb(29,78,137) 
-     PANTONE 16-1328 Sandstone
-         #c78d6b  #c97 rosybrown hsl(22,45,60) rgb(199,141,107)  
-     PANTONE 18-1438 Marsala
-         #955251  #955 sienna hsl(0,29,45) rgb(149,82,81)
-     PANTONE 16-4120 Dusk Blue
-         #7da1bf  #8ac cadetblue hsl(207,34,61) rgb(125,161,191)
-    */
-    .classicblue {stroke:rgb(29,78,137); fill: none;}
-    .sandstone {fill:rgb(199,141,107); stroke:none;}
-    .marsala {fill: rgb(149,82,81); stroke:none;}
+  <!--
+    2026, icon: scrobble-cast-2026.svg without its tile, transparent, for small
+    sizes (favicon) where the tile would take the space. One colour: Classic
+    Blue #1d4e89, Sandstone #c78d6b when the browser or OS is in dark mode.
+    The same mark and units (u, the tile 100 × 100). The viewBox is cropped to
+    a square around the mark's box (52.3 × 86.9u, centred), so it fills the icon.
+  -->
 
-    .round { stroke-width:0.25; stroke-linecap:round; }
+  <style>
+    .mark { fill: #1d4e89; stroke: #1d4e89; }
+    @media (prefers-color-scheme: dark) { .mark { fill: #c78d6b; stroke: #c78d6b; } }
   </style>
 
-  <defs>
-      <g id="_rss">
-        <circle cx="0" cy="0" r=".15" class="marsala" />
-        <!--      x1,y1 --> rx ry  x-rot lg sw x2,y2
-        <path d="m 0,1   A  1 1      0    0 0  1,0" class="round classicblue" />
-        <path d="m 0,.5   A  .5 .5   0    0 0  .5,0" class="round classicblue" />
-      </g>
-      <g id="rss">
-        <use xlink:href="#_rss" transform="scale(.8) translate(-1.0) rotate(0)"/>
-        <use xlink:href="#_rss" transform="scale(.8) translate(1,0) rotate(-180)"/>
-      </g>
-  </defs>
-
-  <rect class="sandstone" x="-1" y="-1" width="2" height="2" rx="0.1" />
-  <use xlink:href="#rss" transform="translate(0,0) scale(.7) rotate(-45) rotate (10)"/>
+  <g class="mark" transform="translate(50 50) rotate(-40)" stroke-width="8" stroke-linecap="round">
+    <g id="half" transform="translate(-28 0)">
+      <circle r="4.2" stroke="none"/>
+      <path d="M0,14 A14 14 0 0 0 14,0 M0,28 A28 28 0 0 0 28,0" fill="none"/>
+    </g>
+    <use href="#half" transform="rotate(180)"/>
+  </g>
 
 </svg>

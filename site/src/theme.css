@@ -1,0 +1,61 @@
+/* The site's colours, as two layers: the brand palette, then roles pointing at
+   it. styles.css uses only the roles. Role names follow shadcn where one fits.
+   A component that shares a colour with another today still gets its own role,
+   so the two can diverge. */
+:root {
+  /* Brand palette: the four 2015 Pantone colours. */
+  --classic-blue: #1d4e89;
+  --sandstone: #c78d6b;
+  --marsala: #955251;
+  --dusk-blue: #7da1bf;
+
+  --font-sans: system-ui, sans-serif;
+
+  /* Page and text */
+  --background: #f5f8fa;
+  --foreground: #122c44;
+  --muted-foreground: #4b6074; /* footer, counts, notes, metadata, labels */
+  --link: var(--classic-blue);
+  --accent: var(--classic-blue); /* card titles, table headings, hero title, byline */
+
+  /* Surfaces */
+  --surface: white; /* raised above the page */
+  --card: var(--surface); /* cards, table, empty and error boxes, stat boxes */
+  --field: var(--surface); /* inputs, selects */
+  --tint: color-mix(in srgb, var(--dusk-blue) 19%, var(--surface));
+  --hero: var(--tint);
+  --table-heading: var(--tint);
+  --table-stripe: #f8fbfd; /* no srgb mix matches it exactly; derive in step 2 */
+  --artwork: var(--tint);
+  --border: #d5e0e8;
+  --input: #9eb2c3; /* field borders, darker than --border */
+  --shadow: 0 5px 18px #0b3d6614; /* card hover */
+  --hover: #00000014; /* overlay on a hovered control */
+
+  /* Actions and focus */
+  --primary: var(--classic-blue);
+  --primary-foreground: white;
+  --primary-hover: color-mix(in srgb, var(--primary) 80%, black);
+  --ring: var(--marsala);
+
+  /* Header: an inverse area, blue in light and dark alike */
+  --header: var(--classic-blue);
+  --header-foreground: white;
+  --header-hover: #ffffff18;
+  --header-active: var(--dusk-blue); /* nav underline */
+  --header-mark: var(--sandstone);
+  --header-ring: var(--sandstone);
+
+  /* Hero */
+  --hero-title: var(--accent);
+  --hero-subtitle: #2c526b;
+
+  /* Notices */
+  --notice-info: var(--tint);
+  --notice-warning: color-mix(in srgb, var(--sandstone) 22%, var(--surface));
+
+  /* Categories: the home cards' top borders */
+  --books: var(--sandstone);
+  --podcasts: var(--marsala);
+  --episodes: var(--dusk-blue);
+}

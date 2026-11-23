@@ -1,4 +1,4 @@
-import type { Episode } from './data'
+import type { Episode } from './data/podcasts'
 
 export function playedPercent(episode: Episode) {
   return episode.duration ? Math.round(100 * episode.playedSeconds / episode.duration) : 0

@@ -1,5 +1,6 @@
 import { createRootRoute, createRoute, createRouter, notFound } from '@tanstack/react-router'
-import { getBooks, getEpisode, getEpisodes, getPodcast, getPodcasts } from './data'
+import { getBooks } from './data/books'
+import { getEpisode, getEpisodes, getPodcast, getPodcasts } from './data/podcasts'
 import { Layout, LoadError, NotFound } from './layout'
 import { BookDetail, Books, EpisodeDetail, Episodes, Home, PodcastDetail, Podcasts } from './pages'
 

@@ -1,0 +1,60 @@
+{
+  "podcasts": [
+    {
+      "uuid": "fe30f8e0-3da9-0135-9028-63f4b61a9224",
+      "title": "Syntax - Tasty Web Development Treats",
+      "author": "Wes Bos & Scott Tolinski - Full Stack JavaScript Web Developers",
+      "description": "Full Stack Developers Wes Bos and Scott Tolinski dive deep into web development ",
+      "url": "https://syntax.fm",
+      "meta": {
+        "__type": "podcast",
+        "__firstSeen": "2017-07-02T08:00:00Z"
+      },
+      "thumbnail_url": "http://static.libsyn.com/p/assets/7/9/0/7/790703531a3c8eca/iTunes_Artwork.png"
+    },
+    {
+      "uuid": "34edb770-79ec-013a-d7bd-0acc26574db2",
+      "title": "The Rest Is Politics",
+      "author": "Goalhanger",
+      "description": "Alastair Campbell and Rory Stewart break down current affairs in the UK and abro",
+      "url": "http://therestispolitics.com/",
+      "meta": {
+        "__type": "podcast",
+        "__firstSeen": "2022-03-02T09:50:00Z"
+      }
+    }
+  ],
+  "episodes": [
+    {
+      "uuid": "64c8f528-3c54-424c-9d17-696c5038c4c5",
+      "title": "Surely You Can't Be Serious",
+      "podcast_uuid": "fde17130-93d9-013d-9291-0afff0a90ec3",
+      "url": "https://media.transistor.fm/92b1fed7/9b7a9ff4.mp3",
+      "duration": 4159,
+      "played_up_to": 1214,
+      "meta": {
+        "__type": "episode",
+        "__firstSeen": "2026-11-21T13:10:00Z",
+        "__lastPlayed": "2026-11-23T00:10:00Z"
+      },
+      "history": {
+        "played_up_to": {
+          "2026-11-21T13:10:00Z": 0,
+          "2026-11-21T19:20:00Z": 46
+        }
+      }
+    },
+    {
+      "uuid": "17304daf-7450-40b6-a1a5-1ed95376ccfd",
+      "title": "Datanauts 153: Understanding Metadata For IT Operations",
+      "podcast_uuid": "56d400d0-242c-0133-b026-0d11918ab357",
+      "url": "https://tracking.feedpress.it/link/16918/10898503/Datanauts_153_Understanding_Metadata_For_IT_Operations.mp3",
+      "duration": "2557",
+      "meta": {
+        "__type": "episode",
+        "__firstSeen": "2018-12-12T16:40:00Z"
+      },
+      "history": {}
+    }
+  ]
+}

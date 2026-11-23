@@ -8,9 +8,9 @@ interface Records {
   podcast: PodcastRecord[]
   episode: EpisodeRecord[]
 }
-const recordTypes: { [K in keyof Records]: { feed: FeedName; schema: z.ZodType<Records[K]> } } = {
-  podcast: { feed: 'podcasts', schema: PodcastRecords },
-  episode: { feed: 'episodes', schema: EpisodeRecords },
+const recordTypes: { [K in keyof Records]: { feedName: FeedName; schema: z.ZodType<Records[K]> } } = {
+  podcast: { feedName: 'podcasts', schema: PodcastRecords },
+  episode: { feedName: 'episodes', schema: EpisodeRecords },
 }
 
 // The history API doesn't say when it last ran; a feed's last change is the
@@ -87,13 +87,13 @@ export function podcastFeeds(download?: Download) {
   }
 
   function feed<K extends keyof Records>(type: K, params: Record<string, string>) {
-    const { feed: name, schema } = recordTypes[type]
+    const { feedName: name, schema } = recordTypes[type]
     return loadFeed({ name, url: historyUrlFor(type, params), schema, time: lastChange }, download)
   }
 
   async function lookup<K extends keyof Records>(type: K, uuid: string): Promise<Records[K][number] | undefined> {
-    const { feed: label, schema } = recordTypes[type]
-    const { data } = await loadJson(historyUrlFor(type, { uuid }), label, schema, download)
+    const { schema } = recordTypes[type]
+    const { data } = await loadJson(historyUrlFor(type, { uuid }), `${type} records`, schema, download)
     return data.at(0)
   }
 

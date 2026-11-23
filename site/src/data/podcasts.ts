@@ -118,13 +118,13 @@ export function podcastFeeds(options: FeedOptions = {}) {
   // again on each call, so a fresh podcast feed brings fresh titles. Ready at
   // once if this tab has both feeds.
   function getEpisodes(): Promise<Feed<Episode[]>> {
+    // Ask both feeds first: that starts a load, or retries a failed refresh.
+    const episodeFeed = getEpisodeFeed()
+    const podcastFeed = getPodcasts().then((podcasts) => podcasts.data, () => [])
     const episodes = getEpisodeFeed.loaded()
     const podcasts = getPodcasts.loaded()
     if (episodes && podcasts) return ready(withTitles(episodes, podcasts.data))
-    return Promise.all([
-      getEpisodeFeed(),
-      getPodcasts().then((podcasts) => podcasts.data, () => []),
-    ]).then(([episodes, podcasts]) => withTitles(episodes, podcasts))
+    return Promise.all([episodeFeed, podcastFeed]).then(([episodes, podcasts]) => withTitles(episodes, podcasts))
   }
 
   function withTitles(episodes: Feed<Episode[]>, podcasts: Podcast[]) {

@@ -1,6 +1,7 @@
 // @vitest-environment happy-dom
 import { expect, test } from 'vite-plus/test'
 import example from '../schema/podcast-example.json'
+import { noticeBoard } from '../notices'
 import { fakeSavedCopies } from './fake-saved-copies'
 import { podcastFeeds } from './podcasts'
 
@@ -106,4 +107,22 @@ test('the podcast feed is saved, the episode feed never', async () => {
   await Promise.all([getPodcasts(), getEpisodeFeed()])
 
   expect(used.map((url) => new URL(url).searchParams.get('type'))).toEqual(['podcast', 'podcast'])
+})
+
+test('asking for episodes retries a failed refresh of the podcast feed', async () => {
+  const { download } = fakeHistory()
+  const { savedCopies } = fakeSavedCopies()
+  await podcastFeeds({ download, savedCopies }).getPodcasts.settled()
+  let podcastsFail = true
+  const flaky = (url: string) => podcastsFail && url.includes('type=podcast')
+    ? Promise.resolve(new Response('', { status: 503 }))
+    : download(url)
+  const { getEpisodes, getPodcasts } = podcastFeeds({ download: flaky, savedCopies, notices: noticeBoard() })
+  await getEpisodes()
+  expect((await getPodcasts.settled()).source).toBe('saved')
+
+  podcastsFail = false
+  await getEpisodes()
+
+  await expect.poll(() => getPodcasts.loaded()?.source).toBe('fresh')
 })

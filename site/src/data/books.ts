@@ -21,10 +21,11 @@ export function booksFeed(options: FeedOptions = {}) {
   // it isn't there.
   function getBook(bookId: string): Promise<Book | undefined> {
     const find = (feed: Feed<Book[]>) => feed.data.find((book) => book.bookId === bookId)
+    const books = getBooks() // Starts a load, or retries a failed refresh.
     const loaded = getBooks.loaded()
     const book = loaded && find(loaded)
     if (book || loaded?.source === 'fresh') return ready(book)
-    return getBooks().then((feed) => find(feed) ?? (feed.source === 'saved' ? getBooks.settled().then(find) : undefined))
+    return books.then((feed) => find(feed) ?? (feed.source === 'saved' ? getBooks.settled().then(find) : undefined))
   }
 
   return { getBooks, getBook }

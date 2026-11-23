@@ -122,3 +122,21 @@ test('after a failed refresh, the next request for the feed tries again', async 
   expect(shared.loaded()?.data[0].title).toBe(second.title)
   expect(downloads).toBe(2)
 })
+
+test('a retry keeps the copy shown, even with the saved copy gone and the fetch failing again', async () => {
+  const { bodies, savedCopies } = fakeSavedCopies({ [url]: [first] })
+  const shared = shareFeed(() => loadFeed(books, { download: fail, savedCopies, notices: noticeBoard() }))
+  expect((await shared.settled()).source).toBe('saved')
+  delete bodies[url]
+
+  expect(shared()).toMatchObject({ status: 'fulfilled', value: { source: 'saved' } })
+  expect((await shared.settled()).source).toBe('saved')
+  expect(shared.loaded()?.data[0].title).toBe(first.title)
+})
+
+test('settling a feed that fails raises the error, and nothing else', async () => {
+  const { savedCopies } = fakeSavedCopies()
+  const shared = shareFeed(() => loadFeed(books, { download: fail, savedCopies, notices: noticeBoard() }))
+
+  await expect(shared.settled()).rejects.toThrow('Could not load books (HTTP 503).')
+})

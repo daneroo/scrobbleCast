@@ -26,7 +26,7 @@ test('without the podcast feed loaded, finding one podcast fetches it by uuid', 
 
   const podcast = await getPodcast(syntax.uuid)
 
-  expect(podcast?.title).toBe('Syntax - Tasty Web Development Treats')
+  expect(podcast?.title).toBe(syntax.title)
   expect(requests.map((params) => params.get('uuid'))).toEqual([syntax.uuid])
 })
 
@@ -38,7 +38,7 @@ test('with the podcast feed loaded, finding one podcast makes no request', async
 
   const podcast = await getPodcast(syntax.uuid)
 
-  expect(podcast?.title).toBe('Syntax - Tasty Web Development Treats')
+  expect(podcast?.title).toBe(syntax.title)
   expect(requests).toEqual([])
 })
 

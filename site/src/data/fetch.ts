@@ -14,9 +14,8 @@ export function plainText(html: string) {
 
 // How a feed is downloaded: `fetch` in the app, a fake in tests.
 export type Download = (url: string) => Promise<Response>
-const fetchDownload: Download = (url) => fetch(url)
 
-export async function loadFeed<T>(url: string, label: string, schema: z.ZodType<T>, download = fetchDownload): Promise<T> {
+export async function loadFeed<T>(url: string, label: string, schema: z.ZodType<T>, download: Download = fetch): Promise<T> {
   const response = await download(url)
   if (!response.ok) throw new Error(`Could not load ${label} (HTTP ${response.status}).`)
   const result = schema.safeParse(await response.json())

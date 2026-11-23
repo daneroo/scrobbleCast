@@ -13,7 +13,6 @@ const recordTypes: { [K in keyof Records]: { label: string; schema: z.ZodType<Re
   episode: { label: 'episodes', schema: EpisodeRecords },
 }
 
-
 export interface Podcast {
   uuid: string
   title: string

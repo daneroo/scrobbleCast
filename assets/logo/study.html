@@ -1,0 +1,367 @@
+<!doctype html>
+<!--
+  Scrobble Cast logo study: the icon, drawn from numbers and judged by eye,
+  one board per question (after Prosodio's /lab/logo):
+  0 Construction, 1 Studies (one variable at a time), 2 Size ladder,
+  3 Colourway × finish, 4 Lockups & top bar.
+  Self-contained: open it in a browser. Nothing here is used by the site.
+  The Parameters panel (sticky, above the boards) changes the values every
+  board draws with; ● marks the value in scrobble-cast-2026.svg (FILE).
+  Two colours, no name inside: the dots take the arcs' colour.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scrobble Cast · logo study</title>
+<link rel="icon" type="image/svg+xml" href="scrobble-cast-icon-2026.svg">
+<style>
+  :root { --mono: ui-monospace, "JetBrains Mono", "SF Mono", Menlo, monospace; --ink: #1c1d26; --grey: #6b6a72; --faint: #8a8992; }
+  body { margin: 0; font: 13px/1.45 system-ui, sans-serif; color: var(--ink); }
+  main { display: flex; flex-direction: column; gap: 10px; }
+  details.board { background: #f3f1ec; border-radius: 10px; padding: 12px 16px; }
+  summary { cursor: pointer; font: 11.5px var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--grey); }
+  .boardbody { display: flex; flex-direction: column; gap: 14px; margin: 14px 0 4px; }
+  .card { background: #fff; border-radius: 16px; box-shadow: 0 0 0 1px #0000000d; padding: 16px 18px; display: flex; flex-direction: column; gap: 12px; }
+  .card.dark { background: #0f1b2a; color: #e6edf5; }
+  .label { font: 11px var(--mono); color: var(--grey); }
+  .dark .label { color: #8fa3b8; }
+  .row { display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-end; }
+  .cell { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .cap { font: 10.5px var(--mono); color: var(--faint); white-space: nowrap; }
+  .cap.on { color: var(--ink); }
+  .dark .cap.on { color: #fff; }
+  .studies { display: flex; flex-wrap: wrap; gap: 10px; }
+  .study { background: #fff; border-radius: 14px; box-shadow: 0 0 0 1px #0000000d; padding: 10px 12px; display: flex; flex-direction: column; gap: 8px; }
+  .study h3 { margin: 0; font-size: 12.5px; font-weight: 500; }
+  .study h3 span { font: 11px var(--mono); color: var(--grey); margin-right: 6px; }
+  .construction { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 18px; align-items: start; }
+  @media (max-width: 720px) { .construction { grid-template-columns: 1fr; } }
+  table.values { border-collapse: collapse; width: 100%; font-size: 12px; }
+  .values td { padding: 5px 0; border-bottom: 1px solid #ecebe6; vertical-align: top; }
+  .values td:first-child { color: var(--grey); width: 38%; padding-right: 10px; }
+  .note { font-size: 11.5px; color: var(--grey); }
+  details.params { position: sticky; top: 0; z-index: 2; box-shadow: 0 4px 12px #0000001f; }
+  .controls { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 8px 22px; background: #fff; border-radius: 16px; box-shadow: 0 0 0 1px #0000000d; padding: 14px 18px; }
+  .ctl { display: grid; grid-template-columns: 100px minmax(110px, 1fr) 46px; align-items: center; gap: 8px; font-size: 12px; }
+  .ctl input { width: 100%; accent-color: #1d4e89; }
+  .ctl output { font: 11px var(--mono); color: var(--grey); text-align: right; }
+  .ctl output.changed { color: #c2185b; font-weight: 600; }
+  .ctl-row { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: center; }
+  .ctl-row button { white-space: nowrap; margin-left: auto; font: 11px var(--mono); padding: 4px 10px; border-radius: 6px; border: 1px solid #ccc; background: #fff; cursor: pointer; }
+  .was { font: 10.5px var(--mono); color: #c2185b; margin-left: 4px; }
+  label.toggle { font: 11px var(--mono); color: var(--grey); display: flex; gap: 6px; align-items: center; cursor: pointer; }
+  .grid-cw { display: grid; grid-template-columns: 112px repeat(6, auto); gap: 10px 12px; align-items: center; justify-content: start; }
+  .grid-cw .head { font: 10.5px var(--mono); color: var(--faint); text-align: center; }
+  .pal { font-size: 12px; }
+  .sw { display: flex; gap: 3px; margin-top: 4px; }
+  .sw i { width: 12px; height: 12px; border-radius: 3px; box-shadow: inset 0 0 0 1px #0002; }
+  .topbar { display: flex; align-items: center; justify-content: space-between; padding: 0 14px; border-radius: 8px; }
+  .topbar nav { display: flex; gap: 14px; font-size: 13px; opacity: .92; }
+  .brand { display: flex; align-items: center; font-weight: 750; white-space: nowrap; }
+  .lockups { display: flex; flex-wrap: wrap; gap: 18px 30px; align-items: flex-end; padding: 14px; border-radius: 10px; }
+  img.orig { display: block; }
+</style>
+</head>
+<body>
+<main id="app"></main>
+<script>
+// ── Values ───────────────────────────────────────────────────────────────
+// u = 1/100 of the tile's side. The originals draw on viewBox −1…1 (2 wide),
+// so 1 original unit = 50u. History, from scrobble-cast-2014.svg:
+//   mark scale(.7), each half scale(.8): outer arc 1 × .8 × .7 = .56 → 28u
+//   stroke .25 × .8 × .7 = .14 → 7u, dot .15 × .8 × .7 = .084 → 4.2u
+//   halves translate(±1) × .8 × .7 = ±.56 → ±28u, rotate(−45) rotate(10)
+//   rect rx .1 → 5u, dots a third colour (Marsala)
+// scrobble-cast-2026.svg keeps those, tilted 5°, arcs 8u, dots in the arcs' colour,
+// drawn in u directly (viewBox 0 0 100 100). Its values:
+const FILE = { R: 28, arcs: 2, stroke: 8, dot: 4.2, spacing: 28, tilt: 5, corner: 5, size: 1, tile: true,
+  // Not from the files: the lockup gap, from the site's .brand gap 0.6rem
+  // (9.6px) at its 42px icon.
+  gap: 0.23 };
+// The working values: the Parameters panel changes them, every board draws with them.
+let P = { ...FILE };
+
+// Colourways: each palette in two arrangements, a tile colour and a mark
+// colour. "dark" is the 2014 logo's (blue tile, sandstone mark), "light" the
+// icon's (sandstone tile, blue mark).
+const PALETTES = {
+  '2015 Pantone': { current: true,
+    dark: { tile: '#1d4e89', arcs: '#c78d6b' },
+    light: { tile: '#c78d6b', arcs: '#1d4e89' } },
+  'Paper & ink': {
+    dark: { tile: '#2b2420', arcs: '#b98232' },
+    light: { tile: '#f6f1e7', arcs: '#2b2420' } },
+  // From Prosodio (packages/logo/colors.ts): its four tile schemes as two
+  // colourways. Its oklch values as hex here (mix() reads hex): midnight
+  // oklch(0.32 0.07 262), rust oklch(0.67 0.13 52), rust lightened for midnight
+  // oklch(0.74 0.13 58), midnight darkened for rust oklch(0.27 0.07 262).
+  'Prosodio sepia & cream': {
+    dark: { tile: '#461901', arcs: '#fffbeb' },
+    light: { tile: '#fffbeb', arcs: '#461901', edge: 'rgba(70,25,1,.14)' } },
+  'Prosodio midnight & rust': {
+    dark: { tile: '#1e3256', arcs: '#e79551' },
+    light: { tile: '#d37c43', arcs: '#132548' } },
+};
+const C2015 = PALETTES['2015 Pantone'];
+const FINISHES = ['flat', 'shadow', 'gradient'];
+
+// ── Geometry ─────────────────────────────────────────────────────────────
+const r1 = (n) => Math.round(n * 10) / 10;
+const r2 = (n) => Math.round(n * 100) / 100;
+
+// The mark in tile units: two RSS halves, each a dot and `arcs` quarter arcs,
+// the second turned 180°, on an axis at −45° + tilt through the tile's centre.
+function geometry(p) {
+  const k = p.size, a = (-45 + p.tilt) * Math.PI / 180, cos = Math.cos(a), sin = Math.sin(a);
+  const T = ([x, y]) => [50 + k * (x * cos - y * sin), 50 + k * (x * sin + y * cos)];
+  const halves = [{ c: [-p.spacing, 0], from: 0 }, { c: [p.spacing, 0], from: Math.PI }];
+  const arcs = [], dots = [], pts = [];
+  const sw = p.stroke * k;
+  for (const h of halves) {
+    dots.push({ c: T(h.c), r: p.dot * k });
+    pts.push([T(h.c)[0] - p.dot * k, T(h.c)[1] - p.dot * k], [T(h.c)[0] + p.dot * k, T(h.c)[1] + p.dot * k]);
+    for (let i = 1; i <= p.arcs; i++) {
+      const r = p.R * i / p.arcs;
+      const at = (t) => T([h.c[0] + r * Math.cos(h.from + t), h.c[1] + r * Math.sin(h.from + t)]);
+      const s = at(Math.PI / 2), e = at(0);
+      arcs.push(`M${r2(s[0])},${r2(s[1])}A${r2(r * k)} ${r2(r * k)} 0 0 0 ${r2(e[0])},${r2(e[1])}`);
+      for (let j = 0; j <= 32; j++) {
+        const [x, y] = at(Math.PI / 2 * j / 32);
+        pts.push([x - sw / 2, y - sw / 2], [x + sw / 2, y + sw / 2]);
+      }
+    }
+  }
+  const xs = pts.map((q) => q[0]), ys = pts.map((q) => q[1]);
+  const box = { x: Math.min(...xs), y: Math.min(...ys) };
+  box.w = Math.max(...xs) - box.x; box.h = Math.max(...ys) - box.y;
+  return { p, arcs, dots, box, sw, axis: [T([-60, 0]), T([60, 0])], centres: halves.map((h) => T(h.c)), k };
+}
+
+let uid = 0;
+// One tile (or bare mark) as SVG text.
+// `crop`: a bare mark's box trimmed left and right to its ink, so a gap beside
+// it is measured from what shows, as a tile's is from its edge.
+function logo({ size, p = P, colors = C2015.light, tile = p.tile, finish = 'flat', guides = false, pad = 0, crop = false }) {
+  const g = geometry(p);
+  const id = 'g' + (uid++);
+  const corner = Math.min(p.corner, 50);
+  let defs = '', fill = colors.tile;
+  if (finish === 'gradient') {
+    defs = `<defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${mix(colors.tile, '#ffffff', .22)}"/><stop offset="1" stop-color="${mix(colors.tile, '#000000', .08)}"/></linearGradient></defs>`;
+    fill = `url(#${id})`;
+  }
+  const edge = colors.edge ? ` stroke="${colors.edge}" stroke-width="1"` : '';
+  // Inset by half the edge's width when it has one, so the edge isn't clipped.
+  const tileEl = !tile ? '' : colors.edge ? `<rect x=".5" y=".5" width="99" height="99" rx="${corner}" fill="${fill}"${edge}/>` : `<rect width="100" height="100" rx="${corner}" fill="${fill}"/>`;
+  const arcsEl = `<path d="${g.arcs.join('')}" fill="none" stroke="${colors.arcs}" stroke-width="${r2(g.sw)}" stroke-linecap="round"/>`;
+  const dotsEl = g.dots.map((d) => `<circle cx="${r2(d.c[0])}" cy="${r2(d.c[1])}" r="${r2(d.r)}" fill="${colors.arcs}"/>`).join('');
+  const guideEl = guides ? guidesFor(g) : '';
+  const shadow = finish === 'shadow' ? ' style="filter: drop-shadow(0 2px 4px #0000003d)"' : '';
+  const trim = crop && !tile;
+  const vb = guides ? '-2 -2 168 104' : trim ? `${r2(g.box.x)} 0 ${r2(g.box.w)} 100` : `${-pad} ${-pad} ${100 + 2 * pad} ${100 + 2 * pad}`;
+  const w = guides ? size * 1.68 : trim ? size * g.box.w / 100 : size;
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${vb}" width="${r1(w)}" height="${size}"${shadow}>${defs}${tileEl}${arcsEl}${dotsEl}${guideEl}</svg>`;
+}
+
+function mix(hex, to, t) {
+  const n = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
+  const [a, b] = [n(hex), n(to)];
+  return '#' + a.map((v, i) => Math.round(v + (b[i] - v) * t).toString(16).padStart(2, '0')).join('');
+}
+
+// Construction guides: bounding box, tile centre, tilt axis, arc circles.
+function guidesFor(g) {
+  const { box } = g, dash = 'stroke-dasharray="1.2 1"', lab = (y, text, color) =>
+    `<line x1="0" y1="${r2(y)}" x2="104" y2="${r2(y)}" stroke="${color}" stroke-width=".25" ${dash}/>` +
+    `<text x="105" y="${r2(y + 1.2)}" font-size="3.2" font-family="ui-monospace, Menlo, monospace" fill="${color}">${text}</text>`;
+  let s = '';
+  s += `<line x1="${r2(g.axis[0][0])}" y1="${r2(g.axis[0][1])}" x2="${r2(g.axis[1][0])}" y2="${r2(g.axis[1][1])}" stroke="#c2185b" stroke-width=".3" ${dash}/>`;
+  s += `<line x1="8" y1="50" x2="92" y2="50" stroke="#999" stroke-width=".25" ${dash}/>`;
+  for (const c of g.centres) for (let i = 1; i <= g.p.arcs; i++)
+    s += `<circle cx="${r2(c[0])}" cy="${r2(c[1])}" r="${r2(g.p.R * i / g.p.arcs * g.k)}" fill="none" stroke="#5e35b1" stroke-width=".2" ${dash}/>`;
+  for (const c of g.centres) s += `<circle cx="${r2(c[0])}" cy="${r2(c[1])}" r=".7" fill="#5e35b1"/>`;
+  s += `<rect x="${r2(box.x)}" y="${r2(box.y)}" width="${r2(box.w)}" height="${r2(box.h)}" fill="none" stroke="#555" stroke-width=".3" ${dash}/>`;
+  s += `<circle cx="50" cy="50" r=".9" fill="#e53935"/>`;
+  s += lab(box.y, `box top · ${r1(box.y)}u`, '#555');
+  s += lab(50, 'tile centre · 50u', '#e53935');
+  s += lab(box.y + box.h, `box bottom · ${r1(box.y + box.h)}u`, '#555');
+  s += `<text x="105" y="${r2(g.axis[1][1] + 1.2)}" font-size="3.2" font-family="ui-monospace, Menlo, monospace" fill="#c2185b">tilt axis · ${-45 + g.p.tilt}°</text>`;
+  return s;
+}
+
+// ── Page ─────────────────────────────────────────────────────────────────
+const cell = (svg, cap, on = false) => `<div class="cell">${svg}<div class="cap${on ? ' on' : ''}">${cap}${on ? ' ●' : ''}</div></div>`;
+
+// The parameters panel: one control per variable the studies vary, plus the tile.
+const CONTROLS = [
+  ['tilt', 'Tilt', -30, 45, 1, '°'],
+  ['stroke', 'Arc weight', 2, 14, 0.5, 'u'],
+  ['arcs', 'Arc count', 1, 4, 1, ''],
+  ['spacing', 'Half spacing', 10, 45, 1, 'u'],
+  ['dot', 'Dot radius', 0, 10, 0.2, 'u'],
+  ['size', 'Mark size', 0.5, 1.4, 0.05, '×'],
+  ['corner', 'Corner radius', 0, 50, 1, 'u'],
+  ['R', 'Outer arc radius', 12, 40, 1, 'u'],
+  ['gap', 'Lockup gap', 0, 0.4, 0.01, '×'],
+];
+function controls() {
+  return `<div class="controls">${CONTROLS.map(([key, label, min, max, step]) =>
+    `<label class="ctl"><span>${label}</span><input type="range" data-key="${key}" min="${min}" max="${max}" step="${step}" value="${P[key]}"><output data-for="${key}"></output></label>`).join('')}
+    <div class="ctl-row">
+      <label class="toggle"><input type="checkbox" data-key="tile" ${P.tile ? 'checked' : ''}> tile</label>
+      <label class="toggle"><input type="checkbox" id="guides" checked> guides &amp; bounding box</label>
+      <button type="button" id="reset">reset to 2026</button>
+    </div></div>`;
+}
+const fmt = (key) => { const c = CONTROLS.find((x) => x[0] === key); return `${r2(P[key])}${c ? c[5] : ''}`; };
+const was = (key) => P[key] === FILE[key] ? '' : ` <span class="was">2026: ${FILE[key]}${CONTROLS.find((x) => x[0] === key)?.[5] ?? ''}</span>`;
+
+function construction(showGuides) {
+  const g = geometry(P);
+  const off = [r1(g.box.x + g.box.w / 2 - 50), r1(g.box.y + g.box.h / 2 - 50)];
+  const radii = Array.from({ length: P.arcs }, (_, i) => r1(P.R * P.size * (P.arcs - i) / P.arcs) + 'u').join(', ');
+  const rows = [
+    ['Unit', 'u = 1/100 of the tile side (2026: viewBox 0 0 100 100; the 2014 and 2017 files: 1 unit of viewBox −1…1 = 50u)'],
+    ['Colours', 'two: the tile, and the mark (arcs and dots alike)'],
+    ['Arc radii', `${radii}: ${P.arcs} quarter circles, evenly spaced${was('R')}${was('arcs')}`],
+    ['Arc stroke', `${r1(P.stroke * P.size)}u = ${r2(P.stroke / P.R)} × outer radius, round caps${was('stroke')}`],
+    ['Dot radius', `${r1(P.dot * P.size)}u = ${r2(P.dot / P.R)} × outer radius${was('dot')}`],
+    ['Half spacing', `dot centres ±${r1(P.spacing * P.size)}u from the centre (${r2(P.spacing / P.R)} × outer radius)${was('spacing')}`],
+    ['Mark size', `× ${P.size}${was('size')}`],
+    ['Tilt', `${P.tilt}°: axis at −45° + ${P.tilt}° = ${-45 + P.tilt}°${was('tilt')}`],
+    ['Corner radius', `${P.corner}u (${P.corner}% of the tile)${was('corner')}`],
+    ['Bounding box', `${r1(g.box.w)} × ${r1(g.box.h)}u (${r2(g.box.w / g.box.h)} : 1); ${r2(g.box.w / 100)} × tile width`],
+    ['Box offset', `${off[0]}u right, ${off[1]}u down of the tile centre (no optical offset applied)`],
+  ];
+  return `<div class="card"><div class="construction">
+      <div>${logo({ size: 230, guides: showGuides })}</div>
+      <div><table class="values">${rows.map(([a, b]) => `<tr><td>${a}</td><td>${b}</td></tr>`).join('')}</table>
+        <p class="note">Purple: the arcs' full circles and the dot centres. Pink: the tilt axis. Red dot: the tile's geometric centre. Dashed box: the mark's bounding box, strokes and caps included.</p></div>
+    </div></div>
+    <div class="card"><div class="label">history · rebuilt from 2026's values · with the values above · 80px</div>
+      <div class="row">
+        ${HISTORY.map(([file, cap]) => cell(`<img class="orig" src="${file}" width="80" height="80" alt="" title="${file}">`, cap)).join('')}
+        ${cell(logo({ size: 80, p: FILE }), 'rebuilt')}
+        ${cell(logo({ size: 80 }), 'now')}
+      </div></div>`;
+}
+// The files in assets/logo, oldest first; the 2026 ones are what FILE describes.
+const HISTORY = [
+  ['scrobble-cast-name-2014.svg', 'name-2014'],
+  ['scrobble-cast-name-2017.svg', 'name-2017'],
+  ['scrobble-cast-2014.svg', '2014'],
+  ['scrobble-cast-2017.svg', '2017'],
+  ['scrobble-cast-2026.svg', '2026'],
+  ['scrobble-cast-icon-2026.svg', 'icon-2026'],
+];
+
+const STUDIES = [
+  ['S1', 'Tilt', 'tilt', [0, 5, 10], (v) => `${v}°`],
+  ['S2', 'Arc weight', 'stroke', [6, 8, 10], (v) => `${v}u`],
+  ['S3', 'Arc count', 'arcs', [2, 3], (v) => `${v} arcs`],
+  ['S4', 'Half spacing', 'spacing', [22, 28, 34], (v) => `±${v}u`],
+  ['S5', 'Dot radius', 'dot', [3, 4.2, 6], (v) => `${v}u`],
+  ['S6', 'Mark size', 'size', [0.8, 1, 1.15], (v) => `× ${v}`],
+  ['S7', 'Corner radius', 'corner', [0, 5, 18, 50], (v) => v === 50 ? 'circle' : `${v}u`],
+];
+function studies() {
+  const items = STUDIES.map(([id, title, key, values, label]) =>
+    `<div class="study"><h3><span>${id}</span>${title}</h3><div class="row">${values.map((v) =>
+      cell(logo({ size: 64, p: { ...P, [key]: v } }), label(v), v === FILE[key])).join('')}</div></div>`);
+  items.push(`<div class="study"><h3><span>S8</span>Tile</h3><div class="row">${
+    cell(logo({ size: 64, tile: false }), 'bare') + cell(logo({ size: 64, tile: true }), 'on tile', true)}</div></div>`);
+  return `<div class="studies">${items.join('')}</div>`;
+}
+
+const SIZES = [16, 24, 32, 48, 64, 128];
+function ladder() {
+  const row = (label, f) => `<div><div class="label" style="margin-bottom:6px">${label}</div><div class="row">${SIZES.map((s) => cell(f(s), `${s}px`)).join('')}</div></div>`;
+  return `<div class="card">
+    <div class="label">favicon = icon at 16/32 · header = icon at 42</div>
+    ${row('Icon (light tile)', (s) => logo({ size: s }))}
+    ${row('Icon (dark tile)', (s) => logo({ size: s, colors: C2015.dark }))}
+    ${row('Bare mark', (s) => logo({ size: s, tile: false }))}
+  </div>`;
+}
+
+function colourway() {
+  const S = 72, heads = ['dark', 'light'].flatMap((a) => FINISHES.map((f) => `${a} · ${f}`));
+  let h = `<div></div>${heads.map((x) => `<div class="head">${x}</div>`).join('')}`;
+  for (const [name, pal] of Object.entries(PALETTES)) {
+    const swatch = [...new Set([pal.dark.tile, pal.dark.arcs, pal.light.tile, pal.light.arcs])];
+    h += `<div class="pal">${name}<div class="sw">${swatch.map((c) => `<i style="background:${c}"></i>`).join('')}</div></div>`;
+    for (const a of ['dark', 'light']) for (const f of FINISHES) {
+      const on = pal.current && a === 'light' && f === 'flat';
+      h += cell(logo({ size: S, colors: pal[a], finish: f, pad: 4 }), on ? '2026' : '', on);
+    }
+  }
+  return `<div class="card"><div class="label">dark tile · light tile · ● 2026</div><div class="grid-cw">${h}</div></div>`;
+}
+
+function lockups() {
+  const bar = (iconSvg, label, on) => `<div><div class="cap${on ? ' on' : ''}" style="margin-bottom:5px">${label}${on ? ' ●' : ''}</div>
+    <div class="topbar" style="background:#1d4e89;color:#fff;min-height:72px">
+      <span class="brand" style="gap:${r1(42 * P.gap)}px;font-size:16.8px">${iconSvg}Scrobble Cast</span>
+      <nav><span>Books</span><span>Podcasts</span><span>Episodes</span></nav></div></div>`;
+  const lock = (size, colors, tile, text, font, weight) =>
+    `<div class="cell" style="align-items:flex-start"><span class="brand" style="gap:${r1(size * P.gap)}px;font-size:${r1(size * .4)}px;font-family:${font};font-weight:${weight};color:${text}">${logo({ size, colors, tile, crop: true })}Scrobble Cast</span><div class="cap">${size}px</div></div>`;
+  return `<div class="card">
+      <div class="label">top bar as in the site · #1d4e89 · height 72px (4.5rem) · icon 42px · name system-ui 750 16.8px · gap ${r1(42 * P.gap)}px (${P.gap} × icon; the site: 9.6px) · measured from the tile's edge or the bare mark's ink</div>
+      ${bar(logo({ size: 42 }), 'light tile (as now)', true)}
+      ${bar(logo({ size: 42, tile: false, crop: true, colors: { ...C2015.light, arcs: '#c78d6b' } }), 'bare mark, sandstone')}
+      ${bar(logo({ size: 42, colors: { ...C2015.dark, edge: '#ffffff55' } }), 'dark tile, hairline edge')}
+    </div>
+    <div class="card">
+      <div class="label">lockups: icon + name · name 0.4 × icon, gap ${P.gap} × icon (${r1(48 * P.gap)}px at 48, ${r1(96 * P.gap)}px at 96) · not used yet</div>
+      <div class="lockups" style="background:#f5f8fa">
+        ${lock(48, C2015.light, true, '#1d4e89', 'system-ui, sans-serif', 750)}
+        ${lock(96, C2015.light, true, '#1d4e89', 'system-ui, sans-serif', 750)}
+        ${lock(48, C2015.light, false, '#1d4e89', "'Iowan Old Style', Charter, Georgia, serif", 600)}
+        ${lock(96, C2015.light, false, '#1d4e89', "'Iowan Old Style', Charter, Georgia, serif", 600)}
+      </div>
+      <div class="lockups" style="background:#0f1b2a">
+        ${lock(48, C2015.dark, true, '#f5f8fa', 'system-ui, sans-serif', 750)}
+        ${lock(96, C2015.dark, true, '#f5f8fa', 'system-ui, sans-serif', 750)}
+        ${lock(48, C2015.dark, false, '#c78d6b', "'Iowan Old Style', Charter, Georgia, serif", 600)}
+        ${lock(96, C2015.dark, false, '#c78d6b', "'Iowan Old Style', Charter, Georgia, serif", 600)}
+      </div>
+    </div>`;
+}
+
+let showGuides = true;
+const shell = (n, title, open = true) =>
+  `<details class="board" ${open ? 'open' : ''}><summary>Board ${n} · ${title}</summary><div class="boardbody" id="b${n}"></div></details>`;
+// The parameters: their own panel above the boards, sticky, so any board can
+// be watched (or Board 0 closed) while they change.
+document.getElementById('app').innerHTML =
+  `<details class="board params" open><summary>Parameters</summary><div class="boardbody">${controls()}</div></details>` +
+  shell(0, 'Construction') +
+  shell(1, 'Studies · one variable at a time') +
+  shell(2, 'Size ladder · rendered at 1×') +
+  shell(3, 'Colourway × finish · 72px') +
+  shell(4, 'Lockups & top bar');
+
+function render() {
+  uid = 0;
+  const bodies = [construction(showGuides), studies(), ladder(), colourway(), lockups()];
+  bodies.forEach((html, n) => { document.getElementById('b' + n).innerHTML = html; });
+  for (const input of document.querySelectorAll('.controls [data-key]')) {
+    const key = input.dataset.key;
+    if (input.type === 'checkbox') input.checked = P[key];
+    else input.value = P[key];
+    const out = document.querySelector(`output[data-for="${key}"]`);
+    if (out) { out.textContent = fmt(key); out.classList.toggle('changed', P[key] !== FILE[key]); }
+  }
+}
+document.querySelector('.controls').addEventListener('input', (e) => {
+  const key = e.target.dataset.key;
+  if (key) P[key] = e.target.type === 'checkbox' ? e.target.checked : +e.target.value;
+  if (e.target.id === 'guides') showGuides = e.target.checked;
+  render();
+});
+document.getElementById('reset').onclick = () => { P = { ...FILE }; render(); };
+render();
+</script>
+</body>
+</html>

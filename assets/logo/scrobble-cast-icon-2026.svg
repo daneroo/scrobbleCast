@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="6 6 88 88" width="256" height="256">
+
+  <title>Scrobble Cast</title>
+
+  <!--
+    2026, icon: scrobble-cast-2026.svg without its tile, transparent, for small
+    sizes (favicon) where the tile would take the space. One colour: Classic
+    Blue #1d4e89, Sandstone #c78d6b when the browser or OS is in dark mode.
+    The same mark and units (u, the tile 100 × 100). The viewBox is cropped to
+    a square around the mark's box (52.3 × 86.9u, centred), so it fills the icon.
+  -->
+
+  <style>
+    .mark { fill: #1d4e89; stroke: #1d4e89; }
+    @media (prefers-color-scheme: dark) { .mark { fill: #c78d6b; stroke: #c78d6b; } }
+  </style>
+
+  <g class="mark" transform="translate(50 50) rotate(-40)" stroke-width="8" stroke-linecap="round">
+    <g id="half" transform="translate(-28 0)">
+      <circle r="4.2" stroke="none"/>
+      <path d="M0,14 A14 14 0 0 0 14,0 M0,28 A28 28 0 0 0 28,0" fill="none"/>
+    </g>
+    <use href="#half" transform="rotate(180)"/>
+  </g>
+
+</svg>

@@ -2,8 +2,8 @@
 // returns them: Pocket Casts items accumulated from several sources over the
 // years, so key sets differ within one type. Only the fields the site reads
 // are checked; other keys pass through. Required unless the data says
-// otherwise: counts are from all records on 2026-11-22 (413 podcasts,
-// 167,014 episodes).
+// otherwise, judged by inspecting every record on 2026-11-22 (413 podcasts,
+// 167,014 episodes); the counts below are from that day.
 import { z } from 'zod'
 
 export const PodcastRecord = z.looseObject({
@@ -35,7 +35,7 @@ export const EpisodeRecord = z.looseObject({
     __lastPlayed: z.iso.datetime().optional(),
   }),
   history: z.looseObject({
-    // played_up_to by the time it was seen
+    // played_up_to by the time it was seen; missing on 2,151
     played_up_to: z.record(z.iso.datetime(), z.number()).optional(),
   }),
 })

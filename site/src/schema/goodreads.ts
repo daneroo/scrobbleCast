@@ -1,8 +1,7 @@
-// Copied unchanged below this header, synced by hand. Ground truth upstream:
-// https://github.com/daneroo/scrobble-books-data at a69ad61b4,
-// apps/scrape/src/goodreads.ts (with cue/check-goodreads.cue and
-// docs/goodreads-schema.html). Its "keep in step" note is upstream's, not
-// this copy's. goodreads-example.json is cue/goodreads-example.json there.
+// Copied unchanged below this header, synced by hand. Ground truth:
+// https://github.com/daneroo/scrobble-books-data/blob/a69ad61b4/apps/scrape/src/goodreads.ts
+// Its "keep in step" note is upstream's, not this copy's. goodreads-example.json
+// is upstream's cue/goodreads-example.json.
 
 /**
  * The `goodreads.json` schema: a plain array, one flat object per entry (a

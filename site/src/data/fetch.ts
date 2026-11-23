@@ -143,15 +143,16 @@ export function ready<T>(value: T): Promise<T> {
 // copy shown now: while the first copy loads, a promise of it; then each copy
 // as a promise ready at once, so a fresh copy replacing a saved copy doesn't
 // suspend the page again. `loaded()` gives the copy shown, if any. A load
-// starts again `ttl` after the last copy was shown.
+// starts again `ttl` after the last copy was shown, or at the next `get()`
+// if the refresh failed and only the saved copy is shown.
 export function shareFeed<T>(load: () => AsyncIterable<Feed<T>>, ttl = cacheTtlMs) {
-  interface Entry { expires: number; promise: Promise<Feed<T>>; feed?: Feed<T> }
+  interface Entry { expires: number; promise: Promise<Feed<T>>; feed?: Feed<T>; refreshFailed?: boolean }
   let entry: Entry | undefined
   const current = () => (entry && entry.expires > Date.now() ? entry : undefined)
 
   const get = () => {
     const found = current()
-    if (found) return found.promise
+    if (found && !found.refreshFailed) return found.promise
     let resolve!: (feed: Feed<T>) => void
     let reject!: (error: unknown) => void
     const first = new Promise<Feed<T>>((...settle) => { [resolve, reject] = settle })
@@ -168,6 +169,7 @@ export function shareFeed<T>(load: () => AsyncIterable<Feed<T>>, ttl = cacheTtlM
           resolve(feed)
           if (entry === next) setShown(feed, replaced)
         }
+        next.refreshFailed = next.feed?.source === 'saved'
       } catch (error) {
         if (entry === next) entry = undefined
         reject(error)

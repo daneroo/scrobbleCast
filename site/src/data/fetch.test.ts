@@ -4,7 +4,7 @@ import { Goodreads } from '../schema/goodreads'
 import example from '../schema/goodreads-example.json'
 import { fakeSavedCopies } from './fake-saved-copies'
 import { noticeBoard } from '../notices'
-import { loadFeed, type Feed, type FeedConfig } from './fetch'
+import { loadFeed, shareFeed, type Feed, type FeedConfig } from './fetch'
 
 const url = 'https://example.com/goodreads.json'
 const books: FeedConfig<typeof example> = {
@@ -103,4 +103,22 @@ test('a feed that is not saved never reads or writes a saved copy', async () => 
 
   expect(await copies(loadFeed({ ...books, save: false }, { download: respond([second]), savedCopies }))).toEqual([['fresh', second.title]])
   expect(bodies[url]).toEqual([first])
+})
+
+test('after a failed refresh, the next request for the feed tries again', async () => {
+  const { savedCopies } = fakeSavedCopies({ [url]: [first] })
+  const notices = noticeBoard()
+  let downloads = 0
+  let download = fail
+  const shared = shareFeed(() => loadFeed(books, { download: () => { downloads++; return download() }, savedCopies, notices }))
+
+  expect((await shared()).source).toBe('saved')
+  await expect.poll(() => notices.get().books).toBeDefined()
+  expect(shared.loaded()?.source).toBe('saved')
+
+  download = respond([second])
+  await shared()
+  await expect.poll(() => shared.loaded()?.source).toBe('fresh')
+  expect(shared.loaded()?.data[0].title).toBe(second.title)
+  expect(downloads).toBe(2)
 })

@@ -45,3 +45,26 @@ test('with a saved copy, the books feed shows it first, then the fresh copy read
   expect(getBooks()).toMatchObject({ status: 'fulfilled', value: { source: 'fresh' } })
   expect(getBooks.loaded()?.data).toHaveLength(example.length)
 })
+
+test('a book missing from the saved copy is looked for in the fresh copy', async () => {
+  const [first, second] = example
+  const { savedCopies } = fakeSavedCopies({ [booksUrl]: [first] })
+  let arrive!: () => void
+  const fresh = new Promise<void>((resolve) => { arrive = resolve })
+  const download = async () => { await fresh; return new Response(JSON.stringify(example)) }
+  const { getBooks, getBook } = booksFeed({ download, savedCopies })
+  expect((await getBooks()).source).toBe('saved')
+
+  const book = getBook(second.bookId)
+  arrive()
+
+  expect(await book).toMatchObject({ title: second.title })
+})
+
+test('a book missing from the saved copy is not found if the refresh fails', async () => {
+  const [first, second] = example
+  const { savedCopies } = fakeSavedCopies({ [booksUrl]: [first] })
+  const { getBook } = booksFeed({ download: async () => new Response('', { status: 503 }), savedCopies })
+
+  expect(await getBook(second.bookId)).toBeUndefined()
+})

@@ -144,9 +144,11 @@ export function ready<T>(value: T): Promise<T> {
 // as a promise ready at once, so a fresh copy replacing a saved copy doesn't
 // suspend the page again. `loaded()` gives the copy shown, if any. A load
 // starts again `ttl` after the last copy was shown, or at the next `get()`
-// if the refresh failed and only the saved copy is shown.
+// if the refresh failed and only the saved copy is shown. `settled()` gives
+// the last copy once the load is over: the fresh copy, or the saved copy if
+// the refresh failed.
 export function shareFeed<T>(load: () => AsyncIterable<Feed<T>>, ttl = cacheTtlMs) {
-  interface Entry { expires: number; promise: Promise<Feed<T>>; feed?: Feed<T>; refreshFailed?: boolean }
+  interface Entry { expires: number; promise: Promise<Feed<T>>; done: Promise<Feed<T>>; feed?: Feed<T>; refreshFailed?: boolean }
   let entry: Entry | undefined
   const current = () => (entry && entry.expires > Date.now() ? entry : undefined)
 
@@ -156,7 +158,11 @@ export function shareFeed<T>(load: () => AsyncIterable<Feed<T>>, ttl = cacheTtlM
     let resolve!: (feed: Feed<T>) => void
     let reject!: (error: unknown) => void
     const first = new Promise<Feed<T>>((...settle) => { [resolve, reject] = settle })
-    const next: Entry = { expires: Date.now() + ttl, promise: first }
+    let finish!: (feed: Feed<T>) => void
+    let fail!: (error: unknown) => void
+    const done = new Promise<Feed<T>>((...settle) => { [finish, fail] = settle })
+    done.catch(() => {}) // Awaited only by `settled()` callers.
+    const next: Entry = { expires: Date.now() + ttl, promise: first, done }
     entry = next
     void (async () => {
       try {
@@ -170,14 +176,21 @@ export function shareFeed<T>(load: () => AsyncIterable<Feed<T>>, ttl = cacheTtlM
           if (entry === next) setShown(feed, replaced)
         }
         next.refreshFailed = next.feed?.source === 'saved'
+        if (next.feed) finish(next.feed)
+        else throw new Error('The feed loaded no copy.')
       } catch (error) {
         if (entry === next) entry = undefined
         reject(error)
+        fail(error)
       }
     })()
     return first
   }
-  return Object.assign(get, { loaded: () => current()?.feed })
+  const settled = () => {
+    void get()
+    return entry!.done
+  }
+  return Object.assign(get, { loaded: () => current()?.feed, settled })
 }
 
 // The copy of each feed shown in this tab, for the footer: its time and

@@ -1,6 +1,6 @@
 import { booksUrl } from '../config'
 import { Goodreads, type Item } from '../schema/goodreads'
-import { loadFeed, mapData, plainText, ready, shareFeed, type FeedOptions } from './fetch'
+import { loadFeed, mapData, plainText, ready, shareFeed, type Feed, type FeedOptions } from './fetch'
 
 // A Book is upstream's Item, its description as plain text: search indexes it.
 export type Book = Item
@@ -16,11 +16,15 @@ export function booksFeed(options: FeedOptions = {}) {
     save: true,
   }, options), (books) => books.map((book): Book => ({ ...book, bookDescription: plainText(book.bookDescription) }))))
 
-  // Ready at once if this tab already has the books feed.
+  // Ready at once if this tab already has the books feed. A book missing from
+  // the saved copy may be new: look for it in the fresh copy before saying
+  // it isn't there.
   function getBook(bookId: string): Promise<Book | undefined> {
-    const find = (books: Book[]) => books.find((book) => book.bookId === bookId)
+    const find = (feed: Feed<Book[]>) => feed.data.find((book) => book.bookId === bookId)
     const loaded = getBooks.loaded()
-    return loaded ? ready(find(loaded.data)) : getBooks().then((feed) => find(feed.data))
+    const book = loaded && find(loaded)
+    if (book || loaded?.source === 'fresh') return ready(book)
+    return getBooks().then((feed) => find(feed) ?? (feed.source === 'saved' ? getBooks.settled().then(find) : undefined))
   }
 
   return { getBooks, getBook }

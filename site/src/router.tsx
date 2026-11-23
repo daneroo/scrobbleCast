@@ -1,7 +1,8 @@
-import { createRootRoute, createRoute, createRouter, notFound } from '@tanstack/react-router'
-import { getBooks } from './data/books'
+import { createRootRoute, createRoute, createRouter } from '@tanstack/react-router'
+import { getBook, getBooks } from './data/books'
 import type { FeedName } from './data/fetch'
-import { getEpisode, getEpisodes, getPodcast, getPodcasts } from './data/podcasts'
+import { getEpisode, getEpisodeFeed, getEpisodes, getPodcast, getPodcasts } from './data/podcasts'
+import { documentTitle } from './format'
 import { Layout, LoadError, NotFound } from './layout'
 import { BookDetail, Books, EpisodeDetail, Episodes, Home, PodcastDetail, Podcasts } from './pages'
 
@@ -15,15 +16,9 @@ const home = createRoute({
   getParentRoute: () => root,
   path: '/',
   staticData: { feeds: ['books', 'podcasts', 'episodes'] },
-  loader: async () => {
-    const [books, podcasts, episodes] = await Promise.all([getBooks(), getPodcasts(), getEpisodes()])
-    return {
-      books: books.data.filter((book) => book.userShelf === 'read').length,
-      podcasts: podcasts.data.length,
-      episodes: episodes.data.filter((episode) => episode.playedSeconds > 0).length,
-    }
-  },
-  component: () => <Home counts={home.useLoaderData()} />,
+  // Each card's count needs only its own feed.
+  loader: () => ({ books: getBooks(), podcasts: getPodcasts(), episodes: getEpisodeFeed() }),
+  component: () => <Home feeds={home.useLoaderData()} />,
 })
 
 const books = createRoute({
@@ -31,21 +26,18 @@ const books = createRoute({
   path: '/books',
   staticData: { feeds: ['books'] },
   head: () => pageTitle('Books'),
-  loader: async () => (await getBooks()).data,
-  component: () => <Books books={books.useLoaderData()} />,
+  loader: () => ({ books: getBooks() }),
+  component: () => <Books books={books.useLoaderData().books} />,
 })
 
 const book = createRoute({
   getParentRoute: () => root,
   path: '/books/$bookId',
   staticData: { feeds: ['books'] },
-  loader: async ({ params }) => {
-    const found = (await getBooks()).data.find((book) => book.bookId === params.bookId)
-    if (!found) throw notFound()
-    return found
-  },
-  head: ({ loaderData }) => pageTitle(loaderData?.title ?? 'Book'),
-  component: () => <BookDetail book={book.useLoaderData()} />,
+  head: () => pageTitle('Book'),
+  loader: ({ params }) => ({ book: getBook(params.bookId) }),
+  component: () => <BookDetail book={book.useLoaderData().book} />,
+  notFoundComponent: NotFound,
 })
 
 const podcasts = createRoute({
@@ -53,20 +45,17 @@ const podcasts = createRoute({
   path: '/podcasts',
   staticData: { feeds: ['podcasts'] },
   head: () => pageTitle('Podcasts'),
-  loader: async () => (await getPodcasts()).data,
-  component: () => <Podcasts podcasts={podcasts.useLoaderData()} />,
+  loader: () => ({ podcasts: getPodcasts() }),
+  component: () => <Podcasts podcasts={podcasts.useLoaderData().podcasts} />,
 })
 
 const podcast = createRoute({
   getParentRoute: () => root,
   path: '/podcasts/$uuid',
-  loader: async ({ params }) => {
-    const found = await getPodcast(params.uuid)
-    if (!found) throw notFound()
-    return found
-  },
-  head: ({ loaderData }) => pageTitle(loaderData?.title ?? 'Podcast'),
-  component: () => <PodcastDetail podcast={podcast.useLoaderData()} />,
+  head: () => pageTitle('Podcast'),
+  loader: ({ params }) => ({ podcast: getPodcast(params.uuid) }),
+  component: () => <PodcastDetail podcast={podcast.useLoaderData().podcast} />,
+  notFoundComponent: NotFound,
 })
 
 const episodes = createRoute({
@@ -75,31 +64,26 @@ const episodes = createRoute({
   // Episode titles come from the podcast feed.
   staticData: { feeds: ['episodes', 'podcasts'] },
   head: () => pageTitle('Recent episodes'),
-  loader: async () => (await getEpisodes()).data,
-  component: () => <Episodes episodes={episodes.useLoaderData()} />,
+  loader: () => ({ episodes: getEpisodes() }),
+  component: () => <Episodes episodes={episodes.useLoaderData().episodes} />,
 })
 
 const episode = createRoute({
   getParentRoute: () => root,
   path: '/episodes/$uuid',
-  loader: async ({ params }) => {
-    const found = await getEpisode(params.uuid)
-    if (!found) throw notFound()
-    return found
-  },
-  head: ({ loaderData }) => pageTitle(loaderData?.title ?? 'Episode'),
-  component: () => <EpisodeDetail episode={episode.useLoaderData()} />,
+  head: () => pageTitle('Episode'),
+  loader: ({ params }) => ({ episode: getEpisode(params.uuid) }),
+  component: () => <EpisodeDetail episode={episode.useLoaderData().episode} />,
+  notFoundComponent: NotFound,
 })
 
 function pageTitle(title: string) {
-  return { meta: [{ title: `${title} · Scrobble Cast` }] }
+  return { meta: [{ title: documentTitle(title) }] }
 }
 
 export const router = createRouter({
   routeTree: root.addChildren([home, books, book, podcasts, podcast, episodes, episode]),
   scrollRestoration: true,
-  defaultPendingMs: 150,
-  defaultPendingComponent: () => <p className="empty" role="status">Loading…</p>,
   defaultErrorComponent: LoadError,
 })
 

@@ -76,8 +76,15 @@ export function subscribeFeedTimes(listener: () => void) {
   return () => { listeners.delete(listener) }
 }
 
+// A promise of data already loaded: React's `use()` reads its `status` and
+// `value` without suspending, so the page shows it at once.
+export function ready<T>(value: T): Promise<T> {
+  return Object.assign(Promise.resolve(value), { status: 'fulfilled', value })
+}
+
 // Share in-flight and recent requests across routes in the current tab.
-// `loaded()` gives the data if it has already arrived and is still recent.
+// `loaded()` gives the data if it has already arrived and is still recent;
+// the promise is then ready at once, as `ready()`'s is.
 export function cached<T>(load: () => Promise<T>, ttl = cacheTtlMs) {
   let entry: { expires: number; promise: Promise<T>; data?: T } | undefined
   const fresh = () => (entry && entry.expires > Date.now() ? entry : undefined)
@@ -88,6 +95,7 @@ export function cached<T>(load: () => Promise<T>, ttl = cacheTtlMs) {
     next.promise = next.promise.then(
       (data) => {
         next.data = data
+        Object.assign(next.promise, { status: 'fulfilled', value: data })
         return data
       },
       (error) => {

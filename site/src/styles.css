@@ -97,6 +97,9 @@ tbody tr:last-child td { border: 0; }
 .empty { padding: 1.4rem; background: white; border: 1px solid var(--line); border-radius: 0.6rem; }
 .empty h1 { margin-bottom: 0.8rem; }
 .empty p { white-space: pre-line; }
+.loading { color: var(--muted); animation: pulse 1.2s ease-in-out infinite; }
+@keyframes pulse { 50% { opacity: 0.35; } }
+@media (prefers-reduced-motion: reduce) { .loading { animation: none; } }
 
 .detail { max-width: 56rem; }
 .back { display: inline-block; margin-bottom: 1.5rem; }

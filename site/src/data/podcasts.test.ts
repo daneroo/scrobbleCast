@@ -78,3 +78,21 @@ test('the episode feed’s last change is its newest __lastUpdated', async () =>
 
   expect(feed.time).toEqual({ label: 'last change', at: new Date('2026-11-23T00:10:00Z') })
 })
+
+test('the episode feed loads without waiting for the podcast feed', async () => {
+  const { download } = fakeHistory()
+  const { getEpisodeFeed } = podcastFeeds((url) =>
+    new URL(url).searchParams.get('type') === 'podcast' ? new Promise(() => {}) : download(url))
+
+  const feed = await getEpisodeFeed()
+
+  expect(feed.data.map((episode) => episode.title)).toContain("Surely You Can't Be Serious")
+})
+
+// React's `use()` reads a promise's `status` and `value` without suspending.
+test('with the podcast feed loaded, a podcast is ready at once', async () => {
+  const { getPodcasts, getPodcast } = podcastFeeds(fakeHistory().download)
+  await getPodcasts()
+
+  expect(getPodcast(syntax.uuid)).toMatchObject({ status: 'fulfilled', value: { title: syntax.title } })
+})

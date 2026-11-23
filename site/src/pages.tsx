@@ -1,11 +1,12 @@
-import { Link } from '@tanstack/react-router'
-import { useState } from 'react'
+import { Await, Link, notFound } from '@tanstack/react-router'
+import { useEffect, useState } from 'react'
 import type { ReactNode } from 'react'
 import { episodePageSize, episodePageStep, recentDays } from './config'
 import type { Book } from './data/books'
+import type { Feed } from './data/fetch'
 import type { Episode, Podcast } from './data/podcasts'
-import { day, playedPercent } from './format'
-import { useSearch } from './search'
+import { day, documentTitle, playedPercent } from './format'
+import { search } from './search'
 import { Table } from './table'
 import type { Column } from './table'
 
@@ -22,6 +23,11 @@ const shelfLabels: Record<string, string> = {
 
 function shelfName(shelf: string) {
   return shelfLabels[shelf] ?? shelf
+}
+
+// The shelf shown until one is picked.
+function defaultShelf(books: Book[]) {
+  return books.some((book) => book.userShelf === 'currently-reading') ? 'currently-reading' : ''
 }
 
 const bookColumns: Column<Book>[] = [
@@ -62,6 +68,31 @@ const episodeColumns: Column<Episode>[] = [
   { label: 'Last played', value: (episode) => episode.lastPlayed, render: (episode) => day(episode.lastPlayed) },
 ]
 
+// Pages show their static part at once. Each data part waits for its feed in
+// `<Await>`, showing a small placeholder until then.
+function Loading({ block = false }: { block?: boolean }) {
+  return block
+    ? <p className="empty" role="status">Loading…</p>
+    : <span className="loading" role="status" aria-label="Loading">…</span>
+}
+
+// The data part of a detail page: the record once it has loaded, or not found.
+function Found<T>({ record, children }: { record: Promise<T | undefined>; children: (record: T) => ReactNode }) {
+  return (
+    <Await promise={record} fallback={<Loading block />}>
+      {(found) => {
+        if (found === undefined) throw notFound()
+        return children(found)
+      }}
+    </Await>
+  )
+}
+
+// The route's head gives a detail page a generic title until its record loads.
+function usePageTitle(title: string) {
+  useEffect(() => { document.title = documentTitle(title) }, [title])
+}
+
 function SearchBox({ value, onChange, label }: { value: string; onChange: (value: string) => void; label: string }) {
   return (
     <label className="search-field">
@@ -73,23 +104,38 @@ function SearchBox({ value, onChange, label }: { value: string; onChange: (value
 
 function Collection({
   title, count, children,
-}: { title: string; count: number; children: ReactNode }) {
+}: { title: string; count: ReactNode; children: ReactNode }) {
   return (
     <>
       <header className="page-title">
         <h1>{title}</h1>
-        <p aria-live="polite">{count.toLocaleString()} {count === 1 ? 'result' : 'results'}</p>
+        <p aria-live="polite">{count}</p>
       </header>
       {children}
     </>
   )
 }
 
-export function Home({ counts }: { counts: { books: number; podcasts: number; episodes: number } }) {
+function ResultCount({ count }: { count: number }) {
+  return <>{count.toLocaleString()} {count === 1 ? 'result' : 'results'}</>
+}
+
+export function Home({ feeds }: {
+  feeds: { books: Promise<Feed<Book[]>>; podcasts: Promise<Feed<Podcast[]>>; episodes: Promise<Feed<Episode[]>> }
+}) {
   const sections = [
-    { to: '/books', title: 'Books', count: counts.books, label: 'read', style: 'books' },
-    { to: '/podcasts', title: 'Podcasts', count: counts.podcasts, label: 'in the catalog', style: 'podcasts' },
-    { to: '/episodes', title: 'Episodes', count: counts.episodes, label: `played in the last ${recentDays} days`, style: 'episodes' },
+    {
+      to: '/books', title: 'Books', label: 'read', style: 'books',
+      count: <Await promise={feeds.books} fallback={<Loading />}>{({ data }) => data.filter((book) => book.userShelf === 'read').length.toLocaleString()}</Await>,
+    },
+    {
+      to: '/podcasts', title: 'Podcasts', label: 'in the catalog', style: 'podcasts',
+      count: <Await promise={feeds.podcasts} fallback={<Loading />}>{({ data }) => data.length.toLocaleString()}</Await>,
+    },
+    {
+      to: '/episodes', title: 'Episodes', label: `played in the last ${recentDays} days`, style: 'episodes',
+      count: <Await promise={feeds.episodes} fallback={<Loading />}>{({ data }) => data.filter((episode) => episode.playedSeconds > 0).length.toLocaleString()}</Await>,
+    },
   ] as const
 
   return (
@@ -105,7 +151,7 @@ export function Home({ counts }: { counts: { books: number; podcasts: number; ep
         {sections.map(({ to, title, count, label, style }) => (
           <Link key={to} to={to} className={`collection-card ${style}`}>
             <span className="card-title">{title}<span aria-hidden="true">↗</span></span>
-            <strong>{count.toLocaleString()}</strong>
+            <strong>{count}</strong>
             <span>{label}</span>
           </Link>
         ))}
@@ -114,52 +160,60 @@ export function Home({ counts }: { counts: { books: number; podcasts: number; ep
   )
 }
 
-export function Books({ books }: { books: Book[] }) {
+export function Books({ books }: { books: Promise<Feed<Book[]>> }) {
   const [query, setQuery] = useState('')
-  const [shelf, setShelf] = useState(books.some((book) => book.userShelf === 'currently-reading') ? 'currently-reading' : '')
-  const shelves = [...new Set(books.map((book) => book.userShelf))]
-  const results = useSearch(books, bookKeys, query.trim())
-    .filter((book) => !shelf || book.userShelf === shelf)
+  const [shelf, setShelf] = useState<string>()
+  const results = (books: Book[]) => {
+    const shown = shelf ?? defaultShelf(books)
+    return search(books, bookKeys, query).filter((book) => !shown || book.userShelf === shown)
+  }
 
   return (
-    <Collection title="Books" count={results.length}>
+    <Collection title="Books" count={<Await promise={books} fallback={<Loading />}>{({ data }) => <ResultCount count={results(data).length} />}</Await>}>
       <div className="controls">
         <SearchBox value={query} onChange={setQuery} label="Search books" />
         <label>
           <span>Shelf</span>
-          <select value={shelf} onChange={(event) => setShelf(event.target.value)}>
-            <option value="">All shelves</option>
-            {shelves.map((name) => <option key={name} value={name}>{shelfName(name)}</option>)}
-          </select>
+          <Await promise={books} fallback={<select disabled><option>All shelves</option></select>}>
+            {({ data }) => (
+              <select value={shelf ?? defaultShelf(data)} onChange={(event) => setShelf(event.target.value)}>
+                <option value="">All shelves</option>
+                {[...new Set(data.map((book) => book.userShelf))].map((name) => <option key={name} value={name}>{shelfName(name)}</option>)}
+              </select>
+            )}
+          </Await>
         </label>
       </div>
-      <Table items={results} columns={bookColumns} id={(book) => book.bookId} />
+      <Await promise={books} fallback={<Loading block />}>
+        {({ data }) => <Table items={results(data)} columns={bookColumns} id={(book) => book.bookId} />}
+      </Await>
     </Collection>
   )
 }
 
-export function Podcasts({ podcasts }: { podcasts: Podcast[] }) {
+export function Podcasts({ podcasts }: { podcasts: Promise<Feed<Podcast[]>> }) {
   const [query, setQuery] = useState('')
-  const results = useSearch(podcasts, podcastKeys, query)
+  const results = (podcasts: Podcast[]) => search(podcasts, podcastKeys, query)
   return (
-    <Collection title="Podcasts" count={results.length}>
+    <Collection title="Podcasts" count={<Await promise={podcasts} fallback={<Loading />}>{({ data }) => <ResultCount count={results(data).length} />}</Await>}>
       <div className="controls">
         <SearchBox value={query} onChange={setQuery} label="Search podcasts" />
       </div>
-      <Table items={results} columns={podcastColumns} id={(podcast) => podcast.uuid} />
+      <Await promise={podcasts} fallback={<Loading block />}>
+        {({ data }) => <Table items={results(data)} columns={podcastColumns} id={(podcast) => podcast.uuid} />}
+      </Await>
     </Collection>
   )
 }
 
-export function Episodes({ episodes }: { episodes: Episode[] }) {
+export function Episodes({ episodes }: { episodes: Promise<Feed<Episode[]>> }) {
   const [query, setQuery] = useState('')
   const [playedOnly, setPlayedOnly] = useState(true)
   const [limit, setLimit] = useState(episodePageSize)
-  const results = useSearch(episodes, episodeKeys, query)
+  const results = (episodes: Episode[]) => search(episodes, episodeKeys, query)
     .filter((episode) => !playedOnly || episode.playedSeconds > 0)
-  const shown = Math.min(results.length, limit)
   return (
-    <Collection title="Recent episodes" count={results.length}>
+    <Collection title="Recent episodes" count={<Await promise={episodes} fallback={<Loading />}>{({ data }) => <ResultCount count={results(data).length} />}</Await>}>
       <p className="section-note">Last {recentDays} days</p>
       <div className="controls">
         <SearchBox value={query} onChange={(value) => { setQuery(value); setLimit(episodePageSize) }} label="Search episodes" />
@@ -168,13 +222,23 @@ export function Episodes({ episodes }: { episodes: Episode[] }) {
           Played only
         </label>
       </div>
-      <Table items={results} columns={episodeColumns} id={(episode) => episode.uuid} limit={limit} />
-      {shown < results.length && (
-        <div className="more">
-          <button className="button" type="button" onClick={() => setLimit(limit + episodePageStep)}>Show more</button>
-          <span>{shown} of {results.length}</span>
-        </div>
-      )}
+      <Await promise={episodes} fallback={<Loading block />}>
+        {({ data }) => {
+          const found = results(data)
+          const shown = Math.min(found.length, limit)
+          return (
+            <>
+              <Table items={found} columns={episodeColumns} id={(episode) => episode.uuid} limit={limit} />
+              {shown < found.length && (
+                <div className="more">
+                  <button className="button" type="button" onClick={() => setLimit(limit + episodePageStep)}>Show more</button>
+                  <span>{shown} of {found.length}</span>
+                </div>
+              )}
+            </>
+          )
+        }}
+      </Await>
     </Collection>
   )
 }
@@ -190,10 +254,19 @@ function Artwork({ src, kind }: { src: string; kind: 'book' | 'podcast' }) {
   )
 }
 
-export function BookDetail({ book }: { book: Book }) {
+export function BookDetail({ book }: { book: Promise<Book | undefined> }) {
   return (
     <article className="detail">
       <Link className="back" to="/books">← Books</Link>
+      <Found record={book}>{(book) => <BookInfo book={book} />}</Found>
+    </article>
+  )
+}
+
+function BookInfo({ book }: { book: Book }) {
+  usePageTitle(book.title)
+  return (
+    <>
       <div className="detail-heading">
         <Artwork key={book.bookImageURL} src={book.bookImageURL} kind="book" />
         <div>
@@ -204,14 +277,23 @@ export function BookDetail({ book }: { book: Book }) {
         </div>
       </div>
       {book.bookDescription && <p className="description">{book.bookDescription}</p>}
+    </>
+  )
+}
+
+export function PodcastDetail({ podcast }: { podcast: Promise<Podcast | undefined> }) {
+  return (
+    <article className="detail">
+      <Link className="back" to="/podcasts">← Podcasts</Link>
+      <Found record={podcast}>{(podcast) => <PodcastInfo podcast={podcast} />}</Found>
     </article>
   )
 }
 
-export function PodcastDetail({ podcast }: { podcast: Podcast }) {
+function PodcastInfo({ podcast }: { podcast: Podcast }) {
+  usePageTitle(podcast.title)
   return (
-    <article className="detail">
-      <Link className="back" to="/podcasts">← Podcasts</Link>
+    <>
       <div className="detail-heading">
         <Artwork key={podcast.thumbnail} src={podcast.thumbnail} kind="podcast" />
         <div>
@@ -221,14 +303,23 @@ export function PodcastDetail({ podcast }: { podcast: Podcast }) {
         </div>
       </div>
       {podcast.description && <p className="description">{podcast.description}</p>}
+    </>
+  )
+}
+
+export function EpisodeDetail({ episode }: { episode: Promise<Episode | undefined> }) {
+  return (
+    <article className="detail">
+      <Link className="back" to="/episodes">← Episodes</Link>
+      <Found record={episode}>{(episode) => <EpisodeInfo episode={episode} />}</Found>
     </article>
   )
 }
 
-export function EpisodeDetail({ episode }: { episode: Episode }) {
+function EpisodeInfo({ episode }: { episode: Episode }) {
+  usePageTitle(episode.title)
   return (
-    <article className="detail">
-      <Link className="back" to="/episodes">← Episodes</Link>
+    <>
       <h1>{episode.title}</h1>
       {episode.podcastId && episode.podcastTitle && (
         <p className="byline"><Link to="/podcasts/$uuid" params={{ uuid: episode.podcastId }}>{episode.podcastTitle}</Link></p>
@@ -239,6 +330,6 @@ export function EpisodeDetail({ episode }: { episode: Episode }) {
         <div><dt>First played</dt><dd>{day(episode.firstPlayed)}</dd></div>
         <div><dt>Last played</dt><dd>{day(episode.lastPlayed)}</dd></div>
       </dl>
-    </article>
+    </>
   )
 }

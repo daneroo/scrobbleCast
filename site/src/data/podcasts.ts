@@ -1,7 +1,7 @@
 import type { z } from 'zod'
 import { historyUrl, recentDays, user } from '../config'
 import { EpisodeRecords, PodcastRecords, type EpisodeRecord, type PodcastRecord } from '../schema/podcast'
-import { cached, loadFeed, loadJson, plainText, type Download, type FeedName, type FeedTime } from './fetch'
+import { cached, loadFeed, loadJson, plainText, ready, type Download, type FeedName, type FeedTime } from './fetch'
 
 // What the history API returns for each type, and the feed of that type.
 interface Records {
@@ -103,21 +103,28 @@ export function podcastFeeds(download?: Download) {
   })
 
   // Use the podcast feed if this tab already has it; never download it whole.
-  async function getPodcast(uuid: string) {
+  function getPodcast(uuid: string): Promise<Podcast | undefined> {
     const known = getPodcasts.loaded()?.data.find((podcast) => podcast.uuid === uuid)
-    if (known) return known
-    const podcast = await lookup('podcast', uuid)
-    return podcast ? toPodcast(podcast) : undefined
+    if (known) return ready(known)
+    return lookup('podcast', uuid).then((podcast) => podcast && toPodcast(podcast))
   }
 
-  const getEpisodes = cached(async () => {
+  // The episode feed alone, without podcast titles: it doesn't wait for the
+  // podcast feed.
+  const getEpisodeFeed = cached(async () => {
     const since = new Date(Date.now() - recentDays * 24 * 60 * 60 * 1000).toISOString()
+    const episodes = await feed('episode', { user, since })
+    return { ...episodes, data: episodes.data.map((episode) => toEpisode(episode)) }
+  })
+
+  // The episode feed with titles from the podcast feed.
+  const getEpisodes = cached(async () => {
     const [episodes, podcasts] = await Promise.all([
-      feed('episode', { user, since }),
+      getEpisodeFeed(),
       getPodcasts().then((podcasts) => podcasts.data, () => []),
     ])
     const titles = new Map(podcasts.map((podcast) => [podcast.uuid, podcast.title]))
-    return { ...episodes, data: episodes.data.map((episode) => toEpisode(episode, titles.get(episode.podcast_uuid))) }
+    return { ...episodes, data: episodes.data.map((episode) => ({ ...episode, podcastTitle: titles.get(episode.podcastId) ?? '' })) }
   })
 
   async function getEpisode(uuid: string) {
@@ -128,7 +135,7 @@ export function podcastFeeds(download?: Download) {
     return toEpisode(episode, podcast?.title)
   }
 
-  return { getPodcasts, getPodcast, getEpisodes, getEpisode }
+  return { getPodcasts, getPodcast, getEpisodeFeed, getEpisodes, getEpisode }
 }
 
-export const { getPodcasts, getPodcast, getEpisodes, getEpisode } = podcastFeeds()
+export const { getPodcasts, getPodcast, getEpisodeFeed, getEpisodes, getEpisode } = podcastFeeds()

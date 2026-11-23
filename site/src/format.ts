@@ -12,3 +12,7 @@ export function day(value: string) {
 export function localTime(date: Date) {
   return date.toLocaleString('sv-SE')
 }
+
+export function documentTitle(title: string) {
+  return `${title} · Scrobble Cast`
+}

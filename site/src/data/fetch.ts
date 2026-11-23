@@ -35,11 +35,10 @@ export async function loadJson<T>(url: string, label: string, schema: z.ZodType<
   return { data: await parse(response, label, schema), headers: response.headers }
 }
 
-// Where a feed's notices go: the app's notice area, or a board of its own in
-// tests.
 export interface FeedOptions {
   download?: Download
   savedCopies?: SavedCopies
+  // Where a feed's notices go: the app's notice area, or a board of its own.
   notices?: Pick<NoticeBoard, 'post' | 'clear'>
 }
 
@@ -95,7 +94,8 @@ export async function* loadFeed<T>(
   fresh.catch(() => {}) // Awaited below, after the saved copy.
 
   let saved: Feed<T> | undefined
-  let discarded: Promise<unknown> | undefined
+  let discarded = false
+  let deleted: Promise<unknown> = Promise.resolve()
   if (config.save) {
     const response = await savedCopies.get(config.url).catch(() => undefined)
     if (response) {
@@ -103,7 +103,8 @@ export async function* loadFeed<T>(
         saved = await copy(response, 'saved')
       } catch {
         // It no longer matches the schema.
-        discarded = savedCopies.delete(config.url).catch(() => {})
+        discarded = true
+        deleted = savedCopies.delete(config.url).catch(() => {})
         warn('saved copy discarded (schema mismatch)')
       }
     }
@@ -120,8 +121,9 @@ export async function* loadFeed<T>(
     return
   }
   // Saved once any bad copy is gone, so discarding it can't remove this one.
-  if (raw) void Promise.resolve(discarded).then(() => savedCopies.put(config.url, raw)).catch(() => {})
-  // A fresh copy clears the feed's notice, except the one this load posted.
+  if (raw) void deleted.then(() => savedCopies.put(config.url, raw)).catch(() => {})
+  // A fresh copy clears the feed's notice. A discard notice stays until the
+  // next load, or the fresh copy right behind it would hide it at once.
   if (!discarded) notices.clear(config.name)
   yield feed
 }

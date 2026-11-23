@@ -6,7 +6,7 @@ Idea inbox, grouped by theme: snippets worth not forgetting, not yet worth an is
 
 Items for the web app in `site/`.
 
-- [ ] theming — a design session for colour and type, following the 2026 logo (`assets/logo/study.html`: its colourways and lockups). Decide whether the site keeps the four 2015 colours or moves to the logo's two (Marsala and Dusk Blue survive only as card borders and focus ring); light/dark themes; maybe Tailwind.
+- [ ] theming — plan and colour inventory: [theming.md](theming.md). A design session for colour and type, following the 2026 logo (`assets/logo/study.html`: its colourways and lockups). Decide whether the site keeps the four 2015 colours or moves to the logo's two (Marsala and Dusk Blue survive only as card borders and focus ring); light/dark themes; maybe Tailwind.
 - [ ] layout — a design session with `/prototype`: structurally different versions of a real page (home, a list, a detail), switched with `?variant=`.
 - [ ] tanstack-start — server rendering would make a "generated at" time meaningful again.
 - [ ] history-api-generated-at — the history API returns a bare array with no generation time. Have it say when the scraper last ran (e.g. `Last-Modified` or an envelope) so the footer can show it.

@@ -100,8 +100,8 @@ test('with the podcast feed loaded, a podcast is ready at once', async () => {
 })
 
 test('the podcast feed is saved, the episode feed never', async () => {
-  const { used, saved } = fakeSavedCopies()
-  const { getPodcasts, getEpisodeFeed } = podcastFeeds({ download: fakeHistory().download, saved })
+  const { used, savedCopies } = fakeSavedCopies()
+  const { getPodcasts, getEpisodeFeed } = podcastFeeds({ download: fakeHistory().download, savedCopies })
 
   await Promise.all([getPodcasts(), getEpisodeFeed()])
 

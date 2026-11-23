@@ -1,10 +1,10 @@
-import type { SavedCopies } from './fetch'
+import type { SavedCopies } from './saved-copies'
 
 // A fake saved-copy store for tests: the body saved for each URL. It logs
-// each URL read or written.
+// each URL it's asked about.
 export function fakeSavedCopies(bodies: Record<string, unknown> = {}) {
   const used: string[] = []
-  const saved: SavedCopies = {
+  const savedCopies: SavedCopies = {
     async get(url) {
       used.push(url)
       return url in bodies ? new Response(JSON.stringify(bodies[url])) : undefined
@@ -13,7 +13,10 @@ export function fakeSavedCopies(bodies: Record<string, unknown> = {}) {
       used.push(url)
       bodies[url] = await response.json()
     },
-    async delete(url) { delete bodies[url] },
+    async delete(url) {
+      used.push(url)
+      delete bodies[url]
+    },
   }
-  return { bodies, used, saved }
+  return { bodies, used, savedCopies }
 }

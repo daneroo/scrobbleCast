@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { cacheTtlMs } from '../config'
+import { browserSavedCopies, type SavedCopies } from './saved-copies'
 
 // Parse failures list only the first few issues: one upstream change can
 // break every record.
@@ -32,28 +33,9 @@ export async function loadJson<T>(url: string, label: string, schema: z.ZodType<
   return { data: await parse(response, label, schema), headers: response.headers }
 }
 
-// Where the browser keeps saved copies of feeds: the raw responses, by URL.
-export interface SavedCopies {
-  get(url: string): Promise<Response | undefined>
-  put(url: string, response: Response): Promise<void>
-  delete(url: string): Promise<void>
-}
-
-// The browser's Cache API. It only exists in secure contexts: without it no
-// copy is saved.
-export const browserSavedCopies: SavedCopies = {
-  async get(url) { return (await openSavedCopies())?.match(url, { ignoreVary: true }) },
-  async put(url, response) { await (await openSavedCopies())?.put(url, response) },
-  async delete(url) { await (await openSavedCopies())?.delete(url, { ignoreVary: true }) },
-}
-
-function openSavedCopies() {
-  return typeof caches === 'undefined' ? undefined : caches.open('saved-copies')
-}
-
 export interface FeedOptions {
   download?: Download
-  saved?: SavedCopies
+  savedCopies?: SavedCopies
 }
 
 export type FeedName = 'books' | 'podcasts' | 'episodes'
@@ -88,7 +70,7 @@ export interface FeedConfig<T> {
 // copy; with no saved copy it raises.
 export async function* loadFeed<T>(
   config: FeedConfig<T>,
-  { download = fetch, saved = browserSavedCopies }: FeedOptions = {},
+  { download = fetch, savedCopies = browserSavedCopies }: FeedOptions = {},
 ): AsyncGenerator<Feed<T>> {
   const copy = async (response: Response, source: Feed<T>['source']): Promise<Feed<T>> => {
     const data = await parse(response, config.name, config.schema)
@@ -98,33 +80,40 @@ export async function* loadFeed<T>(
   // Always fetch the feed, even while the saved copy is read.
   const fresh = download(config.url).then(async (response) => {
     const raw = config.save ? response.clone() : undefined
-    const feed = await copy(response, 'fresh')
-    if (raw) saved.put(config.url, raw).catch(() => {})
-    return feed
+    return { feed: await copy(response, 'fresh'), raw }
   })
   fresh.catch(() => {}) // Awaited below, after the saved copy.
 
-  let savedCopy: Feed<T> | undefined
+  let saved: Feed<T> | undefined
+  let discarded: Promise<unknown> = Promise.resolve()
   if (config.save) {
-    const response = await saved.get(config.url).catch(() => undefined)
+    const response = await savedCopies.get(config.url).catch(() => undefined)
     if (response) {
       try {
-        savedCopy = await copy(response, 'saved')
+        saved = await copy(response, 'saved')
       } catch {
-        saved.delete(config.url).catch(() => {}) // It no longer matches the schema.
+        // It no longer matches the schema.
+        discarded = savedCopies.delete(config.url).catch(() => {})
       }
     }
   }
-  if (savedCopy) yield savedCopy
+  if (saved) yield saved
 
-  let freshCopy: Feed<T>
+  let feed: Feed<T>, raw: Response | undefined
   try {
-    freshCopy = await fresh
+    ({ feed, raw } = await fresh)
   } catch (error) {
-    if (savedCopy) return
+    if (saved) return
     throw error
   }
-  yield freshCopy
+  // Saved once any bad copy is gone, so discarding it can't remove this one.
+  if (raw) void discarded.then(() => savedCopies.put(config.url, raw)).catch(() => {})
+  yield feed
+}
+
+// Change the data of each copy of a feed, keeping its time and source.
+export async function* mapData<T, U>(copies: AsyncIterable<Feed<T>>, change: (data: T) => U): AsyncGenerator<Feed<U>> {
+  for await (const feed of copies) yield { ...feed, data: change(feed.data) }
 }
 
 // A promise of data already loaded: React's `use()` reads its `status` and
@@ -137,7 +126,7 @@ export function ready<T>(value: T): Promise<T> {
 // copy shown now: while the first copy loads, a promise of it; then each copy
 // as a promise ready at once, so a fresh copy replacing a saved copy doesn't
 // suspend the page again. `loaded()` gives the copy shown, if any. A load
-// starts again once the copy shown is older than `ttl`.
+// starts again `ttl` after the last copy was shown.
 export function shareFeed<T>(load: () => AsyncIterable<Feed<T>>, ttl = cacheTtlMs) {
   interface Entry { expires: number; promise: Promise<Feed<T>>; feed?: Feed<T> }
   let entry: Entry | undefined
@@ -154,11 +143,13 @@ export function shareFeed<T>(load: () => AsyncIterable<Feed<T>>, ttl = cacheTtlM
     void (async () => {
       try {
         for await (const feed of load()) {
-          if (next.feed) next.promise = ready(feed)
+          const replaced = next.feed !== undefined
+          if (replaced) next.promise = ready(feed)
           else Object.assign(first, { status: 'fulfilled', value: feed })
           next.feed = feed
+          next.expires = Date.now() + ttl
           resolve(feed)
-          if (entry === next) setShown(feed)
+          if (entry === next) setShown(feed, replaced)
         }
       } catch (error) {
         if (entry === next) entry = undefined
@@ -171,21 +162,23 @@ export function shareFeed<T>(load: () => AsyncIterable<Feed<T>>, ttl = cacheTtlM
 }
 
 // The copy of each feed shown in this tab, for the footer: its time and
-// source. Listeners hear which feed changed.
-export type ShownFeed = Pick<Feed<unknown>, 'time' | 'source'>
-let shownFeeds: Partial<Record<FeedName, ShownFeed>> = {}
-const listeners = new Set<(name: FeedName) => void>()
+// source. Listeners hear which feed changed, and whether its new copy
+// replaced one already shown, e.g. a fresh copy replacing a saved copy.
+export type ShownCopy = Pick<Feed<unknown>, 'time' | 'source'>
+type ShownListener = (name: FeedName, replaced: boolean) => void
+let shownCopies: Partial<Record<FeedName, ShownCopy>> = {}
+const listeners = new Set<ShownListener>()
 
-function setShown({ name, time, source }: Feed<unknown>) {
-  shownFeeds = { ...shownFeeds, [name]: { time, source } }
-  for (const listener of listeners) listener(name)
+function setShown({ name, time, source }: Feed<unknown>, replaced: boolean) {
+  shownCopies = { ...shownCopies, [name]: { time, source } }
+  for (const listener of listeners) listener(name, replaced)
 }
 
-export function getShownFeeds() {
-  return shownFeeds
+export function getShownCopies() {
+  return shownCopies
 }
 
-export function subscribeShownFeeds(listener: (name: FeedName) => void) {
+export function subscribeShownCopies(listener: ShownListener) {
   listeners.add(listener)
   return () => { listeners.delete(listener) }
 }

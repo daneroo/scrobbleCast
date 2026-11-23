@@ -1,7 +1,7 @@
 import { HeadContent, Link, Outlet, useMatches, useRouter } from '@tanstack/react-router'
 import { useSyncExternalStore } from 'react'
 import { version } from '../package.json'
-import { getShownFeeds, subscribeShownFeeds, type FeedName } from './data/fetch'
+import { getShownCopies, subscribeShownCopies, type FeedName } from './data/fetch'
 import { localTime } from './format'
 
 export function Layout() {
@@ -53,7 +53,7 @@ const feedTitles: Record<FeedName, string> = { books: 'Books', podcasts: 'Podcas
 // `(saved)` while its saved copy is shown.
 function Footer() {
   const feeds = useMatches().flatMap((match) => match.staticData.feeds ?? [])
-  const shown = useSyncExternalStore(subscribeShownFeeds, getShownFeeds)
+  const shown = useSyncExternalStore(subscribeShownCopies, getShownCopies)
   return (
     <footer className="site-footer">
       <span>Scrobble Cast v{version}</span>

@@ -1,7 +1,7 @@
 import type { z } from 'zod'
 import { historyUrl, recentDays, user } from '../config'
 import { EpisodeRecords, PodcastRecords, type EpisodeRecord, type PodcastRecord } from '../schema/podcast'
-import { loadFeed, loadJson, plainText, ready, shareFeed, type Feed, type FeedName, type FeedOptions, type FeedTime } from './fetch'
+import { loadFeed, loadJson, mapData, plainText, ready, shareFeed, type Feed, type FeedName, type FeedOptions, type FeedTime } from './fetch'
 
 // What the history API returns for each type, and the feed of that type.
 interface Records {
@@ -98,9 +98,7 @@ export function podcastFeeds(options: FeedOptions = {}) {
     return data.at(0)
   }
 
-  const getPodcasts = shareFeed(async function* () {
-    for await (const podcasts of feed('podcast', { user })) yield { ...podcasts, data: podcasts.data.map(toPodcast) }
-  })
+  const getPodcasts = shareFeed(() => mapData(feed('podcast', { user }), (podcasts) => podcasts.map(toPodcast)))
 
   // Use the podcast feed if this tab already has it; never download it whole.
   function getPodcast(uuid: string): Promise<Podcast | undefined> {
@@ -111,11 +109,9 @@ export function podcastFeeds(options: FeedOptions = {}) {
 
   // The episode feed alone, without podcast titles: it doesn't wait for the
   // podcast feed.
-  const getEpisodeFeed = shareFeed(async function* () {
+  const getEpisodeFeed = shareFeed(() => {
     const since = new Date(Date.now() - recentDays * 24 * 60 * 60 * 1000).toISOString()
-    for await (const episodes of feed('episode', { user, since })) {
-      yield { ...episodes, data: episodes.data.map((episode) => toEpisode(episode)) }
-    }
+    return mapData(feed('episode', { user, since }), (episodes) => episodes.map((episode) => toEpisode(episode)))
   })
 
   // The episode feed with titles from the podcast feed shown now: worked out

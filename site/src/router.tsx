@@ -1,6 +1,6 @@
 import { createRootRoute, createRoute, createRouter } from '@tanstack/react-router'
 import { getBook, getBooks } from './data/books'
-import { subscribeShownFeeds, type FeedName } from './data/fetch'
+import { subscribeShownCopies, type FeedName } from './data/fetch'
 import { getEpisode, getEpisodeFeed, getEpisodes, getPodcast, getPodcasts } from './data/podcasts'
 import { documentTitle } from './format'
 import { Layout, LoadError, NotFound } from './layout'
@@ -54,6 +54,7 @@ const podcast = createRoute({
   path: '/podcasts/$uuid',
   head: () => pageTitle('Podcast'),
   loader: ({ params }) => ({ podcast: getPodcast(params.uuid) }),
+  shouldReload: onlyOnEnter,
   component: () => <PodcastDetail podcast={podcast.useLoaderData().podcast} />,
   notFoundComponent: NotFound,
 })
@@ -73,9 +74,17 @@ const episode = createRoute({
   path: '/episodes/$uuid',
   head: () => pageTitle('Episode'),
   loader: ({ params }) => ({ episode: getEpisode(params.uuid) }),
+  shouldReload: onlyOnEnter,
   component: () => <EpisodeDetail episode={episode.useLoaderData().episode} />,
   notFoundComponent: NotFound,
 })
+
+// A lookup by `uuid` runs when the page opens, and again only after "Try
+// again": `invalidate()` otherwise reloads every page on screen, and a lookup
+// isn't shared, so it would fetch again and show its placeholder.
+function onlyOnEnter({ cause }: { cause: 'preload' | 'enter' | 'stay' }) {
+  return cause !== 'stay'
+}
 
 function pageTitle(title: string) {
   return { meta: [{ title: documentTitle(title) }] }
@@ -87,11 +96,11 @@ export const router = createRouter({
   defaultErrorComponent: LoadError,
 })
 
-// When a feed shows a new copy, e.g. a fresh copy replacing a saved copy, the
-// pages showing that feed load again: their loaders get the new copy ready at
-// once, and their state (search text, shelf, "Show more") stays.
-subscribeShownFeeds((name) => {
-  void router.invalidate({ filter: (match) => match.staticData.feeds?.includes(name) ?? false })
+// When a fresh copy replaces a saved copy, the pages showing that feed load
+// again: their loaders get the new copy ready at once, and their state
+// (search text, shelf, "Show more") stays.
+subscribeShownCopies((name, replaced) => {
+  if (replaced) void router.invalidate({ filter: (match) => match.staticData.feeds?.includes(name) ?? false })
 })
 
 declare module '@tanstack/react-router' {

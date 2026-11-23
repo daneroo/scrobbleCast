@@ -36,8 +36,8 @@ test('once the books feed is loaded, a book is ready at once', async () => {
 
 test('with a saved copy, the books feed shows it first, then the fresh copy ready at once', async () => {
   const [first] = example
-  const { saved } = fakeSavedCopies({ [booksUrl]: [first] })
-  const { getBooks } = booksFeed({ download: async () => new Response(JSON.stringify(example)), saved })
+  const { savedCopies } = fakeSavedCopies({ [booksUrl]: [first] })
+  const { getBooks } = booksFeed({ download: async () => new Response(JSON.stringify(example)), savedCopies })
 
   expect(await getBooks()).toMatchObject({ source: 'saved', data: [{ title: first.title }] })
   await expect.poll(() => getBooks.loaded()?.source).toBe('fresh')

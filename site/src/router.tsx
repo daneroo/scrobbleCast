@@ -17,7 +17,7 @@ const home = createRoute({
   path: '/',
   staticData: { feeds: ['books', 'podcasts', 'episodes'] },
   // Each card's count needs only its own feed.
-  loader: () => ({ books: getBooks(), podcasts: getPodcasts(), episodes: getEpisodeFeed() }),
+  loader: () => handOff({ books: getBooks(), podcasts: getPodcasts(), episodes: getEpisodeFeed() }),
   component: () => <Home feeds={home.useLoaderData()} />,
 })
 
@@ -26,7 +26,7 @@ const books = createRoute({
   path: '/books',
   staticData: { feeds: ['books'] },
   head: () => pageTitle('Books'),
-  loader: () => ({ books: getBooks() }),
+  loader: () => handOff({ books: getBooks() }),
   component: () => <Books books={books.useLoaderData().books} />,
 })
 
@@ -35,7 +35,7 @@ const book = createRoute({
   path: '/books/$bookId',
   staticData: { feeds: ['books'] },
   head: () => pageTitle('Book'),
-  loader: ({ params }) => ({ book: getBook(params.bookId) }),
+  loader: ({ params }) => handOff({ book: getBook(params.bookId) }),
   component: () => <BookDetail book={book.useLoaderData().book} />,
   notFoundComponent: NotFound,
 })
@@ -45,7 +45,7 @@ const podcasts = createRoute({
   path: '/podcasts',
   staticData: { feeds: ['podcasts'] },
   head: () => pageTitle('Podcasts'),
-  loader: () => ({ podcasts: getPodcasts() }),
+  loader: () => handOff({ podcasts: getPodcasts() }),
   component: () => <Podcasts podcasts={podcasts.useLoaderData().podcasts} />,
 })
 
@@ -53,7 +53,7 @@ const podcast = createRoute({
   getParentRoute: () => root,
   path: '/podcasts/$uuid',
   head: () => pageTitle('Podcast'),
-  loader: ({ params }) => ({ podcast: getPodcast(params.uuid) }),
+  loader: ({ params }) => handOff({ podcast: getPodcast(params.uuid) }),
   shouldReload: onlyOnEnter,
   component: () => <PodcastDetail podcast={podcast.useLoaderData().podcast} />,
   notFoundComponent: NotFound,
@@ -65,7 +65,7 @@ const episodes = createRoute({
   // Episode titles come from the podcast feed.
   staticData: { feeds: ['episodes', 'podcasts'] },
   head: () => pageTitle('Recent episodes'),
-  loader: () => ({ episodes: getEpisodes() }),
+  loader: () => handOff({ episodes: getEpisodes() }),
   component: () => <Episodes episodes={episodes.useLoaderData().episodes} />,
 })
 
@@ -73,7 +73,7 @@ const episode = createRoute({
   getParentRoute: () => root,
   path: '/episodes/$uuid',
   head: () => pageTitle('Episode'),
-  loader: ({ params }) => ({ episode: getEpisode(params.uuid) }),
+  loader: ({ params }) => handOff({ episode: getEpisode(params.uuid) }),
   shouldReload: onlyOnEnter,
   component: () => <EpisodeDetail episode={episode.useLoaderData().episode} />,
   notFoundComponent: NotFound,
@@ -84,6 +84,15 @@ const episode = createRoute({
 // isn't shared, so it would fetch again and show its placeholder.
 function onlyOnEnter({ cause }: { cause: 'preload' | 'enter' | 'stay' }) {
   return cause !== 'stay'
+}
+
+// Loaders hand their promises to `<Await>` without awaiting them. `<Await>`
+// handles a rejection only once it renders, so a fast failure would be
+// reported as unhandled first: mark them handled now. `<Await>` still gets the
+// same promises and shows the error.
+function handOff<T extends Record<string, Promise<unknown>>>(promises: T): T {
+  for (const promise of Object.values(promises)) promise.catch(() => {})
+  return promises
 }
 
 function pageTitle(title: string) {

@@ -12,8 +12,12 @@ export function plainText(html: string) {
   return template.content.textContent?.trim() ?? ''
 }
 
-export async function fetchJson<T>(url: string, label: string, schema: z.ZodType<T>): Promise<T> {
-  const response = await fetch(url)
+// How a feed is downloaded: `fetch` in the app, a fake in tests.
+export type Download = (url: string) => Promise<Response>
+const fetchDownload: Download = (url) => fetch(url)
+
+export async function loadFeed<T>(url: string, label: string, schema: z.ZodType<T>, download = fetchDownload): Promise<T> {
+  const response = await download(url)
   if (!response.ok) throw new Error(`Could not load ${label} (HTTP ${response.status}).`)
   const result = schema.safeParse(await response.json())
   if (result.success) return result.data
@@ -23,15 +27,26 @@ export async function fetchJson<T>(url: string, label: string, schema: z.ZodType
 }
 
 // Share in-flight and recent requests across routes in the current tab.
+// `loaded()` gives the data if it has already arrived and is still recent.
 export function cached<T>(load: () => Promise<T>, ttl = cacheTtlMs) {
-  let entry: { expires: number; promise: Promise<T> } | undefined
-  return () => {
-    if (entry && entry.expires > Date.now()) return entry.promise
-    const promise = load().catch((error) => {
-      if (entry?.promise === promise) entry = undefined
-      throw error
-    })
-    entry = { expires: Date.now() + ttl, promise }
-    return promise
+  let entry: { expires: number; promise: Promise<T>; data?: T } | undefined
+  const fresh = () => (entry && entry.expires > Date.now() ? entry : undefined)
+  const get = () => {
+    const current = fresh()
+    if (current) return current.promise
+    const next: NonNullable<typeof entry> = { expires: Date.now() + ttl, promise: load() }
+    next.promise = next.promise.then(
+      (data) => {
+        next.data = data
+        return data
+      },
+      (error) => {
+        if (entry === next) entry = undefined
+        throw error
+      },
+    )
+    entry = next
+    return next.promise
   }
+  return Object.assign(get, { loaded: () => fresh()?.data })
 }

@@ -1,7 +1,12 @@
 import type { ComponentProps, ReactNode } from 'react'
 
-// Small building blocks shared by the pages. Each takes extra classes for
-// layout (margins, width); its look comes from roles only.
+// Small building blocks shared by the pages; their look comes from roles only.
+//
+// `className` on these components is additive, for layout only (margins,
+// width, placement): it is appended to the built-in classes, never merged,
+// so a class that conflicts with a built-in one (padding, colour, size) wins
+// or loses by Tailwind's CSS order, not by being passed. A page that needs a
+// different built-in style should get a prop for it instead.
 
 export function classes(...names: (string | false | undefined)[]) {
   return names.filter(Boolean).join(' ')

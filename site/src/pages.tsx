@@ -158,23 +158,28 @@ export function Home({ feeds }: {
 
   return (
     <>
-      <section className="flex items-start justify-between gap-6 rounded-3xl border bg-hero p-6 sm:items-center sm:p-10 lg:p-14">
-        <div>
+      {/* Stacked on phones, the logo above the title; side by side from sm. */}
+      <section className="flex flex-col-reverse gap-6 rounded-3xl border bg-hero p-6 sm:flex-row sm:items-center sm:justify-between sm:p-10 lg:p-14">
+        <div className="min-w-0">
           <h1 className="text-5xl leading-none font-bold tracking-tighter text-hero-title sm:text-6xl lg:text-7xl xl:text-8xl">
             Scrobble Cast
           </h1>
           <p className="mt-4 text-lg text-hero-subtitle sm:mt-6 sm:text-xl">What my eyes and ears have been up to.</p>
         </div>
-        <img src="/scrobble-cast.svg" alt="" width="180" height="180" className="mt-1 w-22 rounded-xl sm:mt-0 sm:w-36 lg:w-45" />
+        <img src="/scrobble-cast.svg" alt="" width="180" height="180" className="w-22 shrink-0 rounded-xl sm:w-36 lg:w-45" />
       </section>
       <div className="mt-5 grid gap-4 sm:grid-cols-3">
         {sections.map(({ to, title, count, label, border }) => (
           <Link
             key={to}
             to={to}
-            className={classes('grid gap-1.5 rounded-xl border border-t-4 bg-card p-4 text-inherit no-underline hover:shadow-card sm:p-6', border)}
+            className={classes('group grid gap-1.5 rounded-xl border border-t-4 bg-card p-4 text-inherit no-underline hover:shadow-card sm:p-6', border)}
           >
-            <span className="flex justify-between font-bold text-accent">{title}<span aria-hidden="true">↗</span></span>
+            {/* The underline is the hover cue that survives forced colours, where the shadow is dropped. */}
+            <span className="flex justify-between font-bold text-accent">
+              <span className="group-hover:underline">{title}</span>
+              <span aria-hidden="true">↗</span>
+            </span>
             <strong className="text-4xl leading-tight tracking-tighter sm:text-5xl lg:text-6xl">{count}</strong>
             <span className="text-muted-foreground">{label}</span>
           </Link>

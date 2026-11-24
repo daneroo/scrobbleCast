@@ -7,8 +7,10 @@
 
    A theme is one unit: its light values under its `data-theme` on <html>,
    its dark values right after under `.dark`. Pantone is the default: it
-   applies under any (or no, or an unknown) `data-theme`, and every other
-   theme sets all the same base roles over it, so none leaks into another.
+   applies under any (or no, or an unknown) `data-theme`, with zero
+   specificity (`:where`), so a named theme outranks it wherever it sits in
+   this file. Every theme sets all the same base roles over it, so none leaks
+   into another.
    Subtle colours are derived from roles with color-mix, not given values. */
 
 /* ---- Shared: relationships between roles, the same in every theme ------ */
@@ -28,8 +30,7 @@
 }
 
 /* ---- pantone (default): the four 2015 Pantone colours ------------------ */
-:root,
-:root[data-theme="pantone"] {
+:where(:root) {
   /* Brand colours */
   --classic-blue: #1d4e89;
   --sandstone: #c78d6b;
@@ -75,8 +76,7 @@
   --episodes: var(--dusk-blue);
 }
 /* pantone dark: the four 2015 colours on a deep blue page. */
-:root.dark,
-:root[data-theme="pantone"].dark {
+:where(:root.dark) {
   --background: #0f1b2a;
   --foreground: #e6edf5;
   --muted-foreground: #8fa3b8;

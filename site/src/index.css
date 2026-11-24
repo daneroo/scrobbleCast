@@ -47,6 +47,7 @@
   --color-header-active: var(--header-active);
   --color-header-mark: var(--header-mark);
   --color-header-ring: var(--header-ring);
+  --color-switcher-dot: var(--switcher-dot);
 
   --color-hero-title: var(--hero-title);
   --color-hero-subtitle: var(--hero-subtitle);

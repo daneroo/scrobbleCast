@@ -6,6 +6,7 @@ import { feedTitles, getShownCopies, subscribeShownCopies } from './data/fetch'
 import { localTime } from './format'
 import { notices } from './notices'
 import type { Notice } from './notices'
+import { ThemeSwitcher } from './switcher'
 import { Button, Heading, Panel, classes } from './ui'
 
 // The width and side margins of the header and the page's content.
@@ -21,11 +22,14 @@ export function Layout() {
             <BrandMark />
             Scrobble Cast
           </Link>
-          <nav aria-label="Main" className="flex items-center gap-0.5 sm:gap-2 lg:gap-3.5">
-            <NavLink to="/books">Books</NavLink>
-            <NavLink to="/podcasts">Podcasts</NavLink>
-            <NavLink to="/episodes">Episodes</NavLink>
-          </nav>
+          <div className="flex items-center gap-1 sm:gap-3 lg:gap-4">
+            <nav aria-label="Main" className="flex items-center gap-0.5 sm:gap-2 lg:gap-3.5">
+              <NavLink to="/books">Books</NavLink>
+              <NavLink to="/podcasts">Podcasts</NavLink>
+              <NavLink to="/episodes">Episodes</NavLink>
+            </nav>
+            <ThemeSwitcher />
+          </div>
         </div>
       </header>
       <NoticeArea />

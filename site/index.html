@@ -7,15 +7,6 @@
     <meta name="description" content="Daniel's reading and listening log." />
     <link rel="icon" type="image/svg+xml" href="/scrobble-cast-icon.svg" />
     <title>Scrobble Cast</title>
-    <script>
-      // Theme trials for the study page: ?theme=<name>&mode=dark. Replaced by
-      // the theme switcher (#83).
-      (function () {
-        var q = new URLSearchParams(location.search), r = document.documentElement
-        if (q.get('theme')) r.dataset.theme = q.get('theme')
-        r.classList.toggle('dark', q.get('mode') === 'dark')
-      })()
-    </script>
   </head>
   <body>
     <div id="root"></div>

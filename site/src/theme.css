@@ -24,6 +24,7 @@
   --artwork: var(--tint);
   --hero-title: var(--accent);
   --notice-info: var(--tint);
+  --switcher-dot: var(--header-mark); /* the theme button's dot */
 }
 :root.dark {
   color-scheme: dark;

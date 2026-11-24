@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Scrobble Cast · theme study</title>
+<!-- Palette trials (thoughts/theming.md step 2): every palette in theme.css,
+     light and dark, on a real page of the site. Swatches are read from each
+     frame's role variables, so they can't drift from theme.css. -->
+<style>
+  :root { font: 14px/1.4 system-ui, sans-serif; color: #1c1d26; background: #f3f1ec; --mono: ui-monospace, Menlo, monospace; }
+  body { margin: 0; padding: 16px 20px 40px; }
+  h1 { margin: 0 0 4px; font-size: 20px; letter-spacing: -0.02em; }
+  .intro { margin: 0 0 12px; color: #6b6a72; max-width: 80ch; }
+  .params { position: sticky; top: 0; z-index: 2; display: flex; flex-wrap: wrap; gap: 8px 20px; align-items: center; padding: 10px 14px; margin-bottom: 16px; background: #fff; border-radius: 12px; box-shadow: 0 4px 12px #0000001f; }
+  .params label { display: flex; gap: 6px; align-items: center; font-weight: 600; }
+  .params select, .params input { font: inherit; padding: 3px 6px; }
+  .params input[type="text"] { width: 26ch; font-family: var(--mono); font-size: 12px; }
+  .row { margin-bottom: 26px; }
+  .row h2 { margin: 0 0 8px; font-size: 16px; }
+  .row h2 small { font-weight: 400; color: #6b6a72; }
+  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .cell { min-width: 0; }
+  .cell .label { font: 11px var(--mono); color: #6b6a72; margin-bottom: 4px; }
+  .swatches { display: flex; flex-wrap: wrap; gap: 3px; margin-bottom: 6px; }
+  .swatch { display: grid; grid-template-rows: 22px auto; width: 62px; font: 9.5px/1.2 var(--mono); color: #6b6a72; }
+  .swatch i { border-radius: 4px; box-shadow: inset 0 0 0 1px #0000001a; }
+  .swatch span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-top: 2px; }
+  .frame { position: relative; overflow: hidden; border-radius: 8px; box-shadow: 0 0 0 1px #0000001a; background: #fff; }
+  .frame iframe { position: absolute; top: 0; left: 0; border: 0; transform-origin: 0 0; }
+  .open { font: 11px var(--mono); margin-left: 6px; }
+</style>
+</head>
+<body>
+<h1>Theme study</h1>
+<p class="intro">Each palette in <code>site/src/theme.css</code>, light and dark, on the same page of the real site. The frames are live: scroll, hover, follow links. Swatches are the frame's own role values.</p>
+
+<div class="params">
+  <label>Page
+    <select id="page">
+      <option value="/">home</option>
+      <option value="/books">books</option>
+      <option value="/podcasts">podcasts</option>
+      <option value="/episodes">episodes</option>
+      <option value="/books/240339287">a book</option>
+      <option value="/podcasts/fe30f8e0-3da9-0135-9028-63f4b61a9224">a podcast</option>
+      <option value="/episodes/aff98171-0190-4d6c-ac1c-518cc37f29e3">an episode</option>
+      <option value="/books/no-such-book">not found</option>
+    </select>
+  </label>
+  <label>Path <input id="path" type="text" spellcheck="false" /></label>
+  <label>Width
+    <select id="width">
+      <option value="1280">desktop 1280</option>
+      <option value="390">phone 390</option>
+    </select>
+  </label>
+  <label>Height <input id="height" type="range" min="400" max="1600" step="50" value="760" /></label>
+  <label>Palettes
+    <select id="only">
+      <option value="">all</option>
+    </select>
+  </label>
+</div>
+
+<div id="board"></div>
+
+<script>
+const PALETTES = {
+  pantone: 'the 2015 colours: today’s site, plus a derived dark',
+  chromatic: 'im-qcic: rust-cream + midnight by day, midnight + copper by night',
+  sketch: 'im-qcic: monochrome paper and graphite, one red for focus and warnings',
+  prosodio: 'Prosodio’s logo colours: cream, sepia, midnight, rust, amber',
+}
+const ROLES = ['--background', '--surface', '--tint', '--border', '--input', '--foreground', '--muted-foreground',
+  '--accent', '--primary', '--ring', '--header', '--header-mark', '--notice-warning', '--books', '--podcasts', '--episodes']
+
+const $ = (id) => document.getElementById(id)
+const params = new URLSearchParams(location.search)
+for (const name of Object.keys(PALETTES)) $('only').add(new Option(name, name))
+for (const id of ['page', 'width', 'height', 'only']) if (params.get(id)) $(id).value = params.get(id)
+$('path').value = params.get('path') || $('page').value
+
+function short(value) {
+  const v = value.trim()
+  return v.replace(/^color-mix\(in (\w+),\s*/, 'mix ').replace(/oklch\(([^)]*)\)/g, 'oklch $1')
+}
+
+function swatches(el, frame) {
+  try {
+    const css = frame.contentWindow.getComputedStyle(frame.contentDocument.documentElement)
+    el.replaceChildren(...ROLES.map((role) => {
+      const value = css.getPropertyValue(role)
+      const s = document.createElement('div'); s.className = 'swatch'; s.title = `${role}: ${value.trim()}`
+      const i = document.createElement('i'); i.style.background = value
+      const span = document.createElement('span'); span.textContent = role.slice(2)
+      const v = document.createElement('span'); v.textContent = short(value)
+      s.append(i, span, v); return s
+    }))
+  } catch { el.textContent = '(swatches need the study page on the site’s own origin)' }
+}
+
+function render() {
+  const path = $('path').value || '/'
+  const w = +$('width').value, h = +$('height').value
+  const only = $('only').value
+  const q = new URLSearchParams({ page: $('page').value, path, width: w, height: h, ...(only && { only }) })
+  history.replaceState(null, '', '?' + q)
+  const board = $('board'); board.replaceChildren()
+  for (const [name, note] of Object.entries(PALETTES)) {
+    if (only && only !== name) continue
+    const row = document.createElement('section'); row.className = 'row'
+    row.innerHTML = `<h2>${name} <small>· ${note}</small></h2><div class="pair"></div>`
+    for (const mode of ['light', 'dark']) {
+      const src = `${path}${path.includes('?') ? '&' : '?'}theme=${name}&mode=${mode}`
+      const cell = document.createElement('div'); cell.className = 'cell'
+      cell.innerHTML = `<div class="label">${mode}<a class="open" href="${src}" target="_blank">open ↗</a></div><div class="swatches"></div><div class="frame"><iframe loading="lazy"></iframe></div>`
+      row.querySelector('.pair').append(cell)
+      const frame = cell.querySelector('iframe'), box = cell.querySelector('.frame')
+      frame.width = w; frame.height = h / 1
+      frame.addEventListener('load', () => swatches(cell.querySelector('.swatches'), frame))
+      frame.src = src
+      const fit = () => {
+        const s = Math.min(1, box.clientWidth / w)
+        frame.style.transform = `scale(${s})`; frame.height = h
+        box.style.height = `${h * s}px`
+      }
+      new ResizeObserver(fit).observe(box)
+    }
+    board.append(row)
+  }
+}
+
+$('page').addEventListener('change', () => { $('path').value = $('page').value; render() })
+$('path').addEventListener('change', render)
+for (const id of ['width', 'height', 'only']) $(id).addEventListener('change', render)
+render()
+</script>
+</body>
+</html>

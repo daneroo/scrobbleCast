@@ -23,3 +23,11 @@ _Avoid_: Cache (too generic), snapshot
 **Last change**:
 The newest time the scraper saw any record in a podcast or episode feed change. A scrape that changes nothing leaves it as is, so it is not the time of the last scrape.
 _Avoid_: Last fetch, last scrape, generated at
+
+**Theme**:
+A named look for the whole site (pantone, chromatic, sketch, prosodio), chosen by the reader. Every theme has both modes.
+_Avoid_: Palette, skin, colourway
+
+**Mode**:
+Light or dark, within a theme. The reader picks light, dark or system; system follows the device and is a setting, not a third mode.
+_Avoid_: Appearance, scheme

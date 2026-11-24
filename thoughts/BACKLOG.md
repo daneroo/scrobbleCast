@@ -6,7 +6,6 @@ Idea inbox, grouped by theme: snippets worth not forgetting, not yet worth an is
 
 Items for the web app in `site/`.
 
-- [ ] theming — four themes, each light and dark, with a switcher; plan in [theming.md](theming.md). Next: grill stage 2 (Tailwind port + theme switcher).
 - [ ] layout — a design session with `/prototype`: structurally different versions of a real page (home, a list, a detail), switched with `?variant=`.
 - [ ] tanstack-start — server rendering would make a "generated at" time meaningful again.
 - [ ] history-api-generated-at — the history API returns a bare array with no generation time. Have it say when the scraper last ran (e.g. `Last-Modified` or an envelope) so the footer can show it.

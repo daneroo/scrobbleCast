@@ -8,11 +8,12 @@
     <link rel="icon" type="image/svg+xml" href="/scrobble-cast-icon.svg" />
     <title>Scrobble Cast</title>
     <script>
-      // Palette trials (thoughts/theming.md step 2): ?theme=<name>&mode=dark.
+      // Theme trials for the study page: ?theme=<name>&mode=dark. Replaced by
+      // the theme switcher (#83).
       (function () {
         var q = new URLSearchParams(location.search), r = document.documentElement
         if (q.get('theme')) r.dataset.theme = q.get('theme')
-        if (q.get('mode')) r.dataset.mode = q.get('mode')
+        r.classList.toggle('dark', q.get('mode') === 'dark')
       })()
     </script>
   </head>

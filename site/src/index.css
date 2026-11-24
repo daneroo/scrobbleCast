@@ -1,0 +1,98 @@
+/* Tailwind, with preflight. The site styles itself with utilities in the
+   markup; this file holds only what utilities can't: the roles, the dark
+   variant and a few element defaults. Everything sits in Tailwind's layers,
+   so a utility always beats it. */
+@import "tailwindcss";
+@import "./theme.css" layer(base);
+
+/* Mode is the `.dark` class on <html>. For rare exceptions only: colours
+   follow the mode through the roles, never through `dark:`. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Only roles are colours: Tailwind's palette is dropped, so `bg-red-500`
+   doesn't exist and a component can't name a colour by mistake. */
+@theme {
+  --color-*: initial;
+}
+
+/* The roles as utilities (`bg-card`, `text-muted-foreground`, `border-t-books`,
+   …). `inline` keeps them as var() references, so they follow the theme and
+   mode at runtime. Base roles that exist only to be pointed at (--surface,
+   --tint) are left out: a component names its own role. */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-link: var(--link);
+  --color-accent: var(--accent);
+
+  --color-card: var(--card);
+  --color-field: var(--field);
+  --color-hero: var(--hero);
+  --color-table-heading: var(--table-heading);
+  --color-table-stripe: var(--table-stripe);
+  --color-artwork: var(--artwork);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-hover: var(--hover);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-hover: var(--primary-hover);
+  --color-ring: var(--ring);
+
+  --color-header: var(--header);
+  --color-header-foreground: var(--header-foreground);
+  --color-header-hover: var(--header-hover);
+  --color-header-active: var(--header-active);
+  --color-header-mark: var(--header-mark);
+  --color-header-ring: var(--header-ring);
+
+  --color-hero-title: var(--hero-title);
+  --color-hero-subtitle: var(--hero-subtitle);
+
+  --color-notice-info: var(--notice-info);
+  --color-notice-warning: var(--notice-warning);
+
+  --color-books: var(--books);
+  --color-podcasts: var(--podcasts);
+  --color-episodes: var(--episodes);
+
+  --shadow-card: var(--shadow);
+}
+
+/* Element defaults: what preflight removes that the site wants back. */
+@layer base {
+  *,
+  ::before,
+  ::after,
+  ::backdrop {
+    border-color: var(--border);
+  }
+
+  /* The page colour on <body> too: Safari tints its bars from it. */
+  html,
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+  }
+  html {
+    font-synthesis: none;
+  }
+
+  a {
+    color: var(--link);
+    text-decoration-line: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.19em;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--ring);
+    outline-offset: 3px;
+  }
+
+  button:not(:disabled) {
+    cursor: pointer;
+  }
+}

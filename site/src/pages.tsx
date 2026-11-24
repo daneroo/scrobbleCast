@@ -26,6 +26,8 @@ function shelfName(shelf: string) {
   return shelfLabels[shelf] ?? shelf
 }
 
+const shelfSelect = classes(control, 'min-w-44')
+
 // The shelf shown until one is picked.
 function defaultShelf(books: Book[]) {
   return books.some((book) => book.userShelf === 'currently-reading') ? 'currently-reading' : ''
@@ -200,13 +202,13 @@ export function Books({ books }: { books: Promise<Feed<Book[]>> }) {
       <Controls>
         <SearchBox value={query} onChange={setQuery} label="Search books" />
         <Field label="Shelf">
-          <Await promise={books} fallback={<select className={classes(control, 'min-w-44')} disabled><option>All shelves</option></select>}>
+          <Await promise={books} fallback={<select className={shelfSelect} disabled><option>All shelves</option></select>}>
             {({ data }) => {
               const shown = shelf ?? defaultShelf(data)
               // A fresh copy may have no book left on the shelf shown.
               const shelves = new Set([...data.map((book) => book.userShelf), ...(shown ? [shown] : [])])
               return (
-                <select className={classes(control, 'min-w-44')} value={shown} onChange={(event) => setShelf(event.target.value)}>
+                <select className={shelfSelect} value={shown} onChange={(event) => setShelf(event.target.value)}>
                   <option value="">All shelves</option>
                   {[...shelves].map((name) => <option key={name} value={name}>{shelfName(name)}</option>)}
                 </select>
@@ -274,8 +276,22 @@ export function Episodes({ episodes }: { episodes: Promise<Feed<Episode[]>> }) {
   )
 }
 
-// The author or podcast under a detail page's title.
+// A record's page, with a link back to its list.
+function DetailPage({ back, label, children }: { back: '/books' | '/podcasts' | '/episodes'; label: string; children: ReactNode }) {
+  return (
+    <article className="max-w-4xl">
+      <Link className="mb-6 inline-block" to={back}>← {label}</Link>
+      {children}
+    </article>
+  )
+}
+
+// A detail page's parts: the artwork beside the title, then under the title
+// the author or podcast, a line of metadata, and the description below.
+const detailHeading = 'flex items-start gap-4 sm:gap-8'
 const byline = 'mt-3 text-xl text-accent'
+const metadata = 'mt-2 mb-4 text-muted-foreground'
+const description = 'mt-7 max-w-[72ch] leading-relaxed whitespace-pre-line'
 
 function Stat({ label, children }: { label: string; children: ReactNode }) {
   return (
@@ -304,10 +320,9 @@ function Artwork({ src, kind }: { src: string; kind: 'book' | 'podcast' }) {
 
 export function BookDetail({ book }: { book: Promise<Book | undefined> }) {
   return (
-    <article className="max-w-4xl">
-      <Link className="mb-6 inline-block" to="/books">← Books</Link>
+    <DetailPage back="/books" label="Books">
       <Found record={book}>{(book) => <BookInfo book={book} />}</Found>
-    </article>
+    </DetailPage>
   )
 }
 
@@ -315,26 +330,25 @@ function BookInfo({ book }: { book: Book }) {
   usePageTitle(book.title)
   return (
     <>
-      <div className="flex items-start gap-4 sm:gap-8">
+      <div className={detailHeading}>
         <Artwork key={book.bookImageURL} src={book.bookImageURL} kind="book" />
         <div>
           <Heading>{book.title}</Heading>
           <p className={byline}>{book.authorName}</p>
-          <p className="mt-2 mb-4 text-muted-foreground">{shelfName(book.userShelf)}{book.userLastReadAt && ` · Last read ${day(book.userLastReadAt)}`}</p>
+          <p className={metadata}>{shelfName(book.userShelf)}{book.userLastReadAt && ` · Last read ${day(book.userLastReadAt)}`}</p>
           <a href={book.bookURL}>View on Goodreads <span aria-hidden="true">↗</span></a>
         </div>
       </div>
-      {book.bookDescription && <p className="mt-7 max-w-[72ch] leading-relaxed whitespace-pre-line">{book.bookDescription}</p>}
+      {book.bookDescription && <p className={description}>{book.bookDescription}</p>}
     </>
   )
 }
 
 export function PodcastDetail({ podcast }: { podcast: Promise<Podcast | undefined> }) {
   return (
-    <article className="max-w-4xl">
-      <Link className="mb-6 inline-block" to="/podcasts">← Podcasts</Link>
+    <DetailPage back="/podcasts" label="Podcasts">
       <Found record={podcast}>{(podcast) => <PodcastInfo podcast={podcast} />}</Found>
-    </article>
+    </DetailPage>
   )
 }
 
@@ -342,25 +356,24 @@ function PodcastInfo({ podcast }: { podcast: Podcast }) {
   usePageTitle(podcast.title)
   return (
     <>
-      <div className="flex items-start gap-4 sm:gap-8">
+      <div className={detailHeading}>
         <Artwork key={podcast.thumbnail} src={podcast.thumbnail} kind="podcast" />
         <div>
           <Heading>{podcast.title}</Heading>
           {podcast.author && <p className={byline}>{podcast.author}</p>}
-          {podcast.firstSeen && <p className="mt-2 mb-4 text-muted-foreground">In the catalog since {day(podcast.firstSeen)}</p>}
+          {podcast.firstSeen && <p className={metadata}>In the catalog since {day(podcast.firstSeen)}</p>}
         </div>
       </div>
-      {podcast.description && <p className="mt-7 max-w-[72ch] leading-relaxed whitespace-pre-line">{podcast.description}</p>}
+      {podcast.description && <p className={description}>{podcast.description}</p>}
     </>
   )
 }
 
 export function EpisodeDetail({ episode }: { episode: Promise<Episode | undefined> }) {
   return (
-    <article className="max-w-4xl">
-      <Link className="mb-6 inline-block" to="/episodes">← Episodes</Link>
+    <DetailPage back="/episodes" label="Episodes">
       <Found record={episode}>{(episode) => <EpisodeInfo episode={episode} />}</Found>
-    </article>
+    </DetailPage>
   )
 }
 

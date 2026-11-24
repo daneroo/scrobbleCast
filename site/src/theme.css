@@ -6,8 +6,9 @@
    colour with another still gets its own role, so the two can diverge.
 
    A theme is one unit: its light values under its `data-theme` on <html>,
-   its dark values right after under `.dark`. With no `data-theme` the site is
-   pantone. Every theme sets the same base roles, so none leaks into another.
+   its dark values right after under `.dark`. Pantone is the default: it
+   applies under any (or no, or an unknown) `data-theme`, and every other
+   theme sets all the same base roles over it, so none leaks into another.
    Subtle colours are derived from roles with color-mix, not given values. */
 
 /* ---- Shared: relationships between roles, the same in every theme ------ */
@@ -27,9 +28,9 @@
 }
 
 /* ---- pantone (default): the four 2015 Pantone colours ------------------ */
-:root:not([data-theme]),
-[data-theme="pantone"] {
-  /* Brand palette */
+:root,
+:root[data-theme="pantone"] {
+  /* Brand colours */
   --classic-blue: #1d4e89;
   --sandstone: #c78d6b;
   --marsala: #955251;
@@ -74,8 +75,8 @@
   --episodes: var(--dusk-blue);
 }
 /* pantone dark: the four 2015 colours on a deep blue page. */
-:root:not([data-theme]).dark,
-[data-theme="pantone"].dark {
+:root.dark,
+:root[data-theme="pantone"].dark {
   --background: #0f1b2a;
   --foreground: #e6edf5;
   --muted-foreground: #8fa3b8;
@@ -108,7 +109,7 @@
 /* ---- chromatic (from im-qcic): midnight and rust swap roles ------------ */
 /* Rust-cream ground with midnight accents by day, midnight ground with copper
    accents by night. */
-[data-theme="chromatic"] {
+:root[data-theme="chromatic"] {
   --background: #f8f1e7;
   --foreground: #241a12;
   --muted-foreground: #6a5744;
@@ -137,7 +138,7 @@
   --podcasts: #1b3a6b;
   --episodes: #c9803f;
 }
-[data-theme="chromatic"].dark {
+:root[data-theme="chromatic"].dark {
   --background: #080d1a;
   --foreground: #e9effa;
   --muted-foreground: #93a6c6;
@@ -169,7 +170,7 @@
 
 /* ---- sketch (from im-qcic): monochrome warm paper and graphite --------- */
 /* The one red is kept for focus and warnings. */
-[data-theme="sketch"] {
+:root[data-theme="sketch"] {
   --background: #fbfaf7;
   --foreground: #171613;
   --muted-foreground: #5c584f;
@@ -198,7 +199,7 @@
   --podcasts: #96918a;
   --episodes: #cbc7bb;
 }
-[data-theme="sketch"].dark {
+:root[data-theme="sketch"].dark {
   --background: #131211;
   --foreground: #f3f0e9;
   --muted-foreground: #a9a399;
@@ -231,7 +232,7 @@
 /* ---- prosodio (from its logo colours) ---------------------------------- */
 /* Cream and sepia by day under a midnight bar with rust; deep midnight with
    amber by night. */
-[data-theme="prosodio"] {
+:root[data-theme="prosodio"] {
   --background: #fffbeb;
   --foreground: oklch(0.27 0.05 45);
   --muted-foreground: oklch(0.48 0.05 55);
@@ -260,7 +261,7 @@
   --podcasts: oklch(0.32 0.07 262);
   --episodes: oklch(0.8 0.125 68);
 }
-[data-theme="prosodio"].dark {
+:root[data-theme="prosodio"].dark {
   --background: oklch(0.2 0.04 262);
   --foreground: oklch(0.96 0.02 90);
   --muted-foreground: oklch(0.76 0.03 80);

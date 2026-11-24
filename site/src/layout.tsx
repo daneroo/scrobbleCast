@@ -85,9 +85,10 @@ export function LoadError({ error, reset }: { error: unknown; reset: () => void 
   )
 }
 
-const noticeColours: Record<Notice['kind'], string> = {
-  info: 'bg-notice-info',
-  warning: 'bg-notice-warning',
+// How each kind of notice looks and is announced.
+const noticeKinds: Record<Notice['kind'], { className: string; role: 'status' | 'alert' }> = {
+  info: { className: 'bg-notice-info', role: 'status' },
+  warning: { className: 'bg-notice-warning', role: 'alert' },
 }
 
 // A thin bar of notices under the site header, each with × to dismiss it.
@@ -100,8 +101,8 @@ function NoticeArea() {
       {shown.map(([key, { kind, text }]) => (
         <li
           key={key}
-          className={classes('flex items-center justify-center gap-3 border-b px-4 py-1.5', noticeColours[kind])}
-          role={kind === 'warning' ? 'alert' : 'status'}
+          className={classes('flex items-center justify-center gap-3 border-b px-4 py-1.5', noticeKinds[kind].className)}
+          role={noticeKinds[kind].role}
         >
           <span>{text}</span>
           <button

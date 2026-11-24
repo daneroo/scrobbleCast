@@ -1,49 +1,75 @@
-# Theming: plan and colour inventory
+# Theming: the plan
 
-Working notes for the `theming` and `layout` backlog items (2026-11-23). Delete once the work is done and what's still true lives in `site/` or `docs/`.
+Working notes for the `theming` and `layout` backlog items. Delete once the work is done and what's still true lives in `site/`, `docs/` or an ADR.
 
-## Order
+## What we're building
 
-1. **Extract** (refactor, no visual change): every colour into role variables in a new `site/src/theme.css`; `site/src/styles.css` uses only the role names (no hex, no `white`/`black`). Check with before/after screenshots of each page (home, books, podcasts, episodes, the three detail pages, a notice); they must match. One commit.
-2. **Theme design**: palettes, each light and dark, compared on the real pages with `?theme=` (maybe a style-guide page like `assets/logo/study.html`). Only `theme.css` values change. Adds the light/dark switch (system setting, maybe a toggle).
-3. **Layout**: `/prototype`, structurally different versions of a real page with `?variant=`, built from the roles. A new component colour adds one role to `theme.css`.
+The site gets **four themes** (pantone, chromatic, sketch, prosodio), **each with a light and a dark mode**. The reader picks the mode (light, dark or system) and the theme. Not every theme may prove fit for purpose and the values will change, but this is the system: every theme is light and dark, and themes are independent of each other.
 
-Then iterate: each change touches one side; the role list is the only link.
+## Three layers
 
-## Status (2026-11-24)
+1. **Roles** (the contract): the variable names in `site/src/theme.css` (`--background`, `--card`, `--header`, …). Names follow shadcn where one fits.
+2. **Themes** (values): each theme fills in the roles, for light and dark. A theme never adds a role.
+3. **Components and layout** (consumers): use only roles, never a colour. A new component colour adds one role, pointing at an existing role by default so no theme breaks.
 
-- Step 1 done (`dfa03d8`). Step 2 under way on branch `theming`: four palettes in `theme.css` (pantone, chromatic, sketch, prosodio), each light and dark, picked with `?theme=&mode=`; compared on `/theme-study.html` (dev server).
-- Plan: keep all four in the app, with a light/dark/system toggle and a palette switcher (icon).
-- Open: the header bar looks disconnected (a fixed dark blue in every palette). Options: follow the page; the palette's own ink, inverted; the hero tint. Express "same as page" or "inverted" as references to other roles (`--header: var(--foreground)`), not new values.
-- Open: one declaration per role for both modes with `light-dark(light, dark)` plus `color-scheme` on `html` (`light dark` = system). Would halve each palette and give system mode for free.
+The role list is the only link, so themes and layout iterate separately. Rules carried forward:
 
-## Decisions
+- Subtle colours are derived from roles (`color-mix(in oklch, …, var(--surface))`), not given values, so they work in dark mode.
+- Components that share a colour still get their own role (`--hero: var(--tint)`), so they can diverge.
+- A relationship is a reference, not a copy: "the header is the page" is `--header: var(--background)`.
 
-- Plain CSS variables, no new stack. Role names follow shadcn (`--background`, `--foreground`, `--card`, `--muted`, `--muted-foreground`, `--border`, `--input`, `--primary`, `--primary-foreground`, `--accent`, `--ring`, …) so a later move to Tailwind/shadcn is mostly renaming.
-- Two layers: the brand palette (the four 2015 Pantone colours, by name), then roles pointing at it.
-- Step 1 extracts colours, the shadow and the font family. Radii (8 values), font sizes (12), spacing (36) become scales during layout work, since normalising them changes the look.
-- Subtle colours are derived from roles, not given values: tints and the table stripe as `color-mix(..., var(--surface))`, not `white`, so dark mode works. Step 1 keeps `in srgb` (pixel-identical); switch to `in oklch` in step 2.
-- Component roles that today share a colour get their own name pointing at it, so they can diverge: `--hero: var(--tint)`, info notice likewise.
-- Not a cross-app template; what carries over to other apps is this vocabulary and order (maybe as a skill later).
+## Three merges to `main`
 
-## Colour inventory (`styles.css`, `index.html`)
+### 1. Exploration: merge now, no spec
 
-- **Page and text**: page `#f5f8fa` (on `:root`); text `#122c44`; muted `--muted` `#4b6074` (footer, counts, notes, metadata, card labels, loading, stat labels); links classic blue; hero subtitle `#2c526b` (one-off).
-- **Surfaces**: raised `white` (cards, table, empty/error boxes, stat boxes, inputs/selects); tint `--dusk-tint` = `color-mix(in srgb, dusk-blue 19%, white)` (hero panel, table heading row, artwork box, info notice); border `--line` `#d5e0e8`; table stripe `#f8fbfd`; card hover shadow `#0b3d6614`.
-- **Accent and actions**: classic blue for card titles, table heading buttons, hero title, detail byline; primary button classic blue / white, hover `color-mix(classic-blue 80%, black)`; checkbox `accent-color`; input border `#9eb2c3` (darker than `--line`: an `--input` role).
-- **Focus**: marsala; sandstone inside the header.
-- **Header (inverse area, blue in both modes)**: background classic blue, text white, nav hover `#ffffff18`, active underline dusk blue, mark sandstone (CSS mask of `scrobble-cast-icon.svg`).
-- **Status**: info notice = tint; warning = `color-mix(sandstone 22%, white)`; dismiss hover `#00000014` (overlays must flip in dark).
-- **Categories**: home card top borders, books sandstone, podcasts marsala, episodes dusk blue. Only used there; give them roles (`--books`, …) and dark variants.
-- **Outside CSS**: `<meta name="theme-color" content="#1d4e89">` in `index.html`; no `color-scheme` declared (native controls stay light in dark); fixed-colour images: tiled logo (hero, artwork placeholder), book and podcast covers.
+Branch `theming`. Merges as is; the default look is unchanged.
+
+- Every colour as a role in `theme.css`; `styles.css` uses only roles (`dfa03d8`, already on `main`).
+- The four themes as trials, picked by URL: `?theme=<name>&mode=dark`.
+- `/theme-study.html`: every theme, light and dark, side by side on real pages, with swatches read from the frames.
+
+`theme.css` is permanent. Two pieces are temporary scaffolding and go out with the next production deploy:
+
+- The URL switch (the inline script in `site/index.html`): removed by the stack spike, when the switcher replaces it.
+- `site/public/theme-study.html`: kept while themes are tuned; removed once they settle, at the latest when stage 3's layout spec ships.
+
+### 2. Stack spike: spec required, own branch
+
+`/grilling` → `/to-spec` (parent issue) → `/to-tickets`, then one branch for the spec. The test feature is the **theme switcher**: a light/dark/system toggle and a theme menu, saved, with no flash of the wrong theme on load. It needs accessible menus and state, which is what tests a component library, and it ships either way. Likely tickets:
+
+1. Tailwind v4 with the roles exposed through `@theme inline`; no visual change (before/after screenshots).
+2. Each theme as one block with `light-dark()`, `color-scheme` on `html`; settle the header roles.
+3. shadcn set up; the theme switcher built with it. It replaces the URL switch in `index.html` (remove the script; `?theme=` may survive as a way to share a theme, if the switcher reads it).
+4. One real page (books or home) ported to Tailwind utilities, to feel the day-to-day cost.
+5. An ADR in `docs/adr/` recording the stack decision.
+
+Merge if the stack works out. If not, the ADR records "no, and why", and the switcher ships in plain CSS.
+
+### 3. Layout: prototypes, then a spec
+
+`/prototype`: structurally different versions of real pages with `?variant=`, on the chosen stack, built from roles. Prototypes are throwaway and don't merge. The winners become a spec ("port layout X"), implemented on its own branch and merged. That spec also deletes `theme-study.html` if it's still there, and this file once what's still true has moved to `docs/` or an ADR.
+
+## When a spec is needed
+
+- **Spec**: a change to the stack or the app's structure, or a user-facing feature (stages 2 and 3).
+- **No spec**: exploration (study pages, URL-only trials) and theme tuning (values in `theme.css` only). Tuning can happen alongside any stage, on any branch.
+
+## Open questions for the spike's grilling
+
+- **Header**: today a fixed dark blue in every theme, so it looks disconnected. Same as the page, inverted (the theme's ink), or the hero tint? Express it as a role reference.
+- **`light-dark()`**: one declaration per role for both modes, driven by `color-scheme` (`light dark` = system). Check browser support first.
+- **Stack**: Tailwind v4 + shadcn is the lean (im-qcic already runs Tailwind v4 with roles through `@theme inline`: `im-qcic/v2/apps/web/src/theme.css`, `theme.ts`). Check shadcn's current setup before committing. Full frameworks (MUI, Mantine, Chakra) bring their own theming and would fight the roles.
+- **Fixed-colour images**: the tiled logo (hero, artwork placeholder) has baked-in colours that may clash with the non-pantone themes.
+- **Scales**: radii (8 values), font sizes (12) and spacing (36) become scales during layout work, since normalising them changes the look.
 
 ## Browser chrome
 
-- Set the page background on `html` **and** `body`: Safari 26 (iOS, iPadOS, macOS) ignores `theme-color` and the manifest's `theme_color`, and tints its bars from the `body` background (or a fixed/sticky element touching the top edge; bottom bar needs `viewport-fit=cover`). Our header isn't sticky, so Safari shows the page colour, not the blue.
-- Keep `theme-color` with light/dark variants (`media="(prefers-color-scheme: …)"`) for Chrome on Android; a user toggle must update it by script, and set `color-scheme` on `html`.
-- Test on iPhone and iPad. (Prosodio's white bar has the same cause: no `body` background.)
+- Set the page background on `html` **and** `body`: Safari 26 (iOS, iPadOS, macOS) ignores `theme-color` and the manifest's `theme_color`, and tints its bars from the `body` background (or a fixed/sticky element touching the top edge; bottom bar needs `viewport-fit=cover`). Our header isn't sticky, so Safari shows the page colour, not the header's.
+- Keep `theme-color` with light/dark variants (`media="(prefers-color-scheme: …)"`) for Chrome on Android; a user toggle must update it by script.
+- Test on iPhone and iPad.
 
-## Related
+## Sources
 
-- `assets/logo/study.html`: the logo's colourways (2015 Pantone, Paper & ink, Prosodio sepia & cream, Prosodio midnight & rust), a starting point for palettes.
-- The site already uses the 2026 logo: `site/public/scrobble-cast.svg` (tile), `scrobble-cast-icon.svg` (bare; header mask, favicon).
+- `assets/logo/study.html`: the logo's colourways.
+- im-qcic `chromatic` (midnight and rust swap roles by day and night) and `sketch` (monochrome, one red); its two-axis switch (theme and mode, both saved, set before first paint) in `theme.ts`.
+- Prosodio's logo colours: `ai-garden/prosodio/packages/logo/colors.ts`.

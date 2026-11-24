@@ -10,6 +10,13 @@ Working notes for the `theming` and `layout` backlog items (2026-11-23). Delete 
 
 Then iterate: each change touches one side; the role list is the only link.
 
+## Status (2026-11-24)
+
+- Step 1 done (`dfa03d8`). Step 2 under way on branch `theming`: four palettes in `theme.css` (pantone, chromatic, sketch, prosodio), each light and dark, picked with `?theme=&mode=`; compared on `/theme-study.html` (dev server).
+- Plan: keep all four in the app, with a light/dark/system toggle and a palette switcher (icon).
+- Open: the header bar looks disconnected (a fixed dark blue in every palette). Options: follow the page; the palette's own ink, inverted; the hero tint. Express "same as page" or "inverted" as references to other roles (`--header: var(--foreground)`), not new values.
+- Open: one declaration per role for both modes with `light-dark(light, dark)` plus `color-scheme` on `html` (`light dark` = system). Would halve each palette and give system mode for free.
+
 ## Decisions
 
 - Plain CSS variables, no new stack. Role names follow shadcn (`--background`, `--foreground`, `--card`, `--muted`, `--muted-foreground`, `--border`, `--input`, `--primary`, `--primary-foreground`, `--accent`, `--ring`, …) so a later move to Tailwind/shadcn is mostly renaming.

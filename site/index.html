@@ -7,6 +7,14 @@
     <meta name="description" content="Daniel's reading and listening log." />
     <link rel="icon" type="image/svg+xml" href="/scrobble-cast-icon.svg" />
     <title>Scrobble Cast</title>
+    <script>
+      // Palette trials (thoughts/theming.md step 2): ?theme=<name>&mode=dark.
+      (function () {
+        var q = new URLSearchParams(location.search), r = document.documentElement
+        if (q.get('theme')) r.dataset.theme = q.get('theme')
+        if (q.get('mode')) r.dataset.mode = q.get('mode')
+      })()
+    </script>
   </head>
   <body>
     <div id="root"></div>

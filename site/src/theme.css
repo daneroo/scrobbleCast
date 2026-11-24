@@ -59,3 +59,228 @@
   --podcasts: var(--marsala);
   --episodes: var(--dusk-blue);
 }
+
+/* ---- Palette trials (thoughts/theming.md step 2) -----------------------
+   Picked with ?theme=<name>&mode=dark (index.html sets data-theme and
+   data-mode on <html>); compared side by side on /theme-study.html. The
+   block above is "pantone" light, today's site. Every palette sets the same
+   base roles, so none leaks into another; roles left out (--card, --hero, …)
+   follow the base roles they point at. */
+
+html[data-mode="dark"] { color-scheme: dark; }
+
+/* pantone dark: the four 2015 colours on a deep blue page. */
+html[data-mode="dark"]:not([data-theme]),
+html[data-theme="pantone"][data-mode="dark"] {
+  --background: #0f1b2a;
+  --foreground: #e6edf5;
+  --muted-foreground: #8fa3b8;
+  --link: #9cc0de;
+  --accent: #9cc0de;
+  --surface: #162436;
+  --tint: color-mix(in oklch, var(--dusk-blue) 16%, var(--surface));
+  --table-stripe: color-mix(in oklch, var(--foreground) 3%, var(--card));
+  --border: #26384d;
+  --input: #3d536b;
+  --shadow: 0 5px 18px #00000066;
+  --hover: #ffffff14;
+  --primary: var(--dusk-blue);
+  --primary-foreground: #0f1b2a;
+  --primary-hover: color-mix(in oklch, var(--primary) 85%, white);
+  --ring: var(--sandstone);
+  --header: var(--classic-blue);
+  --header-foreground: white;
+  --header-hover: #ffffff18;
+  --header-active: var(--dusk-blue);
+  --header-mark: var(--sandstone);
+  --header-ring: var(--sandstone);
+  --hero-subtitle: #a9bfd3;
+  --notice-warning: color-mix(in oklch, var(--sandstone) 25%, var(--surface));
+  --books: var(--sandstone);
+  --podcasts: #c07a78;
+  --episodes: var(--dusk-blue);
+}
+
+/* chromatic (from im-qcic): midnight and rust swap roles. Rust-cream ground
+   with midnight accents by day, midnight ground with copper accents by
+   night. */
+html[data-theme="chromatic"] {
+  --background: #f8f1e7;
+  --foreground: #241a12;
+  --muted-foreground: #6a5744;
+  --link: #1b3a6b;
+  --accent: #1b3a6b;
+  --surface: #fffbf3;
+  --tint: #f0e6d6;
+  --table-stripe: color-mix(in oklch, var(--tint) 45%, var(--card));
+  --border: #e0d0b8;
+  --input: #c6b092;
+  --shadow: 0 5px 18px #241a1214;
+  --hover: #241a1214;
+  --primary: #1b3a6b;
+  --primary-foreground: #fffbf3;
+  --primary-hover: color-mix(in oklch, var(--primary) 80%, black);
+  --ring: #b04a1e;
+  --header: #1b3a6b;
+  --header-foreground: #fffbf3;
+  --header-hover: #ffffff18;
+  --header-active: #e79551;
+  --header-mark: #e79551;
+  --header-ring: #e79551;
+  --hero-subtitle: #6a5744;
+  --notice-warning: color-mix(in oklch, #b04a1e 16%, var(--surface));
+  --books: #b04a1e;
+  --podcasts: #1b3a6b;
+  --episodes: #c9803f;
+}
+html[data-theme="chromatic"][data-mode="dark"] {
+  --background: #080d1a;
+  --foreground: #e9effa;
+  --muted-foreground: #93a6c6;
+  --link: #c9803f;
+  --accent: #c9803f;
+  --surface: #101829;
+  --tint: #16203a;
+  --table-stripe: color-mix(in oklch, var(--tint) 45%, var(--card));
+  --border: #1f2c49;
+  --input: #33456e;
+  --shadow: 0 5px 18px #00000080;
+  --hover: #ffffff14;
+  --primary: #c9803f;
+  --primary-foreground: #080d1a;
+  --primary-hover: color-mix(in oklch, var(--primary) 85%, white);
+  --ring: #e4713c;
+  --header: #0f1d3a;
+  --header-foreground: #e9effa;
+  --header-hover: #ffffff14;
+  --header-active: #c9803f;
+  --header-mark: #c9803f;
+  --header-ring: #e4713c;
+  --hero-subtitle: #93a6c6;
+  --notice-warning: color-mix(in oklch, #e4713c 22%, var(--surface));
+  --books: #e4713c;
+  --podcasts: #74a9d6;
+  --episodes: #c9803f;
+}
+
+/* sketch (from im-qcic): monochrome warm paper and graphite; the one red is
+   kept for focus and warnings. */
+html[data-theme="sketch"] {
+  --background: #fbfaf7;
+  --foreground: #171613;
+  --muted-foreground: #5c584f;
+  --link: #33302a;
+  --accent: #33302a;
+  --surface: #ffffff;
+  --tint: #f4f2ec;
+  --table-stripe: color-mix(in oklch, var(--tint) 50%, var(--card));
+  --border: #e2dfd6;
+  --input: #cbc7bb;
+  --shadow: 0 5px 18px #17161314;
+  --hover: #17161314;
+  --primary: #33302a;
+  --primary-foreground: #fbfaf7;
+  --primary-hover: color-mix(in oklch, var(--primary) 80%, black);
+  --ring: #93301f;
+  --header: #33302a;
+  --header-foreground: #fbfaf7;
+  --header-hover: #ffffff18;
+  --header-active: #d6d0c3;
+  --header-mark: #d6d0c3;
+  --header-ring: #d6d0c3;
+  --hero-subtitle: #5c584f;
+  --notice-warning: color-mix(in oklch, #93301f 12%, var(--surface));
+  --books: #33302a;
+  --podcasts: #96918a;
+  --episodes: #cbc7bb;
+}
+html[data-theme="sketch"][data-mode="dark"] {
+  --background: #131211;
+  --foreground: #f3f0e9;
+  --muted-foreground: #a9a399;
+  --link: #d6d0c3;
+  --accent: #d6d0c3;
+  --surface: #1b1a18;
+  --tint: #232120;
+  --table-stripe: color-mix(in oklch, var(--tint) 50%, var(--card));
+  --border: #2f2d2a;
+  --input: #45423d;
+  --shadow: 0 5px 18px #00000080;
+  --hover: #ffffff14;
+  --primary: #d6d0c3;
+  --primary-foreground: #131211;
+  --primary-hover: color-mix(in oklch, var(--primary) 85%, white);
+  --ring: #e2705a;
+  --header: #0b0a09;
+  --header-foreground: #f3f0e9;
+  --header-hover: #ffffff14;
+  --header-active: #a9a399;
+  --header-mark: #d6d0c3;
+  --header-ring: #e2705a;
+  --hero-subtitle: #a9a399;
+  --notice-warning: color-mix(in oklch, #e2705a 20%, var(--surface));
+  --books: #d6d0c3;
+  --podcasts: #6f6a61;
+  --episodes: #45423d;
+}
+
+/* prosodio (from its logo colours): cream and sepia by day under a midnight
+   bar with rust; deep midnight with amber by night. */
+html[data-theme="prosodio"] {
+  --background: #fffbeb;
+  --foreground: oklch(0.27 0.05 45);
+  --muted-foreground: oklch(0.48 0.05 55);
+  --link: oklch(0.32 0.07 262);
+  --accent: oklch(0.32 0.07 262);
+  --surface: oklch(0.997 0.006 95);
+  --tint: color-mix(in oklch, oklch(0.67 0.13 52) 13%, var(--surface));
+  --table-stripe: color-mix(in oklch, var(--tint) 40%, var(--card));
+  --border: oklch(0.9 0.03 80);
+  --input: oklch(0.78 0.05 70);
+  --shadow: 0 5px 18px #46190114;
+  --hover: #46190114;
+  --primary: oklch(0.32 0.07 262);
+  --primary-foreground: #fffbeb;
+  --primary-hover: color-mix(in oklch, var(--primary) 80%, black);
+  --ring: oklch(0.67 0.13 52);
+  --header: oklch(0.32 0.07 262);
+  --header-foreground: #fffbeb;
+  --header-hover: #ffffff18;
+  --header-active: oklch(0.74 0.13 58);
+  --header-mark: oklch(0.74 0.13 58);
+  --header-ring: oklch(0.74 0.13 58);
+  --hero-subtitle: oklch(0.42 0.06 50);
+  --notice-warning: color-mix(in oklch, oklch(0.67 0.13 52) 24%, var(--surface));
+  --books: oklch(0.67 0.13 52);
+  --podcasts: oklch(0.32 0.07 262);
+  --episodes: oklch(0.8 0.125 68);
+}
+html[data-theme="prosodio"][data-mode="dark"] {
+  --background: oklch(0.2 0.04 262);
+  --foreground: oklch(0.96 0.02 90);
+  --muted-foreground: oklch(0.76 0.03 80);
+  --link: oklch(0.8 0.125 68);
+  --accent: oklch(0.8 0.125 68);
+  --surface: oklch(0.25 0.045 262);
+  --tint: oklch(0.3 0.055 262);
+  --table-stripe: color-mix(in oklch, var(--tint) 40%, var(--card));
+  --border: oklch(0.34 0.05 262);
+  --input: oklch(0.45 0.05 262);
+  --shadow: 0 5px 18px #00000080;
+  --hover: #ffffff14;
+  --primary: oklch(0.74 0.13 58);
+  --primary-foreground: oklch(0.2 0.04 262);
+  --primary-hover: color-mix(in oklch, var(--primary) 85%, white);
+  --ring: oklch(0.74 0.13 58);
+  --header: oklch(0.27 0.07 262);
+  --header-foreground: oklch(0.96 0.02 90);
+  --header-hover: #ffffff14;
+  --header-active: oklch(0.8 0.125 68);
+  --header-mark: oklch(0.8 0.125 68);
+  --header-ring: oklch(0.8 0.125 68);
+  --hero-subtitle: oklch(0.76 0.03 80);
+  --notice-warning: color-mix(in oklch, oklch(0.67 0.13 52) 28%, var(--surface));
+  --books: oklch(0.74 0.13 58);
+  --podcasts: oklch(0.72 0.08 250);
+  --episodes: oklch(0.8 0.125 68);
+}

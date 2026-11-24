@@ -71,7 +71,8 @@
     border-color: var(--border);
   }
 
-  /* The page colour on <body> too: Safari tints its bars from it. */
+  /* The page colour on <body> too: Safari 26 (iOS, iPadOS, macOS) ignores
+     theme-color and tints its bars from the body's background. */
   html,
   body {
     background-color: var(--background);

@@ -49,6 +49,12 @@ function look(page: Document) {
   }
 }
 
+// Storage the browser blocks: every use throws.
+const throwing = {
+  getItem(): string | null { throw new Error('SecurityError') },
+  setItem() { throw new Error('SecurityError') },
+}
+
 test('a first visit is pantone, following a light device', () => {
   const page = freshPage()
 
@@ -88,12 +94,8 @@ test('an unknown or garbled saved value falls back to the default, on its own', 
 
 test('storage that throws gives the default, and cycling still works', () => {
   const page = freshPage()
-  const storage = {
-    getItem(): string | null { throw new Error('SecurityError') },
-    setItem() { throw new Error('QuotaExceededError') },
-  }
 
-  const setting = themeSetting({ storage, darkQuery: fakeDevice(true).darkQuery, page })
+  const setting = themeSetting({ storage: throwing, darkQuery: fakeDevice(true).darkQuery, page })
   expect(setting.get()).toEqual({ theme: 'pantone', mode: 'system' })
   expect(look(page)).toMatchObject({ theme: 'pantone', dark: true })
 
@@ -193,11 +195,6 @@ function runBeforePaint(page: Document, storage: ThemeSettingDeps['storage'], da
     return darkQuery
   }
   new Function('document', 'localStorage', 'matchMedia', beforePaintScript)(page, storage, matchMedia)
-}
-
-const throwing = {
-  getItem(): string | null { throw new Error('SecurityError') },
-  setItem() { throw new Error('SecurityError') },
 }
 
 test.each([

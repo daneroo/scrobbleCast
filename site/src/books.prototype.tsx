@@ -148,12 +148,12 @@ const presets: Preset[] = [
   {
     key: 'deck', label: 'On deck, best first', hint: 'On-deck books by Goodreads average rating',
     filter: (b) => b.userShelf === 'on-deck', sort: then(compareBy('avg', true), compareBy('added', true)),
-    columns: ['avg', 'pages', 'published', 'added'], query: 'shelf:on-deck sort:-avg',
+    columns: ['avg', 'pages', 'published', 'added'], query: 'shelf:on-deck sort:-avg,-added',
   },
   {
     key: 'quick', label: 'Quick next read', hint: 'On deck, under 300 pages, best average first',
     filter: (b) => b.userShelf === 'on-deck' && Number(b.numPages) > 0 && Number(b.numPages) < 300, sort: compareBy('avg', true),
-    columns: ['pages', 'avg', 'published', 'added'], query: 'shelf:on-deck pages:<300 sort:-avg',
+    columns: ['pages', 'avg', 'published', 'added'], query: 'shelf:on-deck pages:<300 sort:-avg,pages',
   },
   {
     key: 'year', label: `Read in ${thisYear}`, hint: `Finished in ${thisYear}, latest first`,
@@ -163,7 +163,7 @@ const presets: Preset[] = [
   {
     key: 'rereads', label: 'Re-reads', hint: 'Books I read more than once',
     filter: (b) => b.userReadCount >= 2, sort: then(compareBy('reads', true), compareBy('read', true)),
-    columns: ['reads', 'mine', 'first', 'read'], query: 'reads:>=2 sort:-reads',
+    columns: ['reads', 'mine', 'first', 'read'], query: 'reads:>=2 sort:-reads,-read',
   },
   {
     key: 'outlier', label: 'Me vs. everyone', hint: 'Where my rating and the average disagree by 0.8 or more',
@@ -625,7 +625,8 @@ const sortAliases: Record<string, FieldKey> = { rating: 'mine', year: 'read' }
 interface Parsed {
   text: string
   filters: { token: string; test: (b: Book) => boolean }[]
-  sort?: { key: FieldKey; descending: boolean }
+  sort?: { key: FieldKey; descending: boolean } // the primary sort
+  sorts: { key: FieldKey; descending: boolean }[] // all of them, in order
   unknown: string[]
   shelves: string[] // full shelf names the query keeps
   mentioned: FieldKey[] // fields the filters compare
@@ -639,18 +640,21 @@ const filterFields: Record<string, FieldKey[]> = {
 const fieldAlias = (name: string) => (sortAliases[name] ?? name) as FieldKey
 
 function parse(query: string): Parsed {
-  const parsed: Parsed = { text: '', filters: [], unknown: [], shelves: [], mentioned: [], shown: [] }
+  const parsed: Parsed = { text: '', filters: [], unknown: [], shelves: [], mentioned: [], shown: [], sorts: [] }
   const words: string[] = []
   for (const token of query.trim().split(/\s+/).filter(Boolean)) {
     const match = /^(\w+):(.+)$/.exec(token)
     if (!match) { words.push(token); continue }
     const [, key, raw] = match
     if (key === 'sort') {
-      const descending = raw.startsWith('-')
-      const name = raw.replace(/^-/, '')
-      const field = (sortAliases[name] ?? name) as FieldKey
-      if (field in fields) parsed.sort = { key: field, descending }
-      else parsed.unknown.push(token)
+      // `sort:-avg,-added`: each field its own direction; the last `sort:` wins.
+      parsed.sorts = []
+      for (const part of raw.split(',')) {
+        const field = fieldAlias(part.replace(/^-/, ''))
+        if (field in fields && !parsed.sorts.some((s) => s.key === field)) parsed.sorts.push({ key: field, descending: part.startsWith('-') })
+        else if (!(field in fields)) parsed.unknown.push(`sort:${part}`)
+      }
+      parsed.sort = parsed.sorts[0]
     } else if (key === 'show') {
       for (const name of raw.split(',')) {
         if (fieldAlias(name) in fields) parsed.shown.push(fieldAlias(name))
@@ -805,7 +809,7 @@ function columnsFor(parsed: Parsed): FieldKey[] {
   if (shelves.length !== 1) add('shelf')
   if (shelves.includes('currently-reading')) add('progress')
   for (const key of parsed.mentioned) add(key)
-  if (parsed.sort && parsed.sort.key !== 'title' && parsed.sort.key !== 'author') add(parsed.sort.key)
+  for (const { key } of parsed.sorts) if (key !== 'title' && key !== 'author') add(key)
   const unread = shelves.length > 0 && shelves.every((s) => s === 'to-read' || s === 'on-deck')
   const defaults: FieldKey[] = shelves.length === 1 && shelves[0] === 'currently-reading'
     ? ['pages', 'avg', 'updated']
@@ -816,14 +820,16 @@ function columnsFor(parsed: Parsed): FieldKey[] {
 
 function run(data: Book[], parsed: Parsed) {
   let results = search(data, bookKeys, parsed.text).filter((b) => parsed.filters.every((f) => f.test(b)))
-  if (parsed.sort || !parsed.text) results = results.toSorted(compareBy(parsed.sort?.key ?? 'updated', parsed.sort?.descending ?? true))
+  const sorts = parsed.sorts.length ? parsed.sorts : parsed.text ? [] : [{ key: 'updated' as FieldKey, descending: true }]
+  if (sorts.length) results = results.toSorted(then(...sorts.map(({ key, descending }) => compareBy(key, descending))))
   return results
 }
 
-// The query with its `sort:` replaced.
-function withSort(query: string, key: FieldKey, descending: boolean) {
-  const name = key === 'mine' ? 'rating' : key
-  return [...query.trim().split(/\s+/).filter((t) => t && !t.startsWith('sort:')), `sort:${descending ? '-' : ''}${name}`].join(' ')
+// The query with `key` as its primary sort; the other sorts stay as tie-breaks.
+function withSort(query: string, parsed: Parsed, key: FieldKey, descending: boolean) {
+  const sorts = [{ key, descending }, ...parsed.sorts.filter((s) => s.key !== key)]
+  const spec = sorts.map((s) => (s.descending ? '-' : '') + (s.key === 'mine' ? 'rating' : s.key)).join(',')
+  return [...query.trim().split(/\s+/).filter((t) => t && !t.startsWith('sort:')), `sort:${spec}`].join(' ')
 }
 
 // A field as a short line under a cover.
@@ -889,7 +895,7 @@ function VariantS({ books }: { books: Books }) {
               </summary>
               <p className="mt-1">
                 Words search title, author, description. Filters: <code>shelf:on-deck,to-read</code> <code>rating:&gt;=4</code> <code>avg:&gt;=4.3</code> <code>pages:&lt;300</code> <code>year:2025</code> <code>reads:&gt;=2</code> <code>gap:&gt;=0.8</code> <code>published:&lt;1950</code> <code>tag:long-term</code>.
-                Order: <code>sort:-avg</code> (minus = high first). Fields shown follow the query; override with <code>show:avg,pages,read</code>.
+                Order: <code>sort:-avg,-added</code> (minus = high first; later fields break ties). Fields shown follow the query; override with <code>show:avg,pages,read</code>.
                 Field names: read, first, rating, avg, gap, pages, published, added, updated, reads, shelf, progress, title, author.
               </p>
             </details>
@@ -931,7 +937,7 @@ function VariantS({ books }: { books: Books }) {
                 </div>
                 {!results.length ? <Panel role="status">No matches.</Panel> : (
                   <>
-                    {view === 'table' && <QueryTable results={results.slice(0, limit)} columns={columns} parsed={parsed} onSort={(k, d) => setQuery(withSort(query, k, d))} />}
+                    {view === 'table' && <QueryTable results={results.slice(0, limit)} columns={columns} parsed={parsed} onSort={(k, d) => setQuery(withSort(query, parsed, k, d))} />}
                     {view === 'small' && (
                       <ul className="grid grid-cols-3 gap-x-3 gap-y-5 sm:grid-cols-5 lg:grid-cols-7">
                         {results.slice(0, limit).map((b) => <SmallCard key={b.bookId} book={b} columns={columns} />)}
@@ -1040,12 +1046,13 @@ function QueryTable({
   const cell = 'border-b px-3 py-2.5 sm:px-4'
   const header = (key: FieldKey, label: string) => {
     const on = parsed.sort?.key === key
+    const rank = parsed.sorts.findIndex((s) => s.key === key)
     const descending = on ? !parsed.sort!.descending : key !== 'title' && key !== 'author'
     return (
       <th key={key} scope="col" className={classes(cell, 'bg-table-heading whitespace-nowrap')}>
         <button type="button" className="inline-flex items-center gap-1.5 py-1 font-bold text-accent" onClick={() => onSort(key, descending)}>
           {label}
-          <span aria-hidden="true" className="text-[0.85em]">{!on ? '↕' : parsed.sort!.descending ? '↓' : '↑'}</span>
+          <span aria-hidden="true" className="text-[0.85em]">{rank < 0 ? '↕' : (parsed.sorts[rank].descending ? '↓' : '↑') + (rank > 0 ? rank + 1 : '')}</span>
         </button>
       </th>
     )

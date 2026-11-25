@@ -27,9 +27,7 @@ const books = createRoute({
   path: '/books',
   staticData: { feeds: ['books'] },
   head: () => pageTitle('Books'),
-  // PROTOTYPE: `?variant=` picks a layout (prototype/layout branch only).
-  validateSearch: (search: Record<string, unknown>): { variant?: string } =>
-    typeof search.variant === 'string' ? { variant: search.variant } : {},
+  // PROTOTYPE: the settled books list (prototype/layout branch only).
   loader: () => handOff({ books: getBooks() }),
   component: () => <BooksPrototype books={books.useLoaderData().books} />,
 })

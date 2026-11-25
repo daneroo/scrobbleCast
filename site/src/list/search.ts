@@ -1,5 +1,5 @@
 import Fuse from 'fuse.js'
-import { searchThreshold } from './config'
+import { searchThreshold } from '../config'
 
 interface Index<T> {
   fuse: Fuse<T>
@@ -12,13 +12,15 @@ interface Index<T> {
 const indexes = new WeakMap<object, unknown>()
 
 // Every word in the query must fuzzy-match some key, so "culture banks" finds
-// Culture novels by Banks. `keys` must be the same for the same items.
+// Culture novels by Banks, wherever in the key the word is (`ignoreLocation`):
+// by default Fuse only looks near the start. `keys` must be the same for the
+// same items.
 export function search<T>(items: T[], keys: string[], query: string): T[] {
   const term = query.trim()
   if (!term) return items
   let index = indexes.get(items) as Index<T> | undefined
   if (!index) {
-    index = { fuse: new Fuse(items, { keys, threshold: searchThreshold }) }
+    index = { fuse: new Fuse(items, { keys, threshold: searchThreshold, ignoreLocation: true }) }
     indexes.set(items, index)
   }
   if (index.term !== term) {

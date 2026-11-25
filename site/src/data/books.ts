@@ -5,6 +5,20 @@ import { loadFeed, mapData, plainText, ready, shareFeed, type Feed, type FeedOpt
 // A Book is upstream's Item, its description as plain text: search indexes it.
 export type Book = Item
 
+// The reader's shelves, in their usual order, with the short names the site
+// shows for them. A shelf not listed shows as its Goodreads name.
+export const shelfNames: Record<string, string> = {
+  'currently-reading': 'Reading',
+  'on-deck': 'On deck',
+  'to-read': 'To read',
+  read: 'Read',
+  'did-not-finish': 'DNF',
+}
+
+export function shelfName(shelf: string) {
+  return shelfNames[shelf] ?? shelf
+}
+
 // The books feed, with a saved copy, and one book found in it. S3's
 // `Last-Modified` says when the feed was generated.
 export function booksFeed(options: FeedOptions = {}) {

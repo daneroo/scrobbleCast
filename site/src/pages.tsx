@@ -2,30 +2,19 @@ import { Await, Link, notFound } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 import type { ReactNode } from 'react'
 import { episodePageSize, episodePageStep, recentDays } from './config'
+import { shelfName } from './data/books'
 import type { Book } from './data/books'
 import type { Feed } from './data/fetch'
 import type { Episode, Podcast } from './data/podcasts'
 import { day, documentTitle, playedPercent } from './format'
-import { search } from './search'
-import { Table } from './table'
+import { search } from './list/search'
+import { SortableTable } from './list/table'
 import { Button, Field, Heading, Panel, classes, control } from './ui'
-import type { Column } from './table'
+import type { Column } from './list/table'
 
 const bookKeys = ['title', 'authorName', 'bookDescription']
 const podcastKeys = ['title', 'author', 'description']
 const episodeKeys = ['title', 'podcastTitle']
-const shelfLabels: Record<string, string> = {
-  'currently-reading': 'Currently reading',
-  'to-read': 'To read',
-  'on-deck': 'On deck',
-  'did-not-finish': 'Did not finish',
-  read: 'Read',
-}
-
-function shelfName(shelf: string) {
-  return shelfLabels[shelf] ?? shelf
-}
-
 const shelfSelect = classes(control, 'min-w-44')
 
 // The shelf shown until one is picked.
@@ -35,40 +24,44 @@ function defaultShelf(books: Book[]) {
 
 const bookColumns: Column<Book>[] = [
   {
+    key: 'title',
     label: 'Title',
     value: (book) => book.title,
-    render: (book) => <Link to="/books/$bookId" params={{ bookId: book.bookId }}>{book.title}</Link>,
+    cell: (book) => <Link to="/books/$bookId" params={{ bookId: book.bookId }}>{book.title}</Link>,
   },
-  { label: 'Author', value: (book) => book.authorName },
-  { label: 'Shelf', value: (book) => shelfName(book.userShelf) },
-  { label: 'Last read', value: (book) => book.userLastReadAt, render: (book) => day(book.userLastReadAt) },
+  { key: 'author', label: 'Author', value: (book) => book.authorName },
+  { key: 'shelf', label: 'Shelf', value: (book) => shelfName(book.userShelf) },
+  { key: 'read', label: 'Last read', value: (book) => book.userLastReadAt, cell: (book) => day(book.userLastReadAt) },
 ]
 
 const podcastColumns: Column<Podcast>[] = [
   {
+    key: 'title',
     label: 'Title',
     value: (podcast) => podcast.title,
-    render: (podcast) => <Link to="/podcasts/$uuid" params={{ uuid: podcast.uuid }}>{podcast.title}</Link>,
+    cell: (podcast) => <Link to="/podcasts/$uuid" params={{ uuid: podcast.uuid }}>{podcast.title}</Link>,
   },
-  { label: 'Author', value: (podcast) => podcast.author },
-  { label: 'Since', value: (podcast) => podcast.firstSeen, render: (podcast) => day(podcast.firstSeen) },
+  { key: 'author', label: 'Author', value: (podcast) => podcast.author },
+  { key: 'since', label: 'Since', value: (podcast) => podcast.firstSeen, cell: (podcast) => day(podcast.firstSeen) },
 ]
 
 const episodeColumns: Column<Episode>[] = [
   {
+    key: 'title',
     label: 'Title',
     value: (episode) => episode.title,
-    render: (episode) => <Link to="/episodes/$uuid" params={{ uuid: episode.uuid }}>{episode.title}</Link>,
+    cell: (episode) => <Link to="/episodes/$uuid" params={{ uuid: episode.uuid }}>{episode.title}</Link>,
   },
   {
+    key: 'podcast',
     label: 'Podcast',
     value: (episode) => episode.podcastTitle,
-    render: (episode) => episode.podcastId && episode.podcastTitle
+    cell: (episode) => episode.podcastId && episode.podcastTitle
       ? <Link to="/podcasts/$uuid" params={{ uuid: episode.podcastId }}>{episode.podcastTitle}</Link>
       : episode.podcastTitle || '—',
   },
-  { label: 'Played', value: playedPercent, render: (episode) => playedPercent(episode) + '%' },
-  { label: 'Last played', value: (episode) => episode.lastPlayed, render: (episode) => day(episode.lastPlayed) },
+  { key: 'played', label: 'Played', value: playedPercent, cell: (episode) => playedPercent(episode) + '%' },
+  { key: 'lastPlayed', label: 'Last played', value: (episode) => episode.lastPlayed, cell: (episode) => day(episode.lastPlayed) },
 ]
 
 // Pages show their static part at once. Each data part waits for its feed in
@@ -223,7 +216,7 @@ export function Books({ books }: { books: Promise<Feed<Book[]>> }) {
         </Field>
       </Controls>
       <Await promise={books} fallback={<Loading block />}>
-        {({ data }) => <Table items={results(data)} columns={bookColumns} id={(book) => book.bookId} />}
+        {({ data }) => <SortableTable items={results(data)} columns={bookColumns} id={(book) => book.bookId} />}
       </Await>
     </Collection>
   )
@@ -238,7 +231,7 @@ export function Podcasts({ podcasts }: { podcasts: Promise<Feed<Podcast[]>> }) {
         <SearchBox value={query} onChange={setQuery} label="Search podcasts" />
       </Controls>
       <Await promise={podcasts} fallback={<Loading block />}>
-        {({ data }) => <Table items={results(data)} columns={podcastColumns} id={(podcast) => podcast.uuid} />}
+        {({ data }) => <SortableTable items={results(data)} columns={podcastColumns} id={(podcast) => podcast.uuid} />}
       </Await>
     </Collection>
   )
@@ -266,7 +259,7 @@ export function Episodes({ episodes }: { episodes: Promise<Feed<Episode[]>> }) {
           const shown = Math.min(found.length, limit)
           return (
             <>
-              <Table items={found} columns={episodeColumns} id={(episode) => episode.uuid} limit={limit} />
+              <SortableTable items={found} columns={episodeColumns} id={(episode) => episode.uuid} limit={limit} />
               {shown < found.length && (
                 <div className="mt-4 flex items-center gap-4">
                   <Button onClick={() => setLimit(limit + episodePageStep)}>Show more</Button>

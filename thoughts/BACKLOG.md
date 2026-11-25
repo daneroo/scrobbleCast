@@ -6,8 +6,10 @@ Idea inbox, grouped by theme: snippets worth not forgetting, not yet worth an is
 
 Items for the web app in `site/`.
 
-- [ ] layout — a design session with `/prototype`: structurally different versions of a real page (home, a list, a detail), switched with `?variant=`.
-  - After the prototypes, choose a component library (or none); see [ADR 0001](../docs/adr/0001-tailwind-no-component-library.md). Consider TanStack Table for the tables. Revisit the header bar.
+- [ ] layout — design sessions with `/prototype`: structurally different versions of a real page, switched with `?variant=`, one page per session, each on the `prototype/layout` branch (never merges).
+  - Done: the books list (verdict: `site/src/books.prototype.md` on `prototype/layout`).
+  - Still to do: the podcasts and episodes lists (they should reuse the books list's query model), home (the books journal overlaps it), and the detail pages.
+  - Component library: none so far; the books list needed neither one nor TanStack Table (see [ADR 0001](../docs/adr/0001-tailwind-no-component-library.md)). Recheck after the remaining pages. Revisit the header bar.
 - [ ] theme-tuning — tune the four themes' values in `site/src/theme.css` (no spec needed); palette sources: the logo study's colourways (`assets/logo/study.html`), im-qcic's chromatic and sketch, Prosodio's logo colours (`ai-garden/prosodio/packages/logo/colors.ts`). Leftovers from #82:
   - The warning notice mixes to a purplish tone in chromatic dark.
   - The trial themes repeat literal values where a role reference would do (e.g. chromatic light's link, accent, primary and header are all `#1b3a6b`).

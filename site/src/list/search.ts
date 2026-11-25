@@ -4,23 +4,30 @@ import { searchThreshold } from '../config'
 interface Index<T> {
   fuse: Fuse<T>
   term?: string
-  results?: T[]
+  results?: readonly T[]
 }
 
-// One index per list of items, with its last search: a page's result count and
-// table search the same items for the same query.
-const indexes = new WeakMap<object, unknown>()
+// One index per list of items and its ordered keys, with its last search: a
+// page's result count and table search the same items for the same words.
+// Results are shared between callers, so they are read-only.
+const indexes = new WeakMap<object, Map<string, unknown>>()
 
 // Every word must fuzzy-match some key, so "culture banks" finds Culture novels
 // by Banks, wherever in the key the word is (`ignoreLocation`: by default Fuse
-// only looks near the start). `keys` must be the same for the same items.
-export function search<T>(items: T[], keys: string[], words: string): T[] {
+// only looks near the start).
+export function search<T>(items: readonly T[], keys: string[], words: string): readonly T[] {
   const term = words.trim()
   if (!term) return items
-  let index = indexes.get(items) as Index<T> | undefined
+  let byKeys = indexes.get(items)
+  if (!byKeys) {
+    byKeys = new Map()
+    indexes.set(items, byKeys)
+  }
+  const keysId = keys.join('\0')
+  let index = byKeys.get(keysId) as Index<T> | undefined
   if (!index) {
     index = { fuse: new Fuse(items, { keys, threshold: searchThreshold, ignoreLocation: true }) }
-    indexes.set(items, index)
+    byKeys.set(keysId, index)
   }
   if (index.term !== term) {
     index.term = term

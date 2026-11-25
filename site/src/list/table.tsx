@@ -22,7 +22,7 @@ export interface Sort {
 }
 
 interface TableProps<T> {
-  items: T[]
+  items: readonly T[]
   columns: Column<T>[]
   id: (item: T) => string
   sorts: readonly Sort[]
@@ -40,7 +40,7 @@ const bodyCellClass = 'align-top leading-normal first:w-[52%] first:min-w-40 sm:
 
 // A table whose order comes from outside: it draws `items` as given, and shows
 // `sorts` in its headers. The main sort gets `aria-sort`; tie-breaks get an
-// arrow with their rank.
+// arrow with their rank, and the same in words for screen readers.
 export function Table<T>({ items, columns, id, sorts, onSort, expandedRow }: TableProps<T>) {
   const [openId, setOpenId] = useState<string>()
 
@@ -65,6 +65,7 @@ export function Table<T>({ items, columns, id, sorts, onSort, expandedRow }: Tab
                   <button type="button" className="inline-flex items-center gap-1.5 py-1 font-bold text-accent" onClick={() => onSort(key)}>
                     {label}
                     <span aria-hidden="true" className="text-[0.85em]">{arrow}</span>
+                    {rank > 0 && <span className="sr-only">, sorted {ordinal(rank + 1)}, {sort.descending ? 'descending' : 'ascending'}</span>}
                   </button>
                 </th>
               )
@@ -98,6 +99,14 @@ export function Table<T>({ items, columns, id, sorts, onSort, expandedRow }: Tab
       </table>
     </div>
   )
+}
+
+const ordinalRules = new Intl.PluralRules('en', { type: 'ordinal' })
+const ordinalSuffixes: Partial<Record<Intl.LDMLPluralRule, string>> = { one: 'st', two: 'nd', few: 'rd' }
+
+// 2nd, 3rd, 11th…
+function ordinal(n: number) {
+  return n + (ordinalSuffixes[ordinalRules.select(n)] ?? 'th')
 }
 
 const collator = new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' })

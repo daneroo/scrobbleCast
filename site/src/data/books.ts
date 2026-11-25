@@ -1,13 +1,14 @@
 import { booksUrl } from '../config'
-import { Goodreads, type Item } from '../schema/goodreads'
+import { Goodreads, type ExclusiveShelf, type Item } from '../schema/goodreads'
 import { loadFeed, mapData, plainText, ready, shareFeed, type Feed, type FeedOptions } from './fetch'
 
 // A Book is upstream's Item, its description as plain text: search indexes it.
 export type Book = Item
 
 // The reader's shelves, in their usual order, with the short names the site
-// shows for them. A shelf not listed shows as its Goodreads name.
-export const shelfNames: Record<string, string> = {
+// shows for them: a shelf added upstream fails the typecheck until it has one.
+// A name that isn't a shelf shows as given.
+export const shelfNames: Record<ExclusiveShelf, string> = {
   'currently-reading': 'Reading',
   'on-deck': 'On deck',
   'to-read': 'To read',
@@ -16,7 +17,8 @@ export const shelfNames: Record<string, string> = {
 }
 
 export function shelfName(shelf: string) {
-  return shelfNames[shelf] ?? shelf
+  const names: Partial<Record<string, string>> = shelfNames
+  return names[shelf] ?? shelf
 }
 
 // The books feed, with a saved copy, and one book found in it. S3's

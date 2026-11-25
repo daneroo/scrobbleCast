@@ -119,7 +119,7 @@ function FeedCount<T>({
 // A list page: its title and the number of results from its feed.
 function Collection<T>({
   title, feed, results, children,
-}: { title: string; feed: Promise<Feed<T>>; results: (data: T) => unknown[]; children: ReactNode }) {
+}: { title: string; feed: Promise<Feed<T>>; results: (data: T) => readonly unknown[]; children: ReactNode }) {
   return (
     <>
       <header className="mb-5 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2">

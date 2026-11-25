@@ -24,3 +24,9 @@ test('every word must match something', () => {
   expect(search(items, keys, 'culture minds').map(({ title }) => title)).toEqual(['Culture'])
   expect(search(items, keys, 'culture treasury')).toEqual([])
 })
+
+test('the same items searched with different keys give each its own results', () => {
+  expect(search(items, ['title'], 'treasury')).toEqual([])
+  expect(search(items, ['description'], 'treasury').map(({ title }) => title)).toEqual(['The Spy'])
+  expect(search(items, ['title'], 'treasury')).toEqual([])
+})

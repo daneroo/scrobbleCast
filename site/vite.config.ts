@@ -20,5 +20,6 @@ export default defineConfig({
       },
     },
   ],
-  server: { host: '127.0.0.1', port: 3015, strictPort: true },
+  // allowedHosts: reach the dev server by hostname from other devices on the LAN (with --host).
+  server: { host: '127.0.0.1', port: 3015, strictPort: true, allowedHosts: true },
 })

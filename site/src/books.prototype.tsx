@@ -5,6 +5,8 @@
 //   B  general facets + sort-by-any-field over cover cards
 //   C  reading journal: lanes of premade queries, rich list on "See all"
 //   D  one query line (`shelf:on-deck sort:-avg`), presets fill it, compact list
+//   S  synthesis: D's query line, C's journal when empty, results as A's
+//      table, C's small cards or B's large cards; fields follow the query
 //   0  the current page, for comparison
 import { Await, Link, useNavigate, useSearch } from '@tanstack/react-router'
 import { useState } from 'react'
@@ -23,6 +25,7 @@ import { Button, Field, Heading, Panel, classes, control } from './ui'
 type Books = Promise<Feed<Book[]>>
 
 const variants: Variant[] = [
+  { key: 'S', name: 'Synthesis' },
   { key: 'A', name: 'Views + table' },
   { key: 'B', name: 'Facets + covers' },
   { key: 'C', name: 'Reading journal' },
@@ -31,11 +34,12 @@ const variants: Variant[] = [
 ]
 
 export function BooksPrototype({ books }: { books: Books }) {
-  const { variant = 'A' } = useSearch({ from: '/books' })
+  const { variant = 'S' } = useSearch({ from: '/books' })
   const navigate = useNavigate({ from: '/books' })
   if (!import.meta.env.DEV) return <Books books={books} />
   return (
     <>
+      {variant === 'S' && <VariantS books={books} />}
       {variant === 'A' && <VariantA books={books} />}
       {variant === 'B' && <VariantB books={books} />}
       {variant === 'C' && <VariantC books={books} />}
@@ -618,10 +622,24 @@ const numericKeys: Record<string, (b: Book) => number | undefined> = {
 }
 const sortAliases: Record<string, FieldKey> = { rating: 'mine', year: 'read' }
 
-interface Parsed { text: string; filters: { token: string; test: (b: Book) => boolean }[]; sort?: { key: FieldKey; descending: boolean }; unknown: string[] }
+interface Parsed {
+  text: string
+  filters: { token: string; test: (b: Book) => boolean }[]
+  sort?: { key: FieldKey; descending: boolean }
+  unknown: string[]
+  shelves: string[] // full shelf names the query keeps
+  mentioned: FieldKey[] // fields the filters compare
+  shown: FieldKey[] // `show:` override
+}
+
+const allShelves = ['currently-reading', 'on-deck', 'to-read', 'read', 'did-not-finish']
+const filterFields: Record<string, FieldKey[]> = {
+  rating: ['mine'], avg: ['avg'], gap: ['mine', 'avg', 'gap'], pages: ['pages'], reads: ['reads'], year: ['read'], published: ['published'],
+}
+const fieldAlias = (name: string) => (sortAliases[name] ?? name) as FieldKey
 
 function parse(query: string): Parsed {
-  const parsed: Parsed = { text: '', filters: [], unknown: [] }
+  const parsed: Parsed = { text: '', filters: [], unknown: [], shelves: [], mentioned: [], shown: [] }
   const words: string[] = []
   for (const token of query.trim().split(/\s+/).filter(Boolean)) {
     const match = /^(\w+):(.+)$/.exec(token)
@@ -633,15 +651,24 @@ function parse(query: string): Parsed {
       const field = (sortAliases[name] ?? name) as FieldKey
       if (field in fields) parsed.sort = { key: field, descending }
       else parsed.unknown.push(token)
+    } else if (key === 'show') {
+      for (const name of raw.split(',')) {
+        if (fieldAlias(name) in fields) parsed.shown.push(fieldAlias(name))
+        else parsed.unknown.push(`show:${name}`)
+      }
     } else if (key === 'shelf') {
-      const shelves = raw.split(',')
-      parsed.filters.push({ token, test: (b) => shelves.some((s) => b.userShelf.includes(s)) })
+      // Exact name, else any shelf containing it (`deck`): `read` isn't `currently-reading`.
+      const shelves = raw.split(',').flatMap((s) => allShelves.includes(s) ? [s] : allShelves.filter((full) => full.includes(s)))
+      parsed.shelves.push(...shelves)
+      parsed.filters.push({ token, test: (b) => shelves.includes(b.userShelf) })
     } else if (key === 'tag') {
       parsed.filters.push({ token, test: (b) => b.userTags.includes(raw) })
     } else if (key in numericKeys) {
       const m = /^(>=|<=|>|<|=)?(-?\d+(?:\.\d+)?)$/.exec(raw)
       if (!m) { parsed.unknown.push(token); continue }
       const [, op = '=', num] = m
+      // A field every result shares (rating:5) isn't worth a column.
+      if (!(op === '=' && (key === 'rating' || key === 'reads'))) parsed.mentioned.push(...filterFields[key])
       const n = Number(num)
       const get = numericKeys[key]
       const test = (b: Book) => {
@@ -759,6 +786,297 @@ function Expanded({ book: b }: { book: Book }) {
         )}
         <BookLink book={b} className="justify-self-start">Open book page →</BookLink>
       </div>
+    </div>
+  )
+}
+
+// ------------------------------------------------------------ S: synthesis
+
+type View = 'table' | 'small' | 'large'
+
+// The fields a query shows: `show:` if given; else the shelf (unless one
+// shelf), progress (reading), the filtered and sorted fields, then defaults
+// for the shelf, up to 4 (5 at most).
+function columnsFor(parsed: Parsed): FieldKey[] {
+  if (parsed.shown.length) return parsed.shown
+  const columns: FieldKey[] = []
+  const add = (key: FieldKey) => { if (!columns.includes(key)) columns.push(key) }
+  const { shelves } = parsed
+  if (shelves.length !== 1) add('shelf')
+  if (shelves.includes('currently-reading')) add('progress')
+  for (const key of parsed.mentioned) add(key)
+  if (parsed.sort && parsed.sort.key !== 'title' && parsed.sort.key !== 'author') add(parsed.sort.key)
+  const unread = shelves.length > 0 && shelves.every((s) => s === 'to-read' || s === 'on-deck')
+  const defaults: FieldKey[] = shelves.length === 1 && shelves[0] === 'currently-reading'
+    ? ['pages', 'avg', 'updated']
+    : unread ? ['avg', 'pages', 'published', 'added'] : ['mine', 'avg', 'pages', 'read']
+  for (const key of defaults) if (columns.length < 4) add(key)
+  return columns.slice(0, 5)
+}
+
+function run(data: Book[], parsed: Parsed) {
+  let results = search(data, bookKeys, parsed.text).filter((b) => parsed.filters.every((f) => f.test(b)))
+  if (parsed.sort || !parsed.text) results = results.toSorted(compareBy(parsed.sort?.key ?? 'updated', parsed.sort?.descending ?? true))
+  return results
+}
+
+// The query with its `sort:` replaced.
+function withSort(query: string, key: FieldKey, descending: boolean) {
+  const name = key === 'mine' ? 'rating' : key
+  return [...query.trim().split(/\s+/).filter((t) => t && !t.startsWith('sort:')), `sort:${descending ? '-' : ''}${name}`].join(' ')
+}
+
+// A field as a short line under a cover.
+function short(key: FieldKey, b: Book): ReactNode {
+  switch (key) {
+    case 'mine': return b.userRating ? <Stars value={b.userRating} /> : null
+    case 'avg': return `avg ${b.averageRating}`
+    case 'gap': return gap(b) === undefined ? null : `${signed(gap(b))} vs avg`
+    case 'pages': return b.numPages ? `${b.numPages} p` : null
+    case 'published': return b.bookPublished ? `pub. ${b.bookPublished.slice(0, 4)}` : null
+    case 'added': return `added ${b.userAddedAt.slice(0, 7)}`
+    case 'updated': return `active ${day(b.userUpdatedAt)}`
+    case 'read': return b.userLastReadAt ? `read ${day(b.userLastReadAt)}` : null
+    case 'first': return b.userFirstReadAt ? `first ${day(b.userFirstReadAt)}` : null
+    case 'reads': return b.userReadCount > 1 ? `read ${b.userReadCount}×` : null
+    case 'shelf': return shelfName(b.userShelf)
+    case 'progress': return progress(b) === undefined ? null : <Progress value={progress(b)} />
+    case 'author': return b.authorName
+    case 'title': return null
+  }
+}
+
+function Shorts({ book, columns, max }: { book: Book; columns: FieldKey[]; max?: number }) {
+  const bits = columns.map((key) => [key, short(key, book)] as const).filter(([, v]) => v !== null).slice(0, max)
+  return <>{bits.map(([key, v]) => <span key={key} className="block truncate">{v}</span>)}</>
+}
+
+const lanesS = ['now', 'loved', 'year', 'deck', 'quick', 'gems', 'rereads', 'outlier', 'waiting']
+
+function VariantS({ books }: { books: Books }) {
+  const [query, setQuery] = useState('')
+  const [view, setView] = useState<View>('table')
+  const [limit, setLimit] = useState(60)
+  const parsed = parse(query)
+  const columns = columnsFor(parsed)
+  const go = (q: string) => { setQuery(q); setLimit(60); window.scrollTo({ top: 0 }) }
+
+  return (
+    <Loaded books={books}>
+      {(data) => {
+        const results = query.trim() ? run(data, parsed) : []
+        return (
+          <>
+            <header className="mb-4 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2">
+              <Heading>Books</Heading>
+              {query.trim() && <Count n={results.length} />}
+            </header>
+            <label className="grid gap-1.5">
+              <span className="sr-only">Query</span>
+              <input
+                type="search"
+                spellCheck={false}
+                placeholder="shelf:on-deck pages:<300 sort:-avg   — or just words"
+                className={classes(control, 'font-mono text-base')}
+                value={query}
+                onChange={(e) => { setQuery(e.target.value); setLimit(60) }}
+              />
+            </label>
+            <details className="mt-2 text-xs text-muted-foreground">
+              <summary className="cursor-pointer">
+                Query help
+                {parsed.unknown.length > 0 && <> · Not understood: <strong className="text-foreground line-through">{parsed.unknown.join(' ')}</strong></>}
+              </summary>
+              <p className="mt-1">
+                Words search title, author, description. Filters: <code>shelf:on-deck,to-read</code> <code>rating:&gt;=4</code> <code>avg:&gt;=4.3</code> <code>pages:&lt;300</code> <code>year:2025</code> <code>reads:&gt;=2</code> <code>gap:&gt;=0.8</code> <code>published:&lt;1950</code> <code>tag:long-term</code>.
+                Order: <code>sort:-avg</code> (minus = high first). Fields shown follow the query; override with <code>show:avg,pages,read</code>.
+                Field names: read, first, rating, avg, gap, pages, published, added, updated, reads, shelf, progress, title, author.
+              </p>
+            </details>
+            <div className="mt-3 mb-5 flex flex-wrap gap-1.5">
+              {query.trim() && <button type="button" onClick={() => go('')} className="rounded-md border bg-card px-2.5 py-1 text-sm hover:bg-hover">← Journal</button>}
+              {presets.map((p) => (
+                <button
+                  key={p.key}
+                  type="button"
+                  title={p.query}
+                  onClick={() => go(p.query)}
+                  className={classes('rounded-md border px-2.5 py-1 text-sm', query === p.query ? 'border-primary bg-primary text-primary-foreground' : 'bg-card hover:bg-hover')}
+                >
+                  {p.label}
+                </button>
+              ))}
+            </div>
+
+            {!query.trim() ? <Journal data={data} onOpen={go} /> : (
+              <>
+                <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+                  <p className="text-sm text-muted-foreground">
+                    Showing {columns.map((k) => fields[k].label).join(' · ')}
+                    {!parsed.shown.length && <> <span className="opacity-70">(from the query; <code>show:</code> to change)</span></>}
+                  </p>
+                  <div role="group" aria-label="View" className="flex overflow-hidden rounded-md border text-sm">
+                    {(['table', 'small', 'large'] as const).map((v) => (
+                      <button
+                        key={v}
+                        type="button"
+                        aria-pressed={view === v}
+                        onClick={() => setView(v)}
+                        className={classes('px-3 py-1.5 capitalize', view === v ? 'bg-primary text-primary-foreground' : 'bg-card hover:bg-hover')}
+                      >
+                        {v === 'table' ? 'Table' : v === 'small' ? 'Small cards' : 'Large cards'}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                {!results.length ? <Panel role="status">No matches.</Panel> : (
+                  <>
+                    {view === 'table' && <QueryTable results={results.slice(0, limit)} columns={columns} parsed={parsed} onSort={(k, d) => setQuery(withSort(query, k, d))} />}
+                    {view === 'small' && (
+                      <ul className="grid grid-cols-3 gap-x-3 gap-y-5 sm:grid-cols-5 lg:grid-cols-7">
+                        {results.slice(0, limit).map((b) => <SmallCard key={b.bookId} book={b} columns={columns} />)}
+                      </ul>
+                    )}
+                    {view === 'large' && (
+                      <ul className="grid grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-3 lg:grid-cols-4">
+                        {results.slice(0, limit).map((b) => <LargeCard key={b.bookId} book={b} columns={columns} />)}
+                      </ul>
+                    )}
+                  </>
+                )}
+                {limit < results.length && (
+                  <div className="mt-6 flex items-center gap-4">
+                    <Button onClick={() => setLimit(limit + 60)}>Show more</Button>
+                    <span className="text-muted-foreground">{limit} of {results.length}</span>
+                  </div>
+                )}
+              </>
+            )}
+          </>
+        )
+      }}
+    </Loaded>
+  )
+}
+
+// C's lanes, each one a preset's query; "See all" opens it in the query line.
+function Journal({ data, onOpen }: { data: Book[]; onOpen: (query: string) => void }) {
+  return (
+    <>
+      {lanesS.map((key) => {
+        const p = presets.find((x) => x.key === key)!
+        const parsed = parse(p.query)
+        const items = run(data, parsed)
+        const columns = columnsFor(parsed).filter((k) => k !== 'shelf')
+        if (!items.length) return null
+        return (
+          <section key={key} className="mb-9">
+            <div className="mb-3 flex items-baseline justify-between gap-4">
+              <div className="min-w-0">
+                <h2 className="text-xl font-bold">{p.label} <span className="font-normal text-muted-foreground">{items.length}</span></h2>
+                <p className="truncate text-sm text-muted-foreground">{p.hint} · <code className="text-xs">{p.query}</code></p>
+              </div>
+              <button type="button" className="shrink-0 text-accent" onClick={() => onOpen(p.query)}>See all →</button>
+            </div>
+            <ul className="-mx-1 flex gap-3 overflow-x-auto px-1 pb-2">
+              {items.slice(0, 12).map((b) => <SmallCard key={b.bookId} book={b} columns={columns} className="w-28 shrink-0 sm:w-32" max={2} />)}
+            </ul>
+          </section>
+        )
+      })}
+    </>
+  )
+}
+
+// C's small card: cover, title, then the query's first fields.
+function SmallCard({ book: b, columns, className, max = 2 }: { book: Book; columns: FieldKey[]; className?: string; max?: number }) {
+  return (
+    <li className={className}>
+      <BookLink book={b} className="group grid gap-1.5 text-inherit no-underline">
+        <Cover book={b} className="w-full" />
+        <span className="line-clamp-2 text-sm leading-snug font-semibold group-hover:underline">{b.title}</span>
+        <span className="grid gap-0.5 text-xs text-muted-foreground"><Shorts book={b} columns={columns} max={max} /></span>
+      </BookLink>
+    </li>
+  )
+}
+
+// B's large card, with progress when there is some, and the query's fields.
+function LargeCard({ book: b, columns }: { book: Book; columns: FieldKey[] }) {
+  const p = progress(b)
+  const rest = columns.filter((k) => k !== 'mine' && k !== 'avg' && k !== 'shelf' && k !== 'progress')
+  return (
+    <li>
+      <BookLink book={b} className="group grid gap-2 text-inherit no-underline">
+        <span className="relative">
+          <Cover book={b} className="w-full transition group-hover:shadow-card" />
+          {b.userShelf === 'currently-reading' && p !== undefined && (
+            <span className="absolute inset-x-0 bottom-0 h-1.5 overflow-hidden rounded-b-sm bg-card/70">
+              <span className="block h-full bg-primary" style={{ width: `${p}%` }} />
+            </span>
+          )}
+        </span>
+        <span className="line-clamp-2 leading-snug font-semibold group-hover:underline">{b.title}</span>
+        <span className="-mt-1.5 truncate text-sm text-muted-foreground">{b.authorName}</span>
+        <span className="flex items-center justify-between gap-2 text-sm">
+          {b.userShelf === 'currently-reading' ? <Progress value={p} /> : <Stars value={b.userRating} />}
+          <span className="text-muted-foreground tabular-nums">avg {b.averageRating}</span>
+        </span>
+        <span className="flex items-center justify-between gap-2 text-xs text-muted-foreground">
+          <ShelfBadge shelf={b.userShelf} />
+          <span className="truncate tabular-nums">{rest.slice(0, 2).map((k) => short(k, b)).filter((v) => v !== null).map((v, i) => <span key={i}>{i > 0 && ' · '}{v}</span>)}</span>
+        </span>
+      </BookLink>
+    </li>
+  )
+}
+
+// A's table; its columns come from the query, and a header click rewrites the
+// query's `sort:`. A row click opens D's details in place.
+function QueryTable({
+  results, columns, parsed, onSort,
+}: { results: Book[]; columns: FieldKey[]; parsed: Parsed; onSort: (key: FieldKey, descending: boolean) => void }) {
+  const [openId, setOpenId] = useState<string>()
+  const cell = 'border-b px-3 py-2.5 sm:px-4'
+  const header = (key: FieldKey, label: string) => {
+    const on = parsed.sort?.key === key
+    const descending = on ? !parsed.sort!.descending : key !== 'title' && key !== 'author'
+    return (
+      <th key={key} scope="col" className={classes(cell, 'bg-table-heading whitespace-nowrap')}>
+        <button type="button" className="inline-flex items-center gap-1.5 py-1 font-bold text-accent" onClick={() => onSort(key, descending)}>
+          {label}
+          <span aria-hidden="true" className="text-[0.85em]">{!on ? '↕' : parsed.sort!.descending ? '↓' : '↑'}</span>
+        </button>
+      </th>
+    )
+  }
+  return (
+    <div className="overflow-x-auto rounded-lg border bg-card">
+      <table className="w-full text-left">
+        <thead><tr>{header('title', 'Book')}{columns.map((k) => header(k, fields[k].label))}</tr></thead>
+        <tbody className="[&>tr:last-child>td]:border-b-0">
+          {results.flatMap((b) => {
+            const open = openId === b.bookId
+            const row = (
+              <tr key={b.bookId} className="cursor-pointer even:bg-table-stripe hover:bg-hover" onClick={(e) => { if (!(e.target as HTMLElement).closest('a')) setOpenId(open ? undefined : b.bookId) }}>
+                <td className={classes(cell, 'w-[48%] min-w-56 align-top')}>
+                  <span className="flex items-start gap-3">
+                    <Cover book={b} size="SY75" className="w-9 shrink-0" />
+                    <span className="grid">
+                      <BookLink book={b} className="font-semibold" />
+                      <span className="text-sm text-muted-foreground">{b.authorName}</span>
+                    </span>
+                  </span>
+                </td>
+                {columns.map((k) => <td key={k} className={classes(cell, 'align-top whitespace-nowrap tabular-nums')}>{(fields[k] as FieldDef).render?.(b) ?? fields[k].value(b)}</td>)}
+              </tr>
+            )
+            return open
+              ? [row, <tr key={b.bookId + '-open'}><td colSpan={columns.length + 1} className="border-b p-0"><Expanded book={b} /></td></tr>]
+              : [row]
+          })}
+        </tbody>
+      </table>
     </div>
   )
 }

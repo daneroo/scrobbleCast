@@ -30,18 +30,18 @@ interface TableProps<T> {
   onSort: (key: string) => void
   // When given, a row click opens this below the row, and a second click
   // closes it.
-  expanded?: (item: T) => ReactNode
+  expandedRow?: (item: T) => ReactNode
 }
 
 // Every cell; then body cells: the first column (titles) takes the room, the
 // last (dates, percentages) stays on one line.
-const cell = 'border-b px-3 py-3 sm:px-5'
-const bodyCell = 'align-top leading-normal first:w-[52%] first:min-w-40 sm:first:min-w-48 last:whitespace-nowrap last:tabular-nums'
+const cellClass = 'border-b px-3 py-3 sm:px-5'
+const bodyCellClass = 'align-top leading-normal first:w-[52%] first:min-w-40 sm:first:min-w-48 last:whitespace-nowrap last:tabular-nums'
 
 // A table whose order comes from outside: it draws `items` as given, and shows
 // `sorts` in its headers. The main sort gets `aria-sort`; tie-breaks get an
 // arrow with their rank.
-export function Table<T>({ items, columns, id, sorts, onSort, expanded }: TableProps<T>) {
+export function Table<T>({ items, columns, id, sorts, onSort, expandedRow }: TableProps<T>) {
   const [openId, setOpenId] = useState<string>()
 
   if (!items.length) return <Panel role="status">No matches.</Panel>
@@ -60,7 +60,7 @@ export function Table<T>({ items, columns, id, sorts, onSort, expanded }: TableP
                   key={key}
                   scope="col"
                   aria-sort={rank === 0 ? (sort.descending ? 'descending' : 'ascending') : 'none'}
-                  className={classes(cell, 'bg-table-heading whitespace-nowrap')}
+                  className={classes(cellClass, 'bg-table-heading whitespace-nowrap')}
                 >
                   <button type="button" className="inline-flex items-center gap-1.5 py-1 font-bold text-accent" onClick={() => onSort(key)}>
                     {label}
@@ -74,24 +74,24 @@ export function Table<T>({ items, columns, id, sorts, onSort, expanded }: TableP
         <tbody className="[&>tr:last-child>td]:border-b-0">
           {items.flatMap((item) => {
             const itemId = id(item)
-            const open = expanded && openId === itemId
+            const open = openId === itemId
             const row = (
               <tr
                 key={itemId}
-                className={classes('even:bg-table-stripe', expanded && 'cursor-pointer hover:bg-hover')}
-                onClick={expanded && ((event) => {
+                className={classes('even:bg-table-stripe', expandedRow && 'cursor-pointer hover:bg-hover')}
+                onClick={expandedRow && ((event) => {
                   // Links and buttons in a cell do their own thing.
                   if ((event.target as Element).closest('a, button')) return
                   setOpenId(open ? undefined : itemId)
                 })}
               >
                 {columns.map((column) => (
-                  <td key={column.key} className={classes(cell, bodyCell)}>{column.cell ? column.cell(item) : column.value(item)}</td>
+                  <td key={column.key} className={classes(cellClass, bodyCellClass)}>{column.cell ? column.cell(item) : column.value(item)}</td>
                 ))}
               </tr>
             )
-            return open && expanded
-              ? [row, <tr key={itemId + '/expanded'}><td colSpan={columns.length} className="border-b p-0">{expanded(item)}</td></tr>]
+            return expandedRow && open
+              ? [row, <tr key={itemId + '/expanded'}><td colSpan={columns.length} className="border-b p-0">{expandedRow(item)}</td></tr>]
               : [row]
           })}
         </tbody>
@@ -110,7 +110,7 @@ function compare(lhs: string | number | undefined, rhs: string | number | undefi
 
 // A table that sorts itself: a header click sorts by that column, A→Z or low
 // first, and a second click flips it. Shows the first `limit` items.
-export function SortableTable<T>({ items, columns, id, limit }: Pick<TableProps<T>, 'items' | 'columns' | 'id'> & { limit?: number }) {
+export function SelfSortingTable<T>({ items, columns, id, limit }: Pick<TableProps<T>, 'items' | 'columns' | 'id'> & { limit?: number }) {
   const [sort, setSort] = useState<Sort>()
   const column = columns.find(({ key }) => key === sort?.key)
   const sorted = column && sort

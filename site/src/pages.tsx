@@ -8,7 +8,7 @@ import type { Feed } from './data/fetch'
 import type { Episode, Podcast } from './data/podcasts'
 import { day, documentTitle, playedPercent } from './format'
 import { search } from './list/search'
-import { SortableTable } from './list/table'
+import { SelfSortingTable } from './list/table'
 import { Button, Field, Heading, Panel, classes, control } from './ui'
 import type { Column } from './list/table'
 
@@ -216,7 +216,7 @@ export function Books({ books }: { books: Promise<Feed<Book[]>> }) {
         </Field>
       </Controls>
       <Await promise={books} fallback={<Loading block />}>
-        {({ data }) => <SortableTable items={results(data)} columns={bookColumns} id={(book) => book.bookId} />}
+        {({ data }) => <SelfSortingTable items={results(data)} columns={bookColumns} id={(book) => book.bookId} />}
       </Await>
     </Collection>
   )
@@ -231,7 +231,7 @@ export function Podcasts({ podcasts }: { podcasts: Promise<Feed<Podcast[]>> }) {
         <SearchBox value={query} onChange={setQuery} label="Search podcasts" />
       </Controls>
       <Await promise={podcasts} fallback={<Loading block />}>
-        {({ data }) => <SortableTable items={results(data)} columns={podcastColumns} id={(podcast) => podcast.uuid} />}
+        {({ data }) => <SelfSortingTable items={results(data)} columns={podcastColumns} id={(podcast) => podcast.uuid} />}
       </Await>
     </Collection>
   )
@@ -259,7 +259,7 @@ export function Episodes({ episodes }: { episodes: Promise<Feed<Episode[]>> }) {
           const shown = Math.min(found.length, limit)
           return (
             <>
-              <SortableTable items={found} columns={episodeColumns} id={(episode) => episode.uuid} limit={limit} />
+              <SelfSortingTable items={found} columns={episodeColumns} id={(episode) => episode.uuid} limit={limit} />
               {shown < found.length && (
                 <div className="mt-4 flex items-center gap-4">
                   <Button onClick={() => setLimit(limit + episodePageStep)}>Show more</Button>

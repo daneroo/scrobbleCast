@@ -35,7 +35,10 @@ export const deviceDarkQuery = '(prefers-color-scheme: dark)'
 
 export interface ThemeSettingDeps {
   storage: Pick<Storage, 'getItem' | 'setItem'>
-  darkQuery: Pick<MediaQueryList, 'matches'> & { addEventListener(type: 'change', listener: () => void): void }
+  darkQuery: Pick<MediaQueryList, 'matches'> & {
+    addEventListener(type: 'change', listener: () => void): void
+    removeEventListener(type: 'change', listener: () => void): void
+  }
   page: Document
 }
 
@@ -81,8 +84,12 @@ export function themeSetting({ storage, darkQuery, page }: ThemeSettingDeps) {
     for (const listener of listeners) listener()
   }
   apply()
-  // The device changed: the setting hasn't, so subscribers aren't told.
-  darkQuery.addEventListener('change', apply)
+  // The device changed: only the system mode setting follows it. The setting
+  // itself hasn't changed, so subscribers aren't told.
+  const followDevice = () => {
+    if (setting.mode === 'system') apply()
+  }
+  darkQuery.addEventListener('change', followDevice)
   return {
     get: () => setting,
     cycleTheme() {
@@ -95,11 +102,16 @@ export function themeSetting({ storage, darkQuery, page }: ThemeSettingDeps) {
       listeners.add(listener)
       return () => { listeners.delete(listener) }
     },
+    // Stop following the device (e.g. when hot reload replaces the setting).
+    dispose() {
+      darkQuery.removeEventListener('change', followDevice)
+    },
   }
 }
 
 // The setting applied before the page first paints, inlined in the head of
-// index.html (see vite.config.ts), so the wrong theme never flashes. It is
+// index.html right after the theme-color meta (see vite.config.ts), so the
+// wrong theme never flashes. It is
 // built from the names and values above and does what themeSetting does on
 // load; theme.test.ts runs it against the module.
 const json = JSON.stringify
@@ -108,6 +120,8 @@ export const beforePaintScript = `(function () {
   try {
     var saved = localStorage.getItem(${json(keys.theme)})
     if (${json(themes)}.indexOf(saved) >= 0) theme = saved
+  } catch (e) {}
+  try {
     saved = localStorage.getItem(${json(keys.mode)})
     if (${json(modeSettings)}.indexOf(saved) >= 0) mode = saved
   } catch (e) {}

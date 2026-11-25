@@ -14,6 +14,8 @@ const setting = themeSetting({
   darkQuery: matchMedia(deviceDarkQuery),
   page: document,
 })
+// In dev, hot reload runs this file again: drop the old setting's listener.
+import.meta.hot?.dispose(setting.dispose)
 
 const modeIcons = { light: Sun, dark: Moon, system: Monitor }
 

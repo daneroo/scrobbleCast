@@ -21,6 +21,7 @@ function fakeDevice(dark: boolean) {
   const darkQuery = {
     matches: dark,
     addEventListener: (_: 'change', listener: () => void) => { listeners.add(listener) },
+    removeEventListener: (_: 'change', listener: () => void) => { listeners.delete(listener) },
   }
   return {
     darkQuery,
@@ -53,6 +54,15 @@ function look(page: Document) {
 const throwing = {
   getItem(): string | null { throw new Error('SecurityError') },
   setItem() { throw new Error('SecurityError') },
+}
+
+// Storage where reading the theme throws but the mode is saved as dark.
+const themeReadThrows = {
+  getItem(key: string): string | null {
+    if (key === 'scrobble-cast:theme') throw new Error('SecurityError')
+    return key === 'scrobble-cast:mode' ? 'dark' : null
+  },
+  setItem() {},
 }
 
 test('a first visit is pantone, following a light device', () => {
@@ -188,6 +198,36 @@ test('with a forced mode, a change of the device does nothing', () => {
   expect(look(page)).toMatchObject({ dark: false, colorScheme: 'light' })
 })
 
+test('system, then forced, then system again: the device is followed only while system', () => {
+  const page = freshPage()
+  const device = fakeDevice(false)
+  const setting = themeSetting({ storage: fakeStorage().storage, darkQuery: device.darkQuery, page })
+
+  setting.cycleMode()
+  setting.cycleMode()
+  expect(setting.get().mode).toBe('dark')
+  device.setDark(true)
+  device.setDark(false)
+  expect(look(page)).toMatchObject({ dark: true, colorScheme: 'dark' })
+
+  setting.cycleMode()
+  expect(setting.get().mode).toBe('system')
+  expect(look(page)).toMatchObject({ dark: false, colorScheme: 'light' })
+  device.setDark(true)
+  expect(look(page)).toMatchObject({ dark: true, colorScheme: 'dark' })
+})
+
+test('once disposed, the setting no longer follows the device', () => {
+  const page = freshPage()
+  const device = fakeDevice(false)
+  const setting = themeSetting({ storage: fakeStorage().storage, darkQuery: device.darkQuery, page })
+
+  setting.dispose()
+  device.setDark(true)
+
+  expect(look(page)).toMatchObject({ dark: false })
+})
+
 // Runs the before-paint script on a page, as the browser would in its head.
 function runBeforePaint(page: Document, storage: ThemeSettingDeps['storage'], darkQuery: { matches: boolean }) {
   const matchMedia = (query: string) => {
@@ -205,8 +245,10 @@ test.each([
   ['a saved dark mode on a light device', { 'scrobble-cast:theme': 'chromatic', 'scrobble-cast:mode': 'dark' }, false],
   ['unknown and garbled values', { 'scrobble-cast:theme': 'solarized', 'scrobble-cast:mode': '"dark"' }, true],
   ['storage that throws', 'throws', true],
+  ['the theme read throws, the mode is saved', 'theme read throws', false],
 ] as const)('the before-paint script gives the page the module’s look: %s', (_, saved, dark) => {
-  const storage = () => (saved === 'throws' ? throwing : fakeStorage({ ...saved }).storage)
+  const storage = () =>
+    saved === 'throws' ? throwing : saved === 'theme read throws' ? themeReadThrows : fakeStorage({ ...saved }).storage
   const painted = freshPage()
   const loaded = freshPage()
 

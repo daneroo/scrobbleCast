@@ -31,3 +31,23 @@ _Avoid_: Palette, skin, colourway
 **Mode**:
 Light or dark, within a theme. The reader picks light, dark or system; system follows the device and is a setting, not a third mode.
 _Avoid_: Appearance, scheme
+
+### List pages
+
+The books list, and later the podcasts and episodes lists, share these terms.
+
+**Query**:
+The one line that selects and orders a list: words to search, `key:value` filters, `sort:` and `show:`.
+_Avoid_: Filter bar, search (for the whole line; the words alone are the search)
+
+**Preset**:
+A named query, fixed in code, that fills the query line when picked.
+_Avoid_: Saved search, view, favourite
+
+**Journal**:
+What a list shows when its query is empty: one **lane** per preset, in the presets' order, each lane a short row of that preset's results with a way to open it in full.
+_Avoid_: Dashboard, overview, shelf (for a lane)
+
+**View**:
+How a list shows a query's results: table, small cards or large cards.
+_Avoid_: Layout, mode (mode is light or dark)

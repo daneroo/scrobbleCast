@@ -9,7 +9,7 @@ One book on the user's Goodreads shelves: one entry in the books feed. Upstream 
 _Avoid_ as names for it: Edition, Entry, Item, Work ("entry" is fine as a plain word)
 
 **Feed**:
-One upstream download the site loads whole: the books feed (Goodreads, from S3), the podcast feed (the podcast catalog) or the episode feed (recently played episodes), the latter two from the history API.
+One upstream download the site loads whole: the books feed (Goodreads, from S3), the podcast feed (the podcast catalog) or the episode feed (episodes that changed recently: played, or just published), the latter two from the history API.
 _Avoid_: Payload, dataset, history (for the download itself)
 
 **Feed time**:
@@ -31,6 +31,14 @@ _Avoid_: Palette, skin, colourway
 **Mode**:
 Light or dark, within a theme. The reader picks light, dark or system; system follows the device and is a setting, not a third mode.
 _Avoid_: Appearance, scheme
+
+**Window**:
+How far back the loaded episode feed reaches: episodes that changed since a day, shown on the page. The reader can widen it further back. Podcasts' plays and listening time count only episodes in the window.
+_Avoid_: Range, period, page (for the window)
+
+**Status**:
+Where I am with an episode, as Pocket Casts records it: unplayed, in progress or finished. Finished is Pocket Casts' own mark, not a share of the episode played: a finished episode can stop short of its end.
+_Avoid_: Played (for finished), state
 
 ### List pages
 

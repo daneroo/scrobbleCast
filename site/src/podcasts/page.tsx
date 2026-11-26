@@ -1,40 +1,28 @@
-import { Await, Link } from '@tanstack/react-router'
-import { useState } from 'react'
-import type { Feed } from '../data/fetch'
+import { Link } from '@tanstack/react-router'
 import type { Podcast } from '../data/podcasts'
-import { day } from '../format'
-import { Collection, Controls, SearchBox, SelfSortingTable } from '../list/legacy'
-import { search } from '../list/search'
-import type { Column } from '../list/table'
-import { Loading } from '../ui'
+import type { PageDefinition } from '../list/page'
+import type { ShownField } from '../list/shown'
+import { Artwork } from '../ui'
+import { podcastsList } from './list'
 
-// The podcasts list, as it was before the query model (#94 and #95 move it
-// onto the shared list page).
-
-const podcastKeys = ['title', 'author', 'description']
-
-const podcastColumns: Column<Podcast>[] = [
-  {
-    key: 'title',
-    label: 'Title',
-    value: (podcast) => podcast.title,
-    cell: (podcast) => <Link to="/podcasts/$uuid" params={{ uuid: podcast.uuid }}>{podcast.title}</Link>,
+export const podcastsPage: PageDefinition<Podcast, ShownField<Podcast>> = {
+  name: 'podcasts',
+  title: 'Podcasts',
+  noun: ['podcast', 'podcasts'],
+  placeholder: 'plays:>0 sort:-listened   — or just words',
+  list: podcastsList,
+  presets: [],
+  id: (podcast) => podcast.uuid,
+  lead: {
+    label: 'Podcast',
+    cell: (podcast) => (
+      <span className="flex items-start gap-3">
+        <Artwork src={podcast.thumbnail} className="w-10" />
+        <span className="grid">
+          <Link to="/podcasts/$uuid" params={{ uuid: podcast.uuid }} className="font-semibold">{podcast.title}</Link>
+          <span className="text-sm text-muted-foreground">{podcast.author || '—'}</span>
+        </span>
+      </span>
+    ),
   },
-  { key: 'author', label: 'Author', value: (podcast) => podcast.author },
-  { key: 'since', label: 'Since', value: (podcast) => podcast.firstSeen, cell: (podcast) => day(podcast.firstSeen) },
-]
-
-export function Podcasts({ podcasts }: { podcasts: Promise<Feed<Podcast[]>> }) {
-  const [query, setQuery] = useState('')
-  const results = (podcasts: Podcast[]) => search(podcasts, podcastKeys, query)
-  return (
-    <Collection title="Podcasts" feed={podcasts} results={results}>
-      <Controls>
-        <SearchBox value={query} onChange={setQuery} label="Search podcasts" />
-      </Controls>
-      <Await promise={podcasts} fallback={<Loading block />}>
-        {({ data }) => <SelfSortingTable items={results(data)} columns={podcastColumns} id={(podcast) => podcast.uuid} />}
-      </Await>
-    </Collection>
-  )
 }

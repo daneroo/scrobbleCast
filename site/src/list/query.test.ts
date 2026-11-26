@@ -37,6 +37,7 @@ const potList: ListDefinition<Pot, Field<Pot>> = {
     { key: 'dry', label: 'Drying time', kind: 'duration', value: (pot) => pot.dry },
   ],
   searchKeys: ['name', 'note'],
+  searchThreshold: 0.4,
   defaultSort: [{ key: 'size', descending: true }],
   lead: ['name'],
   // The colour, unless the query filters on it; then size and note.

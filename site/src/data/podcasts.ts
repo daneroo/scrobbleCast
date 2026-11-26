@@ -31,6 +31,11 @@ export interface Podcast {
   description: string
   thumbnail: string
   firstSeen: string
+  url?: string
+  added?: string
+  plays?: number
+  listened?: number
+  lastPlayed?: string
 }
 
 function toPodcast(podcast: PodcastRecord): Podcast {
@@ -41,6 +46,8 @@ function toPodcast(podcast: PodcastRecord): Podcast {
     description: plainText(podcast.description),
     thumbnail: podcast.thumbnail_url ?? '',
     firstSeen: podcast.meta.__firstSeen,
+    url: podcast.url ?? undefined,
+    added: isoTime(podcast.dateAdded) || undefined,
   }
 }
 
@@ -118,9 +125,31 @@ export interface EpisodeFeed extends Feed<Episode[]> {
 }
 
 // A recent change to a record can be unrelated to playback.
+function playedSince(episode: Episode, start: number) {
+  return episode.playedSeconds > 0 && Date.parse(episode.lastPlayed) >= start
+}
+
 export function countPlayedSince({ data, since }: EpisodeFeed) {
   const start = since.getTime()
-  return data.filter((episode) => episode.playedSeconds > 0 && Date.parse(episode.lastPlayed) >= start).length
+  return data.filter((episode) => playedSince(episode, start)).length
+}
+
+// Count each played episode once, using its furthest played position.
+function playsByPodcast({ data, since }: EpisodeFeed) {
+  const start = since.getTime()
+  const byId = new Map<string, { plays: number; listened: number; lastPlayed: string }>()
+  for (const episode of data) {
+    if (!playedSince(episode, start)) continue
+    const totals = byId.get(episode.podcastId)
+    if (!totals) {
+      byId.set(episode.podcastId, { plays: 1, listened: episode.playedSeconds, lastPlayed: episode.lastPlayed })
+      continue
+    }
+    totals.plays += 1
+    totals.listened += episode.playedSeconds
+    if (Date.parse(episode.lastPlayed) > Date.parse(totals.lastPlayed)) totals.lastPlayed = episode.lastPlayed
+  }
+  return byId
 }
 
 function lastUpdate(record: EpisodeRecord) {
@@ -171,7 +200,7 @@ export function podcastFeeds(options: FeedOptions = {}) {
     schema: PodcastRecords,
     time: lastChange,
     save: true,
-  }, options), (podcasts) => podcasts.map(toPodcast)))
+  }, options), (podcasts) => podcasts.map(toPodcast)), { refreshInBackground: true })
 
   // Use the podcast feed if this tab already has it; never download it whole.
   function getPodcast(uuid: string): Promise<Podcast | undefined> {
@@ -212,6 +241,24 @@ export function podcastFeeds(options: FeedOptions = {}) {
       throw error
     }
   }, { refreshInBackground: true })
+
+  // The catalog can be shown before the episode feed has a copy. Use the copy
+  // shown when the catalog becomes available, including after a widening.
+  function getPodcastsWithPlays(): Promise<Feed<Podcast[]>> {
+    const catalog = getPodcasts()
+    const shown = getPodcasts.loaded()
+    return shown ? ready(withCurrentPlays(shown)) : catalog.then(withCurrentPlays)
+  }
+
+  function withCurrentPlays(catalog: Feed<Podcast[]>): Feed<Podcast[]> {
+    const episodes = getEpisodeFeed.loaded()
+    if (!episodes) return catalog
+    const byId = playsByPodcast(episodes)
+    return {
+      ...catalog,
+      data: catalog.data.map((podcast) => ({ ...podcast, ...(byId.get(podcast.uuid) ?? { plays: 0, listened: 0 }) })),
+    }
+  }
 
   // Widen the Window a step further back: fetch the range before it, merge
   // it in, and show the new copy, so every page showing the feed follows. A
@@ -263,7 +310,7 @@ export function podcastFeeds(options: FeedOptions = {}) {
     return toEpisode(episode, podcast)
   }
 
-  return { getPodcasts, getPodcast, getEpisodeFeed, getEpisodes, getEpisode, widen: Object.assign(widen, { pending: () => widening }) }
+  return { getPodcasts, getPodcastsWithPlays, getPodcast, getEpisodeFeed, getEpisodes, getEpisode, widen: Object.assign(widen, { pending: () => widening }) }
 }
 
-export const { getPodcasts, getPodcast, getEpisodeFeed, getEpisodes, getEpisode, widen } = podcastFeeds()
+export const { getPodcasts, getPodcastsWithPlays, getPodcast, getEpisodeFeed, getEpisodes, getEpisode, widen } = podcastFeeds()

@@ -14,6 +14,9 @@ export const PodcastRecord = z.looseObject({
   description: z.string(),
   // missing on 250 of 413, null on 1
   thumbnail_url: z.string().nullable().optional(),
+  // One null URL and 103 missing subscription dates in the live catalog.
+  url: z.string().nullable().optional(),
+  dateAdded: z.string().optional(),
   meta: z.looseObject({
     __type: z.literal('podcast'),
     __firstSeen: z.iso.datetime(),

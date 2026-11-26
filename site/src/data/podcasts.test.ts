@@ -324,6 +324,89 @@ test('the played count uses playback within the window, including its start', as
   expect(countPlayedSince(await getEpisodeFeed())).toBe(2)
 })
 
+test('the podcast catalog is ready while the first episode copy is still loading', async () => {
+  const record = podcastRecord({ url: 'https://example.com/podcast', dateAdded: '2026-10-18T09:00:00Z' })
+  const { download, answer } = heldHistory({ podcasts: [record, podcastRecord({ url: null }), podcastRecord()], episodes: [] })
+  const { getEpisodeFeed, getPodcastsWithPlays } = podcastFeeds({ download })
+  const episodes = getEpisodeFeed()
+  answer(1)
+
+  const catalog = await getPodcastsWithPlays()
+  expect(catalog.data[0]).toMatchObject({ url: 'https://example.com/podcast', added: '2026-10-18T09:00:00Z' })
+  expect(catalog.data[1].added).toBeUndefined()
+  expect(catalog.data[1].url).toBeUndefined()
+  expect(catalog.data[2].url).toBeUndefined()
+  expect(catalog.data.map(({ plays, listened, lastPlayed }) => [plays, listened, lastPlayed])).toEqual([
+    [undefined, undefined, undefined], [undefined, undefined, undefined], [undefined, undefined, undefined],
+  ])
+
+  answer(0)
+  await episodes
+  const filled = getPodcastsWithPlays()
+  expect(filled).toMatchObject({ status: 'fulfilled' })
+  expect((await filled).data.map(({ plays, listened, lastPlayed }) => [plays, listened, lastPlayed])).toEqual([
+    [0, 0, undefined], [0, 0, undefined], [0, 0, undefined],
+  ])
+})
+
+test('podcast plays use playback dates within the window and each episode’s furthest played seconds', async () => {
+  const podcast = podcastRecord()
+  const idle = podcastRecord()
+  const start = new Date(2026, 9, 27)
+  const older = new Date(start.getTime() - 1).toISOString()
+  const latest = '2026-11-19T10:00:00Z'
+  const forPodcast = { podcast_uuid: podcast.uuid }
+  const { download } = fakeHistory({
+    podcasts: [podcast, idle],
+    episodes: [
+      episodeRecord({ ...forPodcast, played_up_to: 120, history: { played_up_to: { [start.toISOString()]: 180, [latest]: 60 } } }),
+      episodeRecord({ ...forPodcast, history: { played_up_to: { [start.toISOString()]: 90 } } }),
+      episodeRecord({ ...forPodcast, history: { played_up_to: { [older]: 600 } } }),
+      episodeRecord({ ...forPodcast, played_up_to: 400 }),
+      episodeRecord({ ...forPodcast, history: { played_up_to: { '2026-11-25T10:00:00Z': 0 } } }),
+    ],
+  })
+  const { getEpisodeFeed, getPodcastsWithPlays, widen } = podcastFeeds({ download })
+  await getEpisodeFeed()
+
+  const catalog = await getPodcastsWithPlays()
+  expect(catalog.data[0]).toMatchObject({ plays: 2, listened: 270, lastPlayed: latest })
+  expect(catalog.data[1]).toMatchObject({ plays: 0, listened: 0 })
+  expect(catalog.data[1].lastPlayed).toBeUndefined()
+
+  await widen()
+  const widened = getPodcastsWithPlays()
+  expect(widened).toMatchObject({ status: 'fulfilled' })
+  expect((await widened).data[0]).toMatchObject({ plays: 3, listened: 870, lastPlayed: latest })
+})
+
+test('a wider window updates plays while a catalog refresh is still loading', async () => {
+  const podcast = podcastRecord()
+  const oldPlay = changedAt('2026-10-20T10:00:00Z', {
+    podcast_uuid: podcast.uuid,
+    history: { played_up_to: { '2026-10-19T10:00:00Z': 600 } },
+  })
+  const { requests, download, answer } = heldHistory({ podcasts: [podcast], episodes: [oldPlay] })
+  const { getEpisodeFeed, getPodcasts, getPodcastsWithPlays, widen } = podcastFeeds({ download })
+  answer(0)
+  await getEpisodeFeed()
+  answer(1)
+  await getPodcasts.settled()
+
+  vi.setSystemTime(now.getTime() + cacheTtlMs + 1)
+  const refreshed = getPodcasts.settled()
+  const widened = widen()
+  await expect.poll(() => requests.length).toBe(4)
+  answer(3)
+  await widened
+
+  const catalog = getPodcastsWithPlays()
+  expect(catalog).toMatchObject({ status: 'fulfilled' })
+  expect((await catalog).data[0]).toMatchObject({ uuid: podcast.uuid, plays: 1, listened: 600 })
+  answer(2)
+  await refreshed
+})
+
 test('a wider window replaces the copy shown, ready at once, and the pages showing the feed hear of it', async () => {
   const { getEpisodeFeed, getEpisodes, widen } = podcastFeeds({ download: fakeHistory({ podcasts: [], episodes: monthly() }).download, notices: noticeBoard() })
   await getEpisodes()

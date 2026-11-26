@@ -1,7 +1,7 @@
 import { createRootRoute, createRoute, createRouter } from '@tanstack/react-router'
 import { getBook, getBooks } from './data/books'
 import { subscribeShownCopies, type FeedName } from './data/fetch'
-import { getEpisode, getEpisodeFeed, getEpisodes, getPodcast, getPodcasts } from './data/podcasts'
+import { getEpisode, getEpisodeFeed, getEpisodes, getPodcast, getPodcasts, getPodcastsWithPlays } from './data/podcasts'
 import { documentTitle } from './format'
 import { Layout, LoadError, NotFound } from './layout'
 import { BookDetail } from './books/detail'
@@ -12,7 +12,7 @@ import { WindowLine } from './episodes/window'
 import { ListPage } from './list/page'
 import { Home } from './pages'
 import { PodcastDetail } from './podcasts/detail'
-import { Podcasts } from './podcasts/page'
+import { podcastsPage } from './podcasts/page'
 
 const root = createRootRoute({
   head: () => ({ meta: [{ title: 'Scrobble Cast' }] }),
@@ -51,10 +51,19 @@ const book = createRoute({
 const podcasts = createRoute({
   getParentRoute: () => root,
   path: '/podcasts',
-  staticData: { feeds: ['podcasts'] },
+  staticData: { feeds: ['podcasts', 'episodes'] },
   head: () => pageTitle('Podcasts'),
-  loader: () => handOff({ podcasts: getPodcasts() }),
-  component: () => <Podcasts podcasts={podcasts.useLoaderData().podcasts} />,
+  loader: () => handOff({ episodes: getEpisodeFeed(), podcasts: getPodcastsWithPlays() }),
+  component: () => {
+    const { episodes, podcasts: items } = podcasts.useLoaderData()
+    return (
+      <ListPage
+        page={podcastsPage}
+        items={items}
+        under={<WindowLine episodes={episodes} note={<span>Plays, listened and last played count this window.</span>} />}
+      />
+    )
+  },
 })
 
 const podcast = createRoute({
@@ -119,9 +128,11 @@ export const router = createRouter({
 // When a new copy replaces the one shown (a fresh copy replacing a saved
 // copy, or a wider Window), the pages showing that feed load again: their
 // loaders get the new copy ready at once, and their state (query text,
-// results drawn) stays.
+// results drawn) stays. Podcasts also needs the first episode copy, since its
+// catalog can already be visible when that copy arrives.
 subscribeShownCopies((name, replaced) => {
   if (replaced) void router.invalidate({ filter: (match) => match.staticData.feeds?.includes(name) ?? false })
+  else if (name === 'episodes') void router.invalidate({ filter: (match) => match.routeId === podcasts.id })
 })
 
 declare module '@tanstack/react-router' {

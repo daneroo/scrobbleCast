@@ -40,14 +40,11 @@ export function Loading({ block = false }: { block?: boolean }) {
 
 // A count from a feed, once the feed has loaded.
 export function FeedCount<T>({
-  feed, count, unit,
-}: { feed: Promise<Feed<T>>; count: (data: T) => number; unit?: [one: string, many: string] }) {
+  feed, count,
+}: { feed: Promise<Feed<T>>; count: (data: T) => number }) {
   return (
     <Await promise={feed} fallback={<Loading />}>
-      {({ data }) => {
-        const n = count(data)
-        return unit ? `${n.toLocaleString()} ${n === 1 ? unit[0] : unit[1]}` : n.toLocaleString()
-      }}
+      {({ data }) => count(data).toLocaleString()}
     </Await>
   )
 }
@@ -66,17 +63,7 @@ export function Button({ className, ...props }: ComponentProps<'button'>) {
   )
 }
 
-// A labelled form control: the label above, the control below.
-export function Field({ label, className, children }: { label: string; className?: string; children: ReactNode }) {
-  return (
-    <label className={classes('grid gap-1.5 text-sm font-semibold', className)}>
-      <span>{label}</span>
-      {children}
-    </label>
-  )
-}
-
-// The look of a text input or select inside a Field.
+// The look of a text input.
 export const control = 'min-h-11 w-full rounded-md border border-input bg-field px-3 py-2 font-normal'
 
 // A record's artwork: a square image (`ratio="2/3"` for a book cover), or

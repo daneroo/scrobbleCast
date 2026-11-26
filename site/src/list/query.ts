@@ -325,10 +325,9 @@ export interface Preset {
 
 export interface ListDefinition<T, F extends Field<T>> {
   fields: readonly F[]
-  // The item's keys that words search, and how strictly (Fuse's threshold;
-  // the site's default without one).
+  // The item's keys that words search, and how strictly (Fuse's threshold).
   searchKeys: string[]
-  searchThreshold?: number
+  searchThreshold: number
   // The order of a query with no words and no `sort:`.
   defaultSort: readonly Sort[]
   // Fields the table's lead column already shows: sorting on them adds no

@@ -1,5 +1,4 @@
 import Fuse from 'fuse.js'
-import { searchThreshold } from '../config'
 
 interface Index<T> {
   fuse: Fuse<T>
@@ -16,7 +15,7 @@ const indexes = new WeakMap<object, Map<string, unknown>>()
 // Every word must fuzzy-match some key, so "culture banks" finds Culture novels
 // by Banks, wherever in the key the word is (`ignoreLocation`: by default Fuse
 // only looks near the start). `threshold` is Fuse's: lower is stricter.
-export function search<T>(items: readonly T[], keys: string[], words: string, threshold = searchThreshold): readonly T[] {
+export function search<T>(items: readonly T[], keys: string[], words: string, threshold: number): readonly T[] {
   const term = words.trim()
   if (!term) return items
   let byKeys = indexes.get(items)

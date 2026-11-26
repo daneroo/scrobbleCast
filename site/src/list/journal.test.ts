@@ -12,6 +12,7 @@ const jars = defineList<Jar>({
     { key: 'size', label: 'Size', kind: 'number', value: (jar) => jar.size },
   ],
   searchKeys: ['name'],
+  searchThreshold: 0.4,
   defaultSort: [{ key: 'size', descending: true }],
   pinned: () => [],
   fill: () => ['size'],

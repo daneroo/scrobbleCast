@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import { classes, control } from '../ui'
 import type { FieldHelp, Help } from './query'
 
@@ -58,21 +59,27 @@ function HelpText({ help }: { help: Help }) {
           <ul className="grid gap-1">
             {fields.map((field) => (
               <li key={field.key} className="pl-3">
-                <code className="text-foreground">{field.key}:</code>
-                {field.aliases.map((alias) => <span key={alias}> or <code className="text-foreground">{alias}:</code></span>)}
+                <Code>{field.key}:</Code>
+                {field.aliases.map((alias) => <span key={alias}> or <Code>{alias}:</Code></span>)}
                 {' '}{field.label}
                 {field.note && <>, {field.note}</>}
+                {!field.sorts && <> (filter only: no <Code>sort:</Code> or <Code>show:</Code>)</>}
                 {field.alsoShow.length > 0 && <>; filtering on it also shows {field.alsoShow.map((key) => labels.get(key) ?? key).join(' and ')}</>}
-                {'. '}<code className="whitespace-nowrap text-foreground">{field.example}</code>
+                {'. '}<Code>{field.example}</Code>
               </li>
             ))}
           </ul>
         </section>
       ))}
       <p>
-        <code className="text-foreground">sort:</code> takes {help.sort.syntax}: <code className="text-foreground">{help.sort.example}</code>.
-        {' '}<code className="text-foreground">show:</code> takes {help.show.syntax}: <code className="text-foreground">{help.show.example}</code>.
+        <Code>sort:</Code> takes {help.sort.syntax}: <Code>{help.sort.example}</Code>.
+        {' '}<Code>show:</Code> takes {help.show.syntax}: <Code>{help.show.example}</Code>.
       </p>
     </div>
   )
+}
+
+// Query text in the help.
+function Code({ children }: { children: ReactNode }) {
+  return <code className="whitespace-nowrap text-foreground">{children}</code>
 }

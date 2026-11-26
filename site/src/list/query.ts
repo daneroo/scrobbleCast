@@ -66,6 +66,8 @@ export type Filter = { [K in Kind]: FilterOf<K> }[Kind]
 // What sorts compare: no value, a number, text, or numbers in turn (a date).
 type Comparable = number | string | readonly number[] | undefined
 
+// A kind's rules take any list's field (`Field<never>`): they read only its
+// choices, never its items.
 interface KindRules<K extends Kind> {
   // The filter for a value typed after the key, or none when the kind can't
   // take it.
@@ -85,7 +87,12 @@ interface KindRules<K extends Kind> {
 const numberValue = /^(>=|<=|>|<|=)?(-?\d+(?:\.\d+)?)$/
 const typedDate = /^(>=|<=|>|<|=)?(-?\d{1,4})(?:-(\d{2})(?:-(\d{2}))?)?$/
 // An ISO 8601 date, from a year ("1995", "-0750") to a time.
-const isoDate = /^([+-]?\d{4,})(?:-(\d{2})(?:-(\d{2})(?:T(\d{2}):(\d{2})(?::(\d{2}(?:\.\d+)?))?)?)?)?/
+const isoDate = /^([+-]?\d{4,})(?:-(\d{2})(?:-(\d{2})(?:T(\d{2}):(\d{2})(?::(\d{2}(?:\.\d+)?))?Z?)?)?)?$/
+
+// The operator of a number or date filter: a bare value means `=`.
+function opOf(typed: string | undefined) {
+  return (typed ?? '=') as Op
+}
 
 // `order` is the item's value against the typed one: below, equal or above 0.
 function passes(op: Op, order: number) {
@@ -117,7 +124,7 @@ const kinds: { [K in Kind]: KindRules<K> } = {
   number: {
     parse: (text) => {
       const match = numberValue.exec(text)
-      return match ? { op: (match[1] ?? '=') as Op, number: Number(match[2]) } : undefined
+      return match ? { op: opOf(match[1]), number: Number(match[2]) } : undefined
     },
     match: ({ op, number }, value) => typeof value === 'number' && passes(op, value - number),
     shared: ({ op }) => op === '=',
@@ -132,7 +139,7 @@ const kinds: { [K in Kind]: KindRules<K> } = {
       const date = match.slice(2).filter((part) => part !== undefined).map(Number)
       const [, month = 1, day = 1] = date
       if (month < 1 || month > 12 || day < 1 || day > 31) return undefined
-      return { op: (match[1] ?? '=') as Op, date }
+      return { op: opOf(match[1]), date }
     },
     match: ({ op, date }, value) => {
       const numbers = typeof value === 'string' ? dateNumbers(value) : undefined
@@ -176,7 +183,7 @@ const kinds: { [K in Kind]: KindRules<K> } = {
       return tags.every(Boolean) ? { tags } : undefined
     },
     match: ({ tags }, value) => (typeof value === 'object' ? value : [String(value)]).some((tag) => tags.includes(tag.toLowerCase())),
-    help: { syntax: () => 'a comma list: any of them; filter only, no sort: or show:', example: () => 'name' },
+    help: { syntax: () => 'a comma list: any of them', example: () => 'name' },
   },
   // Case-insensitive contains.
   text: {
@@ -251,7 +258,6 @@ export interface FieldHelp {
   key: string
   label: string
   aliases: readonly string[]
-  kind: Kind
   // How its value is typed, from its kind.
   syntax: string
   note?: string
@@ -415,16 +421,17 @@ export function defineList<T, F extends Field<T> = Field<T>>(list: ListDefinitio
     })
   }
 
-  // A header click on `key`: it becomes the main sort, high first for numbers
-  // and A→Z otherwise, or flips if it already is; the query's earlier order
-  // stays as tie-breaks. The last `sort:` is rewritten in place and earlier
+  // A header click on `key`: it becomes the main sort, the way its kind
+  // first sorts (numbers high first, dates newest first, text A→Z), or flips
+  // if it already is; the query's earlier order stays as tie-breaks. A
+  // filter-only field doesn't sort: the query stays as it is. The last `sort:` is rewritten in place and earlier
   // ones dropped; tokens not understood stay.
   function sortBy(query: Query, key: string): Query {
     const field = byName.get(key.toLowerCase())
-    const sort = field && kinds[field.kind].sort
-    if (!sort) return query
+    const kindSort = field && kinds[field.kind].sort
+    if (!kindSort) return query
     const [main] = query.order
-    const descending = main?.key === field.key ? !main.descending : sort.descending
+    const descending = main?.key === field.key ? !main.descending : kindSort.descending
     const token: Token = { type: 'sort', sorts: [{ key: field.key, descending }, ...query.order.filter((sort) => sort.key !== field.key)] }
     const last = query.tokens.findLastIndex((token) => token.type === 'sort')
     const tokens = last < 0
@@ -462,7 +469,7 @@ export function defineList<T, F extends Field<T> = Field<T>>(list: ListDefinitio
     return keys.slice(0, list.most).map(shownField)
   }
 
-  const helpText: Help = {
+  const generatedHelp: Help = {
     words: `Words search ${list.help.words}; every word must match. Words alone are ordered by relevance.`,
     fields: list.fields.map((field) => {
       const rules = kinds[field.kind]
@@ -470,12 +477,11 @@ export function defineList<T, F extends Field<T> = Field<T>>(list: ListDefinitio
         key: field.key,
         label: field.label,
         aliases: field.aliases ?? [],
-        kind: field.kind,
         syntax: rules.help.syntax(field),
         note: field.note,
         example: field.example ?? `${field.key}:${rules.help.example(field)}`,
         alsoShow: field.alsoShow ?? [],
-        sorts: rules.sort !== undefined,
+        sorts: sortable(field),
       }
     }),
     sort: { example: list.help.sort, syntax: 'fields, comma separated: a minus means high first, later fields break ties, and no value comes last' },
@@ -483,12 +489,12 @@ export function defineList<T, F extends Field<T> = Field<T>>(list: ListDefinitio
   }
 
   // An example the query doesn't understand is a bug.
-  for (const example of [...helpText.fields.map(({ example }) => example), helpText.sort.example, helpText.show.example]) {
+  for (const example of [...generatedHelp.fields.map(({ example }) => example), generatedHelp.sort.example, generatedHelp.show.example]) {
     if (parse(example).notUnderstood.length) throw new Error(`Help example not understood: ${example}`)
   }
 
   function help(): Help {
-    return helpText
+    return generatedHelp
   }
 
   return { parse, format, run, shown, sortBy, help }

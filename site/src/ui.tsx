@@ -2,6 +2,7 @@ import { Await } from '@tanstack/react-router'
 import { useState } from 'react'
 import type { ComponentProps, ReactNode } from 'react'
 import type { Feed } from './data/fetch'
+import { formatPercent } from './format'
 
 // Small building blocks shared by the pages; their look comes from roles only.
 //
@@ -108,7 +109,7 @@ export function Progress({ value }: { value: number | undefined }) {
       <span className="h-1.5 w-16 overflow-hidden rounded-full bg-table-stripe ring-1 ring-border">
         <span className="block h-full bg-primary" style={{ width: `${Math.min(value, 100)}%` }} />
       </span>
-      <span className="tabular-nums">{Math.round(value)}%</span>
+      <span className="tabular-nums">{formatPercent(value)}</span>
     </span>
   )
 }

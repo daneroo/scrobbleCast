@@ -2,6 +2,10 @@ export function day(value: string) {
   return value ? value.slice(0, 10) : '—'
 }
 
+export function formatPercent(value: number) {
+  return `${Math.round(value)}%`
+}
+
 // The sv-SE locale formats local time as "YYYY-MM-DD HH:mm:ss".
 export function localTime(date: Date) {
   return date.toLocaleString('sv-SE')

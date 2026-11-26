@@ -1,5 +1,6 @@
 import { episodesSearchThreshold } from '../config'
 import { statuses, type Episode, type Status } from '../data/podcasts'
+import { formatPercent } from '../format'
 import { formatDuration } from '../list/duration'
 import { defineList, namedChoices } from '../list/query'
 import { dateField, type ShownField } from '../list/shown'
@@ -10,21 +11,29 @@ import { Badge, Progress } from '../ui'
 
 const statusNames: Record<Status, string> = { unplayed: 'Unplayed', 'in-progress': 'In progress', finished: 'Finished' }
 
+function statusName(episode: Episode) {
+  return episode.status && statusNames[episode.status]
+}
+
+function durationText(episode: Episode) {
+  return episode.duration ? formatDuration(episode.duration) : undefined
+}
+
 // In the order the help lists them.
-const fields: ShownField<Episode>[] = [
-  dateField({ key: 'played', label: 'Last played', example: 'played:2026-11' }, (episode) => episode.lastPlayed, 'played'),
-  dateField({ key: 'first', label: 'First played', example: 'first:<2026' }, (episode) => episode.firstPlayed, 'first played'),
-  dateField({ key: 'published', label: 'Published', example: 'published:<2020' }, (episode) => episode.published, 'pub.'),
-  {
+export const episodeFields = {
+  lastPlayed: dateField<Episode>({ key: 'played', label: 'Last played', example: 'played:2026-11' }, (episode) => episode.lastPlayed, 'last'),
+  firstPlayed: dateField<Episode>({ key: 'first', label: 'First played', example: 'first:<2026' }, (episode) => episode.firstPlayed, 'first'),
+  published: dateField<Episode>({ key: 'published', label: 'Published', example: 'published:<2020' }, (episode) => episode.published, 'pub.'),
+  duration: {
     key: 'duration',
     label: 'Duration',
     kind: 'duration',
     value: (episode) => episode.duration || undefined,
     example: 'duration:>=1h30m',
-    cell: (episode) => episode.duration ? formatDuration(episode.duration) : '—',
-    short: (episode) => episode.duration ? formatDuration(episode.duration) : undefined,
+    cell: (episode) => durationText(episode) ?? '—',
+    short: durationText,
   },
-  {
+  progress: {
     key: 'progress',
     label: 'Progress',
     kind: 'number',
@@ -32,22 +41,25 @@ const fields: ShownField<Episode>[] = [
     note: 'percent of the duration, the furthest played',
     example: 'progress:<50',
     cell: (episode) => <Progress value={episode.progress} />,
-    short: (episode) => episode.progress === undefined ? undefined : `${Math.round(episode.progress)}%`,
+    short: (episode) => episode.progress === undefined ? undefined : formatPercent(episode.progress),
   },
-  {
+  status: {
     key: 'status',
     label: 'Status',
     kind: 'choice',
     choices: statuses,
     // Sorted and shown by its name, filtered by its key (`in-progress`).
-    value: (episode) => episode.status && statusNames[episode.status],
+    value: statusName,
     filterValue: (episode) => episode.status,
     note: "Pocket Casts' own: finished is its mark, not a share played",
     example: 'status:in-progress',
-    cell: (episode) => episode.status ? <Badge>{statusNames[episode.status]}</Badge> : '—',
-    short: (episode) => episode.status && statusNames[episode.status],
+    cell: (episode) => {
+      const name = statusName(episode)
+      return name ? <Badge>{name}</Badge> : '—'
+    },
+    short: statusName,
   },
-  {
+  podcast: {
     key: 'podcast',
     label: 'Podcast',
     kind: 'text',
@@ -59,17 +71,11 @@ const fields: ShownField<Episode>[] = [
     example: 'podcast:politics',
     short: (episode) => episode.podcastTitle || undefined,
   },
-  { key: 'title', label: 'Title', kind: 'text', value: (episode) => episode.title, example: 'title:interview' },
-]
-
-export function episodeField(key: string) {
-  const field = fields.find((each) => each.key === key)
-  if (!field) throw new Error(`No episodes field: ${key}`)
-  return field
-}
+  title: { key: 'title', label: 'Title', kind: 'text', value: (episode) => episode.title, example: 'title:interview' },
+} satisfies Record<string, ShownField<Episode>>
 
 export const episodesList = defineList<Episode, ShownField<Episode>>({
-  fields,
+  fields: Object.values(episodeFields),
   searchKeys: ['title', 'podcastTitle'],
   searchThreshold: episodesSearchThreshold,
   // The latest played first; episodes with no last-played date follow,

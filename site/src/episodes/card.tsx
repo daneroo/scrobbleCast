@@ -4,11 +4,10 @@ import { shortLines, type ShownField } from '../list/shown'
 import { SquareCard } from '../list/square-card'
 import { cellOf } from '../list/table'
 import type { CardSize } from '../list/view'
-import { episodeField } from './list'
+import { episodeFields } from './list'
 
-const largeFields = new Set(['podcast', 'status', 'progress'])
-const status = episodeField('status')
-const progress = episodeField('progress')
+const { title, podcast, status, progress } = episodeFields
+const largeFields = new Set([title.key, podcast.key, status.key, progress.key])
 
 export function EpisodeCard({ episode, size, fields }: { episode: Episode; size: CardSize; fields: readonly ShownField<Episode>[] }) {
   const large = size === 'large'

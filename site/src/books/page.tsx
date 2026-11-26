@@ -1,8 +1,9 @@
 import { Await, Link } from '@tanstack/react-router'
 import { useMemo } from 'react'
-import { bookPageSize, bookPageStep } from '../config'
+import { bookPageSize, bookPageStep, journalLaneLength } from '../config'
 import type { Book } from '../data/books'
 import type { Feed } from '../data/fetch'
+import { Journal } from '../list/journal'
 import type { Query } from '../list/query'
 import { QueryLine } from '../list/query-line'
 import { Scroll, useTopOnRestart } from '../list/scroll'
@@ -12,9 +13,11 @@ import type { Column } from '../list/table'
 import type { View } from '../list/view'
 import { ViewSwitch } from '../list/view-switch'
 import { Heading, Loading, Panel } from '../ui'
-import { BookCards, Cover } from './card'
+import { BookCard, BookCards, Cover } from './card'
 import { booksList } from './list'
+import type { BookField } from './list'
 import { BookPanel } from './panel'
+import { bookPresets } from './presets'
 
 // The table's lead column: the book itself, not a query field, so it has its
 // own key and no sort.
@@ -41,8 +44,14 @@ const expand = {
   label: (book: Book) => `Details for ${book.title}`,
 }
 
-// The books list: one query line, then the results of the feed once it has
-// loaded.
+// A journal lane's card: small, and without the shelf, which the lane's
+// preset already names.
+function laneCard(book: Book, fields: readonly BookField[]) {
+  return <BookCard book={book} size="small" fields={fields.filter(({ key }) => key !== 'shelf')} />
+}
+
+// The books list: one query line with the presets, then, once the feed has
+// loaded, the journal for an empty query or the query's results.
 export function Books({ books }: { books: Promise<Feed<Book[]>> }) {
   const [text, setText] = useListQuery('books')
   const [view, setView] = useListView('books')
@@ -56,10 +65,24 @@ export function Books({ books }: { books: Promise<Feed<Book[]>> }) {
         onChange={setText}
         help={booksList.help()}
         notUnderstood={query.notUnderstood}
+        presets={bookPresets}
         placeholder="shelf:on-deck pages:<300 sort:-avg   — or just words"
       />
       <Await promise={books} fallback={<Loading block />}>
-        {({ data }) => (
+        {({ data }) => !query.tokens.length ? (
+          <Journal
+            list={booksList}
+            presets={bookPresets}
+            items={data}
+            length={journalLaneLength}
+            id={(book) => book.bookId}
+            card={laneCard}
+            onOpen={(next) => {
+              setText(next)
+              window.scrollTo({ top: 0 })
+            }}
+          />
+        ) : (
           <Results
             books={data}
             query={query}
@@ -89,7 +112,7 @@ function Results({ books, query, view, onView, onSort }: {
 
   return (
     <>
-      <p ref={start} className="mt-3 text-muted-foreground tabular-nums" aria-live="polite">{count(results.length)}</p>
+      <p ref={start} className="text-muted-foreground tabular-nums" aria-live="polite">{count(results.length)}</p>
       <div className="mt-1 mb-3 flex flex-wrap items-center justify-between gap-3">
         <p className="text-sm text-muted-foreground">
           Showing {fields.map(({ label }) => label).join(' · ')}

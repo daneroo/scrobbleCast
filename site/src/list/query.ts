@@ -257,6 +257,16 @@ export interface Query {
   readonly notUnderstood: readonly string[]
 }
 
+// A named query, fixed in code: a button that fills the query line, and a
+// lane of the journal unless `excludeFromJournalLanes`.
+export interface Preset {
+  readonly label: string
+  // A sentence on what it finds, under its lane's title.
+  readonly hint: string
+  readonly query: string
+  readonly excludeFromJournalLanes?: boolean
+}
+
 export interface ListDefinition<T, F extends Field<T>> {
   fields: readonly F[]
   // The item's keys that words search, and how strictly (Fuse's threshold;
@@ -532,6 +542,9 @@ export function defineList<T, F extends Field<T> = Field<T>>(list: ListDefinitio
 
   return { parse, format, run, shown, sortBy, help }
 }
+
+// What a list defines itself into.
+export type List<T, F extends Field<T> = Field<T>> = ReturnType<typeof defineList<T, F>>
 
 const collator = new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' })
 

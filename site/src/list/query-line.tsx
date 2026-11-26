@@ -1,19 +1,26 @@
 import { useId } from 'react'
 import type { ReactNode } from 'react'
 import { classes, control } from '../ui'
-import type { FieldHelp, Help } from './query'
+import type { FieldHelp, Help, Preset } from './query'
 
 // A list's query line: the input; what the query didn't understand, a status
-// that describes the input, so screen readers hear it as it changes; then
-// "Query help" drawn from the list's help. Nothing here knows books.
-export function QueryLine({ text, onChange, help, notUnderstood, placeholder }: {
+// that describes the input, so screen readers hear it as it changes; "Query
+// help" drawn from the list's help; then the presets. Nothing here knows
+// books.
+export function QueryLine({ text, onChange, help, notUnderstood, presets, placeholder }: {
   text: string
   onChange: (text: string) => void
   help: Help
   notUnderstood: readonly string[]
+  presets: readonly Preset[]
   placeholder?: string
 }) {
   const statusId = useId()
+  // A preset or "← Journal" starts a new query: from the top of the page.
+  function go(next: string) {
+    onChange(next)
+    window.scrollTo({ top: 0 })
+  }
   return (
     <>
       <label className="grid gap-1.5">
@@ -40,7 +47,33 @@ export function QueryLine({ text, onChange, help, notUnderstood, placeholder }: 
         <summary className="cursor-pointer">Query help</summary>
         <HelpText help={help} />
       </details>
+      <Presets text={text} presets={presets} onPick={go} />
     </>
+  )
+}
+
+// One button per preset, in the list's order; the one whose query is in the
+// line is pressed, and hovering shows its query. "← Journal" empties the
+// line, so it is there only when the line isn't empty.
+function Presets({ text, presets, onPick }: { text: string; presets: readonly Preset[]; onPick: (query: string) => void }) {
+  const button = 'rounded-md border px-2.5 py-1 text-sm'
+  const typed = text.trim()
+  return (
+    <div className="mt-3 mb-5 flex flex-wrap gap-1.5">
+      {typed && <button type="button" onClick={() => onPick('')} className={classes(button, 'bg-card hover:bg-hover')}>← Journal</button>}
+      {presets.map(({ label, query }) => (
+        <button
+          key={label}
+          type="button"
+          title={query}
+          aria-pressed={typed === query}
+          onClick={() => onPick(query)}
+          className={classes(button, typed === query ? 'border-primary bg-primary text-primary-foreground' : 'bg-card hover:bg-hover')}
+        >
+          {label}
+        </button>
+      ))}
+    </div>
   )
 }
 

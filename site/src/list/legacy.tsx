@@ -6,9 +6,9 @@ import type { Sort, Value } from './query'
 import { Table } from './table'
 import type { TableProps } from './table'
 
-// The podcasts and episodes pages' old pieces, until they move onto the
-// shared list page (#93–#95): a list's title and count, a search box, and a
-// table that sorts itself. Then this goes.
+// The podcasts page's old pieces, until it moves onto the shared list page
+// (#95): a list's title and count, a search box, and a table that sorts
+// itself. Then this goes.
 
 export function SearchBox({ value, onChange, label }: { value: string; onChange: (value: string) => void; label: string }) {
   return (

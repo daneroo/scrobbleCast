@@ -1,3 +1,4 @@
+import { parseDuration } from './duration'
 import { search } from './search'
 
 // The query model: one line of text that selects and orders a list (see
@@ -16,7 +17,8 @@ export interface Sort {
 // every filter and always sorts last.
 export type Value = string | number | undefined
 
-// What a field filters on: its value, or a list of them (tags).
+// What a field filters on: its value, or a list of them (tags, or texts any
+// of which may match).
 type FilterValue = Value | readonly string[]
 
 // One keyword of a list's query, and one of the fields it can show.
@@ -50,6 +52,8 @@ type Op = '>' | '<' | '>=' | '<=' | '='
 // What each kind's filter holds, besides its key and its value as typed.
 interface FilterData {
   number: { op: Op; number: number }
+  // Seconds.
+  duration: { op: Op; seconds: number }
   // A year, month or day: [year], [year, month] or [year, month, day].
   date: { op: Op; date: readonly number[] }
   choice: { choices: readonly string[] }
@@ -88,6 +92,7 @@ interface KindRules<K extends Kind> {
 }
 
 const numberValue = /^(>=|<=|>|<|=)?(-?\d+(?:\.\d+)?)$/
+const durationValue = /^(>=|<=|>|<|=)?(.*)$/
 const typedDate = /^(>=|<=|>|<|=)?(-?\d{1,4})(?:-(\d{2})(?:-(\d{2}))?)?$/
 // An ISO 8601 date, from a year ("1995", "-0750") to a time.
 const isoDate = /^([+-]?\d{4,})(?:-(\d{2})(?:-(\d{2})(?:T(\d{2}):(\d{2})(?::(\d{2}(?:\.\d+)?))?Z?)?)?)?$/
@@ -157,6 +162,19 @@ const kinds: { [K in Kind]: KindRules<K> } = {
     sort: { descending: true, key: (value) => typeof value === 'number' ? value : undefined },
     help: { syntax: () => 'a number after > < >= <= or =; a bare number means =', example: () => '>1' },
   },
+  // Seconds, typed in units (`1h30m`, see `parseDuration`): a bare number is
+  // not understood.
+  duration: {
+    parse: (text) => {
+      const [, op, duration] = durationValue.exec(text) ?? []
+      const seconds = parseDuration(duration ?? '')
+      return seconds === undefined ? undefined : { op: opOf(op), seconds }
+    },
+    match: ({ op, seconds }, value) => typeof value === 'number' && passes(op, value - seconds),
+    shared: ({ op }) => op === '=',
+    sort: { descending: true, key: (value) => typeof value === 'number' ? value : undefined },
+    help: { syntax: () => 'a duration (45m, 1h30m, 2d) after > < >= <= or =', example: () => '>=1h30m' },
+  },
   // Compared at the precision typed: `2024` is any day that year.
   date: {
     parse: (text) => {
@@ -211,10 +229,11 @@ const kinds: { [K in Kind]: KindRules<K> } = {
     match: ({ tags }, value) => (typeof value === 'object' ? value : [String(value)]).some((tag) => tags.includes(tag.toLowerCase())),
     help: { syntax: () => 'names, exact but in any case, comma separated: any of them', example: () => 'name' },
   },
-  // Case-insensitive contains.
+  // Case-insensitive contains; a field filtering on several texts matches
+  // when any of them contains it.
   text: {
     parse: (text) => text ? {} : undefined,
-    match: ({ text }, value) => String(value).toLowerCase().includes(text.toLowerCase()),
+    match: ({ text }, value) => (typeof value === 'object' ? value : [String(value)]).some((each) => each.toLowerCase().includes(text.toLowerCase())),
     sort: { descending: false, key: String },
     help: { syntax: () => 'any text it contains, in any case', example: () => 'word' },
   },

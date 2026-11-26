@@ -3,7 +3,8 @@ import { shelfName, shelfNames, type Book } from '../data/books'
 import { defineList } from '../list/query'
 import type { Query } from '../list/query'
 import type { ShownField } from '../list/shown'
-import { Progress, ShelfBadge, Stars } from './ui'
+import { Progress } from '../ui'
+import { ShelfBadge, Stars } from './ui'
 
 // The books list's query: its fields, search keys, default sort and the
 // default-fields rule. Its keywords and that rule are the layout prototype's

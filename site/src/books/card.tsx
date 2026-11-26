@@ -3,9 +3,9 @@ import type { Book } from '../data/books'
 import { shortLines } from '../list/shown'
 import type { ShownField } from '../list/shown'
 import type { CardSize } from '../list/view'
-import { classes } from '../ui'
+import { Progress, classes } from '../ui'
 import { progress } from './list'
-import { Progress, ShelfBadge, Stars } from './ui'
+import { ShelfBadge, Stars } from './ui'
 
 // The feed's covers are small (`._SY75_`); the same URL gives other heights:
 // `SY300` is 199×300. With no suffix, the URL is the 315×475 original.

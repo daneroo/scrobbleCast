@@ -107,3 +107,21 @@ function ArtworkImage({ src }: { src: string }) {
 function AppIcon() {
   return <img src="/scrobble-cast.svg" alt="" className="w-[70%]" />
 }
+
+// A short label in a pill: a book's shelf, an episode's status.
+export function Badge({ children }: { children: ReactNode }) {
+  return <span className="inline-block rounded-full border px-2 py-0.5 text-xs whitespace-nowrap text-muted-foreground">{children}</span>
+}
+
+// A percentage as a bar and its number; a dash for none.
+export function Progress({ value }: { value: number | undefined }) {
+  if (value === undefined) return <span className="text-muted-foreground">—</span>
+  return (
+    <span className="inline-flex items-center gap-2">
+      <span className="h-1.5 w-16 overflow-hidden rounded-full bg-table-stripe ring-1 ring-border">
+        <span className="block h-full bg-primary" style={{ width: `${Math.min(value, 100)}%` }} />
+      </span>
+      <span className="tabular-nums">{Math.round(value)}%</span>
+    </span>
+  )
+}

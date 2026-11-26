@@ -13,9 +13,8 @@ export const searchThreshold = 0.4
 // 0.4 lets two words match a third of the books; 0.15 still forgives a typo
 // ("excesion banks").
 export const booksSearchThreshold = 0.15
-
-export const episodePageSize = 5
-export const episodePageStep = 20
+// Episodes search their title and their podcast's: 0.15 to start, as books.
+export const episodesSearchThreshold = 0.15
 
 // Results a list's query draws at first, and how many more each time the
 // reader scrolls near the end.

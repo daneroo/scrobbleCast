@@ -7,7 +7,7 @@ import { Layout, LoadError, NotFound } from './layout'
 import { BookDetail } from './books/detail'
 import { booksPage } from './books/page'
 import { EpisodeDetail } from './episodes/detail'
-import { Episodes } from './episodes/page'
+import { EpisodesReach, episodesPage } from './episodes/page'
 import { ListPage } from './list/page'
 import { Home } from './pages'
 import { PodcastDetail } from './podcasts/detail'
@@ -69,11 +69,11 @@ const podcast = createRoute({
 const episodes = createRoute({
   getParentRoute: () => root,
   path: '/episodes',
-  // Episode titles come from the podcast feed.
+  // Episodes' podcast titles and artwork come from the podcast feed.
   staticData: { feeds: ['episodes', 'podcasts'] },
-  head: () => pageTitle('Recent episodes'),
+  head: () => pageTitle('Episodes'),
   loader: () => handOff({ episodes: getEpisodes() }),
-  component: () => <Episodes episodes={episodes.useLoaderData().episodes} />,
+  component: () => <ListPage page={episodesPage} items={episodes.useLoaderData().episodes} under={<EpisodesReach />} />,
 })
 
 const episode = createRoute({

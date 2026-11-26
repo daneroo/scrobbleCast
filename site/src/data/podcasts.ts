@@ -43,18 +43,42 @@ function toPodcast(podcast: PodcastRecord): Podcast {
   }
 }
 
+// Where I am with an episode, as Pocket Casts records it (glossary: Status).
+export const statuses = ['unplayed', 'in-progress', 'finished'] as const
+export type Status = (typeof statuses)[number]
+
+const statusOf: Record<number, Status> = { 0: 'unplayed', 1: 'unplayed', 2: 'in-progress', 3: 'finished' }
+
 export interface Episode {
   uuid: string
   title: string
+  // Its podcast's, from the podcast feed shown now; empty until it loads, or
+  // when the feed doesn't have it.
   podcastId: string
   podcastTitle: string
+  artwork: string
+  // The audio.
+  url: string
+  // ISO 8601; empty when unknown.
+  published: string
+  // Seconds; 0 when unknown.
   duration: number
   playedSeconds: number
+  // The furthest played, as a percentage of the duration; none without one.
+  progress?: number
+  // None when the record doesn't say.
+  status?: Status
   firstPlayed: string
   lastPlayed: string
 }
 
-function toEpisode(episode: EpisodeRecord, podcastTitle = ''): Episode {
+// ISO 8601: older records give "2018-12-12 16:17:39", taken as UTC.
+function isoTime(text: string | undefined) {
+  if (!text) return ''
+  return /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.test(text) ? text.replace(' ', 'T') + 'Z' : text
+}
+
+function toEpisode(episode: EpisodeRecord, podcast?: Podcast): Episode {
   let playedSeconds = episode.played_up_to ?? 0
   const playbackDates = []
   for (const [date, seconds] of Object.entries(episode.history.played_up_to ?? {})) {
@@ -64,13 +88,19 @@ function toEpisode(episode: EpisodeRecord, podcastTitle = ''): Episode {
     }
   }
   playbackDates.sort()
+  const duration = Number(episode.duration ?? 0)
   return {
     uuid: episode.uuid,
     title: episode.title,
     podcastId: episode.podcast_uuid,
-    podcastTitle,
-    duration: Number(episode.duration ?? 0),
+    podcastTitle: podcast?.title ?? '',
+    artwork: podcast?.thumbnail ?? '',
+    url: episode.url ?? '',
+    published: isoTime(episode.published_at),
+    duration,
     playedSeconds,
+    progress: duration ? 100 * playedSeconds / duration : undefined,
+    status: episode.playing_status === undefined ? undefined : statusOf[episode.playing_status],
     firstPlayed: playbackDates[0] ?? '',
     lastPlayed: episode.meta.__lastPlayed ?? playbackDates.at(-1) ?? '',
   }
@@ -107,29 +137,36 @@ export function podcastFeeds(options: FeedOptions = {}) {
     return lookup('podcast', uuid).then((podcast) => podcast && toPodcast(podcast))
   }
 
-  // The episode feed alone, without podcast titles: it doesn't wait for the
-  // podcast feed.
+  // The episode feed alone, without its podcasts' titles and artwork: it
+  // doesn't wait for the podcast feed.
   const getEpisodeFeed = shareFeed(() => {
     const since = new Date(Date.now() - recentDays * 24 * 60 * 60 * 1000).toISOString()
     return mapData(feed('episode', { user, since }), (episodes) => episodes.map((episode) => toEpisode(episode)))
   })
 
-  // The episode feed with titles from the podcast feed shown now: worked out
-  // again on each call, so a fresh podcast feed brings fresh titles. Ready at
-  // once if this tab has both feeds.
+  // The episode feed joined to the podcast feed shown now (each episode's
+  // podcast title and artwork): worked out again on each call, so a fresh
+  // podcast feed brings fresh titles. Ready at once if this tab has both
+  // feeds.
   function getEpisodes(): Promise<Feed<Episode[]>> {
     // Ask both feeds first: that starts a load, or retries a failed refresh.
     const episodeFeed = getEpisodeFeed()
     const podcastFeed = getPodcasts().then((podcasts) => podcasts.data, () => [])
     const episodes = getEpisodeFeed.loaded()
     const podcasts = getPodcasts.loaded()
-    if (episodes && podcasts) return ready(withTitles(episodes, podcasts.data))
-    return Promise.all([episodeFeed, podcastFeed]).then(([episodes, podcasts]) => withTitles(episodes, podcasts))
+    if (episodes && podcasts) return ready(withPodcasts(episodes, podcasts.data))
+    return Promise.all([episodeFeed, podcastFeed]).then(([episodes, podcasts]) => withPodcasts(episodes, podcasts))
   }
 
-  function withTitles(episodes: Feed<Episode[]>, podcasts: Podcast[]) {
-    const titles = new Map(podcasts.map((podcast) => [podcast.uuid, podcast.title]))
-    return { ...episodes, data: episodes.data.map((episode) => ({ ...episode, podcastTitle: titles.get(episode.podcastId) ?? '' })) }
+  function withPodcasts(episodes: Feed<Episode[]>, podcasts: Podcast[]) {
+    const byId = new Map(podcasts.map((podcast) => [podcast.uuid, podcast]))
+    return {
+      ...episodes,
+      data: episodes.data.map((episode) => {
+        const podcast = byId.get(episode.podcastId)
+        return { ...episode, podcastTitle: podcast?.title ?? '', artwork: podcast?.thumbnail ?? '' }
+      }),
+    }
   }
 
   async function getEpisode(uuid: string) {
@@ -137,7 +174,7 @@ export function podcastFeeds(options: FeedOptions = {}) {
     const episode = await lookup('episode', uuid)
     if (!episode) return undefined
     const podcast = await getPodcast(episode.podcast_uuid).catch(() => undefined)
-    return toEpisode(episode, podcast?.title)
+    return toEpisode(episode, podcast)
   }
 
   return { getPodcasts, getPodcast, getEpisodeFeed, getEpisodes, getEpisode }

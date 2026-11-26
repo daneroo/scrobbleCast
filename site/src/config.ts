@@ -12,3 +12,6 @@ export const searchThreshold = 0.4
 
 export const episodePageSize = 5
 export const episodePageStep = 20
+
+// The most books a query draws.
+export const bookPageSize = 60

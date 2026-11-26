@@ -12,27 +12,8 @@ import { SelfSortingTable } from './list/table'
 import { Button, Field, Heading, Panel, classes, control } from './ui'
 import type { Column } from './list/table'
 
-const bookKeys = ['title', 'authorName', 'bookDescription']
 const podcastKeys = ['title', 'author', 'description']
 const episodeKeys = ['title', 'podcastTitle']
-const shelfSelect = classes(control, 'min-w-44')
-
-// The shelf shown until one is picked.
-function defaultShelf(books: Book[]) {
-  return books.some((book) => book.userShelf === 'currently-reading') ? 'currently-reading' : ''
-}
-
-const bookColumns: Column<Book>[] = [
-  {
-    key: 'title',
-    label: 'Title',
-    value: (book) => book.title,
-    cell: (book) => <Link to="/books/$bookId" params={{ bookId: book.bookId }}>{book.title}</Link>,
-  },
-  { key: 'author', label: 'Author', value: (book) => book.authorName },
-  { key: 'shelf', label: 'Shelf', value: (book) => shelfName(book.userShelf) },
-  { key: 'read', label: 'Last read', value: (book) => book.userLastReadAt, cell: (book) => day(book.userLastReadAt) },
-]
 
 const podcastColumns: Column<Podcast>[] = [
   {
@@ -66,7 +47,7 @@ const episodeColumns: Column<Episode>[] = [
 
 // Pages show their static part at once. Each data part waits for its feed in
 // `<Await>`, showing a small placeholder until then.
-function Loading({ block = false }: { block?: boolean }) {
+export function Loading({ block = false }: { block?: boolean }) {
   return block
     ? <Panel role="status">Loading…</Panel>
     : <span className="animate-pulse text-muted-foreground motion-reduce:animate-none" role="status" aria-label="Loading">…</span>
@@ -179,46 +160,6 @@ export function Home({ feeds }: {
         ))}
       </div>
     </>
-  )
-}
-
-export function Books({ books }: { books: Promise<Feed<Book[]>> }) {
-  const [query, setQuery] = useState('')
-  const [shelf, setShelf] = useState<string>()
-  // The first copy shown sets the default shelf, so a fresh copy replacing a
-  // saved copy doesn't change the view.
-  useEffect(() => {
-    books.then(({ data }) => setShelf((shelf) => shelf ?? defaultShelf(data)), () => {})
-  }, [books])
-  const results = (books: Book[]) => {
-    const shown = shelf ?? defaultShelf(books)
-    return search(books, bookKeys, query).filter((book) => !shown || book.userShelf === shown)
-  }
-
-  return (
-    <Collection title="Books" feed={books} results={results}>
-      <Controls>
-        <SearchBox value={query} onChange={setQuery} label="Search books" />
-        <Field label="Shelf">
-          <Await promise={books} fallback={<select className={shelfSelect} disabled><option>All shelves</option></select>}>
-            {({ data }) => {
-              const shown = shelf ?? defaultShelf(data)
-              // A fresh copy may have no book left on the shelf shown.
-              const shelves = new Set([...data.map((book) => book.userShelf), ...(shown ? [shown] : [])])
-              return (
-                <select className={shelfSelect} value={shown} onChange={(event) => setShelf(event.target.value)}>
-                  <option value="">All shelves</option>
-                  {[...shelves].map((name) => <option key={name} value={name}>{shelfName(name)}</option>)}
-                </select>
-              )
-            }}
-          </Await>
-        </Field>
-      </Controls>
-      <Await promise={books} fallback={<Loading block />}>
-        {({ data }) => <SelfSortingTable items={results(data)} columns={bookColumns} id={(book) => book.bookId} />}
-      </Await>
-    </Collection>
   )
 }
 

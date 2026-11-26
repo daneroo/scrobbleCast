@@ -4,7 +4,8 @@ import { subscribeShownCopies, type FeedName } from './data/fetch'
 import { getEpisode, getEpisodeFeed, getEpisodes, getPodcast, getPodcasts } from './data/podcasts'
 import { documentTitle } from './format'
 import { Layout, LoadError, NotFound } from './layout'
-import { BookDetail, Books, EpisodeDetail, Episodes, Home, PodcastDetail, Podcasts } from './pages'
+import { Books } from './books/page'
+import { BookDetail, EpisodeDetail, Episodes, Home, PodcastDetail, Podcasts } from './pages'
 
 const root = createRootRoute({
   head: () => ({ meta: [{ title: 'Scrobble Cast' }] }),

@@ -4,39 +4,55 @@ import { formatDuration } from '../list/duration'
 import { defineList } from '../list/query'
 import { dateField, type ShownField } from '../list/shown'
 
-const fields: ShownField<Podcast>[] = [
-  {
+function playsText(podcast: Podcast) {
+  return podcast.playTotals?.plays.toLocaleString()
+}
+
+function listenedText(podcast: Podcast) {
+  return podcast.playTotals && formatDuration(podcast.playTotals.listenedSeconds)
+}
+
+export const podcastFields = {
+  plays: {
     key: 'plays',
     label: 'Plays in window',
     kind: 'number',
     value: (podcast) => podcast.playTotals?.plays,
     note: 'episodes played',
     example: 'plays:>0',
-    cell: (podcast) => podcast.playTotals?.plays.toLocaleString() ?? '—',
+    cell: (podcast) => playsText(podcast) ?? '—',
+    short: (podcast) => {
+      const plays = playsText(podcast)
+      return plays === undefined ? undefined : `${plays} ${podcast.playTotals?.plays === 1 ? 'play' : 'plays'}`
+    },
   },
-  {
+  listened: {
     key: 'listened',
     label: 'Listened in window',
     kind: 'duration',
     value: (podcast) => podcast.playTotals?.listenedSeconds,
     note: 'sum of the furthest played positions',
     example: 'listened:>=1h30m',
-    cell: (podcast) => podcast.playTotals ? formatDuration(podcast.playTotals.listenedSeconds) : '—',
+    cell: (podcast) => listenedText(podcast) ?? '—',
+    short: (podcast) => {
+      const listened = listenedText(podcast)
+      return listened === undefined ? undefined : `${listened} listened`
+    },
   },
-  dateField({
+  lastPlayed: dateField<Podcast>({
     key: 'played',
     label: 'Last played in window',
     note: 'latest playback date among the episodes counted',
     example: 'played:2026-11',
-  }, (podcast) => podcast.playTotals?.lastPlayed),
-  dateField({ key: 'since', label: 'Since', note: 'when the scraper first saw it', example: 'since:<2020' }, (podcast) => podcast.firstSeen),
-  dateField({ key: 'added', label: 'Added', note: 'when subscribed, where the feed knows', example: 'added:2026' }, (podcast) => podcast.added),
-  { key: 'title', label: 'Title', kind: 'text', value: (podcast) => podcast.title, example: 'title:politics' },
-  { key: 'author', label: 'Author', kind: 'text', value: (podcast) => podcast.author || undefined, example: 'author:bbc' },
-]
+  }, (podcast) => podcast.playTotals?.lastPlayed, 'last'),
+  since: dateField<Podcast>({ key: 'since', label: 'Since', note: 'when the scraper first saw it', example: 'since:<2020' }, (podcast) => podcast.firstSeen, 'since'),
+  added: dateField<Podcast>({ key: 'added', label: 'Added', note: 'when subscribed, where the feed knows', example: 'added:2026' }, (podcast) => podcast.added, 'added'),
+  title: { key: 'title', label: 'Title', kind: 'text', value: (podcast) => podcast.title, example: 'title:politics' },
+  author: { key: 'author', label: 'Author', kind: 'text', value: (podcast) => podcast.author || undefined, example: 'author:bbc' },
+} satisfies Record<string, ShownField<Podcast>>
 
 export const podcastsList = defineList<Podcast, ShownField<Podcast>>({
-  fields,
+  fields: Object.values(podcastFields),
   searchKeys: ['title', 'author', 'description'],
   searchThreshold: podcastsSearchThreshold,
   defaultSort: [{ key: 'played', descending: true }, { key: 'title', descending: false }],

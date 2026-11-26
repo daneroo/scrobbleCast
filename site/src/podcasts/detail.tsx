@@ -2,6 +2,7 @@ import type { Podcast } from '../data/podcasts'
 import { DetailPage, Found, byline, description, detailArtwork, detailHeading, metadata, usePageTitle } from '../detail'
 import { day } from '../format'
 import { Artwork, Heading } from '../ui'
+import { PodcastEpisodesLink } from './episodes-link'
 
 export function PodcastDetail({ podcast }: { podcast: Promise<Podcast | undefined> }) {
   return (
@@ -24,6 +25,7 @@ function PodcastInfo({ podcast }: { podcast: Podcast }) {
         </div>
       </div>
       {podcast.description && <p className={description}>{podcast.description}</p>}
+      <p className="mt-4"><PodcastEpisodesLink uuid={podcast.uuid} /></p>
     </>
   )
 }

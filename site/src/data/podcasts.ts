@@ -42,6 +42,20 @@ export interface Podcast {
   playTotals?: PlayTotals
 }
 
+function podcastSiteUrl(value: string | null | undefined) {
+  const site = value?.trim()
+  if (!site) return undefined
+  // The catalog can give a hostname without a scheme.
+  const href = /^[a-z][a-z\d+.-]*:/i.test(site) ? site : `https://${site}`
+  try {
+    const url = new URL(href)
+    if (url.protocol === 'http:' || url.protocol === 'https:') return url.href
+  } catch {
+    // A malformed URL has no site to link to.
+  }
+  return undefined
+}
+
 function toPodcast(podcast: PodcastRecord): Podcast {
   return {
     uuid: podcast.uuid,
@@ -50,7 +64,7 @@ function toPodcast(podcast: PodcastRecord): Podcast {
     description: plainText(podcast.description),
     thumbnail: podcast.thumbnail_url ?? '',
     firstSeen: podcast.meta.__firstSeen,
-    url: podcast.url ?? undefined,
+    url: podcastSiteUrl(podcast.url),
     added: isoTime(podcast.dateAdded) || undefined,
   }
 }

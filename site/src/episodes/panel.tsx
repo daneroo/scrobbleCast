@@ -1,17 +1,11 @@
 import { Link } from '@tanstack/react-router'
 import type { ReactNode } from 'react'
 import type { Episode } from '../data/podcasts'
-import { localTime } from '../format'
-import { PanelFact, RowPanel } from '../list/panel'
+import { PanelFact, PanelTime, RowPanel } from '../list/panel'
 import type { ShownField } from '../list/shown'
 import { cellOf } from '../list/table'
 import { Artwork } from '../ui'
 import { episodeFields } from './list'
-
-function dateAndTime(value: string) {
-  const date = new Date(value)
-  return Number.isNaN(date.getTime()) ? '—' : <time dateTime={date.toISOString()}>{localTime(date)}</time>
-}
 
 function fact(field: ShownField<Episode>, show?: (episode: Episode) => ReactNode): [label: string, show: (episode: Episode) => ReactNode] {
   return [field.label, show ?? ((episode) => cellOf(field, episode))]
@@ -24,9 +18,9 @@ const facts = [
   fact(episodeFields.status),
   fact(episodeFields.progress),
   fact(episodeFields.duration),
-  fact(episodeFields.published, (episode) => dateAndTime(episode.published)),
-  fact(episodeFields.firstPlayed, (episode) => dateAndTime(episode.firstPlayed)),
-  fact(episodeFields.lastPlayed, (episode) => dateAndTime(episode.lastPlayed)),
+  fact(episodeFields.published, (episode) => <PanelTime value={episode.published} />),
+  fact(episodeFields.firstPlayed, (episode) => <PanelTime value={episode.firstPlayed} />),
+  fact(episodeFields.lastPlayed, (episode) => <PanelTime value={episode.lastPlayed} />),
   ['Audio', ({ url }) => url ? <a href={url} target="_blank" rel="noreferrer">Open audio</a> : '—'],
 ] satisfies [string, (episode: Episode) => ReactNode][]
 

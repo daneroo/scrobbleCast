@@ -363,6 +363,13 @@ test('the played count uses playback within the window, including its start', as
   expect(countPlayedSince(await getEpisodeFeed())).toBe(2)
 })
 
+test('podcast websites accept a bare hostname and omit blank values', async () => {
+  const podcasts = [podcastRecord({ url: 'siriusxm.com' }), podcastRecord({ url: '  ' })]
+  const { getPodcasts } = podcastFeeds({ download: fakeHistory({ podcasts, episodes: [] }).download })
+
+  expect((await getPodcasts()).data.map(({ url }) => url)).toEqual(['https://siriusxm.com/', undefined])
+})
+
 test('the podcast catalog is ready while the first episode copy is still loading', async () => {
   const record = podcastRecord({ url: 'https://example.com/podcast', dateAdded: '2026-10-18T09:00:00Z' })
   const { download, answer } = heldHistory({ podcasts: [record, podcastRecord({ url: null }), podcastRecord()], episodes: [] })

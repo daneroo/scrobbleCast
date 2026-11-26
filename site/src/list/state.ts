@@ -7,10 +7,15 @@ import type { View } from './view'
 // coming back, not a reload.
 const queries = new Map<string, string>()
 
+// Seed the same query state before opening a list from another page.
+export function rememberListQuery(list: string, text: string) {
+  queries.set(list, text)
+}
+
 export function useListQuery(list: string) {
   const [text, setText] = useState(() => queries.get(list) ?? '')
   function set(next: string) {
-    queries.set(list, next)
+    rememberListQuery(list, next)
     setText(next)
   }
   return [text, set] as const

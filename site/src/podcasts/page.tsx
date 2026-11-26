@@ -4,7 +4,9 @@ import type { PageDefinition } from '../list/page'
 import type { ShownField } from '../list/shown'
 import { LeadCell } from '../list/table'
 import { Artwork } from '../ui'
+import { PodcastCard } from './card'
 import { podcastsList } from './list'
+import { PodcastPanel } from './panel'
 
 export const podcastsPage: PageDefinition<Podcast, ShownField<Podcast>> = {
   name: 'podcasts',
@@ -24,4 +26,9 @@ export const podcastsPage: PageDefinition<Podcast, ShownField<Podcast>> = {
       />
     ),
   },
+  expand: {
+    panel: (podcast) => <PodcastPanel podcast={podcast} />,
+    label: (podcast) => `Details for ${podcast.title}`,
+  },
+  card: (podcast, fields, size) => <PodcastCard podcast={podcast} size={size === 'lane' ? 'small' : size} fields={fields} />,
 }

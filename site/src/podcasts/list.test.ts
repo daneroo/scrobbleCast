@@ -1,5 +1,6 @@
 import { expect, test } from 'vite-plus/test'
 import type { Podcast } from '../data/podcasts'
+import { shortLines } from '../list/shown'
 import { podcastsList } from './list'
 
 function podcast(fields: Partial<Podcast> = {}): Podcast {
@@ -35,6 +36,15 @@ test('plays:0 matches a known zero, excluding podcasts without episode data yet'
     podcast({ title: 'Still loading' }),
   ]
   expect(titles(podcasts, 'plays:0')).toEqual(['No plays'])
+})
+
+test('card lines distinguish known zero totals from unknown totals and follow the shown fields', () => {
+  const fields = podcastsList.shown(podcastsList.parse('show:listened,plays,since'))
+  expect(shortLines(podcast({ playTotals: { plays: 0, listenedSeconds: 0 } }), fields, 2)).toEqual([
+    ['listened', '0m listened'],
+    ['plays', '0 plays'],
+  ])
+  expect(shortLines(podcast(), fields, 2)).toEqual([['since', 'since 2020-01-01']])
 })
 
 test('listened: filters durations in units, including zero', () => {

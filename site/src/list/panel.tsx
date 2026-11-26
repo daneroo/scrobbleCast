@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { localTime } from '../format'
 
 export function RowPanel({ artwork, children }: { artwork: ReactNode; children: ReactNode }) {
   return (
@@ -16,4 +17,9 @@ export function PanelFact({ label, children }: { label: string; children: ReactN
       <dd className="tabular-nums">{children}</dd>
     </div>
   )
+}
+
+export function PanelTime({ value }: { value: string | undefined }) {
+  const date = new Date(value ?? '')
+  return Number.isNaN(date.getTime()) ? '—' : <time dateTime={date.toISOString()}>{localTime(date)}</time>
 }

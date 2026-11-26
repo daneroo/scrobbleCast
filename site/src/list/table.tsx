@@ -41,6 +41,10 @@ interface TableProps<T> {
 const cellClass = 'border-b px-3 py-3 sm:px-5'
 const bodyCellClass = 'align-top leading-normal first:w-[52%] first:min-w-40 sm:first:min-w-48 last:whitespace-nowrap last:tabular-nums'
 
+// The first cell, with `expand`: room at its end for the disclosure button
+// and its focus outline, so the button never covers the cell's text.
+const disclosureCellClass = 'relative pr-11 sm:pr-11'
+
 // A table whose order comes from outside: it draws `items` as given, and shows
 // `sorts` in its headers. The main sort gets `aria-sort`; tie-breaks get an
 // arrow with their rank, and the same in words for screen readers.
@@ -54,8 +58,9 @@ export function Table<T>({ items, columns, id, sorts, onSort, expand }: TablePro
   if (!items.length) return <Panel role="status">No matches.</Panel>
 
   return (
-    // A container, so an open panel can take the visible width (`cqw`).
-    <div className="@container overflow-x-auto rounded-lg border bg-card">
+    // With `expand`, a container, so an open panel can take the visible width
+    // (`cqw`).
+    <div className={classes('overflow-x-auto rounded-lg border bg-card', expand && '@container')}>
       <table className="w-full text-left">
         <thead>
           <tr>
@@ -102,12 +107,12 @@ export function Table<T>({ items, columns, id, sorts, onSort, expand }: TablePro
                 {columns.map((column, columnIndex) => {
                   const disclosure = expand && columnIndex === 0
                   return (
-                    <td key={column.key} className={classes(cellClass, bodyCellClass, disclosure && 'relative')}>
+                    <td key={column.key} className={classes(cellClass, bodyCellClass, disclosure && disclosureCellClass)}>
                       {disclosure && (
                         <button
                           type="button"
                           aria-expanded={open}
-                          aria-controls={panelId}
+                          aria-controls={open ? panelId : undefined}
                           aria-label={expand.label(item)}
                           className="pointer-events-none absolute top-1.5 right-1.5 grid size-7 place-items-center rounded-md border bg-card text-accent opacity-0 focus-visible:pointer-events-auto focus-visible:opacity-100"
                           onClick={toggle}

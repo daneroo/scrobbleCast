@@ -8,10 +8,14 @@ import { browserSavedCopies, type SavedCopies } from './saved-copies'
 // break every record.
 const maxShownIssues = 3
 
+// Block tags: each run of them, opening or closing, is one line break.
+const blockTags = /(?:\s*<\/?(?:p|div|li|ul|ol|blockquote|h[1-6])\b[^>]*>\s*)+/gi
+
+// HTML as plain text: a line break at each `<br>` and block boundary.
 export function plainText(html: string) {
   if (!html) return ''
   const template = document.createElement('template')
-  template.innerHTML = html.replace(/<br\s*\/?>|<\/(?:p|div)>/gi, '\n')
+  template.innerHTML = html.replace(/<br\s*\/?>/gi, '\n').replace(blockTags, '\n')
   return template.content.textContent?.trim() ?? ''
 }
 

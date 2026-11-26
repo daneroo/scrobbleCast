@@ -9,7 +9,7 @@ import type { Episode, Podcast } from './data/podcasts'
 import { day, documentTitle, playedPercent } from './format'
 import { search } from './list/search'
 import { SelfSortingTable } from './list/table'
-import { Button, Field, Heading, Panel, classes, control } from './ui'
+import { Button, Field, Heading, Loading, Panel, classes, control } from './ui'
 import type { Column } from './list/table'
 
 const podcastKeys = ['title', 'author', 'description']
@@ -45,13 +45,6 @@ const episodeColumns: Column<Episode>[] = [
   { key: 'lastPlayed', label: 'Last played', value: (episode) => episode.lastPlayed, cell: (episode) => day(episode.lastPlayed) },
 ]
 
-// Pages show their static part at once. Each data part waits for its feed in
-// `<Await>`, showing a small placeholder until then.
-export function Loading({ block = false }: { block?: boolean }) {
-  return block
-    ? <Panel role="status">Loading…</Panel>
-    : <span className="animate-pulse text-muted-foreground motion-reduce:animate-none" role="status" aria-label="Loading">…</span>
-}
 
 // The data part of a detail page: the record once it has loaded, or not found.
 function Found<T>({ record, children }: { record: Promise<T | undefined>; children: (record: T) => ReactNode }) {

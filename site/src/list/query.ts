@@ -19,7 +19,9 @@ export interface Sort {
 //   every value containing it, and one that matches none is not understood;
 //   first click A→Z.
 // - text: case-insensitive contains; first click A→Z.
-export type Kind = 'number' | 'choice' | 'text'
+// - date: ISO 8601 text, sorted as text; first click newest first. It takes
+//   no filter yet: one is not understood.
+export type Kind = 'number' | 'choice' | 'text' | 'date'
 
 // What a field holds for an item; `undefined` is "no value", which fails
 // every filter and always sorts last.
@@ -27,10 +29,11 @@ export type Value = string | number | undefined
 
 // One keyword of a list's query, and one of the fields it can show.
 export interface Field<T> {
-  // The word typed (`pages`), and other words for it (`year` for `read`).
+  // The word typed (`pages`), and other words for it.
   key: string
   aliases?: readonly string[]
-  // Matches the key: a header tells you what to type.
+  // Names the key ("Rating" for `rating`, "Last read" for `read`): a header
+  // tells you what to type.
   label: string
   kind: Kind
   // To sort by, to filter by, and the plain cell.
@@ -135,6 +138,7 @@ export function defineList<T, F extends Field<T> = Field<T>>(list: ListDefinitio
       }
       return { key, kind, text, choices: [...choices] }
     }
+    if (kind === 'date') return undefined
     return text ? { key, kind, text } : undefined
   }
 
@@ -253,7 +257,7 @@ export function defineList<T, F extends Field<T> = Field<T>>(list: ListDefinitio
     const field = byName.get(key.toLowerCase())
     if (!field) return query
     const [main] = query.order
-    const descending = main?.key === field.key ? !main.descending : field.kind === 'number'
+    const descending = main?.key === field.key ? !main.descending : field.kind === 'number' || field.kind === 'date'
     const token: Token = { type: 'sort', sorts: [{ key: field.key, descending }, ...query.order.filter((sort) => sort.key !== field.key)] }
     const last = query.tokens.findLastIndex((token) => token.type === 'sort')
     const tokens = last < 0
@@ -271,15 +275,15 @@ export function defineList<T, F extends Field<T> = Field<T>>(list: ListDefinitio
     if (query.show) return query.show.map(fieldOf)
     const keys: string[] = []
     const add = (key: string) => { if (!keys.includes(key)) keys.push(key) }
-    const added = (key: string) => { if (!list.lead?.includes(key)) add(key) }
+    const addUnlessLead = (key: string) => { if (!list.lead?.includes(key)) add(key) }
     for (const key of list.pinned(query)) add(key)
     for (const filter of query.filters) {
       if (filter.kind === 'number' && filter.op === '=') continue
       if (filter.kind === 'choice' && filter.choices.length === 1) continue
-      for (const key of fieldOf(filter.key).alsoShow ?? []) added(key)
-      added(filter.key)
+      for (const key of fieldOf(filter.key).alsoShow ?? []) addUnlessLead(key)
+      addUnlessLead(filter.key)
     }
-    for (const { key } of query.sorts) added(key)
+    for (const { key } of query.sorts) addUnlessLead(key)
     for (const key of list.fill(query)) if (keys.length < list.fillTo) add(key)
     return keys.slice(0, list.most).map(fieldOf)
   }

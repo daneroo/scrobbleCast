@@ -1,16 +1,16 @@
 import { Await, Link } from '@tanstack/react-router'
+import { useMemo } from 'react'
 import { bookPageSize } from '../config'
 import type { Book } from '../data/books'
 import type { Feed } from '../data/fetch'
 import { useListQuery } from '../list/state'
 import { Table } from '../list/table'
 import type { Column } from '../list/table'
-import { Loading } from '../pages'
-import { Heading, classes, control } from '../ui'
+import { Heading, Loading, classes, control } from '../ui'
 import { booksList } from './list'
 
 // The feed's covers are small (`._SY75_`); the same URL gives other heights.
-export function coverUrl(book: Book, size: 'SY75' | 'SY300') {
+function coverUrl(book: Book, size: 'SY75' | 'SY300') {
   return book.bookImageURL.replace(/\._S[XY]\d+_\./, `._${size}_.`)
 }
 
@@ -35,15 +35,24 @@ const bookColumn: Column<Book> = {
 // The books list: one query line over a table whose fields follow the query.
 export function Books({ books }: { books: Promise<Feed<Book[]>> }) {
   const [text, setText] = useListQuery('books')
-  const query = booksList.parse(text)
+  const query = useMemo(() => booksList.parse(text), [text])
   const fields = booksList.shown(query)
+  // The count and the table share one run per copy of the feed.
+  const results = useMemo(() => {
+    const runs = new WeakMap<Book[], Book[]>()
+    return (books: Book[]) => {
+      let found = runs.get(books)
+      if (!found) runs.set(books, found = booksList.run(books, query))
+      return found
+    }
+  }, [query])
 
   return (
     <>
       <header className="mb-4 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2">
         <Heading>Books</Heading>
         <p className="text-muted-foreground tabular-nums" aria-live="polite">
-          <Await promise={books} fallback={<Loading />}>{({ data }) => count(booksList.run(data, query).length)}</Await>
+          <Await promise={books} fallback={<Loading />}>{({ data }) => count(results(data).length)}</Await>
         </p>
       </header>
       <label className="grid gap-1.5">
@@ -70,18 +79,18 @@ export function Books({ books }: { books: Promise<Feed<Book[]>> }) {
       </p>
       <Await promise={books} fallback={<Loading block />}>
         {({ data }) => {
-          const results = booksList.run(data, query)
+          const found = results(data)
           return (
             <>
               <Table
-                items={results.slice(0, bookPageSize)}
+                items={found.slice(0, bookPageSize)}
                 columns={[bookColumn, ...fields]}
                 id={(book) => book.bookId}
                 sorts={query.order}
                 onSort={(key) => setText(booksList.format(booksList.sortBy(query, key)))}
               />
-              {results.length > bookPageSize && (
-                <p className="mt-4 text-muted-foreground tabular-nums">The first {bookPageSize} of {results.length.toLocaleString()}</p>
+              {found.length > bookPageSize && (
+                <p className="mt-4 text-muted-foreground tabular-nums">The first {bookPageSize} of {found.length.toLocaleString()}</p>
               )}
             </>
           )

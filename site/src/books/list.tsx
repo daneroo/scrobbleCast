@@ -17,7 +17,7 @@ export interface BookField extends Field<Book> {
 
 // The last percentage in the timeline ("44.0%"), ignoring another edition's
 // rows ("… (Hardcover Edition)").
-export function progress(book: Book): number | undefined {
+function progress(book: Book): number | undefined {
   let found: number | undefined
   for (const { event } of book.timeline) {
     if (/ Edition\)$/.test(event)) continue
@@ -57,11 +57,11 @@ function Stars({ value }: { value: number }) {
   )
 }
 
-export function ShelfBadge({ shelf }: { shelf: string }) {
+function ShelfBadge({ shelf }: { shelf: string }) {
   return <span className="inline-block rounded-full border px-2 py-0.5 text-xs whitespace-nowrap text-muted-foreground">{shelfName(shelf)}</span>
 }
 
-export function Progress({ value }: { value: number | undefined }) {
+function Progress({ value }: { value: number | undefined }) {
   if (value === undefined) return <span className="text-muted-foreground">—</span>
   return (
     <span className="inline-flex items-center gap-2">
@@ -73,13 +73,12 @@ export function Progress({ value }: { value: number | undefined }) {
   )
 }
 
-// A date field. Until dates get their own kind, they filter and sort as text
-// (ISO 8601 sorts as text).
+// A date field, ISO 8601.
 function dateField(key: string, label: string, date: (book: Book) => string, short: string): BookField {
   return {
     key,
     label,
-    kind: 'text',
+    kind: 'date',
     value: (book) => date(book) || undefined,
     cell: (book) => day(date(book)),
     short: (book) => date(book) ? `${short} ${day(date(book))}` : null,
@@ -161,7 +160,7 @@ const fields: BookField[] = [
   {
     key: 'published',
     label: 'Published',
-    kind: 'text',
+    kind: 'date',
     value: (book) => book.bookPublished || undefined,
     cell: (book) => year(book.bookPublished) ?? '—',
     short: (book) => year(book.bookPublished) ? `pub. ${year(book.bookPublished)}` : null,

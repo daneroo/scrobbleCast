@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import type { ReactNode } from 'react'
 import { Panel, classes } from '../ui'
-import type { Sort } from './query'
+import type { Sort, Value } from './query'
 
 // A list's table, generic over its items: nothing here knows books, podcasts
 // or episodes.
@@ -12,7 +12,7 @@ import type { Sort } from './query'
 export interface Column<T> {
   key: string
   label: string
-  value: (item: T) => string | number | undefined
+  value: (item: T) => Value
   cell?: (item: T) => ReactNode
   sortable?: boolean
 }
@@ -108,7 +108,7 @@ function ordinal(n: number) {
 
 const collator = new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' })
 
-function compare(lhs: string | number | undefined, rhs: string | number | undefined) {
+function compare(lhs: Value, rhs: Value) {
   return typeof lhs === 'number' && typeof rhs === 'number'
     ? lhs - rhs
     : collator.compare(String(lhs ?? ''), String(rhs ?? ''))

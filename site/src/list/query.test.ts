@@ -10,6 +10,7 @@ interface Pot {
   colour: string
   price?: number
   stock?: number
+  made?: string
 }
 
 const colours = ['red', 'dark-red', 'blue', 'green']
@@ -22,6 +23,7 @@ const pots = defineList<Pot>({
     { key: 'note', label: 'Note', kind: 'text', value: (pot) => pot.note },
     { key: 'price', label: 'Price', kind: 'number', value: (pot) => pot.price, alsoShow: ['size'] },
     { key: 'stock', label: 'Stock', kind: 'number', value: (pot) => pot.stock },
+    { key: 'made', label: 'Made', kind: 'date', value: (pot) => pot.made },
   ],
   searchKeys: ['name', 'note'],
   defaultSort: [{ key: 'size', descending: true }],
@@ -148,6 +150,16 @@ test('a header click first sorts numbers high first, text and choices A to Z', (
   expect(click('matte', 'size')).toBe('matte sort:-size')
   expect(click('matte', 'name')).toBe('matte sort:name')
   expect(click('matte', 'colour')).toBe('matte sort:colour')
+})
+
+test('a date sorts newest first on the first click, and takes no filter yet', () => {
+  expect(click('matte', 'made')).toBe('matte sort:-made')
+  const items = [
+    { name: 'Old', note: '', colour: 'red', made: '2019-05-01' },
+    { name: 'New', note: '', colour: 'red', made: '2024-02-03' },
+  ]
+  expect(names('sort:-made', items)).toEqual(['New', 'Old'])
+  expect(pots.parse('made:2024').notUnderstood).toEqual(['made:2024'])
 })
 
 test('a second click on the main sort flips it', () => {

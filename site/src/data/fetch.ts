@@ -177,6 +177,7 @@ export function shareFeed<C extends Feed<unknown>>(
   // Load into `target`. If it already shows a copy, skip the saved copy and
   // keep the copy shown if the load fails.
   function run(target: Entry, first?: Deferred<C>) {
+    target.expires = Date.now() + ttl
     target.retry = false
     target.loading = true
     const done = deferred<C>()

@@ -9,10 +9,6 @@ import { Progress, ShelfBadge, Stars } from './ui'
 // default-fields rule. Its keywords and that rule are the layout prototype's
 // (branch `prototype/layout`).
 
-// A books field: a query keyword, with its table cell and its short line
-// under a card.
-type BookField = ShownField<Book>
-
 // The book's own timeline rows: not another edition's ("… (Hardcover
 // Edition)").
 function ownTimeline(book: Book) {
@@ -82,11 +78,11 @@ function readDate(book: Book, at: string) {
 // A date field, ISO 8601: sorted by the feed's date, and filtered and shown
 // as `precise` gives it, its day unless a read date says otherwise.
 function dateField(
-  field: Pick<BookField, 'key' | 'label' | 'aliases' | 'note' | 'example'>,
+  field: Pick<ShownField<Book>, 'key' | 'label' | 'aliases' | 'note' | 'example'>,
   date: (book: Book) => string,
   short: string,
   precise = (book: Book) => date(book).slice(0, 10),
-): BookField {
+): ShownField<Book> {
   return {
     ...field,
     kind: 'date',
@@ -98,7 +94,7 @@ function dateField(
 }
 
 // In the order the help lists them.
-const fields: BookField[] = [
+const fields: ShownField<Book>[] = [
   {
     key: 'rating',
     label: 'Rating',
@@ -229,7 +225,7 @@ function namedShelves(query: Query) {
   return shelves ?? []
 }
 
-export const booksList = defineList<Book, BookField>({
+export const booksList = defineList<Book, ShownField<Book>>({
   fields,
   searchKeys: ['title', 'authorName', 'bookDescription'],
   searchThreshold: booksSearchThreshold,

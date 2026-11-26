@@ -49,8 +49,8 @@ const grids: Record<CardSize, string> = {
   large: 'grid grid-cols-3 gap-x-4 gap-y-6 lg:grid-cols-4',
 }
 
-// A list page: the heading, then `under` (e.g. how far back the items
-// reach), the query line with the presets, then, once the feed has loaded,
+// A list page: the heading, then `under`, a slot for what the list says of
+// its items as a whole (the episodes' Window), the query line with the presets, then, once the feed has loaded,
 // the journal for an empty query or the query's results.
 //
 // Every new query text (typed, a preset, "See all", "← Journal", a header
@@ -139,7 +139,8 @@ function Results<T, F extends ShownField<T>>({ page, items, query, view, narrow,
   const results = useMemo(() => list.run(items, query), [list, items, query])
   const fields = useMemo(() => list.shown(query), [list, query])
   const columns = useMemo<Column<T>[]>(() => [
-    { key: 'lead', label: lead.label, sortable: false, value: () => undefined, cell: lead.cell },
+    // Not a field's key, which starts with a letter.
+    { key: ':lead', label: lead.label, sortable: false, value: () => undefined, cell: lead.cell },
     ...fields,
   ], [lead, fields])
 

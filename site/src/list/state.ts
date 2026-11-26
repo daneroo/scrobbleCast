@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { browserStorage } from '../storage'
 import { viewSetting } from './view'
 import type { View } from './view'
 
@@ -15,16 +16,9 @@ export function useListQuery(list: string) {
   return [text, set] as const
 }
 
-// localStorage, reached on each use: reaching it can itself throw (e.g. when
-// the browser blocks storage), where the view setting catches it.
-const storage: Pick<Storage, 'getItem' | 'setItem'> = {
-  getItem: (key) => localStorage.getItem(key),
-  setItem: (key, value) => localStorage.setItem(key, value),
-}
-
 // Each list's view, saved per device.
 export function useListView(list: string) {
-  const setting = useMemo(() => viewSetting(storage, list), [list])
+  const setting = useMemo(() => viewSetting(browserStorage, list), [list])
   const [view, setView] = useState(setting.get)
   function set(next: View) {
     setting.set(next)

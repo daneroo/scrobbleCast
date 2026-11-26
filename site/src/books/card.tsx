@@ -3,14 +3,19 @@ import type { ReactNode } from 'react'
 import type { Book } from '../data/books'
 import type { View } from '../list/view'
 import { classes } from '../ui'
-import { Progress, ShelfBadge, Stars, progress } from './list'
+import { progress } from './list'
 import type { BookField } from './list'
+import { Progress, ShelfBadge, Stars } from './ui'
 
 // The feed's covers are small (`._SY75_`); the same URL gives other heights:
 // `SY300` is 199×300. With no suffix, the URL is the 315×475 original.
 function coverUrl(book: Book, size: 'SY75' | 'SY300') {
   return book.bookImageURL.replace(/\._S[XY]\d+_\./, `._${size}_.`)
 }
+
+// Each size's pixels, so the browser keeps the room before it loads (the CSS
+// sets the width; the 2:3 ratio gives the height).
+const sizes = { SY75: { width: 50, height: 75 }, SY300: { width: 199, height: 300 } } as const
 
 // `lift`: a deeper shadow while its card is hovered. `className` is for
 // layout only, as in ui.tsx.
@@ -19,7 +24,10 @@ export function Cover({ book, size = 'SY300', lift = false, className }: { book:
     <img
       src={coverUrl(book, size)}
       alt=""
+      width={sizes[size].width}
+      height={sizes[size].height}
       loading="lazy"
+      decoding="async"
       referrerPolicy="no-referrer"
       className={classes('aspect-2/3 rounded-sm bg-artwork object-cover shadow-sm', lift && 'transition group-hover:shadow-card', className)}
     />

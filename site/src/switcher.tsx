@@ -1,16 +1,12 @@
 import { Monitor, Moon, Palette, Sun } from 'lucide-react'
 import { useSyncExternalStore } from 'react'
 import type { ReactNode } from 'react'
+import { browserStorage } from './storage'
 import { deviceDarkQuery, themeSetting } from './theme'
 
-// The page's theme setting. Reaching localStorage can itself throw (e.g. when
-// the browser blocks storage), so it is reached on each use, where the
-// setting catches it.
+// The page's theme setting.
 const setting = themeSetting({
-  storage: {
-    getItem: (key) => localStorage.getItem(key),
-    setItem: (key, value) => localStorage.setItem(key, value),
-  },
+  storage: browserStorage,
   darkQuery: matchMedia(deviceDarkQuery),
   page: document,
 })

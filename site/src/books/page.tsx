@@ -5,7 +5,7 @@ import type { Book } from '../data/books'
 import type { Feed } from '../data/fetch'
 import type { Query } from '../list/query'
 import { QueryLine } from '../list/query-line'
-import { Scroll } from '../list/scroll'
+import { Scroll, useTopOnRestart } from '../list/scroll'
 import { useListQuery, useListView } from '../list/state'
 import { Table } from '../list/table'
 import type { Column } from '../list/table'
@@ -77,10 +77,11 @@ function Results({ books, query, view, onView, onSort }: {
   const results = useMemo(() => booksList.run(books, query), [books, query])
   const fields = useMemo(() => booksList.shown(query), [query])
   const columns = useMemo(() => [bookColumn, ...fields], [fields])
+  const start = useTopOnRestart<HTMLParagraphElement>(query)
 
   return (
     <>
-      <p className="mt-3 text-muted-foreground tabular-nums" aria-live="polite">{count(results.length)}</p>
+      <p ref={start} className="mt-3 text-muted-foreground tabular-nums" aria-live="polite">{count(results.length)}</p>
       <div className="mt-1 mb-3 flex flex-wrap items-center justify-between gap-3">
         <p className="text-sm text-muted-foreground">
           Showing {fields.map(({ label }) => label).join(' · ')}

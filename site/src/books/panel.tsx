@@ -1,6 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import type { ReactNode } from 'react'
 import type { Book } from '../data/books'
+import { cellOf } from '../list/table'
 import { Cover } from './card'
 import { bookField } from './list'
 
@@ -8,8 +9,8 @@ import { bookField } from './list'
 // the list, including what the query can't reach (the review, the ISBN and
 // the timeline). Its composition is the layout prototype's.
 
-// Nothing to show: no value, or an empty one.
-function shown(node: ReactNode) {
+// "—" for no value, or an empty one.
+function orDash(node: ReactNode) {
   return node === undefined || node === null || node === '' ? '—' : node
 }
 
@@ -17,7 +18,7 @@ function shown(node: ReactNode) {
 // panel says what the table says.
 function fact(key: string): [label: string, show: (book: Book) => ReactNode] {
   const field = bookField(key)
-  return [field.label, (book) => shown(field.cell ? field.cell(book) : field.value(book))]
+  return [field.label, (book) => orDash(cellOf(field, book))]
 }
 
 const facts = [
@@ -26,12 +27,12 @@ const facts = [
   fact('avg'),
   fact('pages'),
   // The full date, not the table's year.
-  [bookField('published').label, (book) => shown(book.bookPublished)],
+  [bookField('published').label, (book) => orDash(book.bookPublished)],
   fact('added'),
   fact('first'),
   fact('read'),
   fact('reads'),
-  ['ISBN', (book) => shown(book.isbn)],
+  ['ISBN', (book) => orDash(book.isbn)],
 ] satisfies [string, (book: Book) => ReactNode][]
 
 // The cover beside the rest; on a phone, no cover.
@@ -52,7 +53,7 @@ export function BookPanel({ book }: { book: Book }) {
         {book.bookDescription && <p className="line-clamp-4 text-muted-foreground">{book.bookDescription}</p>}
         {book.timeline.length > 0 && (
           <p className="text-xs text-muted-foreground">
-            {book.timeline.map(({ dateText, event }) => `${dateText || '?'} ${event}`).join(' → ')}
+            {book.timeline.map(({ dateText, event }) => `${dateText || '—'} ${event}`).join(' → ')}
           </p>
         )}
         <Link to="/books/$bookId" params={{ bookId: book.bookId }} className="justify-self-start">Open book page <span aria-hidden="true">→</span></Link>

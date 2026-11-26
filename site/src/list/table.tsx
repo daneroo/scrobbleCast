@@ -18,6 +18,11 @@ export interface Column<T> {
   sortable?: boolean
 }
 
+// A column's cell for an item: its `cell`, or else its plain value.
+export function cellOf<T>(column: Pick<Column<T>, 'value' | 'cell'>, item: T): ReactNode {
+  return column.cell ? column.cell(item) : column.value(item)
+}
+
 interface TableProps<T> {
   items: readonly T[]
   columns: Column<T>[]
@@ -94,30 +99,37 @@ export function Table<T>({ items, columns, id, sorts, onSort, expand }: TablePro
                   toggle()
                 })}
               >
-                {columns.map((column, at) => (
-                  <td key={column.key} className={classes(cellClass, bodyCellClass, expand && at === 0 && 'relative')}>
-                    {expand && at === 0 && (
-                      <button
-                        type="button"
-                        aria-expanded={open}
-                        aria-controls={panelId}
-                        aria-label={expand.label(item)}
-                        className="absolute top-1.5 right-1.5 grid size-7 place-items-center rounded-md border bg-card text-accent opacity-0 focus-visible:opacity-100"
-                        onClick={toggle}
-                      >
-                        <ChevronDown aria-hidden="true" className={classes('size-4 transition-transform motion-reduce:transition-none', open && 'rotate-180')} />
-                      </button>
-                    )}
-                    {column.cell ? column.cell(item) : column.value(item)}
-                  </td>
-                ))}
+                {columns.map((column, columnIndex) => {
+                  const disclosure = expand && columnIndex === 0
+                  return (
+                    <td key={column.key} className={classes(cellClass, bodyCellClass, disclosure && 'relative')}>
+                      {disclosure && (
+                        <button
+                          type="button"
+                          aria-expanded={open}
+                          aria-controls={panelId}
+                          aria-label={expand.label(item)}
+                          className="pointer-events-none absolute top-1.5 right-1.5 grid size-7 place-items-center rounded-md border bg-card text-accent opacity-0 focus-visible:pointer-events-auto focus-visible:opacity-100"
+                          onClick={toggle}
+                        >
+                          <ChevronDown aria-hidden="true" className={classes('size-4 transition-transform motion-reduce:transition-none', open && 'rotate-180')} />
+                        </button>
+                      )}
+                      {cellOf(column, item)}
+                    </td>
+                  )
+                })}
               </tr>
             )
             return expand && open
-              ? [row, <tr key={itemId + '/expanded'} id={panelId}><td colSpan={columns.length} className="border-b p-0">
-                  {/* As wide as the visible table, and kept in view when it scrolls sideways. */}
-                  <div className="sticky left-0 w-[100cqw]">{expand.panel(item)}</div>
-                </td></tr>]
+              ? [row, (
+                <tr key={itemId + '/expanded'} id={panelId}>
+                  <td colSpan={columns.length} className="border-b p-0">
+                    {/* As wide as the visible table, and kept in view when it scrolls sideways. */}
+                    <div className="sticky left-0 w-[100cqw]">{expand.panel(item)}</div>
+                  </td>
+                </tr>
+              )]
               : [row]
           })}
         </tbody>

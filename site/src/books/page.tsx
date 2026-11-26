@@ -34,8 +34,12 @@ const bookColumn: Column<Book> = {
   ),
 }
 
-// A row click opens the book's panel under it.
-const expand = { panel: (book: Book) => <BookPanel book={book} />, label: (book: Book) => `Details for ${book.title}` }
+// A row click opens the book's panel under it; `label` names its disclosure
+// button.
+const expand = {
+  panel: (book: Book) => <BookPanel book={book} />,
+  label: (book: Book) => `Details for ${book.title}`,
+}
 
 // The books list: one query line, then the results of the feed once it has
 // loaded.

@@ -126,3 +126,55 @@ test('words search title, author and description, every word matching', () => {
   ]
   expect(titles(books, 'culture banks')).toEqual(['Excession'])
 })
+
+test('year: is the year last read, and formats as read:', () => {
+  const books = [
+    book({ title: 'This year', userShelf: 'read', userFirstReadAt: '2019-04-02T07:00:00.000Z', userLastReadAt: '2025-03-04T08:00:00.000Z' }),
+    book({ title: 'Last year', userShelf: 'read', userFirstReadAt: '2025-01-10T08:00:00.000Z', userLastReadAt: '2024-07-20T07:00:00.000Z' }),
+    book({ title: 'Unread' }),
+  ]
+  expect(titles(books, 'year:2025')).toEqual(['This year'])
+  expect(titles(books, 'read:2025')).toEqual(['This year'])
+  expect(titles(books, 'read:>=2024-06 sort:read')).toEqual(['Last year', 'This year'])
+  expect(titles(books, 'first:2025')).toEqual(['Last year'])
+  expect(booksList.format(booksList.parse('year:2025 sort:-year'))).toBe('read:2025 sort:-read')
+})
+
+test('published compares in time order, BC included', () => {
+  const books = [
+    book({ title: 'Iliad', bookPublished: '-0750' }),
+    book({ title: 'Aeneid', bookPublished: '-0019' }),
+    book({ title: 'Beowulf', bookPublished: '1000' }),
+    book({ title: 'Hamlet', bookPublished: '1599-01-01' }),
+    book({ title: 'Dune', bookPublished: '1965-08' }),
+    book({ title: 'Unknown', bookPublished: '' }),
+  ]
+  expect(titles(books, 'published:<1950 sort:published')).toEqual(['Iliad', 'Aeneid', 'Beowulf', 'Hamlet'])
+  expect(titles(books, 'published:<0 sort:-published')).toEqual(['Aeneid', 'Iliad'])
+  expect(titles(books, 'sort:published')).toEqual(['Iliad', 'Aeneid', 'Beowulf', 'Hamlet', 'Dune', 'Unknown'])
+})
+
+test('added and updated filter by date', () => {
+  const books = [
+    book({ title: 'Long ago', userAddedAt: '2014-02-01T08:00:00.000Z' }),
+    book({ title: 'Mid 2020', userAddedAt: '2020-06-15T07:00:00.000Z', userUpdatedAt: '2024-01-01T08:00:00.000Z' }),
+    book({ title: 'Recent', userAddedAt: '2026-01-01T08:00:00.000Z' }),
+  ]
+  expect(titles(books, 'added:<2020 sort:added')).toEqual(['Long ago'])
+  expect(titles(books, 'added:<2020-06-15 sort:added')).toEqual(['Long ago'])
+  expect(titles(books, 'added:<=2020-06-15 sort:added')).toEqual(['Long ago', 'Mid 2020'])
+  expect(titles(books, 'updated:2024')).toEqual(['Mid 2020'])
+})
+
+test('tag: filters by my tags, and neither sorts nor shows', () => {
+  const books = [book({ title: 'Kept', userTags: ['long-term'] }), book({ title: 'Other' })]
+  expect(titles(books, 'tag:long-term')).toEqual(['Kept'])
+  expect(booksList.parse('sort:tag show:tag').notUnderstood).toEqual(['sort:tag', 'show:tag'])
+  expect(shown('tag:long-term')).toEqual(shown(''))
+})
+
+test('the help lists every books field', () => {
+  expect(booksList.help().fields.map(({ key }) => key))
+    .toEqual(['rating', 'read', 'first', 'avg', 'gap', 'pages', 'published', 'added', 'updated', 'reads', 'shelf', 'progress', 'title', 'author', 'tag'])
+  expect(booksList.help().fields.find(({ key }) => key === 'read')?.aliases).toEqual(['year'])
+})

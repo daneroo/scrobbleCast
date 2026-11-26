@@ -74,11 +74,10 @@ function Progress({ value }: { value: number | undefined }) {
   )
 }
 
-// A date field, ISO 8601.
-function dateField(key: string, label: string, date: (book: Book) => string, short: string): BookField {
+// A date field, ISO 8601, shown as its day.
+function dateField(field: Pick<BookField, 'key' | 'label' | 'aliases' | 'note' | 'example'>, date: (book: Book) => string, short: string): BookField {
   return {
-    key,
-    label,
+    ...field,
     kind: 'date',
     value: (book) => date(book) || undefined,
     cell: (book) => day(date(book)),
@@ -86,6 +85,7 @@ function dateField(key: string, label: string, date: (book: Book) => string, sho
   }
 }
 
+// In the order the help lists them.
 const fields: BookField[] = [
   {
     key: 'rating',
@@ -94,14 +94,20 @@ const fields: BookField[] = [
     value: (book) => book.userRating || undefined,
     // Unrated is 0: `rating:0`.
     filterValue: (book) => book.userRating,
+    note: 'my stars; unrated is 0, so rating:0 finds books never rated',
+    example: 'rating:>=4',
     cell: (book) => <Stars value={book.userRating} />,
     short: (book) => book.userRating ? <Stars value={book.userRating} /> : null,
   },
+  dateField({ key: 'read', aliases: ['year'], label: 'Last read', example: 'read:>=2024-06' }, (book) => book.userLastReadAt, 'read'),
+  dateField({ key: 'first', label: 'First read', example: 'first:<2010' }, (book) => book.userFirstReadAt, 'first'),
   {
     key: 'avg',
     label: 'Avg',
     kind: 'number',
     value: avg,
+    note: 'the Goodreads average',
+    example: 'avg:>=4.3',
     cell: (book) => book.averageRating,
     short: (book) => `avg ${book.averageRating}`,
   },
@@ -116,6 +122,8 @@ const fields: BookField[] = [
       return value === undefined ? undefined : Math.abs(value)
     },
     alsoShow: ['rating', 'avg'],
+    note: 'my rating less the average, shown signed; it filters on its size, so gap:>=0.8 finds disagreements either way',
+    example: 'gap:>=0.8',
     cell: (book) => signed(gap(book)),
     short: (book) => gap(book) === undefined ? null : `${signed(gap(book))} vs avg`,
   },
@@ -124,8 +132,21 @@ const fields: BookField[] = [
     label: 'Pages',
     kind: 'number',
     value: (book) => Number(book.numPages) || undefined,
+    example: 'pages:<300',
     short: (book) => Number(book.numPages) ? `${book.numPages} p` : null,
   },
+  {
+    key: 'published',
+    label: 'Published',
+    kind: 'date',
+    value: (book) => book.bookPublished || undefined,
+    note: 'shown as its year',
+    example: 'published:<1950',
+    cell: (book) => year(book.bookPublished) ?? '—',
+    short: (book) => year(book.bookPublished) ? `pub. ${year(book.bookPublished)}` : null,
+  },
+  dateField({ key: 'added', label: 'Added', note: 'to my shelves', example: 'added:<2020' }, (book) => book.userAddedAt, 'added'),
+  dateField({ key: 'updated', label: 'Updated', note: 'my latest activity on the book', example: 'updated:>=2025-06' }, (book) => book.userUpdatedAt, 'active'),
   {
     key: 'reads',
     label: 'Reads',
@@ -133,6 +154,8 @@ const fields: BookField[] = [
     value: (book) => book.userReadCount || undefined,
     // Unread is 0: `reads:0`.
     filterValue: (book) => book.userReadCount,
+    note: 'times read; unread is 0',
+    example: 'reads:>=2',
     short: (book) => book.userReadCount > 1 ? `read ${book.userReadCount}×` : null,
   },
   {
@@ -143,6 +166,7 @@ const fields: BookField[] = [
     // Sorted and shown by its name, filtered by its key (`on-deck`).
     value: (book) => shelfName(book.userShelf),
     filterValue: (book) => book.userShelf,
+    example: 'shelf:on-deck,to-read',
     cell: (book) => <ShelfBadge shelf={book.userShelf} />,
     short: (book) => shelfName(book.userShelf),
   },
@@ -151,23 +175,22 @@ const fields: BookField[] = [
     label: 'Progress',
     kind: 'number',
     value: progress,
+    note: 'percent, the latest in the reading timeline',
+    example: 'progress:<50',
     cell: (book) => <Progress value={progress(book)} />,
     short: (book) => progress(book) === undefined ? null : <Progress value={progress(book)} />,
   },
-  { key: 'title', label: 'Title', kind: 'text', value: (book) => book.title },
-  { key: 'author', label: 'Author', kind: 'text', value: (book) => book.authorName, short: (book) => book.authorName },
-  dateField('read', 'Last read', (book) => book.userLastReadAt, 'read'),
-  dateField('first', 'First read', (book) => book.userFirstReadAt, 'first'),
+  { key: 'title', label: 'Title', kind: 'text', value: (book) => book.title, example: 'title:dune' },
+  { key: 'author', label: 'Author', kind: 'text', value: (book) => book.authorName, example: 'author:banks', short: (book) => book.authorName },
   {
-    key: 'published',
-    label: 'Published',
-    kind: 'date',
-    value: (book) => book.bookPublished || undefined,
-    cell: (book) => year(book.bookPublished) ?? '—',
-    short: (book) => year(book.bookPublished) ? `pub. ${year(book.bookPublished)}` : null,
+    key: 'tag',
+    label: 'Tag',
+    kind: 'tags',
+    value: (book) => book.userTags.join(', ') || undefined,
+    filterValue: (book) => book.userTags,
+    note: 'my Goodreads tags',
+    example: 'tag:long-term',
   },
-  dateField('added', 'Added', (book) => book.userAddedAt, 'added'),
-  dateField('updated', 'Updated', (book) => book.userUpdatedAt, 'active'),
 ]
 
 // The shelves the query names: those every shelf filter allows, or none
@@ -205,4 +228,5 @@ export const booksList = defineList<Book, BookField>({
   },
   fillTo: 4,
   most: 5,
+  help: { words: 'title, author and description', sort: 'sort:-avg,-added', show: 'show:avg,pages,read' },
 })

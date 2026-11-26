@@ -4,10 +4,11 @@ import { bookPageSize } from '../config'
 import type { Book } from '../data/books'
 import type { Feed } from '../data/fetch'
 import type { Query } from '../list/query'
+import { QueryLine } from '../list/query-line'
 import { useListQuery } from '../list/state'
 import { Table } from '../list/table'
 import type { Column } from '../list/table'
-import { Heading, Loading, classes, control } from '../ui'
+import { Heading, Loading } from '../ui'
 import { booksList } from './list'
 
 // The feed's covers are small (`._SY75_`); the same URL gives other heights.
@@ -42,24 +43,13 @@ export function Books({ books }: { books: Promise<Feed<Book[]>> }) {
   return (
     <>
       <Heading className="mb-4">Books</Heading>
-      <label className="grid gap-1.5">
-        <span className="sr-only">Query</span>
-        <input
-          type="search"
-          spellCheck={false}
-          autoCapitalize="off"
-          autoCorrect="off"
-          placeholder="shelf:on-deck pages:<300 sort:-avg   — or just words"
-          className={classes(control, 'font-mono text-base')}
-          value={text}
-          onChange={(event) => setText(event.target.value)}
-        />
-      </label>
-      {query.notUnderstood.length > 0 && (
-        <p className="mt-2 text-sm text-muted-foreground">
-          Not understood: <code className="text-foreground line-through">{query.notUnderstood.join(' ')}</code>
-        </p>
-      )}
+      <QueryLine
+        text={text}
+        onChange={setText}
+        help={booksList.help()}
+        notUnderstood={query.notUnderstood}
+        placeholder="shelf:on-deck pages:<300 sort:-avg   — or just words"
+      />
       <Await promise={books} fallback={<Loading block />}>
         {({ data }) => (
           <Results books={data} query={query} onSort={(key) => setText(booksList.format(booksList.sortBy(query, key)))} />

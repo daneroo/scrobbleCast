@@ -42,7 +42,7 @@ _Avoid_: Played (for finished), state
 
 ### List pages
 
-The books list, and later the podcasts and episodes lists, share these terms.
+The books, podcasts and episodes lists share these terms.
 
 **Query**:
 The one line that selects and orders a list: words to search, `key:value` filters, `sort:` and `show:`.

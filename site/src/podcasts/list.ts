@@ -31,7 +31,8 @@ export const podcastFields = {
     label: 'Listened in window',
     kind: 'duration',
     value: (podcast) => podcast.playTotals?.listenedSeconds,
-    note: 'sum of the furthest played positions',
+    durationAliases: new Map([['>0', '>0s']]),
+    note: 'sum of the furthest played positions, with >0 for any listening time',
     example: 'listened:>=1h30m',
     cell: (podcast) => listenedText(podcast) ?? '—',
     short: (podcast) => {

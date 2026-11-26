@@ -31,6 +31,8 @@ export interface Field<T> {
   // The word typed (`pages`), and other words for it.
   key: string
   aliases?: readonly string[]
+  // Alternate spellings of duration filters (e.g. `>0` for `>0s`).
+  durationAliases?: ReadonlyMap<string, string>
   // Names the key ("Rating" for `rating`, "Last read" for `read`): a header
   // tells you what to type.
   label: string
@@ -78,8 +80,8 @@ type Filter = { [K in Kind]: FilterOf<K> }[Kind]
 // What sorts compare: no value, a number, text, or numbers in turn (a date).
 type Comparable = number | string | readonly number[] | undefined
 
-// A kind's rules take any list's field (`Field<never>`): they read only its
-// choices, never its items.
+// A kind's rules take any list's field (`Field<never>`): they read its
+// settings, never its items.
 interface KindRules<K extends Kind> {
   // The filter for a value typed after the key, or none when the kind can't
   // take it.
@@ -187,8 +189,8 @@ const kinds: { [K in Kind]: KindRules<K> } = {
   // not understood. `=` compares to the minute, as cells round, unless the
   // seconds are typed: `1h9m` is 69m19s too, `90s` only 90s.
   duration: {
-    parse: (text) => {
-      const [, op, duration = ''] = durationValue.exec(text) ?? []
+    parse: (text, field) => {
+      const [, op, duration = ''] = durationValue.exec(field.durationAliases?.get(text) ?? text) ?? []
       const seconds = parseDuration(duration)
       return seconds === undefined ? undefined : { op: opOf(op), number: seconds, exact: duration.endsWith('s') }
     },

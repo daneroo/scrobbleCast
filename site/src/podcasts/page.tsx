@@ -7,6 +7,7 @@ import { Artwork } from '../ui'
 import { PodcastCard } from './card'
 import { podcastsList } from './list'
 import { PodcastPanel } from './panel'
+import { podcastPresets } from './presets'
 
 export const podcastsPage: PageDefinition<Podcast, ShownField<Podcast>> = {
   name: 'podcasts',
@@ -14,7 +15,7 @@ export const podcastsPage: PageDefinition<Podcast, ShownField<Podcast>> = {
   noun: ['podcast', 'podcasts'],
   placeholder: 'plays:>0 sort:-listened   — or just words',
   list: podcastsList,
-  presets: [],
+  presets: podcastPresets,
   id: (podcast) => podcast.uuid,
   lead: {
     label: 'Podcast',

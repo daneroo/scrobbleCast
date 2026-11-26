@@ -47,7 +47,7 @@ test('card lines distinguish known zero totals from unknown totals and follow th
   expect(shortLines(podcast(), fields, 2)).toEqual([['since', 'since 2020-01-01']])
 })
 
-test('listened: filters durations in units, including zero', () => {
+test('listened: filters durations in units and accepts >0 for any listening time', () => {
   const podcasts = [
     podcast({ title: 'Zero', playTotals: { plays: 0, listenedSeconds: 0 } }),
     podcast({ title: 'Short', playTotals: { plays: 1, listenedSeconds: 900 } }),
@@ -57,6 +57,7 @@ test('listened: filters durations in units, including zero', () => {
   expect(titles(podcasts, 'listened:>=1h30m')).toEqual(['Long'])
   expect(titles(podcasts, 'listened:<20m sort:-listened')).toEqual(['Short', 'Zero'])
   expect(titles(podcasts, 'listened:0m')).toEqual(['Zero'])
+  expect(titles(podcasts, 'listened:>0 sort:-listened')).toEqual(['Long', 'Short'])
   expect(podcastsList.parse('listened:90').notUnderstood).toEqual(['listened:90'])
 })
 

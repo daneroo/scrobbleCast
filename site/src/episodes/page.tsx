@@ -7,6 +7,7 @@ import { Artwork } from '../ui'
 import { EpisodeCard } from './card'
 import { episodesList } from './list'
 import { EpisodePanel } from './panel'
+import { episodePresets } from './presets'
 
 // The episodes list's registry and views on the shared list page.
 export const episodesPage: PageDefinition<Episode, ShownField<Episode>> = {
@@ -15,7 +16,7 @@ export const episodesPage: PageDefinition<Episode, ShownField<Episode>> = {
   noun: ['episode', 'episodes'],
   placeholder: 'status:finished duration:>=1h sort:-played   — or just words',
   list: episodesList,
-  presets: [],
+  presets: episodePresets,
   id: (episode) => episode.uuid,
   // Its podcast's artwork, its title and its podcast.
   lead: {

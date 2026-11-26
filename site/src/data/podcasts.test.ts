@@ -197,6 +197,32 @@ test('asking for episodes retries a failed refresh of the podcast feed', async (
   await expect.poll(() => getPodcasts.loaded()?.source).toBe('fresh')
 })
 
+test('the catalog retries a failed background refresh on the next read', async () => {
+  const record = podcastRecord()
+  const records = { podcasts: [record], episodes: [] }
+  const { download } = fakeHistory(records)
+  const { bodies, savedCopies } = fakeSavedCopies()
+  const notices = noticeBoard()
+  let offline = false
+  const { getPodcasts } = podcastFeeds({
+    download: (url) => offline ? Promise.resolve(new Response('', { status: 503 })) : download(url),
+    savedCopies,
+    notices,
+  })
+  const shown = await getPodcasts.settled()
+  await expect.poll(() => Object.keys(bodies)).toHaveLength(1)
+
+  vi.setSystemTime(now.getTime() + cacheTtlMs + 1)
+  offline = true
+  expect(await getPodcasts.settled()).toBe(shown)
+  expect(notices.get().podcasts).toBeDefined()
+
+  offline = false
+  records.podcasts[0] = { ...record, title: 'Refreshed title' }
+  expect((await getPodcasts.settled()).data[0].title).toBe('Refreshed title')
+  expect(notices.get().podcasts).toBeUndefined()
+})
+
 // The episodes the feed makes of `episodes`, with `podcasts` as the podcast
 // feed, by title.
 async function episodesOf(episodes: EpisodeRecord[], podcasts: PodcastRecord[] = []) {

@@ -187,17 +187,18 @@ export function shareFeed<C extends Feed<unknown>>(
     target.done = done.promise
     void (async () => {
       let error: unknown
-      let failed = false
+      let refreshed = false
       try {
         for await (const next of load()) {
           const feed = typeof next === 'function' ? next() : next
           if (target.feed && feed.source === 'saved') continue
+          refreshed ||= feed.source === 'fresh'
           target.expires = Date.now() + ttl
           first?.resolve(feed)
           publish(target, feed)
         }
       } catch (caught) {
-        failed = true
+        refreshed = false
         error = caught
       }
       target.loading = false
@@ -208,7 +209,7 @@ export function shareFeed<C extends Feed<unknown>>(
         done.reject(error)
         return
       }
-      target.retry = shown.source === 'saved' || failed
+      target.retry = !refreshed
       done.resolve(shown)
     })()
   }

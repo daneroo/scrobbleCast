@@ -108,7 +108,7 @@ export const router = createRouter({
 
 // When a fresh copy replaces a saved copy, the pages showing that feed load
 // again: their loaders get the new copy ready at once, and their state
-// (search text, shelf, "Show more") stays.
+// (search or query text, "Show more") stays.
 subscribeShownCopies((name, replaced) => {
   if (replaced) void router.invalidate({ filter: (match) => match.staticData.feeds?.includes(name) ?? false })
 })

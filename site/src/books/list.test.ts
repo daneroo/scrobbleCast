@@ -118,6 +118,20 @@ test('gap is my rating against the average, filtered either way and shown signed
   expect(books.map((book) => gap.cell?.(book))).toEqual(['+1.1', '-2.1', '0.0', '—'])
 })
 
+test('gap filters on its size the same either way, with fractional averages', () => {
+  const books = [
+    book({ title: 'Over by 0.75', userRating: 5, averageRating: '4.25' }),
+    book({ title: 'Under by 0.75', userRating: 2, averageRating: '2.75' }),
+    book({ title: 'Over by 0.8', userRating: 4, averageRating: '3.2' }),
+    book({ title: 'Under by 0.8', userRating: 3, averageRating: '3.8' }),
+  ]
+  expect(titles(books, 'gap:>=0.8')).toEqual(['Over by 0.8', 'Under by 0.8'])
+  expect(titles(books, 'gap:<0.8')).toEqual(['Over by 0.75', 'Under by 0.75'])
+  expect(titles(books, 'gap:0.75')).toEqual(['Over by 0.75', 'Under by 0.75'])
+  const gap = booksList.shown(booksList.parse('show:gap'))[0]
+  expect(books.map((book) => gap.cell?.(book))).toEqual(['+0.8', '-0.8', '+0.8', '-0.8'])
+})
+
 test('words search title, author and description, every word matching', () => {
   const books = [
     book({ title: 'Excession', authorName: 'Iain M. Banks', bookDescription: 'A Culture novel about an Outside Context Problem.' }),

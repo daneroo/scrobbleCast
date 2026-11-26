@@ -166,8 +166,12 @@ test('a retry renews the feed’s expiry, so it isn’t loaded twice at once', a
   expect(downloads).toBe(2)
 })
 
-test('plain text keeps a line break at each block boundary and break', () => {
-  expect(plainText('One<br />Two<p>Three</p><ul><li>Four</li><li>Five</li></ul><h3>Six</h3>Seven &amp; <i>eight</i>')).toBe('One\nTwo\nThree\nFour\nFive\nSix\nSeven & eight')
-  expect(plainText('<p>A</p>\n<p>B</p>')).toBe('A\nB')
-  expect(plainText('A<br><br>B')).toBe('A\n\nB')
+test('plain text with every block keeps a line break at each block boundary and break', () => {
+  expect(plainText('One<br />Two<p>Three</p><ul><li>Four</li><li>Five</li></ul><h3>Six</h3>Seven &amp; <i>eight</i>', { everyBlock: true })).toBe('One\nTwo\nThree\nFour\nFive\nSix\nSeven & eight')
+  expect(plainText('<p>A</p>\n<p>B</p>', { everyBlock: true })).toBe('A\nB')
+  expect(plainText('A<br><br>B', { everyBlock: true })).toBe('A\n\nB')
+})
+
+test('plain text by default breaks only at <br> and a closing </p> or </div>', () => {
+  expect(plainText('One<br />Two<p>Three</p><ul><li>Four</li><li>Five</li></ul>Six</div>Seven &amp; <i>eight</i>')).toBe('One\nTwoThree\nFourFiveSix\nSeven & eight')
 })

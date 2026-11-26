@@ -33,8 +33,8 @@ export function booksFeed(options: FeedOptions = {}) {
     save: true,
   }, options), (books) => books.map((book): Book => ({
     ...book,
-    bookDescription: plainText(book.bookDescription),
-    userReview: plainText(book.userReview),
+    bookDescription: plainText(book.bookDescription, { everyBlock: true }),
+    userReview: plainText(book.userReview, { everyBlock: true }),
   }))))
 
   // Ready at once if this tab already has the books feed. A book missing from

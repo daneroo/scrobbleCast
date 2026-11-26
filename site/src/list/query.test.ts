@@ -117,6 +117,12 @@ test('repeated filters all apply', () => {
   expect(names('size:>1 size:<10 sort:name')).toEqual(['Ochre', 'Sky'])
 })
 
+test('an unknown key with hyphens is not understood, not a word', () => {
+  const query = pots.parse('bogus-key:yes x2-y:1 matte')
+  expect(query.notUnderstood).toEqual(['bogus-key:yes', 'x2-y:1'])
+  expect(query.words).toEqual(['matte'])
+})
+
 test('a token not understood does not change the results', () => {
   const query = pots.parse('size:big colour:purple weight:3 sort:name,shine')
   expect(query.notUnderstood).toEqual(['size:big', 'colour:purple', 'weight:3', 'sort:name,shine'])

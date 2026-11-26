@@ -36,10 +36,14 @@ function avg(book: Book) {
   return Number(book.averageRating) || undefined
 }
 
-// My rating less the average, to one decimal; none until I rate it.
+// My rating less the average; none until I rate it. The average has two
+// decimals, so rounding to two drops floating-point noise (4 − 3.2 is
+// 0.7999…) and keeps the value exact either side of zero. Shown to one.
 function gap(book: Book) {
   const average = avg(book)
-  return book.userRating && average ? Math.round(10 * (book.userRating - average)) / 10 : undefined
+  if (!book.userRating || !average) return undefined
+  const difference = book.userRating - average
+  return Math.sign(difference) * Math.round(100 * Math.abs(difference)) / 100
 }
 
 function signed(value: number | undefined) {

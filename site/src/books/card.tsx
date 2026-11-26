@@ -35,7 +35,7 @@ export function Cover({ book, size = 'SY300', lift = false, className }: { book:
 }
 
 // A card view's size.
-export type CardSize = Exclude<View, 'table'>
+type CardSize = Exclude<View, 'table'>
 
 // Cards across, by screen size: small 3, 5 or 7; large 2, 3 or 4.
 const grids: Record<CardSize, string> = {

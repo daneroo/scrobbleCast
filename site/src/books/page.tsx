@@ -116,7 +116,7 @@ function Results({ books, query, view, onView, onSort }: {
       <div className="mt-1 mb-3 flex flex-wrap items-center justify-between gap-3">
         <p className="text-sm text-muted-foreground">
           Showing {fields.map(({ label }) => label).join(' · ')}
-          {!query.show && <> <span className="opacity-70">(from the query; <code>show:</code> to change)</span></>}
+          {' '}<span className="opacity-70">(from the query; <code>show:</code> to change)</span>
         </p>
         <ViewSwitch view={view} onChange={onView} />
       </div>

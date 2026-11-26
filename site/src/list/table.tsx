@@ -76,7 +76,8 @@ export function Table<T>({ items, columns, id, sorts, onSort, expand }: TablePro
                   aria-sort={rank === 0 ? (sort.descending ? 'descending' : 'ascending') : 'none'}
                   className={classes(cellClass, 'bg-table-heading whitespace-nowrap')}
                 >
-                  <button type="button" className="inline-flex items-center gap-1.5 py-1 font-bold text-accent" onClick={() => onSort(key)}>
+                  {/* Relative, so its screen-reader rank stays inside the table's scroll box and can't widen the page. */}
+                  <button type="button" className="relative inline-flex items-center gap-1.5 py-1 font-bold text-accent" onClick={() => onSort(key)}>
                     {label}
                     <span aria-hidden="true" className="text-[0.85em]">{arrow}</span>
                     {rank > 0 && <span className="sr-only">, sorted {ordinal(rank + 1)}, {sort.descending ? 'descending' : 'ascending'}</span>}

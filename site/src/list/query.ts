@@ -17,7 +17,7 @@ export interface Sort {
 export type Value = string | number | undefined
 
 // What a field filters on: its value, or a list of them (tags).
-export type FilterValue = Value | readonly string[]
+type FilterValue = Value | readonly string[]
 
 // One keyword of a list's query, and one of the fields it can show.
 export interface Field<T> {
@@ -45,7 +45,7 @@ export interface Field<T> {
   example?: string
 }
 
-export type Op = '>' | '<' | '>=' | '<=' | '='
+type Op = '>' | '<' | '>=' | '<=' | '='
 
 // What each kind's filter holds, besides its key and its value as typed.
 interface FilterData {
@@ -59,12 +59,12 @@ interface FilterData {
 
 // A field's kind: how its filter is typed and tested, how it sorts, and what
 // the help says about it. See `kinds`.
-export type Kind = keyof FilterData
+type Kind = keyof FilterData
 
 type FilterOf<K extends Kind> = Readonly<{ key: string; kind: K; text: string } & FilterData[K]>
 
 // A filter, its key canonical and its value as typed.
-export type Filter = { [K in Kind]: FilterOf<K> }[Kind]
+type Filter = { [K in Kind]: FilterOf<K> }[Kind]
 
 // What sorts compare: no value, a number, text, or numbers in turn (a date).
 type Comparable = number | string | readonly number[] | undefined
@@ -231,7 +231,7 @@ function rulesOf<K extends Kind>(filter: FilterOf<K>): KindRules<K> {
 }
 
 // The query's tokens in the order typed: `format` writes them back.
-export type Token = Readonly<
+type Token = Readonly<
   | { type: 'word'; text: string }
   | { type: 'filter'; filter: Filter }
   | { type: 'sort'; sorts: readonly Sort[] }
@@ -313,7 +313,9 @@ export interface Help {
 }
 
 const reserved = ['sort', 'show']
-const keyToken = /^([a-z]\w*):(.*)$/i
+// `name:value`, the name a letter then letters, digits, `_` or `-`: a key,
+// known or not, so an unknown one is not understood rather than a word.
+const keyToken = /^([a-z][\w-]*):(.*)$/i
 
 export function defineList<T, F extends Field<T> = Field<T>>(list: ListDefinition<T, F>) {
   // Every key and alias, lower case, to its field.

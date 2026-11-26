@@ -2,7 +2,8 @@ import { booksUrl } from '../config'
 import { Goodreads, type ExclusiveShelf, type Item } from '../schema/goodreads'
 import { loadFeed, mapData, plainText, ready, shareFeed, type Feed, type FeedOptions } from './fetch'
 
-// A Book is upstream's Item, its description as plain text: search indexes it.
+// A Book is upstream's Item, its description and review as plain text: search
+// indexes the description.
 export type Book = Item
 
 // The reader's shelves, in their usual order, with the short names the site
@@ -30,7 +31,11 @@ export function booksFeed(options: FeedOptions = {}) {
     schema: Goodreads,
     time: (_, headers) => ({ label: 'updated', at: validDate(headers.get('Last-Modified')) }),
     save: true,
-  }, options), (books) => books.map((book): Book => ({ ...book, bookDescription: plainText(book.bookDescription) }))))
+  }, options), (books) => books.map((book): Book => ({
+    ...book,
+    bookDescription: plainText(book.bookDescription),
+    userReview: plainText(book.userReview),
+  }))))
 
   // Ready at once if this tab already has the books feed. A book missing from
   // the saved copy may be new: look for it in the fresh copy before saying

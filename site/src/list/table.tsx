@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { ChevronDown } from 'lucide-react'
+import { useId, useState } from 'react'
 import type { ReactNode } from 'react'
 import { Panel, classes } from '../ui'
 import type { Sort, Value } from './query'
@@ -24,9 +25,10 @@ interface TableProps<T> {
   sorts: readonly Sort[]
   // A header click; the caller decides the new sorts.
   onSort: (key: string) => void
-  // When given, a row click opens this below the row, and a second click
-  // closes it.
-  expandedRow?: (item: T) => ReactNode
+  // When given, a row click opens a panel below the row, and a second click
+  // closes it; one row is open at a time. `label` names the row's disclosure
+  // button for screen readers ("Details for Dune").
+  expand?: { panel: (item: T) => ReactNode; label: (item: T) => string }
 }
 
 // Every cell; then body cells: the first column (titles) takes the room, the
@@ -37,13 +39,18 @@ const bodyCellClass = 'align-top leading-normal first:w-[52%] first:min-w-40 sm:
 // A table whose order comes from outside: it draws `items` as given, and shows
 // `sorts` in its headers. The main sort gets `aria-sort`; tie-breaks get an
 // arrow with their rank, and the same in words for screen readers.
-export function Table<T>({ items, columns, id, sorts, onSort, expandedRow }: TableProps<T>) {
+//
+// With `expand`, the row is the pointer's shortcut; the keyboard's way in is
+// a disclosure button in the first cell, out of sight until it has focus.
+export function Table<T>({ items, columns, id, sorts, onSort, expand }: TableProps<T>) {
   const [openId, setOpenId] = useState<string>()
+  const panelIds = useId()
 
   if (!items.length) return <Panel role="status">No matches.</Panel>
 
   return (
-    <div className="overflow-x-auto rounded-lg border bg-card">
+    // A container, so an open panel can take the visible width (`cqw`).
+    <div className="@container overflow-x-auto rounded-lg border bg-card">
       <table className="w-full text-left">
         <thead>
           <tr>
@@ -70,26 +77,47 @@ export function Table<T>({ items, columns, id, sorts, onSort, expandedRow }: Tab
           </tr>
         </thead>
         <tbody className="[&>tr:last-child>td]:border-b-0">
-          {items.flatMap((item) => {
+          {items.flatMap((item, index) => {
             const itemId = id(item)
             const open = openId === itemId
+            const panelId = `${panelIds}-${itemId}`
+            const toggle = () => setOpenId(open ? undefined : itemId)
+            // Striped by its own index, so an open panel doesn't shift the
+            // stripes below it.
             const row = (
               <tr
                 key={itemId}
-                className={classes('even:bg-table-stripe', expandedRow && 'cursor-pointer hover:bg-hover')}
-                onClick={expandedRow && ((event) => {
+                className={classes(index % 2 === 1 && 'bg-table-stripe', expand && 'cursor-pointer hover:bg-hover')}
+                onClick={expand && ((event) => {
                   // Links and buttons in a cell do their own thing.
                   if ((event.target as Element).closest('a, button')) return
-                  setOpenId(open ? undefined : itemId)
+                  toggle()
                 })}
               >
-                {columns.map((column) => (
-                  <td key={column.key} className={classes(cellClass, bodyCellClass)}>{column.cell ? column.cell(item) : column.value(item)}</td>
+                {columns.map((column, at) => (
+                  <td key={column.key} className={classes(cellClass, bodyCellClass, expand && at === 0 && 'relative')}>
+                    {expand && at === 0 && (
+                      <button
+                        type="button"
+                        aria-expanded={open}
+                        aria-controls={panelId}
+                        aria-label={expand.label(item)}
+                        className="absolute top-1.5 right-1.5 grid size-7 place-items-center rounded-md border bg-card text-accent opacity-0 focus-visible:opacity-100"
+                        onClick={toggle}
+                      >
+                        <ChevronDown aria-hidden="true" className={classes('size-4 transition-transform motion-reduce:transition-none', open && 'rotate-180')} />
+                      </button>
+                    )}
+                    {column.cell ? column.cell(item) : column.value(item)}
+                  </td>
                 ))}
               </tr>
             )
-            return expandedRow && open
-              ? [row, <tr key={itemId + '/expanded'}><td colSpan={columns.length} className="border-b p-0">{expandedRow(item)}</td></tr>]
+            return expand && open
+              ? [row, <tr key={itemId + '/expanded'} id={panelId}><td colSpan={columns.length} className="border-b p-0">
+                  {/* As wide as the visible table, and kept in view when it scrolls sideways. */}
+                  <div className="sticky left-0 w-[100cqw]">{expand.panel(item)}</div>
+                </td></tr>]
               : [row]
           })}
         </tbody>

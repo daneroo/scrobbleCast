@@ -210,6 +210,13 @@ const fields: BookField[] = [
   },
 ]
 
+// A field by its key; a key that isn't one is a bug.
+export function bookField(key: string) {
+  const field = fields.find((each) => each.key === key)
+  if (!field) throw new Error(`No books field: ${key}`)
+  return field
+}
+
 // The shelves the query names: those every shelf filter allows, or none
 // without one.
 function namedShelves(query: Query) {

@@ -14,6 +14,7 @@ import { ViewSwitch } from '../list/view-switch'
 import { Heading, Loading, Panel } from '../ui'
 import { BookCards, Cover } from './card'
 import { booksList } from './list'
+import { BookPanel } from './panel'
 
 // The table's lead column: the book itself, not a query field, so it has its
 // own key and no sort.
@@ -32,6 +33,9 @@ const bookColumn: Column<Book> = {
     </span>
   ),
 }
+
+// A row click opens the book's panel under it.
+const expand = { panel: (book: Book) => <BookPanel book={book} />, label: (book: Book) => `Details for ${book.title}` }
 
 // The books list: one query line, then the results of the feed once it has
 // loaded.
@@ -92,7 +96,7 @@ function Results({ books, query, view, onView, onSort }: {
       {!results.length ? <Panel role="status">No matches.</Panel> : (
         <Scroll total={results.length} first={bookPageSize} step={bookPageStep} restart={query}>
           {(shown) => view === 'table'
-            ? <Table items={results.slice(0, shown)} columns={columns} id={(book) => book.bookId} sorts={query.order} onSort={onSort} />
+            ? <Table items={results.slice(0, shown)} columns={columns} id={(book) => book.bookId} sorts={query.order} onSort={onSort} expand={expand} />
             : <BookCards books={results.slice(0, shown)} size={view} fields={fields} />}
         </Scroll>
       )}

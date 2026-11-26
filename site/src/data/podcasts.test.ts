@@ -374,10 +374,11 @@ test('the podcast catalog is ready while the first episode copy is still loading
   const record = podcastRecord({ url: 'https://example.com/podcast', dateAdded: '2026-10-18T09:00:00Z' })
   const { download, answer } = heldHistory({ podcasts: [record, podcastRecord({ url: null }), podcastRecord()], episodes: [] })
   const { getPodcastsInWindow } = podcastFeeds({ download })
-  const { episodes, podcasts } = getPodcastsInWindow()
+  const { episodes, podcasts, hasEpisodeWindow } = getPodcastsInWindow()
   answer(1)
 
   const catalog = await podcasts
+  expect(hasEpisodeWindow).toBe(false)
   expect(catalog.data[0]).toMatchObject({ url: 'https://example.com/podcast', added: '2026-10-18T09:00:00Z' })
   expect(catalog.data[1].added).toBeUndefined()
   expect(catalog.data[1].url).toBeUndefined()
@@ -386,7 +387,8 @@ test('the podcast catalog is ready while the first episode copy is still loading
 
   answer(0)
   await episodes
-  const { podcasts: filled } = getPodcastsInWindow()
+  const { podcasts: filled, hasEpisodeWindow: loaded } = getPodcastsInWindow()
+  expect(loaded).toBe(true)
   expect(filled).toMatchObject({ status: 'fulfilled' })
   expect((await filled).data.map(({ playTotals }) => playTotals)).toEqual([
     { plays: 0, listenedSeconds: 0 }, { plays: 0, listenedSeconds: 0 }, { plays: 0, listenedSeconds: 0 },
@@ -404,6 +406,7 @@ test('a failed first episode download leaves the catalog ready while the episode
   await expect(first.episodes).rejects.toThrow('HTTP 503')
   expect((await first.podcasts).data[0].uuid).toBe(record.uuid)
   const retry = getPodcastsInWindow()
+  expect(retry.hasEpisodeWindow).toBe(false)
   expect(retry.podcasts).toMatchObject({ status: 'fulfilled' })
   expect((await retry.podcasts).data[0].playTotals).toBeUndefined()
 

@@ -53,13 +53,17 @@ const podcasts = createRoute({
   path: '/podcasts',
   staticData: { feeds: ['podcasts', 'episodes'] },
   head: () => pageTitle('Podcasts'),
-  loader: () => handOff(getPodcastsInWindow()),
+  loader: () => {
+    const { hasEpisodeWindow, ...feeds } = getPodcastsInWindow()
+    return { ...handOff(feeds), hasEpisodeWindow }
+  },
   component: () => {
-    const { episodes, podcasts: items } = podcasts.useLoaderData()
+    const { episodes, podcasts: items, hasEpisodeWindow } = podcasts.useLoaderData()
     return (
       <ListPage
         page={podcastsPage}
         items={items}
+        journalAvailable={hasEpisodeWindow}
         under={
           <WindowLine
             episodes={episodes}

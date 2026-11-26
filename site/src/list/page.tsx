@@ -62,16 +62,18 @@ const grids: Record<CardSize, string> = {
 // click) goes back to the top if the list's start has scrolled off screen.
 // "See all" and "← Journal" go with the button pressed, so focus moves to the
 // input, after that scroll.
-export function ListPage<T, F extends ShownField<T>>({ page, items, under }: {
+export function ListPage<T, F extends ShownField<T>>({ page, items, under, journalAvailable = true }: {
   page: PageDefinition<T, F>
   items: Promise<Feed<T[]>>
   under?: ReactNode
+  // A list can show results while its journal's data is still loading.
+  journalAvailable?: boolean
 }) {
   const [text, setText] = useListQuery(page.name)
   const [savedView, setView, narrow] = useListView(page.name)
   const view = page.card ? savedView : 'table'
   const card = page.card
-  const journal = card && hasLanes(page.presets)
+  const journal = journalAvailable && card && hasLanes(page.presets)
   const query = useMemo(() => page.list.parse(text), [page.list, text])
   const start = useTopOnRestart<HTMLDivElement>(text)
   const input = useRef<HTMLInputElement>(null)

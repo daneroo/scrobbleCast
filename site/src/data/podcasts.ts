@@ -260,7 +260,11 @@ export function podcastFeeds(options: FeedOptions = {}) {
     const episodes = getEpisodeFeed()
     const catalog = getPodcasts()
     const shown = getPodcasts.loaded()
-    return { episodes, podcasts: shown ? ready(withCurrentPlays(shown)) : catalog.then(withCurrentPlays) }
+    return {
+      episodes,
+      podcasts: shown ? ready(withCurrentPlays(shown)) : catalog.then(withCurrentPlays),
+      hasEpisodeWindow: getEpisodeFeed.loaded() !== undefined,
+    }
   }
 
   function withCurrentPlays(catalog: Feed<Podcast[]>): Feed<Podcast[]> {

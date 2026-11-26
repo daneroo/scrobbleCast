@@ -2,82 +2,49 @@ import { Await, Link, notFound } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 import type { ReactNode } from 'react'
 import { episodePageSize, episodePageStep, recentDays } from './config'
+import { shelfName } from './data/books'
 import type { Book } from './data/books'
 import type { Feed } from './data/fetch'
 import type { Episode, Podcast } from './data/podcasts'
 import { day, documentTitle, playedPercent } from './format'
-import { search } from './search'
-import { Table } from './table'
-import { Button, Field, Heading, Panel, classes, control } from './ui'
-import type { Column } from './table'
+import { search } from './list/search'
+import { SelfSortingTable } from './list/table'
+import { Button, Field, Heading, Loading, Panel, classes, control } from './ui'
+import type { Column } from './list/table'
 
-const bookKeys = ['title', 'authorName', 'bookDescription']
 const podcastKeys = ['title', 'author', 'description']
 const episodeKeys = ['title', 'podcastTitle']
-const shelfLabels: Record<string, string> = {
-  'currently-reading': 'Currently reading',
-  'to-read': 'To read',
-  'on-deck': 'On deck',
-  'did-not-finish': 'Did not finish',
-  read: 'Read',
-}
-
-function shelfName(shelf: string) {
-  return shelfLabels[shelf] ?? shelf
-}
-
-const shelfSelect = classes(control, 'min-w-44')
-
-// The shelf shown until one is picked.
-function defaultShelf(books: Book[]) {
-  return books.some((book) => book.userShelf === 'currently-reading') ? 'currently-reading' : ''
-}
-
-const bookColumns: Column<Book>[] = [
-  {
-    label: 'Title',
-    value: (book) => book.title,
-    render: (book) => <Link to="/books/$bookId" params={{ bookId: book.bookId }}>{book.title}</Link>,
-  },
-  { label: 'Author', value: (book) => book.authorName },
-  { label: 'Shelf', value: (book) => shelfName(book.userShelf) },
-  { label: 'Last read', value: (book) => book.userLastReadAt, render: (book) => day(book.userLastReadAt) },
-]
 
 const podcastColumns: Column<Podcast>[] = [
   {
+    key: 'title',
     label: 'Title',
     value: (podcast) => podcast.title,
-    render: (podcast) => <Link to="/podcasts/$uuid" params={{ uuid: podcast.uuid }}>{podcast.title}</Link>,
+    cell: (podcast) => <Link to="/podcasts/$uuid" params={{ uuid: podcast.uuid }}>{podcast.title}</Link>,
   },
-  { label: 'Author', value: (podcast) => podcast.author },
-  { label: 'Since', value: (podcast) => podcast.firstSeen, render: (podcast) => day(podcast.firstSeen) },
+  { key: 'author', label: 'Author', value: (podcast) => podcast.author },
+  { key: 'since', label: 'Since', value: (podcast) => podcast.firstSeen, cell: (podcast) => day(podcast.firstSeen) },
 ]
 
 const episodeColumns: Column<Episode>[] = [
   {
+    key: 'title',
     label: 'Title',
     value: (episode) => episode.title,
-    render: (episode) => <Link to="/episodes/$uuid" params={{ uuid: episode.uuid }}>{episode.title}</Link>,
+    cell: (episode) => <Link to="/episodes/$uuid" params={{ uuid: episode.uuid }}>{episode.title}</Link>,
   },
   {
+    key: 'podcast',
     label: 'Podcast',
     value: (episode) => episode.podcastTitle,
-    render: (episode) => episode.podcastId && episode.podcastTitle
+    cell: (episode) => episode.podcastId && episode.podcastTitle
       ? <Link to="/podcasts/$uuid" params={{ uuid: episode.podcastId }}>{episode.podcastTitle}</Link>
       : episode.podcastTitle || '—',
   },
-  { label: 'Played', value: playedPercent, render: (episode) => playedPercent(episode) + '%' },
-  { label: 'Last played', value: (episode) => episode.lastPlayed, render: (episode) => day(episode.lastPlayed) },
+  { key: 'played', label: 'Played', value: playedPercent, cell: (episode) => playedPercent(episode) + '%' },
+  { key: 'lastPlayed', label: 'Last played', value: (episode) => episode.lastPlayed, cell: (episode) => day(episode.lastPlayed) },
 ]
 
-// Pages show their static part at once. Each data part waits for its feed in
-// `<Await>`, showing a small placeholder until then.
-function Loading({ block = false }: { block?: boolean }) {
-  return block
-    ? <Panel role="status">Loading…</Panel>
-    : <span className="animate-pulse text-muted-foreground motion-reduce:animate-none" role="status" aria-label="Loading">…</span>
-}
 
 // The data part of a detail page: the record once it has loaded, or not found.
 function Found<T>({ record, children }: { record: Promise<T | undefined>; children: (record: T) => ReactNode }) {
@@ -126,7 +93,7 @@ function FeedCount<T>({
 // A list page: its title and the number of results from its feed.
 function Collection<T>({
   title, feed, results, children,
-}: { title: string; feed: Promise<Feed<T>>; results: (data: T) => unknown[]; children: ReactNode }) {
+}: { title: string; feed: Promise<Feed<T>>; results: (data: T) => readonly unknown[]; children: ReactNode }) {
   return (
     <>
       <header className="mb-5 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2">
@@ -189,46 +156,6 @@ export function Home({ feeds }: {
   )
 }
 
-export function Books({ books }: { books: Promise<Feed<Book[]>> }) {
-  const [query, setQuery] = useState('')
-  const [shelf, setShelf] = useState<string>()
-  // The first copy shown sets the default shelf, so a fresh copy replacing a
-  // saved copy doesn't change the view.
-  useEffect(() => {
-    books.then(({ data }) => setShelf((shelf) => shelf ?? defaultShelf(data)), () => {})
-  }, [books])
-  const results = (books: Book[]) => {
-    const shown = shelf ?? defaultShelf(books)
-    return search(books, bookKeys, query).filter((book) => !shown || book.userShelf === shown)
-  }
-
-  return (
-    <Collection title="Books" feed={books} results={results}>
-      <Controls>
-        <SearchBox value={query} onChange={setQuery} label="Search books" />
-        <Field label="Shelf">
-          <Await promise={books} fallback={<select className={shelfSelect} disabled><option>All shelves</option></select>}>
-            {({ data }) => {
-              const shown = shelf ?? defaultShelf(data)
-              // A fresh copy may have no book left on the shelf shown.
-              const shelves = new Set([...data.map((book) => book.userShelf), ...(shown ? [shown] : [])])
-              return (
-                <select className={shelfSelect} value={shown} onChange={(event) => setShelf(event.target.value)}>
-                  <option value="">All shelves</option>
-                  {[...shelves].map((name) => <option key={name} value={name}>{shelfName(name)}</option>)}
-                </select>
-              )
-            }}
-          </Await>
-        </Field>
-      </Controls>
-      <Await promise={books} fallback={<Loading block />}>
-        {({ data }) => <Table items={results(data)} columns={bookColumns} id={(book) => book.bookId} />}
-      </Await>
-    </Collection>
-  )
-}
-
 export function Podcasts({ podcasts }: { podcasts: Promise<Feed<Podcast[]>> }) {
   const [query, setQuery] = useState('')
   const results = (podcasts: Podcast[]) => search(podcasts, podcastKeys, query)
@@ -238,7 +165,7 @@ export function Podcasts({ podcasts }: { podcasts: Promise<Feed<Podcast[]>> }) {
         <SearchBox value={query} onChange={setQuery} label="Search podcasts" />
       </Controls>
       <Await promise={podcasts} fallback={<Loading block />}>
-        {({ data }) => <Table items={results(data)} columns={podcastColumns} id={(podcast) => podcast.uuid} />}
+        {({ data }) => <SelfSortingTable items={results(data)} columns={podcastColumns} id={(podcast) => podcast.uuid} />}
       </Await>
     </Collection>
   )
@@ -266,7 +193,7 @@ export function Episodes({ episodes }: { episodes: Promise<Feed<Episode[]>> }) {
           const shown = Math.min(found.length, limit)
           return (
             <>
-              <Table items={found} columns={episodeColumns} id={(episode) => episode.uuid} limit={limit} />
+              <SelfSortingTable items={found} columns={episodeColumns} id={(episode) => episode.uuid} limit={limit} />
               {shown < found.length && (
                 <div className="mt-4 flex items-center gap-4">
                   <Button onClick={() => setLimit(limit + episodePageStep)}>Show more</Button>

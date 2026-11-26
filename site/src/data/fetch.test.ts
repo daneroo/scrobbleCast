@@ -4,7 +4,7 @@ import { Goodreads } from '../schema/goodreads'
 import example from '../schema/goodreads-example.json'
 import { fakeSavedCopies } from './fake-saved-copies'
 import { noticeBoard } from '../notices'
-import { loadFeed, shareFeed, type Feed, type FeedConfig } from './fetch'
+import { loadFeed, plainText, shareFeed, type Feed, type FeedConfig } from './fetch'
 
 const url = 'https://example.com/goodreads.json'
 const books: FeedConfig<typeof example> = {
@@ -164,4 +164,14 @@ test('a retry renews the feed’s expiry, so it isn’t loaded twice at once', a
 
   expect((await shared.settled()).source).toBe('fresh')
   expect(downloads).toBe(2)
+})
+
+test('plain text with every block keeps a line break at each block boundary and break', () => {
+  expect(plainText('One<br />Two<p>Three</p><ul><li>Four</li><li>Five</li></ul><h3>Six</h3>Seven &amp; <i>eight</i>', { everyBlock: true })).toBe('One\nTwo\nThree\nFour\nFive\nSix\nSeven & eight')
+  expect(plainText('<p>A</p>\n<p>B</p>', { everyBlock: true })).toBe('A\nB')
+  expect(plainText('A<br><br>B', { everyBlock: true })).toBe('A\n\nB')
+})
+
+test('plain text by default breaks only at <br> and a closing </p> or </div>', () => {
+  expect(plainText('One<br />Two<p>Three</p><ul><li>Four</li><li>Five</li></ul>Six</div>Seven &amp; <i>eight</i>')).toBe('One\nTwoThree\nFourFiveSix\nSeven & eight')
 })

@@ -27,6 +27,14 @@ export function Panel({ className, ...props }: ComponentProps<'div'>) {
   return <div className={classes('rounded-lg border bg-card p-6', className)} {...props} />
 }
 
+// Pages show their static part at once. Each data part waits for its feed in
+// `<Await>`, showing a small placeholder until then.
+export function Loading({ block = false }: { block?: boolean }) {
+  return block
+    ? <Panel role="status">Loading…</Panel>
+    : <span className="animate-pulse text-muted-foreground motion-reduce:animate-none" role="status" aria-label="Loading">…</span>
+}
+
 // The primary action.
 export function Button({ className, ...props }: ComponentProps<'button'>) {
   return (

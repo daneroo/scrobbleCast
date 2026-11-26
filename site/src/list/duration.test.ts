@@ -16,6 +16,12 @@ test('a bare number, wrong unit order, a repeated unit or anything else is not u
   }
 })
 
+test('a duration past the safe integers is not understood, rather than rounded or infinite', () => {
+  expect(parseDuration('9007199254740991s')).toBe(Number.MAX_SAFE_INTEGER)
+  expect(parseDuration('9007199254740993s')).toBeUndefined()
+  expect(parseDuration('1' + '0'.repeat(400) + 'd')).toBeUndefined()
+})
+
 test('a duration is formatted rounded to minutes, zero units left out', () => {
   expect(formatDuration(4159)).toBe('1h9m')
   expect(formatDuration(2700)).toBe('45m')

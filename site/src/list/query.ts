@@ -17,9 +17,14 @@ export interface Sort {
 // every filter and always sorts last.
 export type Value = string | number | undefined
 
+// A text that a text filter matches only from its start (an id).
+export interface Start {
+  readonly start: string
+}
+
 // What a field filters on: its value, or a list of them (tags, or texts any
 // of which may match).
-type FilterValue = Value | readonly string[]
+type FilterValue = Value | readonly (string | Start)[]
 
 // One keyword of a list's query, and one of the fields it can show.
 export interface Field<T> {
@@ -52,8 +57,8 @@ type Op = '>' | '<' | '>=' | '<=' | '='
 // What each kind's filter holds, besides its key and its value as typed.
 interface FilterData {
   number: { op: Op; number: number }
-  // In seconds.
-  duration: { op: Op; number: number }
+  // In seconds; `exact` when typed to the second.
+  duration: { op: Op; number: number; exact: boolean }
   // A year, month or day: [year], [year, month] or [year, month, day].
   date: { op: Op; date: readonly number[] }
   choice: { choices: readonly string[] }
@@ -81,9 +86,9 @@ interface KindRules<K extends Kind> {
   parse: (text: string, field: Field<never>) => FilterData[K] | undefined
   // Whether an item's value (never "no value") passes the filter.
   match: (filter: FilterOf<K>, value: Exclude<FilterValue, undefined>) => boolean
-  // Whether every item the filter passes has the same value (`rating:5`), so
-  // that showing the field says nothing new.
-  shared?: (filter: FilterOf<K>) => boolean
+  // Whether every item the field's filters all pass shows the same value
+  // (`rating:5`), so that showing the field says nothing new.
+  shared?: (filters: readonly FilterOf<K>[]) => boolean
   // Which way a header click first sorts, and what a sort compares. Without
   // it, the kind only filters: its fields never sort or show.
   sort?: { descending: boolean; key: (value: Exclude<Value, undefined>) => Comparable }
@@ -101,13 +106,18 @@ const isoDate = /^([+-]?\d{4,})(?:-(\d{2})(?:-(\d{2})(?:T(\d{2}):(\d{2})(?::(\d{
 // high first on the first click, `=` shared.
 const comparedAsNumbers = {
   match: ({ op, number }: { op: Op; number: number }, value: Exclude<FilterValue, undefined>) => typeof value === 'number' && passes(op, value - number),
-  shared: ({ op }: { op: Op }) => op === '=',
+  shared: (filters: readonly { op: Op }[]) => filters.some(({ op }) => op === '='),
   sort: { descending: true, key: (value: Exclude<Value, undefined>) => typeof value === 'number' ? value : undefined },
 }
 
 // A filter value as texts: a list as it is, anything else as one.
-function texts(value: Exclude<FilterValue, undefined>): readonly string[] {
+function texts(value: Exclude<FilterValue, undefined>): readonly (string | Start)[] {
   return typeof value === 'object' ? value : [String(value)]
+}
+
+// The choices every one of `filters` allows.
+function intersect(filters: readonly FilterOf<'choice'>[]) {
+  return filters.slice(1).reduce((choices, filter) => choices.filter((choice) => filter.choices.includes(choice)), filters[0]?.choices ?? [])
 }
 
 // The operator of a number or date filter: a bare value means `=`.
@@ -174,15 +184,18 @@ const kinds: { [K in Kind]: KindRules<K> } = {
     help: { syntax: () => 'a number after > < >= <= or =; a bare number means =', example: () => '>1' },
   },
   // Seconds, typed in units (`1h30m`, see `parseDuration`): a bare number is
-  // not understood.
+  // not understood. `=` compares to the minute, as cells round, unless the
+  // seconds are typed: `1h9m` is 69m19s too, `90s` only 90s.
   duration: {
     parse: (text) => {
-      const [, op, duration] = durationValue.exec(text) ?? []
-      const seconds = parseDuration(duration ?? '')
-      return seconds === undefined ? undefined : { op: opOf(op), number: seconds }
+      const [, op, duration = ''] = durationValue.exec(text) ?? []
+      const seconds = parseDuration(duration)
+      return seconds === undefined ? undefined : { op: opOf(op), number: seconds, exact: duration.endsWith('s') }
     },
     ...comparedAsNumbers,
-    help: { syntax: () => 'a duration (45m, 1h30m, 2d) after > < >= <= or =', example: () => '>=1h30m' },
+    match: ({ op, number, exact }, value) => typeof value === 'number' &&
+      (op === '=' && !exact ? Math.round(value / 60) * 60 === number : passes(op, value - number)),
+    help: { syntax: () => 'a duration (45m, 1h30m, 2d) after > < >= <= or =; = matches the minute shown unless seconds are typed', example: () => '>=1h30m' },
   },
   // Compared at the precision typed: `2024` is any day that year.
   date: {
@@ -222,7 +235,7 @@ const kinds: { [K in Kind]: KindRules<K> } = {
       return { choices: [...choices] }
     },
     match: ({ choices }, value) => choices.includes(String(value).toLowerCase()),
-    shared: ({ choices }) => choices.length === 1,
+    shared: (filters) => intersect(filters).length <= 1,
     sort: { descending: false, key: String },
     help: {
       syntax: (field) => `one of ${(field.choices ?? []).join(', ')}, or a comma list of them; part of one matches every one containing it`,
@@ -235,14 +248,17 @@ const kinds: { [K in Kind]: KindRules<K> } = {
       const tags = text.toLowerCase().split(',')
       return tags.every(Boolean) ? { tags } : undefined
     },
-    match: ({ tags }, value) => texts(value).some((tag) => tags.includes(tag.toLowerCase())),
+    match: ({ tags }, value) => texts(value).some((tag) => typeof tag === 'string' && tags.includes(tag.toLowerCase())),
     help: { syntax: () => 'names, exact but in any case, comma separated: any of them', example: () => 'name' },
   },
   // Case-insensitive contains; a field filtering on several texts matches
-  // when any of them contains it.
+  // when any of them contains it, or a `Start` starts with it.
   text: {
     parse: (text) => text ? {} : undefined,
-    match: ({ text }, value) => texts(value).some((each) => each.toLowerCase().includes(text.toLowerCase())),
+    match: ({ text }, value) => {
+      const typed = text.toLowerCase()
+      return texts(value).some((each) => typeof each === 'string' ? each.toLowerCase().includes(typed) : each.start.toLowerCase().startsWith(typed))
+    },
     sort: { descending: false, key: String },
     help: { syntax: () => 'any text it contains, in any case', example: () => 'word' },
   },
@@ -251,6 +267,18 @@ const kinds: { [K in Kind]: KindRules<K> } = {
 // Whether a field sorts and shows, rather than only filtering.
 function sortable(field: Field<never>) {
   return kinds[field.kind].sort !== undefined
+}
+
+// Whether every item `filters` (all on one field) pass shows the same value.
+function shares(filters: readonly Filter[]) {
+  const shared = kinds[filters[0].kind].shared as ((filters: readonly Filter[]) => boolean) | undefined
+  return shared?.(filters) ?? false
+}
+
+// The values a choice field's filters name: those every one allows, or none
+// without one (`shelf:read,to-read shelf:to-read` names to-read).
+export function namedChoices(query: Query, key: string): readonly string[] {
+  return intersect(query.filters.filter((filter): filter is FilterOf<'choice'> => filter.kind === 'choice' && filter.key === key))
 }
 
 // The rules of a filter's kind.
@@ -307,10 +335,12 @@ export interface ListDefinition<T, F extends Field<T>> {
   // field.
   lead?: readonly string[]
   // The default-fields rule: the keys shown first for a query, and the
-  // defaults that fill up to `fillTo`; `most` fields in all.
+  // defaults that fill up to `fillTo` (besides the pinned ones with
+  // `fillBesidesPinned`); `most` fields in all.
   pinned: (query: Query) => readonly string[]
   fill: (query: Query) => readonly string[]
   fillTo: number
+  fillBesidesPinned?: boolean
   most: number
   // For the help: what words search ("title, author and description"), and
   // an example `sort:` and `show:`.
@@ -510,11 +540,13 @@ export function defineList<T, F extends Field<T> = Field<T>>(list: ListDefinitio
   // 1. the pinned fields;
   // 2. the filtered fields, each after its also-show fields;
   // 3. the sorted fields;
-  // 4. the fill, up to `fillTo`;
+  // 4. the fill, up to `fillTo` (besides the pinned, with
+  //    `fillBesidesPinned`);
   // and `most` in all. A field isn't worth a column when it says nothing new:
-  // - every result shares the value of a number `=` filter (`rating:5`) or a
-  //   choice filter that names one value (`shelf:read`, `shelf:deck`), so
-  //   those filters add no field (each kind's `shared`);
+  // - every result shares the value of a number `=` filter (`rating:5`), or
+  //   the field's choice filters together name one value (`shelf:read`,
+  //   `shelf:deck`, `shelf:read,to-read shelf:read`), so those filters add
+  //   no field (each kind's `shared`, over all of a field's filters);
   // - a filter-only field (tags) never shows;
   // - the lead column already shows its fields (title, author), so neither a
   //   filter nor a sort on one adds it.
@@ -523,15 +555,21 @@ export function defineList<T, F extends Field<T> = Field<T>>(list: ListDefinitio
     const keys: string[] = []
     const add = (key: string) => { if (!keys.includes(key)) keys.push(key) }
     const addUnlessLead = (key: string) => { if (!list.lead?.includes(key)) add(key) }
-    for (const key of list.pinned(query)) add(key)
-    for (const filter of query.filters) {
-      const field = fieldOf(filter.key)
-      if (!sortable(field) || (!field.neverShared && rulesOf(filter).shared?.(filter))) continue
-      for (const key of field.alsoShow ?? []) addUnlessLead(key)
-      addUnlessLead(filter.key)
+    const pinned = new Set(list.pinned(query))
+    for (const key of pinned) add(key)
+    // Each filtered field once, in the order first filtered, judged by all of
+    // its filters.
+    const filtersOf = new Map<string, Filter[]>()
+    for (const filter of query.filters) filtersOf.set(filter.key, [...(filtersOf.get(filter.key) ?? []), filter])
+    for (const [key, filters] of filtersOf) {
+      const field = fieldOf(key)
+      if (!sortable(field) || (!field.neverShared && shares(filters))) continue
+      for (const also of field.alsoShow ?? []) addUnlessLead(also)
+      addUnlessLead(key)
     }
     for (const { key } of query.sorts) addUnlessLead(key)
-    for (const key of list.fill(query)) if (keys.length < list.fillTo) add(key)
+    const filled = () => keys.length - (list.fillBesidesPinned ? pinned.size : 0)
+    for (const key of list.fill(query)) if (filled() < list.fillTo) add(key)
     return keys.slice(0, list.most).map(shownField)
   }
 

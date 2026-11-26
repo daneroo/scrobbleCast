@@ -10,11 +10,13 @@ const shownUnits = [['d', 1440], ['h', 60], ['m', 1]] as const
 const typed = /^(?:(\d+)d)?(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s)?$/
 
 // Seconds, or none when the text isn't a duration: a bare number is not
-// one, so `90` never has to mean seconds or minutes.
+// one, so `90` never has to mean seconds or minutes, and one too big to be
+// exact isn't either.
 export function parseDuration(text: string): number | undefined {
   const match = typed.exec(text)
   if (!text || !match) return undefined
-  return units.reduce((seconds, [, size], index) => seconds + Number(match[index + 1] ?? 0) * size, 0)
+  const seconds = units.reduce((total, [, size], index) => total + Number(match[index + 1] ?? 0) * size, 0)
+  return Number.isSafeInteger(seconds) ? seconds : undefined
 }
 
 // Rounded to minutes, zero units left out: `1h9m`, `2d4h20m`, `1h`; `0m`

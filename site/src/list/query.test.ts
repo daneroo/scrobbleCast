@@ -1,5 +1,5 @@
 import { expect, test } from 'vite-plus/test'
-import { defineList } from './query'
+import { defineList, namedChoices } from './query'
 import type { Field, ListDefinition, Query } from './query'
 
 // A test-only list: pots of paint, each with a name, a size, a colour, the
@@ -118,6 +118,17 @@ test('a text field may filter on several texts, matching when any of them contai
   expect(found('label:sky,pale')).toEqual([])
 })
 
+test('a text field’s candidate may match only at its start', () => {
+  // Filtered on the name anywhere, and on the colour from its start.
+  const label: Field<Pot> = { key: 'label', label: 'Label', kind: 'text', value: (pot) => pot.name, filterValue: (pot) => [pot.name, { start: pot.colour }] }
+  const labelled = defineList<Pot>({ ...potList, fields: [...potList.fields, label] })
+  const found = (text: string) => labelled.run(shelf, labelled.parse(text)).map(({ name }) => name)
+  expect(found('label:DARK')).toEqual(['Claret'])
+  expect(found('label:red sort:name')).toEqual(['Ochre'])
+  expect(found('label:ar sort:name')).toEqual(['Claret'])
+  expect(found('label:ochre')).toEqual(['Ochre'])
+})
+
 test('a field can filter on another value than it shows', () => {
   const items: Pot[] = [
     { name: 'Full', note: '', colour: 'red', stock: 3 },
@@ -206,6 +217,18 @@ test('a date sorts newest first on the first click', () => {
   expect(click('matte', 'made')).toBe('matte sort:-made')
 })
 
+test('a duration = matches the minute shown, unless seconds are typed; > < >= <= are exact', () => {
+  // 69m19s, shown as 1h9m.
+  const items: Pot[] = [{ name: 'Lacquer', note: '', colour: 'red', dry: 4159 }, { name: 'Oil', note: '', colour: 'red', dry: 4140 }]
+  expect(names('dry:1h9m sort:name', items)).toEqual(['Lacquer', 'Oil'])
+  expect(names('dry:=69m sort:name', items)).toEqual(['Lacquer', 'Oil'])
+  expect(names('dry:1h9m19s', items)).toEqual(['Lacquer'])
+  expect(names('dry:4159s', items)).toEqual(['Lacquer'])
+  expect(names('dry:1h9m0s', items)).toEqual(['Oil'])
+  expect(names('dry:>1h9m', items)).toEqual(['Lacquer'])
+  expect(names('dry:<=1h9m', items)).toEqual(['Oil'])
+})
+
 // Pots by drying time: 45 minutes to two days, and one not known.
 const drying: Pot[] = [
   { name: 'Wash', note: '', colour: 'blue', dry: 45 * 60 },
@@ -231,6 +254,10 @@ test('a duration filter compares with > < >= <= =, a bare duration meaning =', (
 test('a duration is typed in units: a bare number, wrong unit order and a repeated unit are not understood', () => {
   expect(pots.parse('dry:>90 dry:30m1h dry:1h1h dry:>=1h30m').notUnderstood).toEqual(['dry:>90', 'dry:30m1h', 'dry:1h1h'])
   expect(dry('dry:>90')).toEqual(dry(''))
+  // Too big to be exact: not understood, rather than infinite and less than
+  // every duration.
+  const huge = `dry:<${'9'.repeat(400)}d`
+  expect(pots.parse(`dry:<9007199254740993s ${huge}`).notUnderstood).toEqual(['dry:<9007199254740993s', huge])
 })
 
 test('a duration sorts longest first on the first click, no value last either way', () => {
@@ -419,6 +446,28 @@ test('a filter on a lead-column field adds no field', () => {
   expect(shown('name:sky')).toEqual(['colour', 'size', 'note'])
 })
 
+test('repeated choice filters name their intersection: one value shared adds no field', () => {
+  const query = pots.parse('colour:red,blue colour:blue,green')
+  expect(namedChoices(query, 'colour')).toEqual(['blue'])
+  expect(namedChoices(pots.parse('matte'), 'colour')).toEqual([])
+  expect(shown('colour:red,blue colour:blue,green')).toEqual(['size', 'note'])
+  expect(shown('colour:red,blue colour:blue,dark-red')).toEqual(['size', 'note'])
+  expect(shown('colour:red,blue colour:red,blue,green')).toEqual(['colour', 'size', 'note'])
+})
+
+test('a number = filter among others on its field still shares its value, so the field adds nothing', () => {
+  expect(shown('price:4 price:>2')).toEqual(['colour', 'size', 'note'])
+})
+
+test('a list may fill besides its pinned fields', () => {
+  const fills = { ...potList, fill: () => ['size', 'note', 'made', 'price'] }
+  const counted = defineList<Pot>(fills)
+  const besides = defineList<Pot>({ ...fills, fillBesidesPinned: true })
+  expect(counted.shown(counted.parse('')).map(({ key }) => key)).toEqual(['colour', 'size', 'note'])
+  expect(besides.shown(besides.parse('')).map(({ key }) => key)).toEqual(['colour', 'size', 'note', 'made'])
+  expect(besides.shown(besides.parse('colour:red sort:-tilt')).map(({ key }) => key)).toEqual(['tilt', 'size', 'note'])
+})
+
 test("at most the list's most fields, without repeats", () => {
   expect(shown('stock:>1 price:>1 size:<9 note:wine sort:-stock')).toEqual(['colour', 'stock', 'size', 'price'])
 })
@@ -442,7 +491,7 @@ test("the help says how each kind is typed, and gives a field's own note and exa
   expect(help('made')?.syntax).toContain('2024-06')
   expect(help('price')).toMatchObject({ note: 'in pounds', example: 'price:<5', alsoShow: ['size'] })
   expect(help('tag')?.example).toBe('tag:indoor,gloss')
-  expect(help('dry')?.syntax).toBe('a duration (45m, 1h30m, 2d) after > < >= <= or =')
+  expect(help('dry')?.syntax).toBe('a duration (45m, 1h30m, 2d) after > < >= <= or =; = matches the minute shown unless seconds are typed')
   expect(help('dry')?.example).toBe('dry:>=1h30m')
 })
 

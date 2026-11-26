@@ -1,7 +1,6 @@
 import { booksSearchThreshold } from '../config'
 import { shelfName, shelfNames, type Book } from '../data/books'
-import { defineList } from '../list/query'
-import type { Query } from '../list/query'
+import { defineList, namedChoices } from '../list/query'
 import type { ShownField } from '../list/shown'
 import { Progress } from '../ui'
 import { ShelfBadge, Stars } from './ui'
@@ -215,17 +214,6 @@ export function bookField(key: string) {
   return field
 }
 
-// The shelves the query names: those every shelf filter allows, or none
-// without one.
-function namedShelves(query: Query) {
-  let shelves: readonly string[] | undefined
-  for (const filter of query.filters) {
-    if (filter.kind !== 'choice' || filter.key !== 'shelf') continue
-    shelves = shelves ? shelves.filter((shelf) => filter.choices.includes(shelf)) : filter.choices
-  }
-  return shelves ?? []
-}
-
 export const booksList = defineList<Book, ShownField<Book>>({
   fields,
   searchKeys: ['title', 'authorName', 'bookDescription'],
@@ -236,14 +224,14 @@ export const booksList = defineList<Book, ShownField<Book>>({
   // The shelf, unless the query names one; progress when it names
   // currently-reading.
   pinned: (query) => {
-    const shelves = namedShelves(query)
+    const shelves = namedChoices(query, 'shelf')
     return [
       ...(shelves.length === 1 ? [] : ['shelf']),
       ...(shelves.includes('currently-reading') ? ['progress'] : []),
     ]
   },
   fill: (query) => {
-    const shelves = namedShelves(query)
+    const shelves = namedChoices(query, 'shelf')
     if (shelves.length === 1 && shelves[0] === 'currently-reading') return ['pages', 'avg', 'updated']
     if (shelves.length && shelves.every((shelf) => shelf === 'to-read' || shelf === 'on-deck')) return ['avg', 'pages', 'published', 'added']
     return ['rating', 'avg', 'pages', 'read']

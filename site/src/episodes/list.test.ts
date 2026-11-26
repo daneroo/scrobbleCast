@@ -39,10 +39,15 @@ function titles(episodes: Episode[], text: string) {
   return episodesList.run(episodes, episodesList.parse(text)).map(({ title }) => title)
 }
 
-test('with no status named: the status, then last played, duration, progress', () => {
-  expect(shown('')).toEqual(['status', 'played', 'duration', 'progress'])
-  expect(shown('politics')).toEqual(['status', 'played', 'duration', 'progress'])
-  expect(shown('status:unplayed,finished')).toEqual(['status', 'played', 'duration', 'progress'])
+test('with no status named: the status, then last played, duration, progress, published', () => {
+  expect(shown('')).toEqual(['status', 'played', 'duration', 'progress', 'published'])
+  expect(shown('politics')).toEqual(['status', 'played', 'duration', 'progress', 'published'])
+  expect(shown('status:unplayed,finished')).toEqual(['status', 'played', 'duration', 'progress', 'published'])
+})
+
+test('repeated status filters name the statuses they all allow', () => {
+  expect(shown('status:unplayed,finished status:unplayed,in-progress')).toEqual(['published', 'duration'])
+  expect(shown('status:finished,in-progress status:finished')).toEqual(['played', 'duration', 'progress', 'published'])
 })
 
 test('one status named, not unplayed: last played, duration, progress, published', () => {
@@ -57,12 +62,12 @@ test('only unplayed: published and duration', () => {
 
 test('a filter or sort adds its field, at most five in all', () => {
   expect(shown('status:finished duration:>=1h30m sort:-duration')).toEqual(['duration', 'played', 'progress', 'published'])
-  expect(shown('progress:<50 sort:first')).toEqual(['status', 'progress', 'first', 'played'])
-  expect(shown('progress:<50 duration:>1h published:2026 played:2026 sort:first')).toEqual(['status', 'progress', 'duration', 'published', 'played'])
+  expect(shown('status:finished sort:first')).toEqual(['first', 'played', 'duration', 'progress'])
+  expect(shown('progress:<50 sort:first')).toEqual(['status', 'progress', 'first', 'played', 'duration'])
 })
 
 test('a filter or sort on the title or podcast adds no field', () => {
-  expect(shown('podcast:politics sort:title')).toEqual(['status', 'played', 'duration', 'progress'])
+  expect(shown('podcast:politics sort:title')).toEqual(['status', 'played', 'duration', 'progress', 'published'])
 })
 
 test('without words or sort:, the latest played first, then unplayed episodes, newest published first', () => {
@@ -102,6 +107,12 @@ test('podcast: filters by a word in the podcast’s title', () => {
 test('podcast: filters by the start of the podcast’s id', () => {
   expect(titles(podcasts, 'podcast:34edb770')).toEqual(['Rest'])
   expect(titles(podcasts, 'podcast:fe30f8e0-3da9')).toEqual(['Syntax'])
+  expect(titles(podcasts, 'podcast:FE30F8E0')).toEqual(['Syntax'])
+})
+
+test('podcast: does not match a fragment from the middle of the id', () => {
+  expect(titles(podcasts, 'podcast:79ec-013a')).toEqual([])
+  expect(titles(podcasts, 'podcast:0135')).toEqual([])
 })
 
 test('duration: filters by durations typed in units; a bare number is not understood', () => {
@@ -115,6 +126,9 @@ test('duration: filters by durations typed in units; a bare number is not unders
   expect(titles(episodes, 'duration:<45m')).toEqual(['Short'])
   expect(titles(episodes, 'duration:<=1h sort:-duration')).toEqual(['Hour', 'Short'])
   expect(titles(episodes, 'duration:=1h')).toEqual(['Hour'])
+  expect(titles(episodes, 'duration:2h5m')).toEqual(['Long'])
+  expect(titles([episode({ title: 'Odd', duration: 4159 })], 'duration:1h9m')).toEqual(['Odd'])
+  expect(titles([episode({ title: 'Odd', duration: 4159 })], 'duration:1h9m1s')).toEqual([])
   expect(episodesList.parse('duration:>90').notUnderstood).toEqual(['duration:>90'])
 })
 

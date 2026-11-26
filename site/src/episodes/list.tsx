@@ -2,8 +2,7 @@ import { episodesSearchThreshold } from '../config'
 import { statuses, type Episode, type Status } from '../data/podcasts'
 import { day } from '../format'
 import { formatDuration } from '../list/duration'
-import { defineList } from '../list/query'
-import type { Query } from '../list/query'
+import { defineList, namedChoices } from '../list/query'
 import type { ShownField } from '../list/shown'
 import { Badge, Progress } from '../ui'
 
@@ -57,41 +56,34 @@ const fields: ShownField<Episode>[] = [
     label: 'Podcast',
     kind: 'text',
     value: (episode) => episode.podcastTitle || undefined,
-    // Its title or its id: `podcast:politics`, `podcast:34edb770`.
-    filterValue: (episode) => [episode.podcastTitle, episode.podcastId],
+    // Its title anywhere, or its id from the start: `podcast:politics`,
+    // `podcast:34edb770`.
+    filterValue: (episode) => [episode.podcastTitle, { start: episode.podcastId }],
     note: "a word in the podcast's title, or the start of its id",
     example: 'podcast:politics',
   },
   { key: 'title', label: 'Title', kind: 'text', value: (episode) => episode.title, example: 'title:interview' },
 ]
 
-// The statuses the query names: those every status filter allows, or none
-// without one.
-function namedStatuses(query: Query) {
-  let named: readonly string[] | undefined
-  for (const filter of query.filters) {
-    if (filter.kind !== 'choice' || filter.key !== 'status') continue
-    named = named ? named.filter((status) => filter.choices.includes(status)) : filter.choices
-  }
-  return named ?? []
-}
-
 export const episodesList = defineList<Episode, ShownField<Episode>>({
   fields,
   searchKeys: ['title', 'podcastTitle'],
   searchThreshold: episodesSearchThreshold,
-  // The latest played first; unplayed episodes, which have no last played,
-  // follow, newest published first.
+  // The latest played first; episodes with no last-played date follow,
+  // newest published first.
   defaultSort: [{ key: 'played', descending: true }, { key: 'published', descending: true }],
   // The table's lead column: artwork, title and podcast.
   lead: ['title', 'podcast'],
-  // The status, unless the query names exactly one.
-  pinned: (query) => namedStatuses(query).length === 1 ? [] : ['status'],
+  // The status, unless the query names exactly one; it doesn't count toward
+  // the four filled. Then published and duration for unplayed only;
+  // otherwise last played, duration, progress and published.
+  pinned: (query) => namedChoices(query, 'status').length === 1 ? [] : ['status'],
   fill: (query) => {
-    const named = namedStatuses(query)
+    const named = namedChoices(query, 'status')
     return named.length === 1 && named[0] === 'unplayed' ? ['published', 'duration'] : ['played', 'duration', 'progress', 'published']
   },
   fillTo: 4,
+  fillBesidesPinned: true,
   most: 5,
   help: { words: "title and podcast's title", sort: 'sort:-duration,-played', show: 'show:duration,progress,played' },
 })

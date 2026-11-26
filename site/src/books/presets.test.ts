@@ -7,4 +7,3 @@ test('every preset parses with nothing not understood', () => {
     expect({ label, notUnderstood: booksList.parse(query).notUnderstood }).toEqual({ label, notUnderstood: [] })
   }
 })
-

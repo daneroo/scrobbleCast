@@ -1,5 +1,5 @@
 import { Await, Link } from '@tanstack/react-router'
-import { useMemo } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { bookPageSize, bookPageStep, journalLaneLength } from '../config'
 import type { Book } from '../data/books'
 import type { Feed } from '../data/fetch'
@@ -52,10 +52,28 @@ function laneCard(book: Book, fields: readonly BookField[]) {
 
 // The books list: one query line with the presets, then, once the feed has
 // loaded, the journal for an empty query or the query's results.
+//
+// Every new query text (typed, a preset, "See all", "← Journal", a header
+// click) goes back to the top if the list's start has scrolled off screen.
+// "See all" and "← Journal" go with the button pressed, so focus moves to the
+// input, after that scroll.
 export function Books({ books }: { books: Promise<Feed<Book[]>> }) {
   const [text, setText] = useListQuery('books')
   const [view, setView] = useListView('books')
   const query = useMemo(() => booksList.parse(text), [text])
+  const start = useTopOnRestart<HTMLDivElement>(text)
+  const input = useRef<HTMLInputElement>(null)
+  const focusInput = useRef(false)
+  useEffect(() => {
+    if (!focusInput.current) return
+    focusInput.current = false
+    input.current?.focus()
+  }, [text])
+
+  function open(next: string) {
+    focusInput.current = true
+    setText(next)
+  }
 
   return (
     <>
@@ -63,35 +81,36 @@ export function Books({ books }: { books: Promise<Feed<Book[]>> }) {
       <QueryLine
         text={text}
         onChange={setText}
+        onJournal={() => open('')}
         help={booksList.help()}
         notUnderstood={query.notUnderstood}
         presets={bookPresets}
+        inputRef={input}
         placeholder="shelf:on-deck pages:<300 sort:-avg   — or just words"
       />
-      <Await promise={books} fallback={<Loading block />}>
-        {({ data }) => !query.tokens.length ? (
-          <Journal
-            list={booksList}
-            presets={bookPresets}
-            items={data}
-            laneLength={journalLaneLength}
-            id={(book) => book.bookId}
-            card={laneCard}
-            onOpen={(next) => {
-              setText(next)
-              window.scrollTo({ top: 0 })
-            }}
-          />
-        ) : (
-          <Results
-            books={data}
-            query={query}
-            view={view}
-            onView={setView}
-            onSort={(key) => setText(booksList.format(booksList.sortBy(query, key)))}
-          />
-        )}
-      </Await>
+      <div ref={start}>
+        <Await promise={books} fallback={<Loading block />}>
+          {({ data }) => !query.tokens.length ? (
+            <Journal
+              list={booksList}
+              presets={bookPresets}
+              items={data}
+              laneLength={journalLaneLength}
+              id={(book) => book.bookId}
+              card={laneCard}
+              onOpen={open}
+            />
+          ) : (
+            <Results
+              books={data}
+              query={query}
+              view={view}
+              onView={setView}
+              onSort={(key) => setText(booksList.format(booksList.sortBy(query, key)))}
+            />
+          )}
+        </Await>
+      </div>
     </>
   )
 }
@@ -108,11 +127,10 @@ function Results({ books, query, view, onView, onSort }: {
   const results = useMemo(() => booksList.run(books, query), [books, query])
   const fields = useMemo(() => booksList.shown(query), [query])
   const columns = useMemo(() => [bookColumn, ...fields], [fields])
-  const start = useTopOnRestart<HTMLParagraphElement>(query)
 
   return (
     <>
-      <p ref={start} className="text-muted-foreground tabular-nums" aria-live="polite">{count(results.length)}</p>
+      <p className="text-muted-foreground tabular-nums" aria-live="polite">{count(results.length)}</p>
       <div className="mt-1 mb-3 flex flex-wrap items-center justify-between gap-3">
         <p className="text-sm text-muted-foreground">
           Showing {fields.map(({ label }) => label).join(' · ')}

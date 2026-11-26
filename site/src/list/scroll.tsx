@@ -3,10 +3,10 @@ import type { ReactNode } from 'react'
 
 // Scrolling a long list, in any view. Nothing here knows what the items are.
 
-// Back to the top on a new `restart` value (a new query), if the list's start
-// has scrolled off screen; typing at the top doesn't jump. Put the ref on an
-// element at the list's start that stays mounted whatever the count, so a
-// query with no matches comes back to the top too.
+// Back to the top on a new `restart` value (a new query text), if the list's
+// start has scrolled off screen; typing at the top doesn't jump. Put the ref
+// on an element at the list's start that stays mounted whatever it shows, so
+// a query with no matches, or the journal, comes back to the top too.
 export function useTopOnRestart<T extends Element>(restart: unknown) {
   const start = useRef<T>(null)
   const last = useRef(restart)

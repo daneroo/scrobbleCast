@@ -41,7 +41,8 @@ export function Journal<T, F extends Field<T>>({ list, presets, items, laneLengt
               <h2 className="text-xl font-bold">
                 {preset.label} <span className="font-normal text-muted-foreground tabular-nums">{count.toLocaleString()}</span>
               </h2>
-              <p className="truncate text-sm text-muted-foreground">{preset.hint} · <code className="text-xs">{preset.query}</code></p>
+              <p className="text-sm text-muted-foreground">{preset.hint}</p>
+              <p className="text-muted-foreground"><code className="text-xs wrap-anywhere">{preset.query}</code></p>
             </div>
             <button type="button" className="shrink-0 text-accent hover:underline" onClick={() => onOpen(preset.query)}>See all →</button>
           </div>

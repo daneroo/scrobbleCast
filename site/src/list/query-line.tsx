@@ -1,31 +1,32 @@
 import { useId } from 'react'
-import type { ReactNode } from 'react'
+import type { ReactNode, RefObject } from 'react'
 import { classes, control } from '../ui'
 import type { FieldHelp, Help, Preset } from './query'
 
 // A list's query line: the input; what the query didn't understand, a status
 // that describes the input, so screen readers hear it as it changes; "Query
 // help" drawn from the list's help; then the presets. Nothing here knows
-// books.
-export function QueryLine({ text, onChange, help, notUnderstood, presets, placeholder }: {
+// books, or scrolls: the list's page does, on every new query.
+export function QueryLine({ text, onChange, onJournal, help, notUnderstood, presets, inputRef, placeholder }: {
   text: string
+  // Typing, or picking a preset.
   onChange: (text: string) => void
+  // "← Journal": the line is to be emptied. The button goes with it, so the
+  // page moves focus to the input.
+  onJournal: () => void
   help: Help
   notUnderstood: readonly string[]
   presets: readonly Preset[]
+  inputRef: RefObject<HTMLInputElement | null>
   placeholder?: string
 }) {
   const statusId = useId()
-  // A preset or "← Journal" starts a new query: from the top of the page.
-  function startQuery(next: string) {
-    onChange(next)
-    window.scrollTo({ top: 0 })
-  }
   return (
     <>
       <label className="grid gap-1.5">
         <span className="sr-only">Query</span>
         <input
+          ref={inputRef}
           type="search"
           spellCheck={false}
           autoCapitalize="off"
@@ -47,7 +48,7 @@ export function QueryLine({ text, onChange, help, notUnderstood, presets, placeh
         <summary className="cursor-pointer">Query help</summary>
         <HelpText help={help} />
       </details>
-      <Presets text={text} presets={presets} onPick={startQuery} />
+      <Presets text={text} presets={presets} onPick={onChange} onJournal={onJournal} />
     </>
   )
 }
@@ -55,12 +56,12 @@ export function QueryLine({ text, onChange, help, notUnderstood, presets, placeh
 // One button per preset, in the list's order; the one whose query is in the
 // line is pressed, and hovering shows its query. "← Journal" empties the
 // line, so it is there only when the line isn't empty.
-function Presets({ text, presets, onPick }: { text: string; presets: readonly Preset[]; onPick: (query: string) => void }) {
+function Presets({ text, presets, onPick, onJournal }: { text: string; presets: readonly Preset[]; onPick: (query: string) => void; onJournal: () => void }) {
   const buttonClass = 'rounded-md border px-2.5 py-1 text-sm'
   const typed = text.trim()
   return (
     <div className="mt-3 mb-5 flex flex-wrap gap-1.5">
-      {typed && <button type="button" onClick={() => onPick('')} className={classes(buttonClass, 'bg-card hover:bg-hover')}>← Journal</button>}
+      {typed && <button type="button" onClick={onJournal} className={classes(buttonClass, 'bg-card hover:bg-hover')}>← Journal</button>}
       {presets.map(({ label, query }) => (
         <button
           key={label}

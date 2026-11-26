@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { booksSearchThreshold } from '../config'
 import { shelfName, shelfNames, type Book } from '../data/books'
 import { day } from '../format'
 import { defineList } from '../list/query'
@@ -172,7 +173,7 @@ const fields: BookField[] = [
 // The shelves the query names: those every shelf filter allows, or none
 // without one.
 function namedShelves(query: Query) {
-  let shelves: string[] | undefined
+  let shelves: readonly string[] | undefined
   for (const filter of query.filters) {
     if (filter.kind !== 'choice' || filter.key !== 'shelf') continue
     shelves = shelves ? shelves.filter((shelf) => filter.choices.includes(shelf)) : filter.choices
@@ -183,6 +184,7 @@ function namedShelves(query: Query) {
 export const booksList = defineList<Book, BookField>({
   fields,
   searchKeys: ['title', 'authorName', 'bookDescription'],
+  searchThreshold: booksSearchThreshold,
   defaultSort: [{ key: 'updated', descending: true }],
   // The table's lead column: cover, title and author.
   lead: ['title', 'author'],

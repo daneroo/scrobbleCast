@@ -4,7 +4,7 @@ import type { ReactNode } from 'react'
 import { journalLaneLength, listPageSize, listPageStep } from '../config'
 import type { Feed } from '../data/fetch'
 import { Heading, Loading, Panel } from '../ui'
-import { Journal } from './journal'
+import { Journal, hasLanes } from './journal'
 import type { List, Preset, Query } from './query'
 import { QueryLine } from './query-line'
 import { Scroll, useTopOnRestart } from './scroll'
@@ -35,11 +35,13 @@ export interface PageDefinition<T, F extends ShownField<T>> {
   // no sort.
   lead: { label: string; cell: (item: T) => ReactNode }
   // A row click opens `panel` under it; `label` names its disclosure button
-  // ("Details for Dune").
-  expand: { panel: (item: T) => ReactNode; label: (item: T) => string }
+  // ("Details for Dune"). Without it, rows don't open.
+  expand?: { panel: (item: T) => ReactNode; label: (item: T) => string }
   // An item as a card, a link to its page, given the fields shown: in a
   // results view of that size, or in a journal lane (small, and narrower).
-  card: (item: T, fields: readonly F[], size: CardSize | 'lane') => ReactNode
+  // Without it, there is no journal and no view switch: always the table,
+  // whatever view is saved.
+  card?: (item: T, fields: readonly F[], size: CardSize | 'lane') => ReactNode
 }
 
 // Cards across, by screen size: small 3, 5 or 7; large 3 or 4 (a narrow
@@ -50,8 +52,11 @@ const grids: Record<CardSize, string> = {
 }
 
 // A list page: the heading, then `under`, a slot for what the list says of
-// its items as a whole (the episodes' Window), the query line with the presets, then, once the feed has loaded,
-// the journal for an empty query or the query's results.
+// its items as a whole (the episodes' Window), the query line with the
+// presets, then, once the feed has loaded, the journal for an empty query or
+// the query's results. A list with no lanes (no card, or no preset that may
+// be a lane) has no journal: an empty query shows every item, in the default
+// sort with the default fields, and there is no "← Journal".
 //
 // Every new query text (typed, a preset, "See all", "← Journal", a header
 // click) goes back to the top if the list's start has scrolled off screen.
@@ -63,7 +68,10 @@ export function ListPage<T, F extends ShownField<T>>({ page, items, under }: {
   under?: ReactNode
 }) {
   const [text, setText] = useListQuery(page.name)
-  const [view, setView, narrow] = useListView(page.name)
+  const [savedView, setView, narrow] = useListView(page.name)
+  const view = page.card ? savedView : 'table'
+  const card = page.card
+  const journal = card && hasLanes(page.presets)
   const query = useMemo(() => page.list.parse(text), [page.list, text])
   const start = useTopOnRestart<HTMLDivElement>(text)
   const input = useRef<HTMLInputElement>(null)
@@ -88,7 +96,7 @@ export function ListPage<T, F extends ShownField<T>>({ page, items, under }: {
       <QueryLine
         text={text}
         onChange={setText}
-        onJournal={() => open('')}
+        onJournal={journal ? () => open('') : undefined}
         help={page.list.help()}
         notUnderstood={query.notUnderstood}
         presets={page.presets}
@@ -97,14 +105,14 @@ export function ListPage<T, F extends ShownField<T>>({ page, items, under }: {
       />
       <div ref={start}>
         <Await promise={items} fallback={<Loading block />}>
-          {({ data }) => !query.tokens.length ? (
+          {({ data }) => journal && !query.tokens.length ? (
             <Journal
               list={page.list}
               presets={page.presets}
               items={data}
               laneLength={journalLaneLength}
               id={page.id}
-              card={(item, fields) => page.card(item, fields, 'lane')}
+              card={(item, fields) => card(item, fields, 'lane')}
               onOpen={open}
             />
           ) : (
@@ -154,11 +162,11 @@ function Results<T, F extends ShownField<T>>({ page, items, query, view, narrow,
           Showing {fields.map(({ label }) => label).join(' · ')}
           {' '}<span className="opacity-70">(from the query; <code>show:</code> to change)</span>
         </p>
-        <ViewSwitch view={view} narrow={narrow} onChange={onView} />
+        {card && <ViewSwitch view={view} narrow={narrow} onChange={onView} />}
       </div>
       {!results.length ? <Panel role="status">No matches.</Panel> : (
         <Scroll total={results.length} first={listPageSize} step={listPageStep} restart={query}>
-          {(shown) => view === 'table'
+          {(shown) => view === 'table' || !card
             ? <Table items={results.slice(0, shown)} columns={columns} id={id} sorts={query.order} onSort={onSort} expand={expand} />
             : (
               <ul className={grids[view]}>

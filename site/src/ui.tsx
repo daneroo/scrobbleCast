@@ -83,8 +83,6 @@ export const control = 'min-h-11 w-full rounded-md border border-input bg-field 
 // the app icon when there is none or it fails to load. `className` sets its
 // width.
 export function Artwork({ src, ratio = 'square', className }: { src: string | undefined; ratio?: 'square' | '2/3'; className?: string }) {
-  // The image that failed, so another `src` gets its own try.
-  const [failed, setFailed] = useState<string>()
   return (
     <span
       className={classes(
@@ -93,9 +91,19 @@ export function Artwork({ src, ratio = 'square', className }: { src: string | un
         className,
       )}
     >
-      {src && failed !== src
-        ? <img src={src} alt="" loading="lazy" decoding="async" referrerPolicy="no-referrer" className="size-full object-contain" onError={() => setFailed(src)} />
-        : <img src="/scrobble-cast.svg" alt="" className="w-[70%]" />}
+      {/* Keyed, so every new `src` (even one that failed before) gets a fresh try. */}
+      {src ? <ArtworkImage key={src} src={src} /> : <AppIcon />}
     </span>
   )
+}
+
+// One image, or the app icon once it fails to load.
+function ArtworkImage({ src }: { src: string }) {
+  const [failed, setFailed] = useState(false)
+  if (failed) return <AppIcon />
+  return <img src={src} alt="" loading="lazy" decoding="async" referrerPolicy="no-referrer" className="size-full object-contain" onError={() => setFailed(true)} />
+}
+
+function AppIcon() {
+  return <img src="/scrobble-cast.svg" alt="" className="w-[70%]" />
 }

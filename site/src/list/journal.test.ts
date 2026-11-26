@@ -1,5 +1,5 @@
 import { expect, test } from 'vite-plus/test'
-import { journalLanes } from './journal'
+import { hasLanes, journalLanes } from './journal'
 import { defineList } from './query'
 import type { Preset } from './query'
 
@@ -47,4 +47,11 @@ test('one lane per preset, in their order, without the excluded or the empty', (
 test('each lane has its query\'s fields for the cards', () => {
   expect(journalLanes(jars, presets, items, 3).map(({ fields }) => fields.map(({ key }) => key)))
     .toEqual([['size'], ['size']])
+})
+
+test('a list has lanes when a preset is not excluded from them, whatever its results', () => {
+  expect(hasLanes(presets)).toBe(true)
+  expect(hasLanes([{ label: 'Huge', hint: 'Over 100', query: 'size:>100' }])).toBe(true)
+  expect(hasLanes([{ label: 'All', hint: 'Every jar', query: 'sort:-size', excludeFromJournalLanes: true }])).toBe(false)
+  expect(hasLanes([])).toBe(false)
 })

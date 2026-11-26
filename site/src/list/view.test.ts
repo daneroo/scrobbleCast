@@ -1,5 +1,5 @@
 import { expect, test } from 'vite-plus/test'
-import { viewSetting } from './view'
+import { viewOn, viewSetting, viewsOn } from './view'
 
 // A fake localStorage: the values saved, by key.
 function fakeStorage(saved: Record<string, string> = {}) {
@@ -51,4 +51,16 @@ test('each list keeps its own view', () => {
 
   expect(viewSetting(storage, 'podcasts').get()).toBe('table')
   expect(viewSetting(storage, 'books').get()).toBe('large')
+})
+
+test('a narrow screen shows small cards for large ones, and offers no large', () => {
+  expect(viewOn('large', true)).toBe('small')
+  expect(viewOn('table', true)).toBe('table')
+  expect(viewOn('small', true)).toBe('small')
+  expect(viewsOn(true)).toEqual(['table', 'small'])
+})
+
+test('a wide screen shows every view as chosen', () => {
+  expect(viewOn('large', false)).toBe('large')
+  expect(viewsOn(false)).toEqual(['table', 'small', 'large'])
 })

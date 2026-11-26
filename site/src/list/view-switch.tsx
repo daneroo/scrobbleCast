@@ -1,15 +1,16 @@
 import { classes } from '../ui'
-import { views } from './view'
+import { viewsOn } from './view'
 import type { View } from './view'
 
 const labels: Record<View, string> = { table: 'Table', small: 'Small cards', large: 'Large cards' }
 
-// A list's view switch: one button per view, the current one pressed. The
-// group clips its corners, so the focus outline is drawn inside each button.
-export function ViewSwitch({ view, onChange }: { view: View; onChange: (view: View) => void }) {
+// A list's view switch: one button per view this screen offers, the current
+// one pressed. The group clips its corners, so the focus outline is drawn
+// inside each button.
+export function ViewSwitch({ view, narrow, onChange }: { view: View; narrow: boolean; onChange: (view: View) => void }) {
   return (
     <div role="group" aria-label="View" className="flex overflow-hidden rounded-md border text-sm">
-      {views.map((name) => (
+      {viewsOn(narrow).map((name) => (
         <button
           key={name}
           type="button"

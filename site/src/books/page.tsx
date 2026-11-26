@@ -59,7 +59,7 @@ function laneCard(book: Book, fields: readonly BookField[]) {
 // input, after that scroll.
 export function Books({ books }: { books: Promise<Feed<Book[]>> }) {
   const [text, setText] = useListQuery('books')
-  const [view, setView] = useListView('books')
+  const [view, setView, narrow] = useListView('books')
   const query = useMemo(() => booksList.parse(text), [text])
   const start = useTopOnRestart<HTMLDivElement>(text)
   const input = useRef<HTMLInputElement>(null)
@@ -105,6 +105,7 @@ export function Books({ books }: { books: Promise<Feed<Book[]>> }) {
               books={data}
               query={query}
               view={view}
+              narrow={narrow}
               onView={setView}
               onSort={(key) => setText(booksList.format(booksList.sortBy(query, key)))}
             />
@@ -117,10 +118,11 @@ export function Books({ books }: { books: Promise<Feed<Book[]>> }) {
 
 // A query's results from one copy of the feed: the count, the fields shown,
 // the view switch, and the results in that view, drawn as the reader scrolls.
-function Results({ books, query, view, onView, onSort }: {
+function Results({ books, query, view, narrow, onView, onSort }: {
   books: Book[]
   query: Query
   view: View
+  narrow: boolean
   onView: (view: View) => void
   onSort: (key: string) => void
 }) {
@@ -136,7 +138,7 @@ function Results({ books, query, view, onView, onSort }: {
           Showing {fields.map(({ label }) => label).join(' · ')}
           {' '}<span className="opacity-70">(from the query; <code>show:</code> to change)</span>
         </p>
-        <ViewSwitch view={view} onChange={onView} />
+        <ViewSwitch view={view} narrow={narrow} onChange={onView} />
       </div>
       {!results.length ? <Panel role="status">No matches.</Panel> : (
         <Scroll total={results.length} first={bookPageSize} step={bookPageStep} restart={query}>

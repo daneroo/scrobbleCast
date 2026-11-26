@@ -37,10 +37,11 @@ export function Cover({ book, size = 'SY300', lift = false, className }: { book:
 // A card view's size.
 type CardSize = Exclude<View, 'table'>
 
-// Cards across, by screen size: small 3, 5 or 7; large 2, 3 or 4.
+// Cards across, by screen size: small 3, 5 or 7; large 3 or 4 (a narrow
+// screen shows small cards instead, see `viewOn`).
 const grids: Record<CardSize, string> = {
   small: 'grid grid-cols-3 gap-x-3 gap-y-5 sm:grid-cols-5 lg:grid-cols-7',
-  large: 'grid grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-3 lg:grid-cols-4',
+  large: 'grid grid-cols-3 gap-x-4 gap-y-6 lg:grid-cols-4',
 }
 
 // The fields' short lines that have something to say, at most `most`.

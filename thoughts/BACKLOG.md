@@ -6,6 +6,7 @@ Idea inbox, grouped by theme: snippets worth not forgetting, not yet worth an is
 
 Items for the web app in `site/`.
 
+- [ ] book-field-references — use type-checked field references in Books, following Episodes and Podcasts. [#99](https://github.com/daneroo/scrobbleCast/issues/99)
 - [ ] layout — design sessions with `/prototype`: structurally different versions of a real page, switched with `?variant=`, one page per session, each on the `prototype/layout` branch (never merges).
   - Done: the books list, prototyped (verdict: `site/src/books.prototype.md` on `prototype/layout`) and implemented by #84.
   - Done: the podcasts and episodes lists, implemented by #91 using the shared list page.

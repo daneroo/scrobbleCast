@@ -8,8 +8,8 @@ import { search } from './search'
 // One sort, by a field's key. A list of them is the main sort, then its
 // tie-breaks.
 export interface Sort {
-  key: string
-  descending: boolean
+  readonly key: string
+  readonly descending: boolean
 }
 
 // A field's kind sets the operators its filter takes, and which way a header
@@ -49,43 +49,47 @@ export interface Field<T> {
 export type Op = '>' | '<' | '>=' | '<=' | '='
 
 // A filter, its key canonical and its value as typed.
-export type Filter =
+export type Filter = Readonly<
   | { key: string; kind: 'number'; text: string; op: Op; number: number }
-  | { key: string; kind: 'choice'; text: string; choices: string[] }
+  | { key: string; kind: 'choice'; text: string; choices: readonly string[] }
   | { key: string; kind: 'text'; text: string }
+>
 
 // The query's tokens in the order typed: `format` writes them back.
-export type Token =
+export type Token = Readonly<
   | { type: 'word'; text: string }
   | { type: 'filter'; filter: Filter }
-  | { type: 'sort'; sorts: Sort[] }
-  | { type: 'show'; keys: string[] }
+  | { type: 'sort'; sorts: readonly Sort[] }
+  | { type: 'show'; keys: readonly string[] }
   | { type: 'not-understood'; text: string }
+>
 
-// A parsed query: plain data. `tokens` is the whole of it; the rest is read
-// from them.
+// A parsed query: plain data, a snapshot nothing changes (`sortBy` makes a
+// new one). `tokens` is the whole of it; the rest is read from them.
 export interface Query {
-  tokens: Token[]
-  words: string[]
+  readonly tokens: readonly Token[]
+  readonly words: readonly string[]
   // Every filter applies.
-  filters: Filter[]
+  readonly filters: readonly Filter[]
   // From the last `sort:`; empty when there is none.
-  sorts: Sort[]
+  readonly sorts: readonly Sort[]
   // The order `run` applies: `sorts`; without them, the list's default sort
   // when there are no words, or none (the words' relevance).
-  order: Sort[]
+  readonly order: readonly Sort[]
   // From the last `show:`, when there is one.
-  show?: string[]
+  readonly show?: readonly string[]
   // As typed.
-  notUnderstood: string[]
+  readonly notUnderstood: readonly string[]
 }
 
 export interface ListDefinition<T, F extends Field<T>> {
   fields: readonly F[]
-  // The item's keys that words search.
+  // The item's keys that words search, and how strictly (Fuse's threshold;
+  // the site's default without one).
   searchKeys: string[]
+  searchThreshold?: number
   // The order of a query with no words and no `sort:`.
-  defaultSort: Sort[]
+  defaultSort: readonly Sort[]
   // Fields the table's lead column already shows: sorting on them adds no
   // field.
   lead?: readonly string[]
@@ -183,17 +187,22 @@ export function defineList<T, F extends Field<T> = Field<T>>(list: ListDefinitio
     return filter ? { type: 'filter', filter } : notUnderstood
   }
 
-  function fromTokens(tokens: Token[]): Query {
-    const query: Query = { tokens, words: [], filters: [], sorts: [], order: [], notUnderstood: [] }
+  function fromTokens(tokens: readonly Token[]): Query {
+    const words: string[] = []
+    const filters: Filter[] = []
+    const notUnderstood: string[] = []
+    let sorts: readonly Sort[] = []
+    let show: readonly string[] | undefined
     for (const token of tokens) {
-      if (token.type === 'word') query.words.push(token.text)
-      else if (token.type === 'filter') query.filters.push(token.filter)
-      else if (token.type === 'sort') query.sorts = token.sorts
-      else if (token.type === 'show') query.show = token.keys
-      else query.notUnderstood.push(token.text)
+      if (token.type === 'word') words.push(token.text)
+      else if (token.type === 'filter') filters.push(token.filter)
+      else if (token.type === 'sort') sorts = token.sorts
+      else if (token.type === 'show') show = token.keys
+      else notUnderstood.push(token.text)
     }
-    query.order = query.sorts.length ? query.sorts : query.words.length ? [] : list.defaultSort
-    return query
+    // The list's default sort is copied: the query holds its own order.
+    const order = sorts.length ? sorts : words.length ? [] : list.defaultSort.map((sort) => ({ ...sort }))
+    return { tokens, words, filters, sorts, order, show, notUnderstood }
   }
 
   function parse(text: string): Query {
@@ -233,7 +242,7 @@ export function defineList<T, F extends Field<T> = Field<T>>(list: ListDefinitio
 
   // Words, then filters, then the query's order.
   function run(items: readonly T[], query: Query): T[] {
-    const found = search(items, list.searchKeys, query.words.join(' '))
+    const found = search(items, list.searchKeys, query.words.join(' '), list.searchThreshold)
       .filter((item) => query.filters.every((filter) => test(filter, item)))
     if (!query.order.length) return found
     const comparisons = query.order.map(({ key, descending }) => {
@@ -266,11 +275,17 @@ export function defineList<T, F extends Field<T> = Field<T>>(list: ListDefinitio
     return fromTokens(tokens)
   }
 
-  // The fields a query shows: those of `show:`; otherwise, without repeats,
-  // the pinned fields, the filtered fields after their also-show fields
-  // (except those every result shares: a number `=`, a single choice), the
-  // sorted fields, then the fill up to `fillTo`; `most` in all. Fields the
-  // lead column shows are not added for a filter or a sort.
+  // The fields a query shows: those of `show:`; otherwise, without repeats:
+  // 1. the pinned fields;
+  // 2. the filtered fields, each after its also-show fields;
+  // 3. the sorted fields;
+  // 4. the fill, up to `fillTo`;
+  // and `most` in all. A field isn't worth a column when it says nothing new:
+  // - every result shares the value of a number `=` filter (`rating:5`) or a
+  //   choice filter that names one value (`shelf:read`, `shelf:deck`), so
+  //   those filters add no field;
+  // - the lead column already shows its fields (title, author), so neither a
+  //   filter nor a sort on one adds it.
   function shown(query: Query): F[] {
     if (query.show) return query.show.map(fieldOf)
     const keys: string[] = []

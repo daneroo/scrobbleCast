@@ -107,6 +107,11 @@ test('every word must match the name or the note', () => {
   expect(names('earthy wine')).toEqual([])
 })
 
+test('words and filters both apply', () => {
+  // "green" finds Moss and Sea; only Sea is blue.
+  expect(names('green colour:blue')).toEqual(['Sea'])
+})
+
 test('words alone keep their relevance', () => {
   // Listed, and by size, Pink comes first; Seashell matches the word better.
   const items = [
@@ -204,27 +209,33 @@ test('filtered fields come after the pinned ones, then the fill up to its number
   expect(shown('note:wine')).toEqual(['colour', 'note', 'size'])
 })
 
-test('a number filter with = adds no field: every result shares it', () => {
+test('every result shares a number = filter\'s value, so it adds no field', () => {
   expect(shown('stock:3')).toEqual(['colour', 'size', 'note'])
   expect(shown('stock:=3')).toEqual(['colour', 'size', 'note'])
 })
 
-test('a choice filter adds its field unless it names one value', () => {
-  expect(shown('colour:blue,green')).toEqual(['colour', 'size', 'note'])
+test('every result shares a one-value choice filter\'s value, so it adds no field', () => {
   expect(shown('colour:red')).toEqual(['size', 'note'])
+  // `dark` names one colour, dark-red.
   expect(shown('colour:dark')).toEqual(['size', 'note'])
+})
+
+test('a choice filter with several values adds its field', () => {
+  expect(shown('colour:blue,green')).toEqual(['colour', 'size', 'note'])
+  // `re` names three: red, dark-red and green.
+  expect(shown('colour:re')).toEqual(['colour', 'size', 'note'])
 })
 
 test('a filtered field brings its also-show fields, ahead of it', () => {
   expect(shown('price:>2')).toEqual(['colour', 'size', 'price'])
 })
 
-test('sorted fields come after the filtered ones, except those the lead column shows', () => {
+test('sorted fields come after the filtered ones; a sort on a lead-column field adds no field', () => {
   expect(shown('sort:name,-stock')).toEqual(['colour', 'stock', 'size'])
   expect(shown('note:wine sort:name,-stock')).toEqual(['colour', 'note', 'stock'])
 })
 
-test('filtering on a field the lead column shows adds no field', () => {
+test('a filter on a lead-column field adds no field', () => {
   expect(shown('name:sky')).toEqual(['colour', 'size', 'note'])
 })
 

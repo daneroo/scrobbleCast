@@ -1,7 +1,7 @@
 import { Await, Link } from '@tanstack/react-router'
 import type { Book } from './data/books'
 import type { Feed } from './data/fetch'
-import type { EpisodeFeed, Podcast } from './data/podcasts'
+import { countPlayedSince, type EpisodeFeed, type Podcast } from './data/podcasts'
 import { localDay } from './format'
 import { FeedCount, Loading, classes } from './ui'
 
@@ -21,7 +21,11 @@ export function Home({ feeds }: {
     },
     {
       to: '/episodes', title: 'Episodes', label: <WindowSince episodes={feeds.episodes} />, border: 'border-t-episodes',
-      count: <FeedCount feed={feeds.episodes} count={(episodes) => episodes.filter((episode) => episode.playedSeconds > 0).length} />,
+      count: (
+        <Await promise={feeds.episodes} fallback={<Loading />}>
+          {(feed) => countPlayedSince(feed).toLocaleString()}
+        </Await>
+      ),
     },
   ] as const
 

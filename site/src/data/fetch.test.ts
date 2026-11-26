@@ -153,7 +153,7 @@ test('a retry renews the feed’s expiry, so it isn’t loaded twice at once', a
     await slow
     return new Response(JSON.stringify([second]))
   }
-  const shared = shareFeed(() => loadFeed(books, { download, savedCopies, notices: noticeBoard() }), ttl)
+  const shared = shareFeed(() => loadFeed(books, { download, savedCopies, notices: noticeBoard() }), { ttl })
   await shared.settled()
 
   await new Promise((resolve) => setTimeout(resolve, ttl * 0.8))

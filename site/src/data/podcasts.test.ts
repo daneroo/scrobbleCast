@@ -7,7 +7,7 @@ import { fakeSavedCopies } from './fake-saved-copies'
 import type { EpisodeRecord, PodcastRecord } from '../schema/podcast'
 import { cacheTtlMs } from '../config'
 import { subscribeShownCopies } from './fetch'
-import { podcastFeeds } from './podcasts'
+import { countPlayedSince, podcastFeeds } from './podcasts'
 
 const [syntax] = example.podcasts
 
@@ -305,6 +305,25 @@ function monthly() {
   return ['2026-11-20', '2026-10-20', '2026-09-20', '2026-08-20', '2026-07-20'].map((day) => changedAt(`${day}T10:00:00Z`, { title: day }))
 }
 
+test('the played count uses playback within the window, including its start', async () => {
+  const start = new Date(2026, 9, 27)
+  const justBefore = new Date(start.getTime() - 1)
+  const { download } = fakeHistory({
+    podcasts: [],
+    episodes: [
+      changedAt('2026-11-20T10:00:00Z', { history: { played_up_to: { [start.toISOString()]: 100 } } }),
+      changedAt('2026-11-20T10:00:00Z', { history: { played_up_to: { [justBefore.toISOString()]: 100 } } }),
+      changedAt('2026-11-20T10:00:00Z', { played_up_to: 100 }),
+      changedAt('2026-11-20T10:00:00Z'),
+    ],
+  })
+  const { getEpisodeFeed, widen } = podcastFeeds({ download, notices: noticeBoard() })
+
+  expect(countPlayedSince(await getEpisodeFeed())).toBe(1)
+  await widen()
+  expect(countPlayedSince(await getEpisodeFeed())).toBe(2)
+})
+
 test('a wider window replaces the copy shown, ready at once, and the pages showing the feed hear of it', async () => {
   const { getEpisodeFeed, getEpisodes, widen } = podcastFeeds({ download: fakeHistory({ podcasts: [], episodes: monthly() }).download, notices: noticeBoard() })
   await getEpisodes()
@@ -316,6 +335,7 @@ test('a wider window replaces the copy shown, ready at once, and the pages showi
 
   expect(heard).toEqual([['episodes', true]])
   expect(getEpisodeFeed()).toMatchObject({ status: 'fulfilled', value: { since: new Date(2026, 8, 27) } })
+  expect(await getEpisodeFeed.settled()).toBe(await getEpisodeFeed())
   expect(getEpisodes()).toMatchObject({ status: 'fulfilled', value: { since: new Date(2026, 8, 27) } })
   expect((await getEpisodes()).data.map((episode) => episode.title)).toEqual(['2026-11-20', '2026-10-20'])
 })
@@ -330,7 +350,7 @@ test('a failed widening posts a notice and keeps the window; trying again widens
   offline = true
   await widen()
 
-  expect(notices.get()).toEqual({ episodes: { kind: 'warning', text: 'Episodes: couldn’t load 30 more days; the window is unchanged. Failed to fetch' } })
+  expect(notices.get()).toEqual({ 'episodes-widening': { kind: 'warning', text: 'Episodes: couldn’t load 30 more days; the window is unchanged. Failed to fetch' } })
   expect(await getEpisodeFeed()).toBe(shown)
 
   offline = false
@@ -358,36 +378,38 @@ test('widening twice at once fetches one step', async () => {
 })
 
 test('a refresh fetches the whole window in one request', async () => {
-  const { requests, download } = fakeHistory({ podcasts: [], episodes: monthly() })
+  const records = { podcasts: [], episodes: monthly() }
+  const { requests, download } = fakeHistory(records)
   const { getEpisodeFeed, widen } = podcastFeeds({ download, notices: noticeBoard() })
-  await getEpisodeFeed()
-  await widen()
-  requests.length = 0
+  await getEpisodeFeed.settled()
 
   vi.setSystemTime(now.getTime() + cacheTtlMs + 1)
-  const feed = await getEpisodeFeed()
+  await widen()
+  records.episodes.shift()
+  requests.length = 0
+
+  const feed = await getEpisodeFeed.settled()
 
   expect(requests.map(range)).toEqual(['2026-09-27 00:00:00..now'])
   expect(feed.since).toEqual(new Date(2026, 8, 27))
-  expect(feed.data.map((episode) => episode.title)).toEqual(['2026-11-20', '2026-10-20'])
+  expect(feed.data.map((episode) => episode.title)).toEqual(['2026-10-20'])
 })
 
 // A fake history API whose answers wait until `answer(n)` lets the nth
 // request through (from 0).
 function heldHistory(records: { podcasts: object[]; episodes: object[] }) {
   const { requests, download } = fakeHistory(records)
-  const held: (() => void)[] = []
-  const gates: Promise<void>[] = []
+  const held: ((response: Response | undefined) => void)[] = []
+  const gates: Promise<Response | undefined>[] = []
   const gate = (n: number) => gates[n] ??= new Promise((resolve) => { held[n] = resolve })
   return {
     requests,
     download: async (url: string) => {
       const n = requests.length
       const response = await download(url)
-      await gate(n)
-      return response
+      return (await gate(n)) ?? response
     },
-    answer: (n: number) => { gate(n); held[n]() },
+    answer: (n: number, response?: Response) => { gate(n); held[n](response) },
   }
 }
 
@@ -397,34 +419,44 @@ test('a refresh that started before a widening and ends after it keeps the wider
   const { requests, download, answer } = heldHistory(records)
   const { getEpisodeFeed, widen } = podcastFeeds({ download, notices: noticeBoard() })
   answer(0)
-  await getEpisodeFeed()
+  await getEpisodeFeed.settled()
 
   records.episodes.push(changedAt('2026-11-26T11:00:00Z', { uuid: replayed.uuid, title: 'replayed since' }))
   vi.setSystemTime(now.getTime() + cacheTtlMs + 1)
-  const refreshed = getEpisodeFeed()
+  const heard: [string, boolean][] = []
+  const unsubscribe = subscribeShownCopies((name, replaced) => heard.push([name, replaced]))
+  const refreshed = getEpisodeFeed.settled()
   await expect.poll(() => requests.length).toBe(2) // The refresh, held.
   const widened = widen()
   await expect.poll(() => requests.length).toBe(3)
   answer(2)
   await widened
+  const whileRefreshing = getEpisodeFeed()
+  const heardWhileRefreshing = [...heard]
   answer(1)
 
   const feed = await refreshed
+  unsubscribe()
+  expect(heardWhileRefreshing).toEqual([['episodes', true]])
+  expect(whileRefreshing).toMatchObject({ status: 'fulfilled', value: { since: new Date(2026, 8, 27) } })
+  expect(heard).toEqual([['episodes', true], ['episodes', true]])
   expect(requests.map(range)).toEqual(['2026-10-27 00:00:00..now', '2026-10-27 00:00:00..now', '2026-09-27 00:00:00..2026-10-27 00:00:00'])
   expect(feed.since).toEqual(new Date(2026, 8, 27))
   expect(feed.data.map((episode) => episode.title)).toEqual(['replayed since', '2026-11-20', '2026-10-20'])
 })
 
 test('a widening that started before a refresh and ends after it keeps the refreshed records', async () => {
-  const { requests, download, answer } = heldHistory({ podcasts: [], episodes: monthly() })
+  const records = { podcasts: [], episodes: monthly() }
+  const { requests, download, answer } = heldHistory(records)
   const { getEpisodeFeed, widen } = podcastFeeds({ download, notices: noticeBoard() })
   answer(0)
-  await getEpisodeFeed()
+  await getEpisodeFeed.settled()
 
   const widened = widen()
   await expect.poll(() => requests.length).toBe(2)
+  records.episodes[0] = changedAt('2026-11-26T11:00:00Z', { uuid: records.episodes[0].uuid, title: 'refreshed' })
   vi.setSystemTime(now.getTime() + cacheTtlMs + 1)
-  const refreshed = getEpisodeFeed()
+  const refreshed = getEpisodeFeed.settled()
   await expect.poll(() => requests.length).toBe(3)
   answer(2)
   await refreshed
@@ -433,5 +465,77 @@ test('a widening that started before a refresh and ends after it keeps the refre
 
   const feed = await getEpisodeFeed()
   expect(feed.since).toEqual(new Date(2026, 8, 27))
-  expect(feed.data.map((episode) => episode.title)).toEqual(['2026-11-20', '2026-10-20'])
+  expect(feed.data.map((episode) => episode.title)).toEqual(['refreshed', '2026-10-20'])
+})
+
+test('a refresh and widening that finish together publish the wider window with refreshed records', async () => {
+  const records = { podcasts: [], episodes: monthly() }
+  const { requests, download, answer } = heldHistory(records)
+  const { getEpisodeFeed, widen } = podcastFeeds({ download, notices: noticeBoard() })
+  answer(0)
+  await getEpisodeFeed.settled()
+
+  records.episodes[0] = changedAt('2026-11-26T11:00:00Z', { uuid: records.episodes[0].uuid, title: 'refreshed' })
+  vi.setSystemTime(now.getTime() + cacheTtlMs + 1)
+  const refreshed = getEpisodeFeed.settled()
+  const widened = widen()
+  await expect.poll(() => requests.length).toBe(3)
+  answer(1)
+  answer(2)
+  await Promise.all([refreshed, widened])
+
+  const feed = await getEpisodeFeed()
+  expect(feed.since).toEqual(new Date(2026, 8, 27))
+  expect(feed.data.map((episode) => episode.title)).toEqual(['refreshed', '2026-10-20'])
+})
+
+test('a failed refresh keeps the widened copy visible and the next request retries it', async () => {
+  const { requests, download, answer } = heldHistory({ podcasts: [], episodes: monthly() })
+  const notices = noticeBoard()
+  const { getEpisodeFeed, widen } = podcastFeeds({ download, notices })
+  answer(0)
+  await getEpisodeFeed.settled()
+
+  vi.setSystemTime(now.getTime() + cacheTtlMs + 1)
+  const refreshed = getEpisodeFeed.settled()
+  const widened = widen()
+  await expect.poll(() => requests.length).toBe(3)
+  answer(2)
+  await widened
+  answer(1, new Response('', { status: 503 }))
+  const shown = await refreshed
+
+  expect(shown.since).toEqual(new Date(2026, 8, 27))
+  expect(notices.get().episodes?.text).toContain('refresh failed')
+  const current = getEpisodeFeed()
+  expect(current).toMatchObject({ status: 'fulfilled', value: shown })
+  answer(3)
+  expect((await getEpisodeFeed.settled()).since).toEqual(shown.since)
+  expect(requests.map(range).at(-1)).toBe('2026-09-27 00:00:00..now')
+  expect(notices.get()).toEqual({})
+})
+
+test('a successful refresh leaves a failed widening notice until widening succeeds', async () => {
+  const { requests, download, answer } = heldHistory({ podcasts: [], episodes: monthly() })
+  const notices = noticeBoard()
+  const { getEpisodeFeed, widen } = podcastFeeds({ download, notices })
+  answer(0)
+  await getEpisodeFeed.settled()
+
+  vi.setSystemTime(now.getTime() + cacheTtlMs + 1)
+  const refreshed = getEpisodeFeed.settled()
+  const widened = widen()
+  await expect.poll(() => requests.length).toBe(3)
+  answer(2, new Response('', { status: 503 }))
+  await widened
+  const warning = notices.get()['episodes-widening']
+  expect(warning?.text).toContain('the window is unchanged')
+
+  answer(1)
+  expect((await refreshed).since).toEqual(new Date(2026, 9, 27))
+  expect(notices.get()['episodes-widening']).toBe(warning)
+  answer(3)
+  await widen()
+  expect((await getEpisodeFeed()).since).toEqual(new Date(2026, 8, 27))
+  expect(notices.get()).toEqual({})
 })

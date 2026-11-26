@@ -23,7 +23,7 @@ export function cellOf<T>(column: Pick<Column<T>, 'value' | 'cell'>, item: T): R
   return column.cell ? column.cell(item) : column.value(item)
 }
 
-interface TableProps<T> {
+export interface TableProps<T> {
   items: readonly T[]
   columns: Column<T>[]
   id: (item: T) => string
@@ -150,31 +150,4 @@ const ordinalSuffixes: Partial<Record<Intl.LDMLPluralRule, string>> = { one: 'st
 // 2nd, 3rd, 11th…
 function ordinal(n: number) {
   return n + (ordinalSuffixes[ordinalRules.select(n)] ?? 'th')
-}
-
-const collator = new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' })
-
-function compare(lhs: Value, rhs: Value) {
-  return typeof lhs === 'number' && typeof rhs === 'number'
-    ? lhs - rhs
-    : collator.compare(String(lhs ?? ''), String(rhs ?? ''))
-}
-
-// A table that sorts itself: a header click sorts by that column, A→Z or low
-// first, and a second click flips it. Shows the first `limit` items.
-export function SelfSortingTable<T>({ items, columns, id, limit }: Pick<TableProps<T>, 'items' | 'columns' | 'id'> & { limit?: number }) {
-  const [sort, setSort] = useState<Sort>()
-  const column = columns.find(({ key }) => key === sort?.key)
-  const sorted = column && sort
-    ? items.toSorted((a, b) => (sort.descending ? -1 : 1) * compare(column.value(a), column.value(b)))
-    : items
-  return (
-    <Table
-      items={sorted.slice(0, limit)}
-      columns={columns}
-      id={id}
-      sorts={sort ? [sort] : []}
-      onSort={(key) => setSort({ key, descending: sort?.key === key ? !sort.descending : false })}
-    />
-  )
 }

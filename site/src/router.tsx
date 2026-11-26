@@ -4,8 +4,14 @@ import { subscribeShownCopies, type FeedName } from './data/fetch'
 import { getEpisode, getEpisodeFeed, getEpisodes, getPodcast, getPodcasts } from './data/podcasts'
 import { documentTitle } from './format'
 import { Layout, LoadError, NotFound } from './layout'
-import { Books } from './books/page'
-import { BookDetail, EpisodeDetail, Episodes, Home, PodcastDetail, Podcasts } from './pages'
+import { BookDetail } from './books/detail'
+import { booksPage } from './books/page'
+import { EpisodeDetail } from './episodes/detail'
+import { Episodes } from './episodes/page'
+import { ListPage } from './list/page'
+import { Home } from './pages'
+import { PodcastDetail } from './podcasts/detail'
+import { Podcasts } from './podcasts/page'
 
 const root = createRootRoute({
   head: () => ({ meta: [{ title: 'Scrobble Cast' }] }),
@@ -28,7 +34,7 @@ const books = createRoute({
   staticData: { feeds: ['books'] },
   head: () => pageTitle('Books'),
   loader: () => handOff({ books: getBooks() }),
-  component: () => <Books books={books.useLoaderData().books} />,
+  component: () => <ListPage page={booksPage} items={books.useLoaderData().books} />,
 })
 
 const book = createRoute({

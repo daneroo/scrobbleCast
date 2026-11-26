@@ -1,8 +1,8 @@
-import type { ReactNode } from 'react'
 import { booksSearchThreshold } from '../config'
 import { shelfName, shelfNames, type Book } from '../data/books'
 import { defineList } from '../list/query'
-import type { Field, Query } from '../list/query'
+import type { Query } from '../list/query'
+import type { ShownField } from '../list/shown'
 import { Progress, ShelfBadge, Stars } from './ui'
 
 // The books list's query: its fields, search keys, default sort and the
@@ -11,10 +11,7 @@ import { Progress, ShelfBadge, Stars } from './ui'
 
 // A books field: a query keyword, with its table cell and its short line
 // under a card.
-export interface BookField extends Field<Book> {
-  cell?: (book: Book) => ReactNode
-  short?: (book: Book) => ReactNode
-}
+type BookField = ShownField<Book>
 
 // The book's own timeline rows: not another edition's ("… (Hardcover
 // Edition)").

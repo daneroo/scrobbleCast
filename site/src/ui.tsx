@@ -1,4 +1,7 @@
+import { Await } from '@tanstack/react-router'
+import { useState } from 'react'
 import type { ComponentProps, ReactNode } from 'react'
+import type { Feed } from './data/fetch'
 
 // Small building blocks shared by the pages; their look comes from roles only.
 //
@@ -35,6 +38,20 @@ export function Loading({ block = false }: { block?: boolean }) {
     : <span className="animate-pulse text-muted-foreground motion-reduce:animate-none" role="status" aria-label="Loading">…</span>
 }
 
+// A count from a feed, once the feed has loaded.
+export function FeedCount<T>({
+  feed, count, unit,
+}: { feed: Promise<Feed<T>>; count: (data: T) => number; unit?: [one: string, many: string] }) {
+  return (
+    <Await promise={feed} fallback={<Loading />}>
+      {({ data }) => {
+        const n = count(data)
+        return unit ? `${n.toLocaleString()} ${n === 1 ? unit[0] : unit[1]}` : n.toLocaleString()
+      }}
+    </Await>
+  )
+}
+
 // The primary action.
 export function Button({ className, ...props }: ComponentProps<'button'>) {
   return (
@@ -61,3 +78,24 @@ export function Field({ label, className, children }: { label: string; className
 
 // The look of a text input or select inside a Field.
 export const control = 'min-h-11 w-full rounded-md border border-input bg-field px-3 py-2 font-normal'
+
+// A record's artwork: a square image (`ratio="2/3"` for a book cover), or
+// the app icon when there is none or it fails to load. `className` sets its
+// width.
+export function Artwork({ src, ratio = 'square', className }: { src: string | undefined; ratio?: 'square' | '2/3'; className?: string }) {
+  // The image that failed, so another `src` gets its own try.
+  const [failed, setFailed] = useState<string>()
+  return (
+    <span
+      className={classes(
+        'grid shrink-0 place-items-center overflow-hidden rounded-md bg-artwork',
+        ratio === 'square' ? 'aspect-square' : 'aspect-2/3',
+        className,
+      )}
+    >
+      {src && failed !== src
+        ? <img src={src} alt="" loading="lazy" decoding="async" referrerPolicy="no-referrer" className="size-full object-contain" onError={() => setFailed(src)} />
+        : <img src="/scrobble-cast.svg" alt="" className="w-[70%]" />}
+    </span>
+  )
+}

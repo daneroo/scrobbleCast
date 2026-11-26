@@ -4,6 +4,8 @@
 
 export const views = ['table', 'small', 'large'] as const
 export type View = (typeof views)[number]
+// A card view's size.
+export type CardSize = Exclude<View, 'table'>
 
 const fallback: View = 'table'
 

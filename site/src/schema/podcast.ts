@@ -14,6 +14,9 @@ export const PodcastRecord = z.looseObject({
   description: z.string(),
   // missing on 250 of 413, null on 1
   thumbnail_url: z.string().nullable().optional(),
+  // One null URL and 103 missing subscription dates in the live catalog.
+  url: z.string().nullable().optional(),
+  dateAdded: z.string().optional(),
   meta: z.looseObject({
     __type: z.literal('podcast'),
     __firstSeen: z.iso.datetime(),
@@ -30,6 +33,13 @@ export const EpisodeRecord = z.looseObject({
   duration: z.union([z.number(), z.string().regex(/^\d+$/)]).optional(),
   // seconds; missing on 2,151, the same records as history.played_up_to
   played_up_to: z.number().optional(),
+  // 0 or 1 never played, 2 in progress, 3 finished; missing on older records
+  // (seen 2026-11-26)
+  playing_status: z.number().optional(),
+  // ISO 8601, or "2018-12-12 16:17:39" on older records
+  published_at: z.string().optional(),
+  // the audio
+  url: z.string().optional(),
   meta: z.looseObject({
     __type: z.literal('episode'),
     // the scraper sets it when it first sees a record, and on each change

@@ -1,11 +1,11 @@
 import { Link } from '@tanstack/react-router'
-import type { ReactNode } from 'react'
 import type { Book } from '../data/books'
-import type { View } from '../list/view'
-import { classes } from '../ui'
+import { shortLines } from '../list/shown'
+import type { ShownField } from '../list/shown'
+import type { CardSize } from '../list/view'
+import { Progress, classes } from '../ui'
 import { progress } from './list'
-import type { BookField } from './list'
-import { Progress, ShelfBadge, Stars } from './ui'
+import { ShelfBadge, Stars } from './ui'
 
 // The feed's covers are small (`._SY75_`); the same URL gives other heights:
 // `SY300` is 199×300. With no suffix, the URL is the 315×475 original.
@@ -34,26 +34,6 @@ export function Cover({ book, size = 'SY300', lift = false, className }: { book:
   )
 }
 
-// A card view's size.
-type CardSize = Exclude<View, 'table'>
-
-// Cards across, by screen size: small 3, 5 or 7; large 3 or 4 (a narrow
-// screen shows small cards instead, see `viewOn`).
-const grids: Record<CardSize, string> = {
-  small: 'grid grid-cols-3 gap-x-3 gap-y-5 sm:grid-cols-5 lg:grid-cols-7',
-  large: 'grid grid-cols-3 gap-x-4 gap-y-6 lg:grid-cols-4',
-}
-
-// The fields' short lines that have something to say, at most `most`.
-function shorts(book: Book, fields: readonly BookField[], most: number) {
-  const lines: [key: string, line: ReactNode][] = []
-  for (const field of fields) {
-    const line = field.short?.(book)
-    if (line !== null && line !== undefined && lines.length < most) lines.push([field.key, line])
-  }
-  return lines
-}
-
 // What the large card always shows, so not as one of its two short lines.
 const largeOwn = new Set(['author', 'rating', 'avg', 'shelf', 'progress'])
 
@@ -61,7 +41,7 @@ const largeOwn = new Set(['author', 'rating', 'avg', 'shelf', 'progress'])
 // short lines from the fields shown. Large: a big cover with a progress bar
 // over it while reading; title; author; stars (or progress while reading)
 // and the average; the shelf; and two more short lines.
-export function BookCard({ book, size, fields }: { book: Book; size: CardSize; fields: readonly BookField[] }) {
+export function BookCard({ book, size, fields }: { book: Book; size: CardSize; fields: readonly ShownField<Book>[] }) {
   const link = { to: '/books/$bookId', params: { bookId: book.bookId } } as const
 
   if (size === 'small') {
@@ -70,7 +50,7 @@ export function BookCard({ book, size, fields }: { book: Book; size: CardSize; f
         <Cover book={book} className="w-full" />
         <span className="line-clamp-2 text-sm leading-snug font-semibold group-hover:underline">{book.title}</span>
         <span className="grid gap-0.5 text-xs text-muted-foreground">
-          {shorts(book, fields, 2).map(([key, line]) => <span key={key} className="block truncate">{line}</span>)}
+          {shortLines(book, fields, 2).map(([key, line]) => <span key={key} className="block truncate">{line}</span>)}
         </span>
       </Link>
     )
@@ -78,7 +58,7 @@ export function BookCard({ book, size, fields }: { book: Book; size: CardSize; f
 
   const reading = book.userShelf === 'currently-reading'
   const percent = progress(book)
-  const rest = shorts(book, fields.filter(({ key }) => !largeOwn.has(key)), 2)
+  const rest = shortLines(book, fields.filter(({ key }) => !largeOwn.has(key)), 2)
   return (
     <Link {...link} className="group grid grid-cols-1 gap-2 text-inherit no-underline">
       <span className="relative">
@@ -102,14 +82,5 @@ export function BookCard({ book, size, fields }: { book: Book; size: CardSize; f
         </span>
       </span>
     </Link>
-  )
-}
-
-// Books as a grid of cards of one size.
-export function BookCards({ books, size, fields }: { books: readonly Book[]; size: CardSize; fields: readonly BookField[] }) {
-  return (
-    <ul className={grids[size]}>
-      {books.map((book) => <li key={book.bookId}><BookCard book={book} size={size} fields={fields} /></li>)}
-    </ul>
   )
 }

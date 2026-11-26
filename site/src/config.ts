@@ -2,24 +2,34 @@ export const booksUrl = 'https://im-scrobble-books.s3.amazonaws.com/goodreads.js
 export const historyUrl = 'https://scrobblecast.dl.imetrical.com/api/history'
 export const user = 'daniel'
 
-// Episodes listed are those played in the last `recentDays` days.
-export const recentDays = 7
+// The episode feed's Window: episodes that changed since the start of the day
+// `windowDays` back at first; each "+N days" widens it `windowStepDays`
+// further back.
+export const windowDays = 30
+export const windowStepDays = 30
 // How long fetched data is reused across pages in the same tab.
 export const cacheTtlMs = 5 * 60 * 1000
 
-// Fuse's default (0.6) matches almost anything; lower is stricter.
-export const searchThreshold = 0.4
 // Books search long descriptions anywhere in them (`ignoreLocation`), where
 // 0.4 lets two words match a third of the books; 0.15 still forgives a typo
 // ("excesion banks").
 export const booksSearchThreshold = 0.15
+// Episodes search their title and their podcast's: 0.15 to start, as books.
+// Probed by eye on the live feed (2026-11-26, 250 episodes): an exact title
+// ("Write Once, Deploy Everywhere") finds it alone; a dropped letter
+// ("politcs") finds The Rest Is Politics; two words must both match
+// ("tarantino maher" finds one, "deploy politics" none). Swapped letters in
+// a short word ("synatx") find nothing.
+export const episodesSearchThreshold = 0.15
+// Probed on the live catalog (2026-11-26, 413 podcasts): the exact title
+// "Philosophize This!" and "graduate-level" (mid-description) each find
+// only that podcast. The dropped letter in "tolnski" finds only Syntax.
+// "syntax tolinski" finds Syntax; "syntax goalhanger" finds none.
+export const podcastsSearchThreshold = 0.15
 
-export const episodePageSize = 5
-export const episodePageStep = 20
-
-// Books a query draws at first, and how many more each time the reader
-// scrolls near the end.
-export const bookPageSize = 60
-export const bookPageStep = 60
-// Books in each lane of the journal.
+// Results a list's query draws at first, and how many more each time the
+// reader scrolls near the end.
+export const listPageSize = 60
+export const listPageStep = 60
+// Items in each lane of a list's journal.
 export const journalLaneLength = 12

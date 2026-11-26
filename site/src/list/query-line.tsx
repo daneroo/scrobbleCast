@@ -12,8 +12,9 @@ export function QueryLine({ text, onChange, onJournal, help, notUnderstood, pres
   // Typing, or picking a preset.
   onChange: (text: string) => void
   // "← Journal": the line is to be emptied. The button goes with it, so the
-  // page moves focus to the input.
-  onJournal: () => void
+  // page moves focus to the input. Without it (a list with no journal), no
+  // button: clearing the line is enough.
+  onJournal?: () => void
   help: Help
   notUnderstood: readonly string[]
   presets: readonly Preset[]
@@ -56,12 +57,12 @@ export function QueryLine({ text, onChange, onJournal, help, notUnderstood, pres
 // One button per preset, in the list's order; the one whose query is in the
 // line is pressed, and hovering shows its query. "← Journal" empties the
 // line, so it is there only when the line isn't empty.
-function Presets({ text, presets, onPick, onJournal }: { text: string; presets: readonly Preset[]; onPick: (query: string) => void; onJournal: () => void }) {
+function Presets({ text, presets, onPick, onJournal }: { text: string; presets: readonly Preset[]; onPick: (query: string) => void; onJournal?: () => void }) {
   const buttonClass = 'rounded-md border px-2.5 py-1 text-sm'
   const typed = text.trim()
   return (
     <div className="mt-3 mb-5 flex flex-wrap gap-1.5">
-      {typed && <button type="button" onClick={onJournal} className={classes(buttonClass, 'bg-card hover:bg-hover')}>← Journal</button>}
+      {typed && onJournal && <button type="button" onClick={onJournal} className={classes(buttonClass, 'bg-card hover:bg-hover')}>← Journal</button>}
       {presets.map(({ label, query }) => (
         <button
           key={label}

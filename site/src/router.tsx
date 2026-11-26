@@ -1,11 +1,18 @@
 import { createRootRoute, createRoute, createRouter } from '@tanstack/react-router'
 import { getBook, getBooks } from './data/books'
 import { subscribeShownCopies, type FeedName } from './data/fetch'
-import { getEpisode, getEpisodeFeed, getEpisodes, getPodcast, getPodcasts } from './data/podcasts'
+import { getEpisode, getEpisodeFeed, getEpisodes, getPodcast, getPodcasts, getPodcastsInWindow } from './data/podcasts'
 import { documentTitle } from './format'
 import { Layout, LoadError, NotFound } from './layout'
-import { Books } from './books/page'
-import { BookDetail, EpisodeDetail, Episodes, Home, PodcastDetail, Podcasts } from './pages'
+import { BookDetail } from './books/detail'
+import { booksPage } from './books/page'
+import { EpisodeDetail } from './episodes/detail'
+import { episodesPage } from './episodes/page'
+import { WindowLine } from './episodes/window'
+import { ListPage } from './list/page'
+import { Home } from './pages'
+import { PodcastDetail } from './podcasts/detail'
+import { podcastsPage } from './podcasts/page'
 
 const root = createRootRoute({
   head: () => ({ meta: [{ title: 'Scrobble Cast' }] }),
@@ -28,7 +35,7 @@ const books = createRoute({
   staticData: { feeds: ['books'] },
   head: () => pageTitle('Books'),
   loader: () => handOff({ books: getBooks() }),
-  component: () => <Books books={books.useLoaderData().books} />,
+  component: () => <ListPage page={booksPage} items={books.useLoaderData().books} />,
 })
 
 const book = createRoute({
@@ -44,10 +51,29 @@ const book = createRoute({
 const podcasts = createRoute({
   getParentRoute: () => root,
   path: '/podcasts',
-  staticData: { feeds: ['podcasts'] },
+  staticData: { feeds: ['podcasts', 'episodes'] },
   head: () => pageTitle('Podcasts'),
-  loader: () => handOff({ podcasts: getPodcasts() }),
-  component: () => <Podcasts podcasts={podcasts.useLoaderData().podcasts} />,
+  loader: () => {
+    const { hasEpisodeWindow, ...feeds } = getPodcastsInWindow()
+    return { ...handOff(feeds), hasEpisodeWindow }
+  },
+  component: () => {
+    const { episodes, podcasts: items, hasEpisodeWindow } = podcasts.useLoaderData()
+    return (
+      <ListPage
+        page={podcastsPage}
+        items={items}
+        journalAvailable={hasEpisodeWindow}
+        under={
+          <WindowLine
+            episodes={episodes}
+            note={<span>Plays, listened and last played use episodes in this window.</span>}
+            retry={() => { void router.invalidate({ filter: (match) => match.routeId === podcasts.id }) }}
+          />
+        }
+      />
+    )
+  },
 })
 
 const podcast = createRoute({
@@ -63,11 +89,14 @@ const podcast = createRoute({
 const episodes = createRoute({
   getParentRoute: () => root,
   path: '/episodes',
-  // Episode titles come from the podcast feed.
+  // Episodes' podcast titles and artwork come from the podcast feed.
   staticData: { feeds: ['episodes', 'podcasts'] },
-  head: () => pageTitle('Recent episodes'),
+  head: () => pageTitle('Episodes'),
   loader: () => handOff({ episodes: getEpisodes() }),
-  component: () => <Episodes episodes={episodes.useLoaderData().episodes} />,
+  component: () => {
+    const { episodes: items } = episodes.useLoaderData()
+    return <ListPage page={episodesPage} items={items} under={<WindowLine episodes={items} />} />
+  },
 })
 
 const episode = createRoute({
@@ -106,11 +135,14 @@ export const router = createRouter({
   defaultErrorComponent: LoadError,
 })
 
-// When a fresh copy replaces a saved copy, the pages showing that feed load
-// again: their loaders get the new copy ready at once, and their state
-// (search or query text, "Show more") stays.
+// When a new copy replaces the one shown (a fresh copy replacing a saved
+// copy, or a wider Window), the pages showing that feed load again: their
+// loaders get the new copy ready at once, and their state (query text,
+// results drawn) stays. Podcasts also needs the first episode copy, since its
+// catalog can already be visible when that copy arrives.
 subscribeShownCopies((name, replaced) => {
   if (replaced) void router.invalidate({ filter: (match) => match.staticData.feeds?.includes(name) ?? false })
+  else if (name === 'episodes') void router.invalidate({ filter: (match) => match.routeId === podcasts.id })
 })
 
 declare module '@tanstack/react-router' {

@@ -1,4 +1,5 @@
 import { shelfName } from '../data/books'
+import { Badge } from '../ui'
 
 // Small pieces for showing a book, shared by the registry's cells and the
 // cards.
@@ -15,17 +16,5 @@ export function Stars({ value }: { value: number }) {
 }
 
 export function ShelfBadge({ shelf }: { shelf: string }) {
-  return <span className="inline-block rounded-full border px-2 py-0.5 text-xs whitespace-nowrap text-muted-foreground">{shelfName(shelf)}</span>
-}
-
-export function Progress({ value }: { value: number | undefined }) {
-  if (value === undefined) return <span className="text-muted-foreground">—</span>
-  return (
-    <span className="inline-flex items-center gap-2">
-      <span className="h-1.5 w-16 overflow-hidden rounded-full bg-table-stripe ring-1 ring-border">
-        <span className="block h-full bg-primary" style={{ width: `${Math.min(value, 100)}%` }} />
-      </span>
-      <span className="tabular-nums">{Math.round(value)}%</span>
-    </span>
-  )
+  return <Badge>{shelfName(shelf)}</Badge>
 }

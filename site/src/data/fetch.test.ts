@@ -1,5 +1,5 @@
 // @vitest-environment happy-dom
-import { expect, test } from 'vite-plus/test'
+import { expect, test, vi } from 'vite-plus/test'
 import { Goodreads } from '../schema/goodreads'
 import example from '../schema/goodreads-example.json'
 import { fakeSavedCopies } from './fake-saved-copies'
@@ -153,7 +153,7 @@ test('a retry renews the feed’s expiry, so it isn’t loaded twice at once', a
     await slow
     return new Response(JSON.stringify([second]))
   }
-  const shared = shareFeed(() => loadFeed(books, { download, savedCopies, notices: noticeBoard() }), ttl)
+  const shared = shareFeed(() => loadFeed(books, { download, savedCopies, notices: noticeBoard() }), { ttl })
   await shared.settled()
 
   await new Promise((resolve) => setTimeout(resolve, ttl * 0.8))
@@ -164,6 +164,33 @@ test('a retry renews the feed’s expiry, so it isn’t loaded twice at once', a
 
   expect((await shared.settled()).source).toBe('fresh')
   expect(downloads).toBe(2)
+})
+
+test('a failed retry spanning the old expiry keeps the copy shown', async () => {
+  const { bodies, savedCopies } = fakeSavedCopies({ [url]: [first] })
+  const ttl = 100
+  let now = 0
+  const clock = vi.spyOn(Date, 'now').mockImplementation(() => now)
+  let download = fail
+  const shared = shareFeed(() => loadFeed(books, { download: () => download(), savedCopies, notices: noticeBoard() }), { ttl })
+  try {
+    const shown = await shared.settled()
+    delete bodies[url]
+
+    let finishRetry!: () => void
+    const pending = new Promise<void>((resolve) => { finishRetry = resolve })
+    download = async () => { await pending; return fail() }
+    now = 80
+    const retry = shared.settled()
+    now = 120
+    finishRetry()
+
+    expect(await retry).toBe(shown)
+    expect(shared.loaded()).toBe(shown)
+    expect(await shared.settled()).toBe(shown)
+  } finally {
+    clock.mockRestore()
+  }
 })
 
 test('plain text with every block keeps a line break at each block boundary and break', () => {

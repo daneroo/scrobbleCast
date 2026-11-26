@@ -5,12 +5,22 @@ import type { Field, List, Preset } from './query'
 // The list's side of the journal: parsing, running, and the fields shown.
 type JournalList<T, F extends Field<T>> = Pick<List<T, F>, 'parse' | 'run' | 'shown'>
 
+// Whether a list has a journal: a preset that may be a lane, even one with
+// no results now. Without one, an empty query shows every item instead.
+export function hasLanes(presets: readonly Preset[]) {
+  return presets.some(isLane)
+}
+
+function isLane(preset: Preset) {
+  return !preset.excludeFromJournalLanes
+}
+
 // The journal's lanes: one per preset, in the presets' order, except those
 // with `excludeFromJournalLanes` and those with no results. Each has its
 // results' count, its first `laneLength` results as cards, and the fields
 // its query shows.
 export function journalLanes<T, F extends Field<T>>(list: JournalList<T, F>, presets: readonly Preset[], items: readonly T[], laneLength: number) {
-  return presets.filter((preset) => !preset.excludeFromJournalLanes).map((preset) => {
+  return presets.filter(isLane).map((preset) => {
     const query = list.parse(preset.query)
     const results = list.run(items, query)
     return { preset, count: results.length, cards: results.slice(0, laneLength), fields: list.shown(query) }

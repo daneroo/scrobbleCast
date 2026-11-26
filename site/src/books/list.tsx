@@ -1,20 +1,13 @@
-import type { ReactNode } from 'react'
 import { booksSearchThreshold } from '../config'
 import { shelfName, shelfNames, type Book } from '../data/books'
-import { defineList } from '../list/query'
-import type { Field, Query } from '../list/query'
-import { Progress, ShelfBadge, Stars } from './ui'
+import { defineList, namedChoices } from '../list/query'
+import type { ShownField } from '../list/shown'
+import { Progress } from '../ui'
+import { ShelfBadge, Stars } from './ui'
 
 // The books list's query: its fields, search keys, default sort and the
 // default-fields rule. Its keywords and that rule are the layout prototype's
 // (branch `prototype/layout`).
-
-// A books field: a query keyword, with its table cell and its short line
-// under a card.
-export interface BookField extends Field<Book> {
-  cell?: (book: Book) => ReactNode
-  short?: (book: Book) => ReactNode
-}
 
 // The book's own timeline rows: not another edition's ("… (Hardcover
 // Edition)").
@@ -85,11 +78,11 @@ function readDate(book: Book, at: string) {
 // A date field, ISO 8601: sorted by the feed's date, and filtered and shown
 // as `precise` gives it, its day unless a read date says otherwise.
 function dateField(
-  field: Pick<BookField, 'key' | 'label' | 'aliases' | 'note' | 'example'>,
+  field: Pick<ShownField<Book>, 'key' | 'label' | 'aliases' | 'note' | 'example'>,
   date: (book: Book) => string,
   short: string,
   precise = (book: Book) => date(book).slice(0, 10),
-): BookField {
+): ShownField<Book> {
   return {
     ...field,
     kind: 'date',
@@ -101,7 +94,7 @@ function dateField(
 }
 
 // In the order the help lists them.
-const fields: BookField[] = [
+const fields: ShownField<Book>[] = [
   {
     key: 'rating',
     label: 'Rating',
@@ -221,18 +214,7 @@ export function bookField(key: string) {
   return field
 }
 
-// The shelves the query names: those every shelf filter allows, or none
-// without one.
-function namedShelves(query: Query) {
-  let shelves: readonly string[] | undefined
-  for (const filter of query.filters) {
-    if (filter.kind !== 'choice' || filter.key !== 'shelf') continue
-    shelves = shelves ? shelves.filter((shelf) => filter.choices.includes(shelf)) : filter.choices
-  }
-  return shelves ?? []
-}
-
-export const booksList = defineList<Book, BookField>({
+export const booksList = defineList<Book, ShownField<Book>>({
   fields,
   searchKeys: ['title', 'authorName', 'bookDescription'],
   searchThreshold: booksSearchThreshold,
@@ -242,14 +224,14 @@ export const booksList = defineList<Book, BookField>({
   // The shelf, unless the query names one; progress when it names
   // currently-reading.
   pinned: (query) => {
-    const shelves = namedShelves(query)
+    const shelves = namedChoices(query, 'shelf')
     return [
       ...(shelves.length === 1 ? [] : ['shelf']),
       ...(shelves.includes('currently-reading') ? ['progress'] : []),
     ]
   },
   fill: (query) => {
-    const shelves = namedShelves(query)
+    const shelves = namedChoices(query, 'shelf')
     if (shelves.length === 1 && shelves[0] === 'currently-reading') return ['pages', 'avg', 'updated']
     if (shelves.length && shelves.every((shelf) => shelf === 'to-read' || shelf === 'on-deck')) return ['avg', 'pages', 'published', 'added']
     return ['rating', 'avg', 'pages', 'read']

@@ -151,39 +151,57 @@ export function ready<T>(value: T): Promise<T> {
 // copy shown now: while the first copy loads, a promise of it; then each copy
 // as a promise ready at once, so a fresh copy replacing a saved copy doesn't
 // suspend the page again. `loaded()` gives the copy shown, if any. A load
-// starts again `ttl` after the last copy was shown. If the refresh failed, the
-// next `get()` tries it again in the background, keeping the copy shown.
+// starts again `ttl` after the last copy was shown. With `refreshInBackground`,
+// it keeps the tab's current copy visible while that load runs. After a failed
+// refresh with a copy shown, the next `get()` tries again in the background.
 // `settled()` gives the last copy once the load is over: the fresh copy, or
-// the copy shown if the refresh failed.
-export function shareFeed<T>(load: () => AsyncIterable<Feed<T>>, ttl = cacheTtlMs) {
-  interface Entry { expires: number; promise: Promise<Feed<T>>; done: Promise<Feed<T>>; feed?: Feed<T>; retry?: boolean }
+// the copy shown if the refresh failed. `show()` puts a new copy in place.
+// `loaded({ unexpired: true })` only gives a copy shown within the TTL.
+// A loader can yield a function to build its copy at publication, using
+// data that may have changed since the download began.
+export function shareFeed<C extends Feed<unknown>>(
+  load: () => AsyncIterable<C | (() => C)>,
+  { ttl = cacheTtlMs, refreshInBackground = false } = {},
+) {
+  interface Entry { expires: number; promise: Promise<C>; done: Promise<C>; feed?: C; shownAt?: number; retry?: boolean; loading?: boolean }
   let entry: Entry | undefined
-  const current = () => (entry && entry.expires > Date.now() ? entry : undefined)
+  const current = () => (entry && (entry.loading || entry.expires > Date.now()) ? entry : undefined)
 
-  // Load into `target`. When it already shows a copy (a retry), the saved copy
-  // is skipped, and a failure keeps the copy shown.
-  function run(target: Entry, first?: Deferred<Feed<T>>) {
+  function publish(target: Entry, feed: C) {
+    const replaced = target.feed !== undefined
+    if (replaced) target.promise = ready(feed)
+    else Object.assign(target.promise, { status: 'fulfilled', value: feed })
+    target.feed = feed
+    target.shownAt = Date.now()
+    if (entry === target) setShown(feed, replaced)
+  }
+
+  // Load into `target`. If it already shows a copy, skip the saved copy and
+  // keep the copy shown if the load fails.
+  function run(target: Entry, first?: Deferred<C>) {
+    target.expires = Date.now() + ttl
     target.retry = false
-    target.expires = Date.now() + ttl // A retry isn't overlapped by a new load.
-    const done = deferred<Feed<T>>()
+    target.loading = true
+    const done = deferred<C>()
     done.promise.catch(() => {}) // Awaited only by `settled()` callers.
     target.done = done.promise
     void (async () => {
       let error: unknown
+      let refreshed = false
       try {
-        for await (const feed of load()) {
-          const replaced = target.feed !== undefined
-          if (replaced && feed.source === 'saved') continue
-          if (replaced) target.promise = ready(feed)
-          else Object.assign(target.promise, { status: 'fulfilled', value: feed })
-          target.feed = feed
+        for await (const next of load()) {
+          const feed = typeof next === 'function' ? next() : next
+          if (target.feed && feed.source === 'saved') continue
+          refreshed ||= feed.source === 'fresh'
           target.expires = Date.now() + ttl
           first?.resolve(feed)
-          if (entry === target) setShown(feed, replaced)
+          publish(target, feed)
         }
       } catch (caught) {
+        refreshed = false
         error = caught
       }
+      target.loading = false
       const shown = target.feed
       if (!shown) {
         if (entry === target) entry = undefined
@@ -191,7 +209,7 @@ export function shareFeed<T>(load: () => AsyncIterable<Feed<T>>, ttl = cacheTtlM
         done.reject(error)
         return
       }
-      target.retry = shown.source === 'saved'
+      target.retry = !refreshed
       done.resolve(shown)
     })()
   }
@@ -202,7 +220,11 @@ export function shareFeed<T>(load: () => AsyncIterable<Feed<T>>, ttl = cacheTtlM
       if (found.retry) run(found)
       return found.promise
     }
-    const first = deferred<Feed<T>>()
+    if (refreshInBackground && entry?.feed) {
+      run(entry)
+      return entry.promise
+    }
+    const first = deferred<C>()
     const next: Entry = { expires: Date.now() + ttl, promise: first.promise, done: first.promise }
     entry = next
     run(next, first)
@@ -210,11 +232,25 @@ export function shareFeed<T>(load: () => AsyncIterable<Feed<T>>, ttl = cacheTtlM
   }
 
   const settled = () => {
-    get().catch(() => {}) // The caller handles `done` instead.
-    return entry!.done
+    const promise = get()
+    if (!entry?.loading) return promise
+    promise.catch(() => {}) // The caller handles `done` instead.
+    return entry.done
   }
 
-  return Object.assign(get, { loaded: () => current()?.feed, settled })
+  // Publish a new copy, e.g. a wider Window. The next refresh still falls
+  // due on schedule, since widening only downloads older episodes.
+  const show = (feed: C) => {
+    if (!entry?.feed) return
+    publish(entry, feed)
+  }
+
+  const loaded = ({ unexpired = false } = {}) => {
+    const shown = refreshInBackground ? entry : current()
+    if (unexpired && (shown?.shownAt === undefined || shown.shownAt + ttl <= Date.now())) return undefined
+    return shown?.feed
+  }
+  return Object.assign(get, { loaded, settled, show })
 }
 
 interface Deferred<T> {

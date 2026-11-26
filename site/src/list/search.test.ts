@@ -7,6 +7,7 @@ interface Item {
 }
 
 const keys = ['title', 'description']
+const looseThreshold = 0.4
 
 const items: Item[] = [
   {
@@ -17,18 +18,18 @@ const items: Item[] = [
 ]
 
 test('a word from the middle of a long field is found', () => {
-  expect(search(items, keys, 'Treasury officer').map(({ title }) => title)).toEqual(['The Spy'])
+  expect(search(items, keys, 'Treasury officer', looseThreshold).map(({ title }) => title)).toEqual(['The Spy'])
 })
 
 test('every word must match something', () => {
-  expect(search(items, keys, 'culture minds').map(({ title }) => title)).toEqual(['Culture'])
-  expect(search(items, keys, 'culture treasury')).toEqual([])
+  expect(search(items, keys, 'culture minds', looseThreshold).map(({ title }) => title)).toEqual(['Culture'])
+  expect(search(items, keys, 'culture treasury', looseThreshold)).toEqual([])
 })
 
 test('the same items searched with different keys give each its own results', () => {
-  expect(search(items, ['title'], 'treasury')).toEqual([])
-  expect(search(items, ['description'], 'treasury').map(({ title }) => title)).toEqual(['The Spy'])
-  expect(search(items, ['title'], 'treasury')).toEqual([])
+  expect(search(items, ['title'], 'treasury', looseThreshold)).toEqual([])
+  expect(search(items, ['description'], 'treasury', looseThreshold).map(({ title }) => title)).toEqual(['The Spy'])
+  expect(search(items, ['title'], 'treasury', looseThreshold)).toEqual([])
 })
 
 // Long descriptions give loose fuzzy matching a place to match almost any
@@ -42,7 +43,7 @@ const shelf: Item[] = [
 ]
 
 test('with a strict threshold, two words find only the item that has both', () => {
-  expect(search(shelf, keys, 'culture banks').length).toBeGreaterThan(1)
+  expect(search(shelf, keys, 'culture banks', looseThreshold).length).toBeGreaterThan(1)
   expect(search(shelf, keys, 'culture banks', 0.15).map(({ title }) => title)).toEqual(['Excession'])
   expect(search(shelf, keys, 'excesion banks', 0.15).map(({ title }) => title)).toEqual(['Excession'])
 })

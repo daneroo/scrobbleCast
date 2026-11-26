@@ -1,5 +1,5 @@
 import { expect, test } from 'vite-plus/test'
-import { defineList } from './query'
+import { defineList, namedChoices } from './query'
 import type { Field, ListDefinition, Query } from './query'
 
 // A test-only list: pots of paint, each with a name, a size, a colour, the
@@ -14,6 +14,8 @@ interface Pot {
   made?: string
   tags?: string[]
   tilt?: number
+  // Drying time, in seconds.
+  dry?: number
 }
 
 const colours = ['red', 'dark-red', 'blue', 'green']
@@ -32,8 +34,10 @@ const potList: ListDefinition<Pot, Field<Pot>> = {
     // either way.
     { key: 'tilt', label: 'Tilt', kind: 'number', value: (pot) => pot.tilt, filterValue: (pot) => pot.tilt === undefined ? undefined : Math.abs(pot.tilt), alsoShow: ['size'], neverShared: true },
     { key: 'tag', label: 'Tag', kind: 'tags', value: (pot) => pot.tags?.join(', '), filterValue: (pot) => pot.tags, example: 'tag:indoor,gloss' },
+    { key: 'dry', label: 'Drying time', kind: 'duration', value: (pot) => pot.dry },
   ],
   searchKeys: ['name', 'note'],
+  searchThreshold: 0.4,
   defaultSort: [{ key: 'size', descending: true }],
   lead: ['name'],
   // The colour, unless the query filters on it; then size and note.
@@ -99,6 +103,31 @@ test('choice filters take a comma list, and a value that is no colour matches ev
 
 test('text filters are a case-insensitive contains', () => {
   expect(names('note:EARTHY sort:name')).toEqual(['Moss', 'Ochre'])
+})
+
+test('a text field may filter on several texts, matching when any of them contains the text', () => {
+  // Shown as the name, filtered on the name and the note.
+  const label: Field<Pot> = { key: 'label', label: 'Label', kind: 'text', value: (pot) => pot.name, filterValue: (pot) => [pot.name, pot.note] }
+  const labelled = defineList<Pot>({ ...potList, fields: [...potList.fields, label] })
+  const found = (text: string) => labelled.run(shelf, labelled.parse(text)).map(({ name }) => name)
+  expect(found('label:SKY sort:name')).toEqual(['Sky'])
+  expect(found('label:earthy sort:name')).toEqual(['Moss', 'Ochre'])
+  expect(found('label:green sort:name')).toEqual(['Moss', 'Sea'])
+  expect(found('label:ea sort:name')).toEqual(['Moss', 'Ochre', 'Sea'])
+  expect(found('label:violet')).toEqual([])
+  // Each text on its own: none of them contains "sky,pale".
+  expect(found('label:sky,pale')).toEqual([])
+})
+
+test('a text field’s candidate may match only at its start', () => {
+  // Filtered on the name anywhere, and on the colour from its start.
+  const label: Field<Pot> = { key: 'label', label: 'Label', kind: 'text', value: (pot) => pot.name, filterValue: (pot) => [pot.name, { start: pot.colour }] }
+  const labelled = defineList<Pot>({ ...potList, fields: [...potList.fields, label] })
+  const found = (text: string) => labelled.run(shelf, labelled.parse(text)).map(({ name }) => name)
+  expect(found('label:DARK')).toEqual(['Claret'])
+  expect(found('label:red sort:name')).toEqual(['Ochre'])
+  expect(found('label:ar sort:name')).toEqual(['Claret'])
+  expect(found('label:ochre')).toEqual(['Ochre'])
 })
 
 test('a field can filter on another value than it shows', () => {
@@ -187,6 +216,60 @@ test('a header click first sorts numbers high first, text and choices A to Z', (
 
 test('a date sorts newest first on the first click', () => {
   expect(click('matte', 'made')).toBe('matte sort:-made')
+})
+
+test('a duration = matches the minute shown, unless seconds are typed; > < >= <= are exact', () => {
+  // 69m19s, shown as 1h9m.
+  const items: Pot[] = [{ name: 'Lacquer', note: '', colour: 'red', dry: 4159 }, { name: 'Oil', note: '', colour: 'red', dry: 4140 }]
+  expect(names('dry:1h9m sort:name', items)).toEqual(['Lacquer', 'Oil'])
+  expect(names('dry:=69m sort:name', items)).toEqual(['Lacquer', 'Oil'])
+  expect(names('dry:1h9m19s', items)).toEqual(['Lacquer'])
+  expect(names('dry:4159s', items)).toEqual(['Lacquer'])
+  expect(names('dry:1h9m0s', items)).toEqual(['Oil'])
+  expect(names('dry:>1h9m', items)).toEqual(['Lacquer'])
+  expect(names('dry:<=1h9m', items)).toEqual(['Oil'])
+})
+
+// Pots by drying time: 45 minutes to two days, and one not known.
+const drying: Pot[] = [
+  { name: 'Wash', note: '', colour: 'blue', dry: 45 * 60 },
+  { name: 'Gloss', note: '', colour: 'red', dry: 90 * 60 },
+  { name: 'Enamel', note: '', colour: 'red', dry: 2 * 86400 },
+  { name: 'Mist', note: '', colour: 'green', dry: 90 },
+  { name: 'Unknown', note: '', colour: 'green' },
+]
+
+function dry(text: string) {
+  return names(text, drying)
+}
+
+test('a duration filter compares with > < >= <= =, a bare duration meaning =', () => {
+  expect(dry('dry:>1h30m sort:dry')).toEqual(['Enamel'])
+  expect(dry('dry:<1h30m sort:dry')).toEqual(['Mist', 'Wash'])
+  expect(dry('dry:>=1h30m sort:dry')).toEqual(['Gloss', 'Enamel'])
+  expect(dry('dry:<=45m sort:dry')).toEqual(['Mist', 'Wash'])
+  expect(dry('dry:=2d')).toEqual(['Enamel'])
+  expect(dry('dry:90s')).toEqual(['Mist'])
+})
+
+test('a duration is typed in units: a bare number, wrong unit order and a repeated unit are not understood', () => {
+  expect(pots.parse('dry:>90 dry:30m1h dry:1h1h dry:>=1h30m').notUnderstood).toEqual(['dry:>90', 'dry:30m1h', 'dry:1h1h'])
+  expect(dry('dry:>90')).toEqual(dry(''))
+  // Too big to be exact: not understood, rather than infinite and less than
+  // every duration.
+  const huge = `dry:<${'9'.repeat(400)}d`
+  expect(pots.parse(`dry:<9007199254740993s ${huge}`).notUnderstood).toEqual(['dry:<9007199254740993s', huge])
+})
+
+test('a duration sorts longest first on the first click, no value last either way', () => {
+  expect(click('matte', 'dry')).toBe('matte sort:-dry')
+  expect(dry('sort:-dry')).toEqual(['Enamel', 'Gloss', 'Wash', 'Mist', 'Unknown'])
+  expect(dry('sort:dry')).toEqual(['Mist', 'Wash', 'Gloss', 'Enamel', 'Unknown'])
+})
+
+test('a duration = filter is shared, so it adds no field', () => {
+  expect(shown('dry:=1h')).toEqual(['colour', 'size', 'note'])
+  expect(shown('dry:>1h')).toEqual(['colour', 'dry', 'size'])
 })
 
 // Pots made over the ages: BC, before the year 1000, and recent days.
@@ -364,15 +447,37 @@ test('a filter on a lead-column field adds no field', () => {
   expect(shown('name:sky')).toEqual(['colour', 'size', 'note'])
 })
 
+test('repeated choice filters name their intersection: one value shared adds no field', () => {
+  const query = pots.parse('colour:red,blue colour:blue,green')
+  expect(namedChoices(query, 'colour')).toEqual(['blue'])
+  expect(namedChoices(pots.parse('matte'), 'colour')).toEqual([])
+  expect(shown('colour:red,blue colour:blue,green')).toEqual(['size', 'note'])
+  expect(shown('colour:red,blue colour:blue,dark-red')).toEqual(['size', 'note'])
+  expect(shown('colour:red,blue colour:red,blue,green')).toEqual(['colour', 'size', 'note'])
+})
+
+test('a number = filter among others on its field still shares its value, so the field adds nothing', () => {
+  expect(shown('price:4 price:>2')).toEqual(['colour', 'size', 'note'])
+})
+
+test('a list may fill besides its pinned fields', () => {
+  const fills = { ...potList, fill: () => ['size', 'note', 'made', 'price'] }
+  const counted = defineList<Pot>(fills)
+  const besides = defineList<Pot>({ ...fills, fillBesidesPinned: true })
+  expect(counted.shown(counted.parse('')).map(({ key }) => key)).toEqual(['colour', 'size', 'note'])
+  expect(besides.shown(besides.parse('')).map(({ key }) => key)).toEqual(['colour', 'size', 'note', 'made'])
+  expect(besides.shown(besides.parse('colour:red sort:-tilt')).map(({ key }) => key)).toEqual(['tilt', 'size', 'note'])
+})
+
 test("at most the list's most fields, without repeats", () => {
   expect(shown('stock:>1 price:>1 size:<9 note:wine sort:-stock')).toEqual(['colour', 'stock', 'size', 'price'])
 })
 
 test('the help lists every field in order, with its label, aliases, whether it sorts, and an example', () => {
   const { fields } = pots.help()
-  expect(fields.map(({ key }) => key)).toEqual(['name', 'size', 'colour', 'note', 'price', 'stock', 'made', 'tilt', 'tag'])
+  expect(fields.map(({ key }) => key)).toEqual(['name', 'size', 'colour', 'note', 'price', 'stock', 'made', 'tilt', 'tag', 'dry'])
   expect(fields[1]).toMatchObject({ label: 'Size', aliases: ['litres'], sorts: true })
-  expect(fields.at(-1)).toMatchObject({ label: 'Tag', aliases: [], sorts: false })
+  expect(fields.at(-2)).toMatchObject({ label: 'Tag', aliases: [], sorts: false })
   for (const { key, example } of fields) {
     expect(example).toMatch(new RegExp(`^${key}:.`))
     expect(pots.parse(example).notUnderstood).toEqual([])
@@ -387,6 +492,8 @@ test("the help says how each kind is typed, and gives a field's own note and exa
   expect(help('made')?.syntax).toContain('2024-06')
   expect(help('price')).toMatchObject({ note: 'in pounds', example: 'price:<5', alsoShow: ['size'] })
   expect(help('tag')?.example).toBe('tag:indoor,gloss')
+  expect(help('dry')?.syntax).toBe('a duration (45m, 1h30m, 2d) after > < >= <= or =; = matches the minute shown unless seconds are typed')
+  expect(help('dry')?.example).toBe('dry:>=1h30m')
 })
 
 test('the help says what words search, and how to sort and show', () => {
@@ -400,7 +507,7 @@ test('the help says what words search, and how to sort and show', () => {
 test('adding a field adds it to the help', () => {
   const shine: Field<Pot> = { key: 'shine', label: 'Shine', kind: 'number', value: () => 1 }
   const more = defineList<Pot>({ ...potList, fields: [...potList.fields, shine] })
-  expect(more.help().fields.map(({ key }) => key)).toEqual(['name', 'size', 'colour', 'note', 'price', 'stock', 'made', 'tilt', 'tag', 'shine'])
+  expect(more.help().fields.map(({ key }) => key)).toEqual(['name', 'size', 'colour', 'note', 'price', 'stock', 'made', 'tilt', 'tag', 'dry', 'shine'])
 })
 
 test('a help example the query does not understand fails the list', () => {

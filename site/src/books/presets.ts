@@ -10,8 +10,8 @@
 //   the page's "Query help" (or the fields in `list.tsx`). The query line
 //   highlights the preset when its text is exactly this.
 // - `excludeFromJournalLanes: true` (optional): a button only, with no lane
-//   in the journal (the overview shown when the query is empty). Use it for
-//   broad or chore-like queries.
+//   in the journal (what the list shows when the query is empty). Use it
+//   for broad or chore-like queries.
 //
 // Order matters: the buttons and the journal's lanes follow this list's
 // order.

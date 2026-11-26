@@ -44,8 +44,8 @@ const expand = {
   label: (book: Book) => `Details for ${book.title}`,
 }
 
-// A journal lane's card: small, and without the shelf, which the lane's
-// preset already names.
+// A journal lane's card: small, with at most two short lines and, as in the
+// prototype's lanes, never the shelf's.
 function laneCard(book: Book, fields: readonly BookField[]) {
   return <BookCard book={book} size="small" fields={fields.filter(({ key }) => key !== 'shelf')} />
 }
@@ -74,7 +74,7 @@ export function Books({ books }: { books: Promise<Feed<Book[]>> }) {
             list={booksList}
             presets={bookPresets}
             items={data}
-            length={journalLaneLength}
+            laneLength={journalLaneLength}
             id={(book) => book.bookId}
             card={laneCard}
             onOpen={(next) => {

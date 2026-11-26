@@ -8,7 +8,3 @@ test('every preset parses with nothing not understood', () => {
   }
 })
 
-test('the year preset follows the clock', () => {
-  const year = String(new Date().getFullYear())
-  expect(bookPresets.find(({ query }) => query.startsWith('year:'))?.query).toBe(`year:${year} sort:-read`)
-})

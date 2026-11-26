@@ -17,7 +17,7 @@ export function QueryLine({ text, onChange, help, notUnderstood, presets, placeh
 }) {
   const statusId = useId()
   // A preset or "← Journal" starts a new query: from the top of the page.
-  function go(next: string) {
+  function startQuery(next: string) {
     onChange(next)
     window.scrollTo({ top: 0 })
   }
@@ -47,7 +47,7 @@ export function QueryLine({ text, onChange, help, notUnderstood, presets, placeh
         <summary className="cursor-pointer">Query help</summary>
         <HelpText help={help} />
       </details>
-      <Presets text={text} presets={presets} onPick={go} />
+      <Presets text={text} presets={presets} onPick={startQuery} />
     </>
   )
 }
@@ -56,11 +56,11 @@ export function QueryLine({ text, onChange, help, notUnderstood, presets, placeh
 // line is pressed, and hovering shows its query. "← Journal" empties the
 // line, so it is there only when the line isn't empty.
 function Presets({ text, presets, onPick }: { text: string; presets: readonly Preset[]; onPick: (query: string) => void }) {
-  const button = 'rounded-md border px-2.5 py-1 text-sm'
+  const buttonClass = 'rounded-md border px-2.5 py-1 text-sm'
   const typed = text.trim()
   return (
     <div className="mt-3 mb-5 flex flex-wrap gap-1.5">
-      {typed && <button type="button" onClick={() => onPick('')} className={classes(button, 'bg-card hover:bg-hover')}>← Journal</button>}
+      {typed && <button type="button" onClick={() => onPick('')} className={classes(buttonClass, 'bg-card hover:bg-hover')}>← Journal</button>}
       {presets.map(({ label, query }) => (
         <button
           key={label}
@@ -68,7 +68,7 @@ function Presets({ text, presets, onPick }: { text: string; presets: readonly Pr
           title={query}
           aria-pressed={typed === query}
           onClick={() => onPick(query)}
-          className={classes(button, typed === query ? 'border-primary bg-primary text-primary-foreground' : 'bg-card hover:bg-hover')}
+          className={classes(buttonClass, typed === query ? 'border-primary bg-primary text-primary-foreground' : 'bg-card hover:bg-hover')}
         >
           {label}
         </button>

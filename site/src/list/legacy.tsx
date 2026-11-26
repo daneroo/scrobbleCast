@@ -47,8 +47,8 @@ function compare(lhs: Value, rhs: Value) {
 }
 
 // A table that sorts itself: a header click sorts by that column, A→Z or low
-// first, and a second click flips it. Shows the first `limit` items.
-export function SelfSortingTable<T>({ items, columns, id, limit }: Pick<TableProps<T>, 'items' | 'columns' | 'id'> & { limit?: number }) {
+// first, and a second click flips it.
+export function SelfSortingTable<T>({ items, columns, id }: Pick<TableProps<T>, 'items' | 'columns' | 'id'>) {
   const [sort, setSort] = useState<Sort>()
   const column = columns.find(({ key }) => key === sort?.key)
   const sorted = column && sort
@@ -56,7 +56,7 @@ export function SelfSortingTable<T>({ items, columns, id, limit }: Pick<TablePro
     : items
   return (
     <Table
-      items={sorted.slice(0, limit)}
+      items={sorted}
       columns={columns}
       id={id}
       sorts={sort ? [sort] : []}

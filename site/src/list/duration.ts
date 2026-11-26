@@ -2,7 +2,10 @@
 // written as units in descending order, each at most once (`45m`, `1h30m`,
 // `2d4h`, `90s`). Shared by the query model's duration kind and the cells.
 
+// Each unit's seconds, largest first.
 const units = [['d', 86400], ['h', 3600], ['m', 60], ['s', 1]] as const
+// What a formatted duration shows: each unit's minutes, largest first.
+const shownUnits = [['d', 1440], ['h', 60], ['m', 1]] as const
 
 const typed = /^(?:(\d+)d)?(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s)?$/
 
@@ -19,9 +22,9 @@ export function parseDuration(text: string): number | undefined {
 export function formatDuration(seconds: number): string {
   let minutes = Math.round(seconds / 60)
   const parts: string[] = []
-  for (const [unit, size] of units.slice(0, 3)) {
-    const count = Math.floor(minutes / (size / 60))
-    minutes -= count * (size / 60)
+  for (const [unit, size] of shownUnits) {
+    const count = Math.floor(minutes / size)
+    minutes -= count * size
     if (count) parts.push(`${count}${unit}`)
   }
   return parts.join('') || '0m'

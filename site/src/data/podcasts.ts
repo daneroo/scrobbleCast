@@ -72,6 +72,11 @@ export interface Episode {
   lastPlayed: string
 }
 
+// What an episode carries of its podcast, when the podcast feed has it.
+function ofPodcast(podcast: Podcast | undefined) {
+  return { podcastTitle: podcast?.title ?? '', artwork: podcast?.thumbnail ?? '' }
+}
+
 // ISO 8601: older records give "2018-12-12 16:17:39", taken as UTC.
 function isoTime(text: string | undefined) {
   if (!text) return ''
@@ -93,8 +98,7 @@ function toEpisode(episode: EpisodeRecord, podcast?: Podcast): Episode {
     uuid: episode.uuid,
     title: episode.title,
     podcastId: episode.podcast_uuid,
-    podcastTitle: podcast?.title ?? '',
-    artwork: podcast?.thumbnail ?? '',
+    ...ofPodcast(podcast),
     url: episode.url ?? '',
     published: isoTime(episode.published_at),
     duration,
@@ -160,13 +164,7 @@ export function podcastFeeds(options: FeedOptions = {}) {
 
   function withPodcasts(episodes: Feed<Episode[]>, podcasts: Podcast[]) {
     const byId = new Map(podcasts.map((podcast) => [podcast.uuid, podcast]))
-    return {
-      ...episodes,
-      data: episodes.data.map((episode) => {
-        const podcast = byId.get(episode.podcastId)
-        return { ...episode, podcastTitle: podcast?.title ?? '', artwork: podcast?.thumbnail ?? '' }
-      }),
-    }
+    return { ...episodes, data: episodes.data.map((episode) => ({ ...episode, ...ofPodcast(byId.get(episode.podcastId)) })) }
   }
 
   async function getEpisode(uuid: string) {

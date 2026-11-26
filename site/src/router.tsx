@@ -7,7 +7,7 @@ import { Layout, LoadError, NotFound } from './layout'
 import { BookDetail } from './books/detail'
 import { booksPage } from './books/page'
 import { EpisodeDetail } from './episodes/detail'
-import { EpisodesReach, episodesPage } from './episodes/page'
+import { EpisodesWindow, episodesPage } from './episodes/page'
 import { ListPage } from './list/page'
 import { Home } from './pages'
 import { PodcastDetail } from './podcasts/detail'
@@ -73,7 +73,7 @@ const episodes = createRoute({
   staticData: { feeds: ['episodes', 'podcasts'] },
   head: () => pageTitle('Episodes'),
   loader: () => handOff({ episodes: getEpisodes() }),
-  component: () => <ListPage page={episodesPage} items={episodes.useLoaderData().episodes} under={<EpisodesReach />} />,
+  component: () => <ListPage page={episodesPage} items={episodes.useLoaderData().episodes} under={<EpisodesWindow />} />,
 })
 
 const episode = createRoute({

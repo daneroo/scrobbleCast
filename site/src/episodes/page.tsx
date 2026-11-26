@@ -31,8 +31,8 @@ export const episodesPage: PageDefinition<Episode, ShownField<Episode>> = {
   },
 }
 
-// Under the heading: how far back the episode feed reaches (the Window, in
-// #94).
-export function EpisodesReach() {
+// Under the heading: how far back the episode feed reaches, the Window
+// (which #94 makes widen).
+export function EpisodesWindow() {
   return <p className="mt-1 text-muted-foreground">Changed in the last {recentDays} days</p>
 }

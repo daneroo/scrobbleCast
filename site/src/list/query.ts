@@ -52,8 +52,8 @@ type Op = '>' | '<' | '>=' | '<=' | '='
 // What each kind's filter holds, besides its key and its value as typed.
 interface FilterData {
   number: { op: Op; number: number }
-  // Seconds.
-  duration: { op: Op; seconds: number }
+  // In seconds.
+  duration: { op: Op; number: number }
   // A year, month or day: [year], [year, month] or [year, month, day].
   date: { op: Op; date: readonly number[] }
   choice: { choices: readonly string[] }
@@ -96,6 +96,19 @@ const durationValue = /^(>=|<=|>|<|=)?(.*)$/
 const typedDate = /^(>=|<=|>|<|=)?(-?\d{1,4})(?:-(\d{2})(?:-(\d{2}))?)?$/
 // An ISO 8601 date, from a year ("1995", "-0750") to a time.
 const isoDate = /^([+-]?\d{4,})(?:-(\d{2})(?:-(\d{2})(?:T(\d{2}):(\d{2})(?::(\d{2}(?:\.\d+)?))?Z?)?)?)?$/
+
+// A number or duration filter's test, sort and sharing: compared as numbers,
+// high first on the first click, `=` shared.
+const comparedAsNumbers = {
+  match: ({ op, number }: { op: Op; number: number }, value: Exclude<FilterValue, undefined>) => typeof value === 'number' && passes(op, value - number),
+  shared: ({ op }: { op: Op }) => op === '=',
+  sort: { descending: true, key: (value: Exclude<Value, undefined>) => typeof value === 'number' ? value : undefined },
+}
+
+// A filter value as texts: a list as it is, anything else as one.
+function texts(value: Exclude<FilterValue, undefined>): readonly string[] {
+  return typeof value === 'object' ? value : [String(value)]
+}
 
 // The operator of a number or date filter: a bare value means `=`.
 function opOf(typed: string | undefined) {
@@ -157,9 +170,7 @@ const kinds: { [K in Kind]: KindRules<K> } = {
       const match = numberValue.exec(text)
       return match ? { op: opOf(match[1]), number: Number(match[2]) } : undefined
     },
-    match: ({ op, number }, value) => typeof value === 'number' && passes(op, value - number),
-    shared: ({ op }) => op === '=',
-    sort: { descending: true, key: (value) => typeof value === 'number' ? value : undefined },
+    ...comparedAsNumbers,
     help: { syntax: () => 'a number after > < >= <= or =; a bare number means =', example: () => '>1' },
   },
   // Seconds, typed in units (`1h30m`, see `parseDuration`): a bare number is
@@ -168,11 +179,9 @@ const kinds: { [K in Kind]: KindRules<K> } = {
     parse: (text) => {
       const [, op, duration] = durationValue.exec(text) ?? []
       const seconds = parseDuration(duration ?? '')
-      return seconds === undefined ? undefined : { op: opOf(op), seconds }
+      return seconds === undefined ? undefined : { op: opOf(op), number: seconds }
     },
-    match: ({ op, seconds }, value) => typeof value === 'number' && passes(op, value - seconds),
-    shared: ({ op }) => op === '=',
-    sort: { descending: true, key: (value) => typeof value === 'number' ? value : undefined },
+    ...comparedAsNumbers,
     help: { syntax: () => 'a duration (45m, 1h30m, 2d) after > < >= <= or =', example: () => '>=1h30m' },
   },
   // Compared at the precision typed: `2024` is any day that year.
@@ -226,14 +235,14 @@ const kinds: { [K in Kind]: KindRules<K> } = {
       const tags = text.toLowerCase().split(',')
       return tags.every(Boolean) ? { tags } : undefined
     },
-    match: ({ tags }, value) => (typeof value === 'object' ? value : [String(value)]).some((tag) => tags.includes(tag.toLowerCase())),
+    match: ({ tags }, value) => texts(value).some((tag) => tags.includes(tag.toLowerCase())),
     help: { syntax: () => 'names, exact but in any case, comma separated: any of them', example: () => 'name' },
   },
   // Case-insensitive contains; a field filtering on several texts matches
   // when any of them contains it.
   text: {
     parse: (text) => text ? {} : undefined,
-    match: ({ text }, value) => (typeof value === 'object' ? value : [String(value)]).some((each) => each.toLowerCase().includes(text.toLowerCase())),
+    match: ({ text }, value) => texts(value).some((each) => each.toLowerCase().includes(text.toLowerCase())),
     sort: { descending: false, key: String },
     help: { syntax: () => 'any text it contains, in any case', example: () => 'word' },
   },

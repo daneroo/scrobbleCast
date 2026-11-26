@@ -2,7 +2,8 @@ export const booksUrl = 'https://im-scrobble-books.s3.amazonaws.com/goodreads.js
 export const historyUrl = 'https://scrobblecast.dl.imetrical.com/api/history'
 export const user = 'daniel'
 
-// Episodes listed are those played in the last `recentDays` days.
+// The episode feed: episodes that changed in the last `recentDays` days.
+// (#94 replaces it with the Window.)
 export const recentDays = 7
 // How long fetched data is reused across pages in the same tab.
 export const cacheTtlMs = 5 * 60 * 1000
@@ -14,6 +15,11 @@ export const searchThreshold = 0.4
 // ("excesion banks").
 export const booksSearchThreshold = 0.15
 // Episodes search their title and their podcast's: 0.15 to start, as books.
+// Probed by eye on the live feed (2026-11-26, 250 episodes): an exact title
+// ("Write Once, Deploy Everywhere") finds it alone; a dropped letter
+// ("politcs") finds The Rest Is Politics; two words must both match
+// ("tarantino maher" finds one, "deploy politics" none). Swapped letters in
+// a short word ("synatx") find nothing.
 export const episodesSearchThreshold = 0.15
 
 // Results a list's query draws at first, and how many more each time the

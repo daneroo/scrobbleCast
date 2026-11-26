@@ -26,10 +26,9 @@ function episode(fields: Partial<Episode> = {}): Episode {
   }
 }
 
-// A played episode: `progress` percent of an hour, first and last played on
-// `played`.
-function played(played: string, fields: Partial<Episode> = {}): Episode {
-  return episode({ status: 'in-progress', playedSeconds: 1800, progress: 50, firstPlayed: played, lastPlayed: played, ...fields })
+// An episode in progress, half played, first and last played `at`.
+function played(at: string, fields: Partial<Episode> = {}): Episode {
+  return episode({ status: 'in-progress', playedSeconds: 1800, progress: 50, firstPlayed: at, lastPlayed: at, ...fields })
 }
 
 function shown(text: string) {

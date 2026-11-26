@@ -4,10 +4,11 @@ import type { PageDefinition } from '../list/page'
 import type { ShownField } from '../list/shown'
 import { LeadCell } from '../list/table'
 import { Artwork } from '../ui'
+import { EpisodeCard } from './card'
 import { episodesList } from './list'
+import { EpisodePanel } from './panel'
 
-// The episodes list's page: its registry on the shared list page, a table
-// only for now (no presets, card or expanded row yet).
+// The episodes list's registry and views on the shared list page.
 export const episodesPage: PageDefinition<Episode, ShownField<Episode>> = {
   name: 'episodes',
   title: 'Episodes',
@@ -27,4 +28,9 @@ export const episodesPage: PageDefinition<Episode, ShownField<Episode>> = {
       />
     ),
   },
+  expand: {
+    panel: (episode) => <EpisodePanel episode={episode} />,
+    label: (episode) => `Details for ${episode.title}`,
+  },
+  card: (episode, fields, size) => <EpisodeCard episode={episode} size={size === 'lane' ? 'small' : size} fields={fields} />,
 }

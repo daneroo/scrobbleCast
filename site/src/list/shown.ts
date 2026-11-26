@@ -11,9 +11,18 @@ export interface ShownField<T> extends Field<T> {
   short?: (item: T) => ReactNode
 }
 
-// Filter and sort on the feed's time and show its day in the table.
-export function dateField<T>(field: Pick<ShownField<T>, 'key' | 'label' | 'note' | 'example'>, date: (item: T) => string | undefined): ShownField<T> {
-  return { ...field, kind: 'date', value: (item) => date(item) || undefined, cell: (item) => day(date(item) ?? '') }
+// Filter and sort on the feed's time and show its day in the table and on cards.
+export function dateField<T>(field: Pick<ShownField<T>, 'key' | 'label' | 'note' | 'example'>, date: (item: T) => string | undefined, shortLabel?: string): ShownField<T> {
+  return {
+    ...field,
+    kind: 'date',
+    value: (item) => date(item) || undefined,
+    cell: (item) => day(date(item) ?? ''),
+    short: shortLabel === undefined ? undefined : (item) => {
+      const value = date(item)
+      return value ? `${shortLabel} ${day(value)}` : undefined
+    },
+  }
 }
 
 // A card's short lines: those of `fields` that have something to say, in

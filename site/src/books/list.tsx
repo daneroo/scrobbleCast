@@ -22,7 +22,7 @@ function ownTimeline(book: Book) {
 }
 
 // The last percentage in its own timeline ("44.0%").
-function progress(book: Book): number | undefined {
+export function progress(book: Book): number | undefined {
   let found: number | undefined
   for (const { event } of ownTimeline(book)) {
     const match = /(\d+(?:\.\d+)?)%$/.exec(event)
@@ -50,7 +50,7 @@ function year(published: string) {
   return /^-?\d{4}/.exec(published)?.[0].replace(/^(-?)0+(?=\d)/, '$1')
 }
 
-function Stars({ value }: { value: number }) {
+export function Stars({ value }: { value: number }) {
   if (!value) return <span className="text-muted-foreground">—</span>
   const stars = Math.round(value)
   return (
@@ -61,11 +61,11 @@ function Stars({ value }: { value: number }) {
   )
 }
 
-function ShelfBadge({ shelf }: { shelf: string }) {
+export function ShelfBadge({ shelf }: { shelf: string }) {
   return <span className="inline-block rounded-full border px-2 py-0.5 text-xs whitespace-nowrap text-muted-foreground">{shelfName(shelf)}</span>
 }
 
-function Progress({ value }: { value: number | undefined }) {
+export function Progress({ value }: { value: number | undefined }) {
   if (value === undefined) return <span className="text-muted-foreground">—</span>
   return (
     <span className="inline-flex items-center gap-2">

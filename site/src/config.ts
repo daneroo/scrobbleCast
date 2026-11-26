@@ -17,5 +17,9 @@ export const booksSearchThreshold = 0.15
 export const episodePageSize = 5
 export const episodePageStep = 20
 
-// The most books a query draws.
+// Books a query draws at first, and how many more each time the reader
+// scrolls near the end.
 export const bookPageSize = 60
+export const bookPageStep = 60
+// Books in each lane of the journal.
+export const journalLaneLength = 12

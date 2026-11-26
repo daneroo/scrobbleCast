@@ -178,3 +178,56 @@ test('the help lists every books field', () => {
     .toEqual(['rating', 'read', 'first', 'avg', 'gap', 'pages', 'published', 'added', 'updated', 'reads', 'shelf', 'progress', 'title', 'author', 'tag'])
   expect(booksList.help().fields.find(({ key }) => key === 'read')?.aliases).toEqual(['year'])
 })
+
+// A read on the timeline: "2021", "February, 1997" or "May 2, 2021".
+function finished(dateText: string, edition = '') {
+  return { dateText, event: `Finished Reading${edition}` }
+}
+
+test('read and first filter at the precision the timeline gives, not the padded feed date', () => {
+  const books = [
+    // The feed pads a year to 1 January, and a month to its 1st.
+    book({ title: 'Helgoland', userShelf: 'read', userFirstReadAt: '2021-01-01T08:00:00.000Z', userLastReadAt: '2021-01-01T08:00:00.000Z', timeline: [finished('2021')] }),
+    book({ title: 'Bridge of Birds', userShelf: 'read', userFirstReadAt: '1997-02-01T08:00:00.000Z', userLastReadAt: '1997-02-01T08:00:00.000Z', timeline: [finished(''), { dateText: 'January, 1997', event: 'Started Reading' }, finished('February, 1997')] }),
+  ]
+  expect(titles(books, 'read:2021-01-01')).toEqual([])
+  expect(titles(books, 'read:2021')).toEqual(['Helgoland'])
+  expect(titles(books, 'year:2021')).toEqual(['Helgoland'])
+  expect(titles(books, 'read:>=2021-01')).toEqual(['Helgoland'])
+  expect(titles(books, 'read:<2021-06')).toEqual(['Bridge of Birds'])
+  expect(titles(books, 'read:1997-02-01')).toEqual([])
+  expect(titles(books, 'read:1997-02')).toEqual(['Bridge of Birds'])
+  expect(titles(books, 'first:1997-01')).toEqual([])
+  const [read] = booksList.shown(booksList.parse('show:read'))
+  expect(books.map((book) => read.cell?.(book))).toEqual(['2021', '1997-02'])
+})
+
+test('first and last read each take their own row, and another edition\'s rows are ignored', () => {
+  const books = [
+    book({
+      title: 'Twice',
+      userShelf: 'read',
+      userFirstReadAt: '2015-01-01T08:00:00.000Z',
+      userLastReadAt: '2020-03-03T08:00:00.000Z',
+      timeline: [finished('2015'), finished('March 3, 2020'), finished('2015', ' (Paperback Edition)')],
+    }),
+    // Its own finish is a day; the paperback's "2021" is another edition's.
+    book({ title: 'Hardcover', userShelf: 'read', userFirstReadAt: '2021-07-06T07:00:00.000Z', userLastReadAt: '2021-07-06T07:00:00.000Z', timeline: [finished('2021', ' (Paperback Edition)'), finished('July 6, 2021')] }),
+    // Read in "2021" and on 1 January 2021: the day is known.
+    book({ title: 'New Year', userShelf: 'read', userFirstReadAt: '2021-01-01T08:00:00.000Z', userLastReadAt: '2021-01-01T08:00:00.000Z', timeline: [finished('2021'), finished('January 1, 2021')] }),
+    // No matching row: the feed's day.
+    book({ title: 'Untracked', userShelf: 'read', userFirstReadAt: '2025-03-04T08:00:00.000Z', userLastReadAt: '2025-03-04T08:00:00.000Z' }),
+  ]
+  expect(titles(books, 'first:2015-01-01')).toEqual([])
+  expect(titles(books, 'first:2015')).toEqual(['Twice'])
+  expect(titles(books, 'read:2020-03-03')).toEqual(['Twice'])
+  expect(titles(books, 'read:2021-07-06')).toEqual(['Hardcover'])
+  expect(titles(books, 'read:2025-03-04')).toEqual(['Untracked'])
+  expect(titles(books, 'read:2021-01-01')).toEqual(['New Year'])
+  // Sorted by the feed's dates.
+  expect(titles(books, 'sort:read')).toEqual(['Twice', 'New Year', 'Hardcover', 'Untracked'])
+})
+
+test('a gap filter with = still shows gap, rating and avg: equal sizes differ in sign', () => {
+  expect(shown('shelf:on-deck gap:0.8')).toEqual(['rating', 'avg', 'gap', 'pages'])
+})

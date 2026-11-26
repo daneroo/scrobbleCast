@@ -13,6 +13,7 @@ interface Pot {
   stock?: number
   made?: string
   tags?: string[]
+  tilt?: number
 }
 
 const colours = ['red', 'dark-red', 'blue', 'green']
@@ -27,6 +28,9 @@ const potList: ListDefinition<Pot, Field<Pot>> = {
     // None in stock is 0 to filter on, and no value to sort and show.
     { key: 'stock', label: 'Stock', kind: 'number', value: (pot) => pot.stock, filterValue: (pot) => pot.stock ?? 0 },
     { key: 'made', label: 'Made', kind: 'date', value: (pot) => pot.made },
+    // Shown signed, filtered by its size: pots that share a size may lean
+    // either way.
+    { key: 'tilt', label: 'Tilt', kind: 'number', value: (pot) => pot.tilt, filterValue: (pot) => pot.tilt === undefined ? undefined : Math.abs(pot.tilt), alsoShow: ['size'], neverShared: true },
     { key: 'tag', label: 'Tag', kind: 'tags', value: (pot) => pot.tags?.join(', '), filterValue: (pot) => pot.tags, example: 'tag:indoor,gloss' },
   ],
   searchKeys: ['name', 'note'],
@@ -219,6 +223,18 @@ test('a date less precise than the one typed matches only when it is clearly on 
   expect(made('made:<2024-06-15')).toEqual(['Amphora', 'Urn', 'Bowl', 'Jug', 'Vase', 'Tin'])
 })
 
+test('a date less precise than the one typed matches when every day it may be passes', () => {
+  // Jug is 1949: any day that year is on or after its first month, and on
+  // or before its last day; after January, it can't say.
+  expect(made('made:>=1949-01')).toEqual(['Jug', 'Vase', 'Tin', 'Can'])
+  expect(made('made:<=1949-12-31')).toEqual(['Amphora', 'Urn', 'Bowl', 'Jug'])
+  expect(made('made:>1949-01')).toEqual(['Vase', 'Tin', 'Can'])
+  // Vase is May 2024.
+  expect(made('made:>=2024-05-01')).toEqual(['Vase', 'Tin', 'Can'])
+  expect(made('made:<=2024-05-31')).toEqual(['Amphora', 'Urn', 'Bowl', 'Jug', 'Vase'])
+  expect(made('made:<2024-05-31')).toEqual(['Amphora', 'Urn', 'Bowl', 'Jug'])
+})
+
 test('years before 1000 and BC years compare in time order', () => {
   expect(made('made:<1000')).toEqual(['Amphora', 'Urn', 'Bowl'])
   expect(made('made:<0')).toEqual(['Amphora', 'Urn'])
@@ -236,6 +252,13 @@ test('a date filter takes a year, month or day, with an operator', () => {
   expect(pots.parse('made:2024-13 made:2024-06-32 made:June made:2024-6 made:>=x made:12345').notUnderstood)
     .toEqual(['made:2024-13', 'made:2024-06-32', 'made:June', 'made:2024-6', 'made:>=x', 'made:12345'])
   expect(pots.format(pots.parse('made:>=2024-06'))).toBe('made:>=2024-06')
+})
+
+test('a day that is not in the calendar is not understood, and changes no results', () => {
+  const query = pots.parse('made:2025-02-29 made:<2024-04-31 made:1900-02-29 sort:made')
+  expect(query.notUnderstood).toEqual(['made:2025-02-29', 'made:<2024-04-31', 'made:1900-02-29'])
+  expect(pots.run(ages, query)).toEqual(pots.run(ages, pots.parse('sort:made')))
+  expect(pots.parse('made:2024-02-29 made:2000-02-29 made:2024-04-30').notUnderstood).toEqual([])
 })
 
 test('a tags filter takes a comma list, and a pot with any of them matches', () => {
@@ -317,6 +340,11 @@ test('a choice filter with several values adds its field', () => {
   expect(shown('colour:re')).toEqual(['colour', 'size', 'note'])
 })
 
+test('a field whose filter value is not what it shows adds its fields even for =', () => {
+  // Pots tilted by 2 lean either way.
+  expect(shown('tilt:2')).toEqual(['colour', 'size', 'tilt'])
+})
+
 test('a filtered field brings its also-show fields, ahead of it', () => {
   expect(shown('price:>2')).toEqual(['colour', 'size', 'price'])
 })
@@ -336,7 +364,7 @@ test("at most the list's most fields, without repeats", () => {
 
 test('the help lists every field in order, with its label, aliases, whether it sorts, and an example', () => {
   const { fields } = pots.help()
-  expect(fields.map(({ key }) => key)).toEqual(['name', 'size', 'colour', 'note', 'price', 'stock', 'made', 'tag'])
+  expect(fields.map(({ key }) => key)).toEqual(['name', 'size', 'colour', 'note', 'price', 'stock', 'made', 'tilt', 'tag'])
   expect(fields[1]).toMatchObject({ label: 'Size', aliases: ['litres'], sorts: true })
   expect(fields.at(-1)).toMatchObject({ label: 'Tag', aliases: [], sorts: false })
   for (const { key, example } of fields) {
@@ -366,11 +394,20 @@ test('the help says what words search, and how to sort and show', () => {
 test('adding a field adds it to the help', () => {
   const shine: Field<Pot> = { key: 'shine', label: 'Shine', kind: 'number', value: () => 1 }
   const more = defineList<Pot>({ ...potList, fields: [...potList.fields, shine] })
-  expect(more.help().fields.map(({ key }) => key)).toEqual(['name', 'size', 'colour', 'note', 'price', 'stock', 'made', 'tag', 'shine'])
+  expect(more.help().fields.map(({ key }) => key)).toEqual(['name', 'size', 'colour', 'note', 'price', 'stock', 'made', 'tilt', 'tag', 'shine'])
 })
 
 test('a help example the query does not understand fails the list', () => {
   const field: Field<Pot> = { key: 'shine', label: 'Shine', kind: 'number', value: () => 1, example: 'shine:high' }
   expect(() => defineList<Pot>({ ...potList, fields: [...potList.fields, field] })).toThrow('shine:high')
   expect(() => defineList<Pot>({ ...potList, help: { ...potList.help, sort: 'sort:tag' } })).toThrow('sort:tag')
+})
+
+test('a help example must be about its own field or directive', () => {
+  const field = (example: string): Field<Pot> => ({ key: 'shine', aliases: ['gloss'], label: 'Shine', kind: 'number', value: () => 1, example })
+  expect(() => defineList<Pot>({ ...potList, fields: [...potList.fields, field('size:>2')] })).toThrow('size:>2')
+  expect(() => defineList<Pot>({ ...potList, fields: [...potList.fields, field('shine:1 matte')] })).toThrow('shine:1 matte')
+  expect(() => defineList<Pot>({ ...potList, fields: [...potList.fields, field('gloss:>1')] })).not.toThrow()
+  expect(() => defineList<Pot>({ ...potList, help: { ...potList.help, sort: 'show:note' } })).toThrow('show:note')
+  expect(() => defineList<Pot>({ ...potList, help: { ...potList.help, show: 'sort:note' } })).toThrow('sort:note')
 })

@@ -36,6 +36,9 @@ export interface Field<T> {
   choices?: readonly string[]
   // Shown too when the field is filtered on.
   alsoShow?: readonly string[]
+  // Its filter never counts as shared, whatever its kind says: a gap filters
+  // on its size, so the results of `gap:0.8` still show +0.8 and -0.8.
+  neverShared?: boolean
   // For the help: a rule of its own, and an example token (`rating:>=4`);
   // without one, its kind gives an example.
   note?: string
@@ -112,6 +115,29 @@ function dateNumbers(text: string): number[] | undefined {
   return numbers
 }
 
+// Days in a month, leap years by the Gregorian rule (1900 has no 29 February,
+// 2000 does).
+function daysIn(year: number, month: number) {
+  if (month === 2) return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0 ? 29 : 28
+  return [4, 6, 9, 11].includes(month) ? 30 : 31
+}
+
+// A date's first and last day as precise as `length` numbers (a year, a
+// month or a day): 1995 at a day's precision spans 1995-01-01 to 1995-12-31.
+function span(numbers: readonly number[], length: number) {
+  const first = numbers.slice(0, length)
+  const last = [...first]
+  if (first.length === 1 && length > 1) {
+    first.push(1)
+    last.push(12)
+  }
+  if (first.length === 2 && length > 2) {
+    first.push(1)
+    last.push(daysIn(last[0], last[1]))
+  }
+  return [first, last]
+}
+
 // Numbers in turn; a shorter list that agrees so far comes first.
 function compareNumbers(a: readonly number[], b: readonly number[]) {
   for (let i = 0; i < Math.min(a.length, b.length); i++) if (a[i] !== b[i]) return a[i] - b[i]
@@ -137,17 +163,17 @@ const kinds: { [K in Kind]: KindRules<K> } = {
       const match = typedDate.exec(text)
       if (!match) return undefined
       const date = match.slice(2).filter((part) => part !== undefined).map(Number)
-      const [, month = 1, day = 1] = date
-      if (month < 1 || month > 12 || day < 1 || day > 31) return undefined
+      const [year, month = 1, day = 1] = date
+      if (month < 1 || month > 12 || day < 1 || day > daysIn(year, month)) return undefined
       return { op: opOf(match[1]), date }
     },
+    // An item's date less precise than the one typed passes when every day
+    // it may be passes: 1995 is >=1995-01 but not >1995-01, which it can't
+    // say.
     match: ({ op, date }, value) => {
       const numbers = typeof value === 'string' ? dateNumbers(value) : undefined
       if (!numbers) return false
-      // At the precision both give; when they agree that far but the item's
-      // stops short (1995 against 1995-06), it can't say.
-      const order = compareNumbers(numbers.slice(0, date.length), date.slice(0, numbers.length))
-      return (order !== 0 || numbers.length >= date.length) && passes(op, order)
+      return span(numbers, date.length).every((end) => passes(op, compareNumbers(end, date)))
     },
     sort: { descending: true, key: (value) => dateNumbers(String(value)) },
     help: {
@@ -183,7 +209,7 @@ const kinds: { [K in Kind]: KindRules<K> } = {
       return tags.every(Boolean) ? { tags } : undefined
     },
     match: ({ tags }, value) => (typeof value === 'object' ? value : [String(value)]).some((tag) => tags.includes(tag.toLowerCase())),
-    help: { syntax: () => 'a comma list: any of them', example: () => 'name' },
+    help: { syntax: () => 'names, exact but in any case, comma separated: any of them', example: () => 'name' },
   },
   // Case-insensitive contains.
   text: {
@@ -460,7 +486,7 @@ export function defineList<T, F extends Field<T> = Field<T>>(list: ListDefinitio
     for (const key of list.pinned(query)) add(key)
     for (const filter of query.filters) {
       const field = fieldOf(filter.key)
-      if (!sortable(field) || rulesOf(filter).shared?.(filter)) continue
+      if (!sortable(field) || (!field.neverShared && rulesOf(filter).shared?.(filter))) continue
       for (const key of field.alsoShow ?? []) addUnlessLead(key)
       addUnlessLead(filter.key)
     }
@@ -488,9 +514,16 @@ export function defineList<T, F extends Field<T> = Field<T>>(list: ListDefinitio
     show: { example: list.help.show, syntax: 'fields, comma separated: exactly these are shown' },
   }
 
-  // An example the query doesn't understand is a bug.
-  for (const example of [...generatedHelp.fields.map(({ example }) => example), generatedHelp.sort.example, generatedHelp.show.example]) {
-    if (parse(example).notUnderstood.length) throw new Error(`Help example not understood: ${example}`)
+  // An example that isn't one token about its own field (or `sort:`, or
+  // `show:`) is a bug.
+  const examples: [string, (token: Token) => boolean][] = [
+    ...generatedHelp.fields.map(({ key, example }): [string, (token: Token) => boolean] => [example, (token) => token.type === 'filter' && token.filter.key === key]),
+    [generatedHelp.sort.example, (token) => token.type === 'sort'],
+    [generatedHelp.show.example, (token) => token.type === 'show'],
+  ]
+  for (const [example, about] of examples) {
+    const { tokens } = parse(example)
+    if (tokens.length !== 1 || !about(tokens[0])) throw new Error(`Help example not about its own field: ${example}`)
   }
 
   function help(): Help {

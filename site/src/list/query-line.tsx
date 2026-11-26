@@ -1,10 +1,11 @@
+import { useId } from 'react'
 import type { ReactNode } from 'react'
 import { classes, control } from '../ui'
 import type { FieldHelp, Help } from './query'
 
-// A list's query line: the input, then "Query help" drawn from the list's
-// help, with what the query didn't understand beside it, shown while the
-// help is closed too. Nothing here knows books.
+// A list's query line: the input; what the query didn't understand, a status
+// that describes the input, so screen readers hear it as it changes; then
+// "Query help" drawn from the list's help. Nothing here knows books.
 export function QueryLine({ text, onChange, help, notUnderstood, placeholder }: {
   text: string
   onChange: (text: string) => void
@@ -12,6 +13,7 @@ export function QueryLine({ text, onChange, help, notUnderstood, placeholder }: 
   notUnderstood: readonly string[]
   placeholder?: string
 }) {
+  const statusId = useId()
   return (
     <>
       <label className="grid gap-1.5">
@@ -25,15 +27,17 @@ export function QueryLine({ text, onChange, help, notUnderstood, placeholder }: 
           className={classes(control, 'font-mono text-base')}
           value={text}
           onChange={(event) => onChange(event.target.value)}
+          aria-describedby={statusId}
         />
       </label>
+      {/* Always there, empty when all is understood: a status announces changes, not its first content. */}
+      <p id={statusId} role="status" className="text-sm text-muted-foreground empty:hidden mt-2">
+        {notUnderstood.length > 0 && (
+          <>Not understood: <code className="text-foreground line-through wrap-anywhere">{notUnderstood.join(' ')}</code></>
+        )}
+      </p>
       <details className="mt-2 text-sm text-muted-foreground">
-        <summary className="cursor-pointer">
-          Query help
-          {notUnderstood.length > 0 && (
-            <> · Not understood: <code className="text-foreground line-through">{notUnderstood.join(' ')}</code></>
-          )}
-        </summary>
+        <summary className="cursor-pointer">Query help</summary>
         <HelpText help={help} />
       </details>
     </>

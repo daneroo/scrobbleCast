@@ -1,7 +1,6 @@
 import type { ReactNode } from 'react'
 import { booksSearchThreshold } from '../config'
 import { shelfName, shelfNames, type Book } from '../data/books'
-import { day } from '../format'
 import { defineList } from '../list/query'
 import type { Field, Query } from '../list/query'
 
@@ -16,12 +15,16 @@ export interface BookField extends Field<Book> {
   short?: (book: Book) => ReactNode
 }
 
-// The last percentage in the timeline ("44.0%"), ignoring another edition's
-// rows ("… (Hardcover Edition)").
+// The book's own timeline rows: not another edition's ("… (Hardcover
+// Edition)").
+function ownTimeline(book: Book) {
+  return book.timeline.filter(({ event }) => !/ Edition\)$/.test(event))
+}
+
+// The last percentage in its own timeline ("44.0%").
 function progress(book: Book): number | undefined {
   let found: number | undefined
-  for (const { event } of book.timeline) {
-    if (/ Edition\)$/.test(event)) continue
+  for (const { event } of ownTimeline(book)) {
     const match = /(\d+(?:\.\d+)?)%$/.exec(event)
     if (match) found = Number(match[1])
   }
@@ -74,14 +77,48 @@ function Progress({ value }: { value: number | undefined }) {
   )
 }
 
-// A date field, ISO 8601, shown as its day.
-function dateField(field: Pick<BookField, 'key' | 'label' | 'aliases' | 'note' | 'example'>, date: (book: Book) => string, short: string): BookField {
+const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+
+// A timeline date as ISO 8601, at the precision it gives: "2021" is 2021,
+// "February, 1997" 1997-02, "May 2, 2021" 2021-05-02.
+function timelineDate(text: string) {
+  const match = /^(?:([A-Z][a-z]+)(?: (\d{1,2}))?, )?(\d{4})$/.exec(text)
+  const month = match?.[1] && months.indexOf(match[1]) + 1
+  if (!match || month === 0) return undefined
+  const two = (n: number | string) => String(n).padStart(2, '0')
+  return [match[3], ...(month ? [two(month)] : []), ...(match[2] ? [two(match[2])] : [])].join('-')
+}
+
+// A read date as precise as the timeline gives it: the feed pads a year to
+// 1 January and a month to its 1st ("2021" is 2021-01-01T08:00Z), so the
+// book's own "Finished Reading" row that pads to the same day says what was
+// known; the most precise, when two do. Without one, the feed's day.
+function readDate(book: Book, at: string) {
+  const feedDay = at.slice(0, 10)
+  let found: string | undefined
+  for (const { dateText, event } of ownTimeline(book)) {
+    const date = event === 'Finished Reading' ? timelineDate(dateText) : undefined
+    const padded = date && `${date}-01-01`.slice(0, 10)
+    if (date && padded === feedDay && date.length > (found?.length ?? 0)) found = date
+  }
+  return found ?? feedDay
+}
+
+// A date field, ISO 8601: sorted by the feed's date, and filtered and shown
+// as `precise` gives it, its day unless a read date says otherwise.
+function dateField(
+  field: Pick<BookField, 'key' | 'label' | 'aliases' | 'note' | 'example'>,
+  date: (book: Book) => string,
+  short: string,
+  precise = (book: Book) => date(book).slice(0, 10),
+): BookField {
   return {
     ...field,
     kind: 'date',
     value: (book) => date(book) || undefined,
-    cell: (book) => day(date(book)),
-    short: (book) => date(book) ? `${short} ${day(date(book))}` : null,
+    filterValue: (book) => precise(book) || undefined,
+    cell: (book) => precise(book) || '—',
+    short: (book) => precise(book) ? `${short} ${precise(book)}` : null,
   }
 }
 
@@ -99,8 +136,13 @@ const fields: BookField[] = [
     cell: (book) => <Stars value={book.userRating} />,
     short: (book) => book.userRating ? <Stars value={book.userRating} /> : null,
   },
-  dateField({ key: 'read', aliases: ['year'], label: 'Last read', example: 'read:>=2024-06' }, (book) => book.userLastReadAt, 'read'),
-  dateField({ key: 'first', label: 'First read', example: 'first:<2010' }, (book) => book.userFirstReadAt, 'first'),
+  dateField(
+    { key: 'read', aliases: ['year'], label: 'Last read', note: 'as precise as the reading timeline gives it: a year, a month or a day', example: 'read:>=2024-06' },
+    (book) => book.userLastReadAt,
+    'read',
+    (book) => readDate(book, book.userLastReadAt),
+  ),
+  dateField({ key: 'first', label: 'First read', note: 'as precise as the reading timeline gives it', example: 'first:<2010' }, (book) => book.userFirstReadAt, 'first', (book) => readDate(book, book.userFirstReadAt)),
   {
     key: 'avg',
     label: 'Avg',
@@ -122,6 +164,7 @@ const fields: BookField[] = [
       return value === undefined ? undefined : Math.abs(value)
     },
     alsoShow: ['rating', 'avg'],
+    neverShared: true,
     note: 'my rating less the average, shown signed; it filters on its size, so gap:>=0.8 finds disagreements either way',
     example: 'gap:>=0.8',
     cell: (book) => signed(gap(book)),

@@ -156,13 +156,14 @@ export function ready<T>(value: T): Promise<T> {
 // refresh with a copy shown, the next `get()` tries again in the background.
 // `settled()` gives the last copy once the load is over: the fresh copy, or
 // the copy shown if the refresh failed. `show()` puts a new copy in place.
+// `loaded({ unexpired: true })` only gives a copy shown within the TTL.
 // A loader can yield a function to build its copy at publication, using
 // data that may have changed since the download began.
 export function shareFeed<C extends Feed<unknown>>(
   load: () => AsyncIterable<C | (() => C)>,
   { ttl = cacheTtlMs, refreshInBackground = false } = {},
 ) {
-  interface Entry { expires: number; promise: Promise<C>; done: Promise<C>; feed?: C; retry?: boolean; loading?: boolean }
+  interface Entry { expires: number; promise: Promise<C>; done: Promise<C>; feed?: C; shownAt?: number; retry?: boolean; loading?: boolean }
   let entry: Entry | undefined
   const current = () => (entry && (entry.loading || entry.expires > Date.now()) ? entry : undefined)
 
@@ -171,6 +172,7 @@ export function shareFeed<C extends Feed<unknown>>(
     if (replaced) target.promise = ready(feed)
     else Object.assign(target.promise, { status: 'fulfilled', value: feed })
     target.feed = feed
+    target.shownAt = Date.now()
     if (entry === target) setShown(feed, replaced)
   }
 
@@ -242,7 +244,11 @@ export function shareFeed<C extends Feed<unknown>>(
     publish(entry, feed)
   }
 
-  const loaded = () => (refreshInBackground ? entry : current())?.feed
+  const loaded = ({ unexpired = false } = {}) => {
+    const shown = refreshInBackground ? entry : current()
+    if (unexpired && (shown?.shownAt === undefined || shown.shownAt + ttl <= Date.now())) return undefined
+    return shown?.feed
+  }
   return Object.assign(get, { loaded, settled, show })
 }
 

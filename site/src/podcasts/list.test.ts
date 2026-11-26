@@ -30,8 +30,8 @@ test('the default fields are plays, listened, last played and since', () => {
 
 test('plays:0 matches a known zero, excluding podcasts without episode data yet', () => {
   const podcasts = [
-    podcast({ title: 'Played', plays: 1 }),
-    podcast({ title: 'No plays', plays: 0 }),
+    podcast({ title: 'Played', playTotals: { plays: 1, listenedSeconds: 60 } }),
+    podcast({ title: 'No plays', playTotals: { plays: 0, listenedSeconds: 0 } }),
     podcast({ title: 'Still loading' }),
   ]
   expect(titles(podcasts, 'plays:0')).toEqual(['No plays'])
@@ -39,9 +39,9 @@ test('plays:0 matches a known zero, excluding podcasts without episode data yet'
 
 test('listened: filters durations in units, including zero', () => {
   const podcasts = [
-    podcast({ title: 'Zero', listened: 0 }),
-    podcast({ title: 'Short', listened: 900 }),
-    podcast({ title: 'Long', listened: 5400 }),
+    podcast({ title: 'Zero', playTotals: { plays: 0, listenedSeconds: 0 } }),
+    podcast({ title: 'Short', playTotals: { plays: 1, listenedSeconds: 900 } }),
+    podcast({ title: 'Long', playTotals: { plays: 1, listenedSeconds: 5400 } }),
     podcast({ title: 'Still loading' }),
   ]
   expect(titles(podcasts, 'listened:>=1h30m')).toEqual(['Long'])
@@ -53,9 +53,9 @@ test('listened: filters durations in units, including zero', () => {
 test('the default sort orders by last played, then title, with missing dates last', () => {
   const podcasts = [
     podcast({ title: 'Undated' }),
-    podcast({ title: 'Zeta', lastPlayed: '2026-11-25T10:00:00Z' }),
-    podcast({ title: 'Earlier', lastPlayed: '2026-11-03T10:00:00Z' }),
-    podcast({ title: 'Alpha', lastPlayed: '2026-11-25T10:00:00Z' }),
+    podcast({ title: 'Zeta', playTotals: { plays: 1, listenedSeconds: 20, lastPlayed: '2026-11-25T10:00:00Z' } }),
+    podcast({ title: 'Earlier', playTotals: { plays: 1, listenedSeconds: 20, lastPlayed: '2026-11-03T10:00:00Z' } }),
+    podcast({ title: 'Alpha', playTotals: { plays: 1, listenedSeconds: 20, lastPlayed: '2026-11-25T10:00:00Z' } }),
   ]
   expect(titles(podcasts, '')).toEqual(['Alpha', 'Zeta', 'Earlier', 'Undated'])
   expect(titles(podcasts, 'played:2026-11-25')).toEqual(['Alpha', 'Zeta'])

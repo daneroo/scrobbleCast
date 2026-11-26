@@ -1,21 +1,14 @@
 import { episodesSearchThreshold } from '../config'
 import { statuses, type Episode, type Status } from '../data/podcasts'
-import { day } from '../format'
 import { formatDuration } from '../list/duration'
 import { defineList, namedChoices } from '../list/query'
-import type { ShownField } from '../list/shown'
+import { dateField, type ShownField } from '../list/shown'
 import { Badge, Progress } from '../ui'
 
 // The episodes list's query: its fields, search keys, default sort and the
 // default-fields rule (spec #91, "Episodes list").
 
 const statusNames: Record<Status, string> = { unplayed: 'Unplayed', 'in-progress': 'In progress', finished: 'Finished' }
-
-// A date field: the feed's ISO 8601 time, shown and filtered at that, as its
-// day in the table.
-function dateField(field: Pick<ShownField<Episode>, 'key' | 'label' | 'note' | 'example'>, date: (episode: Episode) => string): ShownField<Episode> {
-  return { ...field, kind: 'date', value: (episode) => date(episode) || undefined, cell: (episode) => day(date(episode)) }
-}
 
 // In the order the help lists them.
 const fields: ShownField<Episode>[] = [

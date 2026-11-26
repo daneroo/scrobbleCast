@@ -1,7 +1,7 @@
 import { createRootRoute, createRoute, createRouter } from '@tanstack/react-router'
 import { getBook, getBooks } from './data/books'
 import { subscribeShownCopies, type FeedName } from './data/fetch'
-import { getEpisode, getEpisodeFeed, getEpisodes, getPodcast, getPodcasts, getPodcastsWithPlays } from './data/podcasts'
+import { getEpisode, getEpisodeFeed, getEpisodes, getPodcast, getPodcasts, getPodcastsInWindow } from './data/podcasts'
 import { documentTitle } from './format'
 import { Layout, LoadError, NotFound } from './layout'
 import { BookDetail } from './books/detail'
@@ -53,14 +53,20 @@ const podcasts = createRoute({
   path: '/podcasts',
   staticData: { feeds: ['podcasts', 'episodes'] },
   head: () => pageTitle('Podcasts'),
-  loader: () => handOff({ episodes: getEpisodeFeed(), podcasts: getPodcastsWithPlays() }),
+  loader: () => handOff(getPodcastsInWindow()),
   component: () => {
     const { episodes, podcasts: items } = podcasts.useLoaderData()
     return (
       <ListPage
         page={podcastsPage}
         items={items}
-        under={<WindowLine episodes={episodes} note={<span>Plays, listened and last played count this window.</span>} />}
+        under={
+          <WindowLine
+            episodes={episodes}
+            note={<span>Plays, listened and last played use episodes in this window.</span>}
+            retry={() => { void router.invalidate({ filter: (match) => match.routeId === podcasts.id }) }}
+          />
+        }
       />
     )
   },

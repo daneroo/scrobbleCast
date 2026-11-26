@@ -1,34 +1,34 @@
 import { podcastsSearchThreshold } from '../config'
 import type { Podcast } from '../data/podcasts'
-import { day } from '../format'
 import { formatDuration } from '../list/duration'
 import { defineList } from '../list/query'
-import type { ShownField } from '../list/shown'
-
-function dateField(field: Pick<ShownField<Podcast>, 'key' | 'label' | 'note' | 'example'>, date: (podcast: Podcast) => string | undefined): ShownField<Podcast> {
-  return { ...field, kind: 'date', value: (podcast) => date(podcast) || undefined, cell: (podcast) => day(date(podcast) ?? '') }
-}
+import { dateField, type ShownField } from '../list/shown'
 
 const fields: ShownField<Podcast>[] = [
   {
     key: 'plays',
     label: 'Plays in window',
     kind: 'number',
-    value: (podcast) => podcast.plays,
+    value: (podcast) => podcast.playTotals?.plays,
     note: 'episodes played',
     example: 'plays:>0',
-    cell: (podcast) => podcast.plays?.toLocaleString() ?? '—',
+    cell: (podcast) => podcast.playTotals?.plays.toLocaleString() ?? '—',
   },
   {
     key: 'listened',
     label: 'Listened in window',
     kind: 'duration',
-    value: (podcast) => podcast.listened,
+    value: (podcast) => podcast.playTotals?.listenedSeconds,
     note: 'sum of the furthest played positions',
     example: 'listened:>=1h30m',
-    cell: (podcast) => podcast.listened === undefined ? '—' : formatDuration(podcast.listened),
+    cell: (podcast) => podcast.playTotals ? formatDuration(podcast.playTotals.listenedSeconds) : '—',
   },
-  dateField({ key: 'played', label: 'Last played in window', example: 'played:2026-11' }, (podcast) => podcast.lastPlayed),
+  dateField({
+    key: 'played',
+    label: 'Last played in window',
+    note: 'latest playback date among the episodes counted',
+    example: 'played:2026-11',
+  }, (podcast) => podcast.playTotals?.lastPlayed),
   dateField({ key: 'since', label: 'Since', note: 'when the scraper first saw it', example: 'since:<2020' }, (podcast) => podcast.firstSeen),
   dateField({ key: 'added', label: 'Added', note: 'when subscribed, where the feed knows', example: 'added:2026' }, (podcast) => podcast.added),
   { key: 'title', label: 'Title', kind: 'text', value: (podcast) => podcast.title, example: 'title:politics' },

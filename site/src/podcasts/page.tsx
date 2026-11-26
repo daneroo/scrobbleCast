@@ -2,6 +2,7 @@ import { Link } from '@tanstack/react-router'
 import type { Podcast } from '../data/podcasts'
 import type { PageDefinition } from '../list/page'
 import type { ShownField } from '../list/shown'
+import { LeadCell } from '../list/table'
 import { Artwork } from '../ui'
 import { podcastsList } from './list'
 
@@ -16,13 +17,11 @@ export const podcastsPage: PageDefinition<Podcast, ShownField<Podcast>> = {
   lead: {
     label: 'Podcast',
     cell: (podcast) => (
-      <span className="flex items-start gap-3">
-        <Artwork src={podcast.thumbnail} className="w-10" />
-        <span className="grid">
-          <Link to="/podcasts/$uuid" params={{ uuid: podcast.uuid }} className="font-semibold">{podcast.title}</Link>
-          <span className="text-sm text-muted-foreground">{podcast.author || '—'}</span>
-        </span>
-      </span>
+      <LeadCell
+        artwork={<Artwork src={podcast.thumbnail} className="w-10" />}
+        title={<Link to="/podcasts/$uuid" params={{ uuid: podcast.uuid }} className="font-semibold">{podcast.title}</Link>}
+        byline={podcast.author || '—'}
+      />
     ),
   },
 }

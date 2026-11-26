@@ -101,6 +101,19 @@ test('with the podcast feed loaded, finding one podcast makes no request', async
   expect(requests).toEqual([])
 })
 
+test('after the catalog expires, a podcast detail looks up the latest record by uuid', async () => {
+  const record = podcastRecord()
+  const records = { podcasts: [record], episodes: [] }
+  const { requests, download } = fakeHistory(records)
+  const { getPodcasts, getPodcast } = podcastFeeds({ download })
+  await getPodcasts.settled()
+
+  vi.setSystemTime(now.getTime() + cacheTtlMs + 1)
+  records.podcasts[0] = { ...record, title: 'New title' }
+  expect((await getPodcast(record.uuid))?.title).toBe('New title')
+  expect(requests.at(-1)?.get('uuid')).toBe(record.uuid)
+})
+
 test('an unknown podcast uuid finds nothing', async () => {
   const { getPodcasts, getPodcast } = podcastFeeds({ download: fakeHistory().download })
   await getPodcasts()
@@ -327,57 +340,79 @@ test('the played count uses playback within the window, including its start', as
 test('the podcast catalog is ready while the first episode copy is still loading', async () => {
   const record = podcastRecord({ url: 'https://example.com/podcast', dateAdded: '2026-10-18T09:00:00Z' })
   const { download, answer } = heldHistory({ podcasts: [record, podcastRecord({ url: null }), podcastRecord()], episodes: [] })
-  const { getEpisodeFeed, getPodcastsWithPlays } = podcastFeeds({ download })
-  const episodes = getEpisodeFeed()
+  const { getPodcastsInWindow } = podcastFeeds({ download })
+  const { episodes, podcasts } = getPodcastsInWindow()
   answer(1)
 
-  const catalog = await getPodcastsWithPlays()
+  const catalog = await podcasts
   expect(catalog.data[0]).toMatchObject({ url: 'https://example.com/podcast', added: '2026-10-18T09:00:00Z' })
   expect(catalog.data[1].added).toBeUndefined()
   expect(catalog.data[1].url).toBeUndefined()
   expect(catalog.data[2].url).toBeUndefined()
-  expect(catalog.data.map(({ plays, listened, lastPlayed }) => [plays, listened, lastPlayed])).toEqual([
-    [undefined, undefined, undefined], [undefined, undefined, undefined], [undefined, undefined, undefined],
-  ])
+  expect(catalog.data.map(({ playTotals }) => playTotals)).toEqual([undefined, undefined, undefined])
 
   answer(0)
   await episodes
-  const filled = getPodcastsWithPlays()
+  const { podcasts: filled } = getPodcastsInWindow()
   expect(filled).toMatchObject({ status: 'fulfilled' })
-  expect((await filled).data.map(({ plays, listened, lastPlayed }) => [plays, listened, lastPlayed])).toEqual([
-    [0, 0, undefined], [0, 0, undefined], [0, 0, undefined],
+  expect((await filled).data.map(({ playTotals }) => playTotals)).toEqual([
+    { plays: 0, listenedSeconds: 0 }, { plays: 0, listenedSeconds: 0 }, { plays: 0, listenedSeconds: 0 },
   ])
 })
 
-test('podcast plays use playback dates within the window and each episode’s furthest played seconds', async () => {
+test('a failed first episode download leaves the catalog ready while the episode window retries', async () => {
+  const record = podcastRecord()
+  const { download, answer } = heldHistory({ podcasts: [record], episodes: [] })
+  const { getPodcastsInWindow } = podcastFeeds({ download })
+  const first = getPodcastsInWindow()
+  answer(0, new Response('', { status: 503 }))
+  answer(1)
+
+  await expect(first.episodes).rejects.toThrow('HTTP 503')
+  expect((await first.podcasts).data[0].uuid).toBe(record.uuid)
+  const retry = getPodcastsInWindow()
+  expect(retry.podcasts).toMatchObject({ status: 'fulfilled' })
+  expect((await retry.podcasts).data[0].playTotals).toBeUndefined()
+
+  answer(2)
+  await retry.episodes
+  expect((await getPodcastsInWindow().podcasts).data[0].playTotals).toEqual({ plays: 0, listenedSeconds: 0 })
+})
+
+test('podcast totals count played episodes in the feed and use playback dates for last played', async () => {
   const podcast = podcastRecord()
   const idle = podcastRecord()
+  const undated = podcastRecord()
   const start = new Date(2026, 9, 27)
   const older = new Date(start.getTime() - 1).toISOString()
   const latest = '2026-11-19T10:00:00Z'
   const forPodcast = { podcast_uuid: podcast.uuid }
   const { download } = fakeHistory({
-    podcasts: [podcast, idle],
+    podcasts: [podcast, idle, undated],
     episodes: [
       episodeRecord({ ...forPodcast, played_up_to: 120, history: { played_up_to: { [start.toISOString()]: 180, [latest]: 60 } } }),
       episodeRecord({ ...forPodcast, history: { played_up_to: { [start.toISOString()]: 90 } } }),
       episodeRecord({ ...forPodcast, history: { played_up_to: { [older]: 600 } } }),
       episodeRecord({ ...forPodcast, played_up_to: 400 }),
       episodeRecord({ ...forPodcast, history: { played_up_to: { '2026-11-25T10:00:00Z': 0 } } }),
+      episodeRecord({ podcast_uuid: undated.uuid, played_up_to: 120 }),
+      changedAt('2026-10-12T10:00:00Z', { ...forPodcast, history: { played_up_to: { '2026-10-10T10:00:00Z': 360 } } }),
     ],
   })
-  const { getEpisodeFeed, getPodcastsWithPlays, widen } = podcastFeeds({ download })
-  await getEpisodeFeed()
+  const { getPodcastsInWindow, widen } = podcastFeeds({ download })
+  await getPodcastsInWindow().episodes
 
-  const catalog = await getPodcastsWithPlays()
-  expect(catalog.data[0]).toMatchObject({ plays: 2, listened: 270, lastPlayed: latest })
-  expect(catalog.data[1]).toMatchObject({ plays: 0, listened: 0 })
-  expect(catalog.data[1].lastPlayed).toBeUndefined()
+  const catalog = await getPodcastsInWindow().podcasts
+  expect(catalog.data.map(({ playTotals }) => playTotals)).toEqual([
+    { plays: 4, listenedSeconds: 1270, lastPlayed: latest },
+    { plays: 0, listenedSeconds: 0 },
+    { plays: 1, listenedSeconds: 120 },
+  ])
 
   await widen()
-  const widened = getPodcastsWithPlays()
+  const { podcasts: widened } = getPodcastsInWindow()
   expect(widened).toMatchObject({ status: 'fulfilled' })
-  expect((await widened).data[0]).toMatchObject({ plays: 3, listened: 870, lastPlayed: latest })
+  expect((await widened).data[0].playTotals).toEqual({ plays: 5, listenedSeconds: 1630, lastPlayed: latest })
 })
 
 test('a wider window updates plays while a catalog refresh is still loading', async () => {
@@ -387,7 +422,7 @@ test('a wider window updates plays while a catalog refresh is still loading', as
     history: { played_up_to: { '2026-10-19T10:00:00Z': 600 } },
   })
   const { requests, download, answer } = heldHistory({ podcasts: [podcast], episodes: [oldPlay] })
-  const { getEpisodeFeed, getPodcasts, getPodcastsWithPlays, widen } = podcastFeeds({ download })
+  const { getEpisodeFeed, getPodcasts, getPodcastsInWindow, widen } = podcastFeeds({ download })
   answer(0)
   await getEpisodeFeed()
   answer(1)
@@ -400,11 +435,13 @@ test('a wider window updates plays while a catalog refresh is still loading', as
   answer(3)
   await widened
 
-  const catalog = getPodcastsWithPlays()
+  const { podcasts: catalog } = getPodcastsInWindow()
   expect(catalog).toMatchObject({ status: 'fulfilled' })
-  expect((await catalog).data[0]).toMatchObject({ uuid: podcast.uuid, plays: 1, listened: 600 })
+  expect((await catalog).data[0]).toMatchObject({ uuid: podcast.uuid, playTotals: { plays: 1, listenedSeconds: 600 } })
   answer(2)
+  answer(4)
   await refreshed
+  await getEpisodeFeed.settled()
 })
 
 test('a wider window replaces the copy shown, ready at once, and the pages showing the feed hear of it', async () => {

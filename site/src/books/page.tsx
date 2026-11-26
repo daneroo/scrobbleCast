@@ -2,6 +2,7 @@ import { Link } from '@tanstack/react-router'
 import type { Book } from '../data/books'
 import type { PageDefinition } from '../list/page'
 import type { ShownField } from '../list/shown'
+import { LeadCell } from '../list/table'
 import { BookCard, Cover } from './card'
 import { booksList } from './list'
 import { BookPanel } from './panel'
@@ -20,13 +21,11 @@ export const booksPage: PageDefinition<Book, ShownField<Book>> = {
   lead: {
     label: 'Book',
     cell: (book) => (
-      <span className="flex items-start gap-3">
-        <Cover book={book} size="SY75" className="w-9 shrink-0" />
-        <span className="grid">
-          <Link to="/books/$bookId" params={{ bookId: book.bookId }} className="font-semibold">{book.title}</Link>
-          <span className="text-sm text-muted-foreground">{book.authorName}</span>
-        </span>
-      </span>
+      <LeadCell
+        artwork={<Cover book={book} size="SY75" className="w-9 shrink-0" />}
+        title={<Link to="/books/$bookId" params={{ bookId: book.bookId }} className="font-semibold">{book.title}</Link>}
+        byline={book.authorName}
+      />
     ),
   },
   expand: {

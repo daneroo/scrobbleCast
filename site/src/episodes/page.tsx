@@ -2,6 +2,7 @@ import { Link } from '@tanstack/react-router'
 import type { Episode } from '../data/podcasts'
 import type { PageDefinition } from '../list/page'
 import type { ShownField } from '../list/shown'
+import { LeadCell } from '../list/table'
 import { Artwork } from '../ui'
 import { episodesList } from './list'
 
@@ -19,13 +20,11 @@ export const episodesPage: PageDefinition<Episode, ShownField<Episode>> = {
   lead: {
     label: 'Episode',
     cell: (episode) => (
-      <span className="flex items-start gap-3">
-        <Artwork src={episode.artwork} className="w-10" />
-        <span className="grid">
-          <Link to="/episodes/$uuid" params={{ uuid: episode.uuid }} className="font-semibold">{episode.title}</Link>
-          <span className="text-sm text-muted-foreground">{episode.podcastTitle || '—'}</span>
-        </span>
-      </span>
+      <LeadCell
+        artwork={<Artwork src={episode.artwork} className="w-10" />}
+        title={<Link to="/episodes/$uuid" params={{ uuid: episode.uuid }} className="font-semibold">{episode.title}</Link>}
+        byline={episode.podcastTitle || '—'}
+      />
     ),
   },
 }

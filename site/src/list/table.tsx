@@ -23,6 +23,19 @@ export function cellOf<T>(column: Pick<Column<T>, 'value' | 'cell'>, item: T): R
   return column.cell ? column.cell(item) : column.value(item)
 }
 
+// The record's artwork, title link and byline in a list's lead column.
+export function LeadCell({ artwork, title, byline }: { artwork: ReactNode; title: ReactNode; byline: string }) {
+  return (
+    <span className="flex items-start gap-3">
+      {artwork}
+      <span className="grid">
+        {title}
+        <span className="text-sm text-muted-foreground">{byline}</span>
+      </span>
+    </span>
+  )
+}
+
 export interface TableProps<T> {
   items: readonly T[]
   columns: Column<T>[]

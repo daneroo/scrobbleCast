@@ -24,6 +24,12 @@ function lastChange(records: { meta: { __lastUpdated: string } }[]): FeedTime {
   return { label: 'last change', at: newest ? new Date(newest) : undefined }
 }
 
+interface PlayTotals {
+  plays: number
+  listenedSeconds: number
+  lastPlayed?: string
+}
+
 export interface Podcast {
   uuid: string
   title: string
@@ -33,9 +39,7 @@ export interface Podcast {
   firstSeen: string
   url?: string
   added?: string
-  plays?: number
-  listened?: number
-  lastPlayed?: string
+  playTotals?: PlayTotals
 }
 
 function toPodcast(podcast: PodcastRecord): Podcast {
@@ -125,29 +129,22 @@ export interface EpisodeFeed extends Feed<Episode[]> {
 }
 
 // A recent change to a record can be unrelated to playback.
-function playedSince(episode: Episode, start: number) {
-  return episode.playedSeconds > 0 && Date.parse(episode.lastPlayed) >= start
-}
-
 export function countPlayedSince({ data, since }: EpisodeFeed) {
   const start = since.getTime()
-  return data.filter((episode) => playedSince(episode, start)).length
+  return data.filter((episode) => episode.playedSeconds > 0 && Date.parse(episode.lastPlayed) >= start).length
 }
 
-// Count each played episode once, using its furthest played position.
-function playsByPodcast({ data, since }: EpisodeFeed) {
-  const start = since.getTime()
-  const byId = new Map<string, { plays: number; listened: number; lastPlayed: string }>()
-  for (const episode of data) {
-    if (!playedSince(episode, start)) continue
-    const totals = byId.get(episode.podcastId)
-    if (!totals) {
-      byId.set(episode.podcastId, { plays: 1, listened: episode.playedSeconds, lastPlayed: episode.lastPlayed })
-      continue
-    }
+// The episode feed's Window determines which records count. Playback dates
+// describe when those episodes were played; they don't select the records.
+function playsByPodcast(episodes: readonly Episode[]) {
+  const byId = new Map<string, PlayTotals>()
+  for (const { podcastId, playedSeconds, lastPlayed } of episodes) {
+    if (playedSeconds <= 0) continue
+    const totals = byId.get(podcastId) ?? { plays: 0, listenedSeconds: 0 }
     totals.plays += 1
-    totals.listened += episode.playedSeconds
-    if (Date.parse(episode.lastPlayed) > Date.parse(totals.lastPlayed)) totals.lastPlayed = episode.lastPlayed
+    totals.listenedSeconds += playedSeconds
+    if (lastPlayed && (!totals.lastPlayed || Date.parse(lastPlayed) > Date.parse(totals.lastPlayed))) totals.lastPlayed = lastPlayed
+    byId.set(podcastId, totals)
   }
   return byId
 }
@@ -202,9 +199,10 @@ export function podcastFeeds(options: FeedOptions = {}) {
     save: true,
   }, options), (podcasts) => podcasts.map(toPodcast)), { refreshInBackground: true })
 
-  // Use the podcast feed if this tab already has it; never download it whole.
+  // Use the podcast feed while its copy is current; never download it whole
+  // for a detail lookup.
   function getPodcast(uuid: string): Promise<Podcast | undefined> {
-    const known = getPodcasts.loaded()?.data.find((podcast) => podcast.uuid === uuid)
+    const known = getPodcasts.loaded({ unexpired: true })?.data.find((podcast) => podcast.uuid === uuid)
     if (known) return ready(known)
     return lookup('podcast', uuid).then((podcast) => podcast && toPodcast(podcast))
   }
@@ -244,19 +242,20 @@ export function podcastFeeds(options: FeedOptions = {}) {
 
   // The catalog can be shown before the episode feed has a copy. Use the copy
   // shown when the catalog becomes available, including after a widening.
-  function getPodcastsWithPlays(): Promise<Feed<Podcast[]>> {
+  function getPodcastsInWindow() {
+    const episodes = getEpisodeFeed()
     const catalog = getPodcasts()
     const shown = getPodcasts.loaded()
-    return shown ? ready(withCurrentPlays(shown)) : catalog.then(withCurrentPlays)
+    return { episodes, podcasts: shown ? ready(withCurrentPlays(shown)) : catalog.then(withCurrentPlays) }
   }
 
   function withCurrentPlays(catalog: Feed<Podcast[]>): Feed<Podcast[]> {
     const episodes = getEpisodeFeed.loaded()
     if (!episodes) return catalog
-    const byId = playsByPodcast(episodes)
+    const byId = playsByPodcast(episodes.data)
     return {
       ...catalog,
-      data: catalog.data.map((podcast) => ({ ...podcast, ...(byId.get(podcast.uuid) ?? { plays: 0, listened: 0 }) })),
+      data: catalog.data.map((podcast) => ({ ...podcast, playTotals: byId.get(podcast.uuid) ?? { plays: 0, listenedSeconds: 0 } })),
     }
   }
 
@@ -310,7 +309,7 @@ export function podcastFeeds(options: FeedOptions = {}) {
     return toEpisode(episode, podcast)
   }
 
-  return { getPodcasts, getPodcastsWithPlays, getPodcast, getEpisodeFeed, getEpisodes, getEpisode, widen: Object.assign(widen, { pending: () => widening }) }
+  return { getPodcasts, getPodcastsInWindow, getPodcast, getEpisodeFeed, getEpisodes, getEpisode, widen: Object.assign(widen, { pending: () => widening }) }
 }
 
-export const { getPodcasts, getPodcastsWithPlays, getPodcast, getEpisodeFeed, getEpisodes, getEpisode, widen } = podcastFeeds()
+export const { getPodcasts, getPodcastsInWindow, getPodcast, getEpisodeFeed, getEpisodes, getEpisode, widen } = podcastFeeds()

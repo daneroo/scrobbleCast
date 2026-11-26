@@ -1,5 +1,6 @@
 import type { z } from 'zod'
-import { historyUrl, recentDays, user } from '../config'
+import { historyUrl, user, windowDays, windowStepDays } from '../config'
+import { notices as appNotices } from '../notices'
 import { EpisodeRecords, PodcastRecords, type EpisodeRecord, type PodcastRecord } from '../schema/podcast'
 import { loadFeed, loadJson, mapData, plainText, ready, shareFeed, type Feed, type FeedName, type FeedOptions, type FeedTime } from './fetch'
 
@@ -110,10 +111,36 @@ function toEpisode(episode: EpisodeRecord, podcast?: Podcast): Episode {
   }
 }
 
+// A copy of the episode feed: its episodes, and since when they changed, its
+// Window (glossary). It reaches from `since` to now.
+export interface EpisodeFeed extends Feed<Episode[]> {
+  since: Date
+}
+
+// Episode records merged by uuid, the one with the newer last update kept
+// (`incoming` on a tie), newest first as the history API gives them.
+function mergeRecords(kept: EpisodeRecord[], incoming: EpisodeRecord[]) {
+  const lastUpdate = (record: EpisodeRecord) => Date.parse(record.meta.__lastUpdated)
+  const byId = new Map(kept.map((record) => [record.uuid, record]))
+  for (const record of incoming) {
+    const known = byId.get(record.uuid)
+    if (!known || lastUpdate(record) >= lastUpdate(known)) byId.set(record.uuid, record)
+  }
+  return [...byId.values()].sort((a, b) => lastUpdate(b) - lastUpdate(a))
+}
+
+// The start of the local day `days` before `day`.
+function daysBefore(day: Date, days: number) {
+  const start = new Date(day)
+  start.setHours(0, 0, 0, 0)
+  start.setDate(start.getDate() - days)
+  return start
+}
+
 // The podcast and episode feeds, and lookups of one podcast or episode by
 // `uuid`, all from the history API. A lookup is not a feed: it has no feed
 // time. Only the podcast feed has a saved copy: the episode feed's URL changes
-// with every load, and it's small.
+// with every load, and its Window lasts for the tab.
 export function podcastFeeds(options: FeedOptions = {}) {
   function historyUrlFor(type: keyof Records, params: Record<string, string>) {
     const url = new URL(historyUrl)
@@ -141,18 +168,63 @@ export function podcastFeeds(options: FeedOptions = {}) {
     return lookup('podcast', uuid).then((podcast) => podcast && toPodcast(podcast))
   }
 
+  // The episode feed's records over `[since, before)`, or `[since, now)`.
+  async function episodeRange(since: Date, before?: Date) {
+    const params = { user, since: since.toISOString(), ...(before && { before: before.toISOString() }) }
+    // A feed with no saved copy gives its fresh copy, or raises.
+    for await (const copy of feed('episode', params)) return copy.data
+    throw new Error('The episode feed gave no copy.')
+  }
+
+  // The Window's records, and since when: it lasts for the tab.
+  let kept: { since: Date; records: EpisodeRecord[] } | undefined
+
+  // Records fetched since `since`, merged into the Window kept: a copy of the
+  // new Window. Merging, not replacing, lets a load and a widening overlap
+  // in either order.
+  function keep(since: Date, records: EpisodeRecord[]): EpisodeFeed {
+    if (kept) {
+      records = mergeRecords(kept.records, records)
+      if (kept.since < since) since = kept.since
+    }
+    kept = { since, records }
+    return { name: 'episodes', data: records.map((episode) => toEpisode(episode)), time: lastChange(records), source: 'fresh', since }
+  }
+
   // The episode feed alone, without its podcasts' titles and artwork: it
-  // doesn't wait for the podcast feed.
-  const getEpisodeFeed = shareFeed(() => {
-    const since = new Date(Date.now() - recentDays * 24 * 60 * 60 * 1000).toISOString()
-    return mapData(feed('episode', { user, since }), (episodes) => episodes.map((episode) => toEpisode(episode)))
+  // doesn't wait for the podcast feed. Each load fetches the whole Window.
+  const getEpisodeFeed = shareFeed(async function* () {
+    const since = kept?.since ?? daysBefore(new Date(), windowDays)
+    yield keep(since, await episodeRange(since))
   })
+
+  // Widen the Window a step further back: fetch the range before it, merge
+  // it in, and show the new copy, so every page showing the feed follows. A
+  // failure posts a notice and keeps the Window. A widening under way is
+  // joined, not repeated. It never raises.
+  const notices = options.notices ?? appNotices
+  let widening: Promise<void> | undefined
+  function widen() {
+    widening ??= (async () => {
+      try {
+        const { since } = kept ?? await getEpisodeFeed()
+        const from = daysBefore(since, windowStepDays)
+        getEpisodeFeed.show(keep(from, await episodeRange(from, since)))
+      } catch (error) {
+        const reason = error instanceof Error ? error.message : String(error)
+        notices.post('episodes', { kind: 'warning', text: `Episodes: couldn’t load ${windowStepDays} more days; the window is unchanged. ${reason}` })
+      } finally {
+        widening = undefined
+      }
+    })()
+    return widening
+  }
 
   // The episode feed joined to the podcast feed shown now (each episode's
   // podcast title and artwork): worked out again on each call, so a fresh
   // podcast feed brings fresh titles. Ready at once if this tab has both
   // feeds.
-  function getEpisodes(): Promise<Feed<Episode[]>> {
+  function getEpisodes(): Promise<EpisodeFeed> {
     // Ask both feeds first: that starts a load, or retries a failed refresh.
     const episodeFeed = getEpisodeFeed()
     const podcastFeed = getPodcasts().then((podcasts) => podcasts.data, () => [])
@@ -162,7 +234,7 @@ export function podcastFeeds(options: FeedOptions = {}) {
     return Promise.all([episodeFeed, podcastFeed]).then(([episodes, podcasts]) => withPodcasts(episodes, podcasts))
   }
 
-  function withPodcasts(episodes: Feed<Episode[]>, podcasts: Podcast[]) {
+  function withPodcasts(episodes: EpisodeFeed, podcasts: Podcast[]): EpisodeFeed {
     const byId = new Map(podcasts.map((podcast) => [podcast.uuid, podcast]))
     return { ...episodes, data: episodes.data.map((episode) => ({ ...episode, ...ofPodcast(byId.get(episode.podcastId)) })) }
   }
@@ -175,7 +247,7 @@ export function podcastFeeds(options: FeedOptions = {}) {
     return toEpisode(episode, podcast)
   }
 
-  return { getPodcasts, getPodcast, getEpisodeFeed, getEpisodes, getEpisode }
+  return { getPodcasts, getPodcast, getEpisodeFeed, getEpisodes, getEpisode, widen: Object.assign(widen, { pending: () => widening }) }
 }
 
-export const { getPodcasts, getPodcast, getEpisodeFeed, getEpisodes, getEpisode } = podcastFeeds()
+export const { getPodcasts, getPodcast, getEpisodeFeed, getEpisodes, getEpisode, widen } = podcastFeeds()

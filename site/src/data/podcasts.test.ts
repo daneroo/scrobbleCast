@@ -1,9 +1,12 @@
 // @vitest-environment happy-dom
-import { expect, test } from 'vite-plus/test'
+import { afterEach, beforeEach, expect, test, vi } from 'vite-plus/test'
 import example from '../schema/podcast-example.json'
+import { localTime } from '../format'
 import { noticeBoard } from '../notices'
 import { fakeSavedCopies } from './fake-saved-copies'
 import type { EpisodeRecord, PodcastRecord } from '../schema/podcast'
+import { cacheTtlMs } from '../config'
+import { subscribeShownCopies } from './fetch'
 import { podcastFeeds } from './podcasts'
 
 const [syntax] = example.podcasts
@@ -41,8 +44,14 @@ function episodeRecord(fields: Partial<EpisodeRecord> = {}): EpisodeRecord {
   }
 }
 
-// A fake history API serving `records` (the example records by default); it
-// logs each request.
+// Today, for every test: the example records changed in the last 30 days.
+const now = new Date(2026, 10, 26, 12)
+beforeEach(() => { vi.setSystemTime(now) })
+afterEach(() => { vi.useRealTimers() })
+
+// A fake history API serving `records` (the example records by default), as
+// the real one does: by `uuid`, or those whose last update is in
+// `[since, before)`, newest first. It logs each request.
 function fakeHistory(records: { podcasts: object[]; episodes: object[] } = example) {
   const requests: URLSearchParams[] = []
   const download = async (url: string) => {
@@ -50,11 +59,24 @@ function fakeHistory(records: { podcasts: object[]; episodes: object[] } = examp
     requests.push(params)
     const type = params.get('type')
     const uuid = params.get('uuid')
-    const served: { uuid: string }[] = type === 'podcast' ? records.podcasts as PodcastRecord[] : records.episodes as EpisodeRecord[]
-    const found = uuid ? served.filter((record) => record.uuid === uuid) : served
+    const since = Date.parse(params.get('since') ?? '0000-01-01')
+    const before = Date.parse(params.get('before') ?? '9999-12-31')
+    const served = (type === 'podcast' ? records.podcasts : records.episodes) as (PodcastRecord | EpisodeRecord)[]
+    const found = uuid
+      ? served.filter((record) => record.uuid === uuid)
+      : served
+          .filter(({ meta }) => since <= Date.parse(meta.__lastUpdated) && Date.parse(meta.__lastUpdated) < before)
+          .sort((a, b) => Date.parse(b.meta.__lastUpdated) - Date.parse(a.meta.__lastUpdated))
     return new Response(JSON.stringify(found))
   }
   return { requests, download }
+}
+
+// A request's range of last updates, as local days: `since..before`, with
+// `now` for no `before`.
+function range(params: URLSearchParams) {
+  const local = (iso: string | null) => iso ? localTime(new Date(iso)) : 'now'
+  return `${local(params.get('since'))}..${local(params.get('before'))}`
 }
 
 test('without the podcast feed loaded, finding one podcast fetches it by uuid', async () => {
@@ -236,4 +258,180 @@ test('one episode found by uuid carries its podcast’s artwork too', async () =
   const { getEpisode } = podcastFeeds({ download: fakeHistory({ podcasts: [...example.podcasts, podcastRecord({ uuid: played.podcast_uuid, thumbnail_url: 'https://example.com/art.png' })], episodes: example.episodes }).download })
 
   expect(await getEpisode(played.uuid)).toMatchObject({ status: 'finished', published: '2026-11-21T13:00:00Z', artwork: 'https://example.com/art.png' })
+})
+
+// The window
+
+test('the episode feed opens on the window: what changed since the start of the day 30 days back', async () => {
+  const { requests, download } = fakeHistory()
+  const { getEpisodeFeed } = podcastFeeds({ download })
+
+  const feed = await getEpisodeFeed()
+
+  expect(requests.map(range)).toEqual(['2026-10-27 00:00:00..now'])
+  expect(feed.since).toEqual(new Date(2026, 9, 27))
+})
+
+// An episode record that last changed at `lastUpdated`.
+function changedAt(lastUpdated: string, fields: Partial<EpisodeRecord> = {}) {
+  return episodeRecord({ ...fields, meta: { __type: 'episode', __lastUpdated: lastUpdated } })
+}
+
+test('widening fetches the 30 days before the window, merges them by uuid keeping the newer record, and moves since back', async () => {
+  const replayed = changedAt('2026-11-20T10:00:00Z', { title: 'replayed, newer' })
+  const { requests, download } = fakeHistory({
+    podcasts: [],
+    episodes: [
+      replayed,
+      changedAt('2026-10-28T10:00:00Z', { title: 'in the window' }),
+      changedAt('2026-10-20T10:00:00Z', { uuid: replayed.uuid, title: 'replayed, older' }),
+      changedAt('2026-10-01T10:00:00Z', { title: 'in the step' }),
+      changedAt('2026-09-01T10:00:00Z', { title: 'further back' }),
+    ],
+  })
+  const { getEpisodeFeed, widen } = podcastFeeds({ download, notices: noticeBoard() })
+  await getEpisodeFeed()
+
+  await widen()
+
+  const feed = await getEpisodeFeed()
+  expect(requests.map(range)).toEqual(['2026-10-27 00:00:00..now', '2026-09-27 00:00:00..2026-10-27 00:00:00'])
+  expect(feed.since).toEqual(new Date(2026, 8, 27))
+  expect(feed.data.map((episode) => episode.title)).toEqual(['replayed, newer', 'in the window', 'in the step'])
+})
+
+// Five episodes, one in each 30 days back from today, the newest first.
+function monthly() {
+  return ['2026-11-20', '2026-10-20', '2026-09-20', '2026-08-20', '2026-07-20'].map((day) => changedAt(`${day}T10:00:00Z`, { title: day }))
+}
+
+test('a wider window replaces the copy shown, ready at once, and the pages showing the feed hear of it', async () => {
+  const { getEpisodeFeed, getEpisodes, widen } = podcastFeeds({ download: fakeHistory({ podcasts: [], episodes: monthly() }).download, notices: noticeBoard() })
+  await getEpisodes()
+  const heard: [string, boolean][] = []
+  const unsubscribe = subscribeShownCopies((name, replaced) => heard.push([name, replaced]))
+
+  await widen()
+  unsubscribe()
+
+  expect(heard).toEqual([['episodes', true]])
+  expect(getEpisodeFeed()).toMatchObject({ status: 'fulfilled', value: { since: new Date(2026, 8, 27) } })
+  expect(getEpisodes()).toMatchObject({ status: 'fulfilled', value: { since: new Date(2026, 8, 27) } })
+  expect((await getEpisodes()).data.map((episode) => episode.title)).toEqual(['2026-11-20', '2026-10-20'])
+})
+
+test('a failed widening posts a notice and keeps the window; trying again widens it and clears the notice', async () => {
+  const { requests, download } = fakeHistory({ podcasts: [], episodes: monthly() })
+  let offline = false
+  const notices = noticeBoard()
+  const { getEpisodeFeed, widen } = podcastFeeds({ download: (url) => offline ? Promise.reject(new TypeError('Failed to fetch')) : download(url), notices })
+  const shown = await getEpisodeFeed()
+
+  offline = true
+  await widen()
+
+  expect(notices.get()).toEqual({ episodes: { kind: 'warning', text: 'Episodes: couldn’t load 30 more days; the window is unchanged. Failed to fetch' } })
+  expect(await getEpisodeFeed()).toBe(shown)
+
+  offline = false
+  await widen()
+
+  expect(notices.get()).toEqual({})
+  expect((await getEpisodeFeed()).since).toEqual(new Date(2026, 8, 27))
+  expect(requests.map(range)).toEqual(['2026-10-27 00:00:00..now', '2026-09-27 00:00:00..2026-10-27 00:00:00'])
+})
+
+test('widening twice at once fetches one step', async () => {
+  const { requests, download } = fakeHistory({ podcasts: [], episodes: monthly() })
+  const { getEpisodeFeed, widen } = podcastFeeds({ download, notices: noticeBoard() })
+  await getEpisodeFeed()
+
+  await Promise.all([widen(), widen()])
+  await widen()
+
+  expect(requests.map(range)).toEqual([
+    '2026-10-27 00:00:00..now',
+    '2026-09-27 00:00:00..2026-10-27 00:00:00',
+    '2026-08-28 00:00:00..2026-09-27 00:00:00',
+  ])
+  expect((await getEpisodeFeed()).data.map((episode) => episode.title)).toEqual(['2026-11-20', '2026-10-20', '2026-09-20'])
+})
+
+test('a refresh fetches the whole window in one request', async () => {
+  const { requests, download } = fakeHistory({ podcasts: [], episodes: monthly() })
+  const { getEpisodeFeed, widen } = podcastFeeds({ download, notices: noticeBoard() })
+  await getEpisodeFeed()
+  await widen()
+  requests.length = 0
+
+  vi.setSystemTime(now.getTime() + cacheTtlMs + 1)
+  const feed = await getEpisodeFeed()
+
+  expect(requests.map(range)).toEqual(['2026-09-27 00:00:00..now'])
+  expect(feed.since).toEqual(new Date(2026, 8, 27))
+  expect(feed.data.map((episode) => episode.title)).toEqual(['2026-11-20', '2026-10-20'])
+})
+
+// A fake history API whose answers wait until `answer(n)` lets the nth
+// request through (from 0).
+function heldHistory(records: { podcasts: object[]; episodes: object[] }) {
+  const { requests, download } = fakeHistory(records)
+  const held: (() => void)[] = []
+  const gates: Promise<void>[] = []
+  const gate = (n: number) => gates[n] ??= new Promise((resolve) => { held[n] = resolve })
+  return {
+    requests,
+    download: async (url: string) => {
+      const n = requests.length
+      const response = await download(url)
+      await gate(n)
+      return response
+    },
+    answer: (n: number) => { gate(n); held[n]() },
+  }
+}
+
+test('a refresh that started before a widening and ends after it keeps the wider window', async () => {
+  const replayed = changedAt('2026-10-20T10:00:00Z', { title: 'replayed before' })
+  const records = { podcasts: [], episodes: [...monthly(), replayed] }
+  const { requests, download, answer } = heldHistory(records)
+  const { getEpisodeFeed, widen } = podcastFeeds({ download, notices: noticeBoard() })
+  answer(0)
+  await getEpisodeFeed()
+
+  records.episodes.push(changedAt('2026-11-26T11:00:00Z', { uuid: replayed.uuid, title: 'replayed since' }))
+  vi.setSystemTime(now.getTime() + cacheTtlMs + 1)
+  const refreshed = getEpisodeFeed()
+  await expect.poll(() => requests.length).toBe(2) // The refresh, held.
+  const widened = widen()
+  await expect.poll(() => requests.length).toBe(3)
+  answer(2)
+  await widened
+  answer(1)
+
+  const feed = await refreshed
+  expect(requests.map(range)).toEqual(['2026-10-27 00:00:00..now', '2026-10-27 00:00:00..now', '2026-09-27 00:00:00..2026-10-27 00:00:00'])
+  expect(feed.since).toEqual(new Date(2026, 8, 27))
+  expect(feed.data.map((episode) => episode.title)).toEqual(['replayed since', '2026-11-20', '2026-10-20'])
+})
+
+test('a widening that started before a refresh and ends after it keeps the refreshed records', async () => {
+  const { requests, download, answer } = heldHistory({ podcasts: [], episodes: monthly() })
+  const { getEpisodeFeed, widen } = podcastFeeds({ download, notices: noticeBoard() })
+  answer(0)
+  await getEpisodeFeed()
+
+  const widened = widen()
+  await expect.poll(() => requests.length).toBe(2)
+  vi.setSystemTime(now.getTime() + cacheTtlMs + 1)
+  const refreshed = getEpisodeFeed()
+  await expect.poll(() => requests.length).toBe(3)
+  answer(2)
+  await refreshed
+  answer(1)
+  await widened
+
+  const feed = await getEpisodeFeed()
+  expect(feed.since).toEqual(new Date(2026, 8, 27))
+  expect(feed.data.map((episode) => episode.title)).toEqual(['2026-11-20', '2026-10-20'])
 })

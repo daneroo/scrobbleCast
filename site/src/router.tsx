@@ -7,7 +7,8 @@ import { Layout, LoadError, NotFound } from './layout'
 import { BookDetail } from './books/detail'
 import { booksPage } from './books/page'
 import { EpisodeDetail } from './episodes/detail'
-import { EpisodesWindow, episodesPage } from './episodes/page'
+import { episodesPage } from './episodes/page'
+import { WindowLine } from './episodes/window'
 import { ListPage } from './list/page'
 import { Home } from './pages'
 import { PodcastDetail } from './podcasts/detail'
@@ -73,7 +74,10 @@ const episodes = createRoute({
   staticData: { feeds: ['episodes', 'podcasts'] },
   head: () => pageTitle('Episodes'),
   loader: () => handOff({ episodes: getEpisodes() }),
-  component: () => <ListPage page={episodesPage} items={episodes.useLoaderData().episodes} under={<EpisodesWindow />} />,
+  component: () => {
+    const { episodes: items } = episodes.useLoaderData()
+    return <ListPage page={episodesPage} items={items} under={<WindowLine episodes={items} />} />
+  },
 })
 
 const episode = createRoute({
@@ -112,9 +116,10 @@ export const router = createRouter({
   defaultErrorComponent: LoadError,
 })
 
-// When a fresh copy replaces a saved copy, the pages showing that feed load
-// again: their loaders get the new copy ready at once, and their state
-// (search or query text, "Show more") stays.
+// When a new copy replaces the one shown (a fresh copy replacing a saved
+// copy, or a wider Window), the pages showing that feed load again: their
+// loaders get the new copy ready at once, and their state (query text,
+// results drawn) stays.
 subscribeShownCopies((name, replaced) => {
   if (replaced) void router.invalidate({ filter: (match) => match.staticData.feeds?.includes(name) ?? false })
 })

@@ -154,18 +154,18 @@ export function ready<T>(value: T): Promise<T> {
 // starts again `ttl` after the last copy was shown. If the refresh failed, the
 // next `get()` tries it again in the background, keeping the copy shown.
 // `settled()` gives the last copy once the load is over: the fresh copy, or
-// the copy shown if the refresh failed.
-export function shareFeed<T>(load: () => AsyncIterable<Feed<T>>, ttl = cacheTtlMs) {
-  interface Entry { expires: number; promise: Promise<Feed<T>>; done: Promise<Feed<T>>; feed?: Feed<T>; retry?: boolean }
+// the copy shown if the refresh failed. `show()` puts a new copy in place.
+export function shareFeed<C extends Feed<unknown>>(load: () => AsyncIterable<C>, ttl = cacheTtlMs) {
+  interface Entry { expires: number; promise: Promise<C>; done: Promise<C>; feed?: C; retry?: boolean }
   let entry: Entry | undefined
   const current = () => (entry && entry.expires > Date.now() ? entry : undefined)
 
   // Load into `target`. When it already shows a copy (a retry), the saved copy
   // is skipped, and a failure keeps the copy shown.
-  function run(target: Entry, first?: Deferred<Feed<T>>) {
+  function run(target: Entry, first?: Deferred<C>) {
     target.retry = false
     target.expires = Date.now() + ttl // A retry isn't overlapped by a new load.
-    const done = deferred<Feed<T>>()
+    const done = deferred<C>()
     done.promise.catch(() => {}) // Awaited only by `settled()` callers.
     target.done = done.promise
     void (async () => {
@@ -202,7 +202,7 @@ export function shareFeed<T>(load: () => AsyncIterable<Feed<T>>, ttl = cacheTtlM
       if (found.retry) run(found)
       return found.promise
     }
-    const first = deferred<Feed<T>>()
+    const first = deferred<C>()
     const next: Entry = { expires: Date.now() + ttl, promise: first.promise, done: first.promise }
     entry = next
     run(next, first)
@@ -214,7 +214,18 @@ export function shareFeed<T>(load: () => AsyncIterable<Feed<T>>, ttl = cacheTtlM
     return entry!.done
   }
 
-  return Object.assign(get, { loaded: () => current()?.feed, settled })
+  // Show a new copy in place of the one shown, e.g. a wider Window: the pages
+  // showing the feed load again, and the next load starts `ttl` from now.
+  // Nothing while no copy is shown: the load under way shows its own.
+  const show = (feed: C) => {
+    if (!entry?.feed) return
+    entry.promise = ready(feed)
+    entry.feed = feed
+    entry.expires = Date.now() + ttl
+    setShown(feed, true)
+  }
+
+  return Object.assign(get, { loaded: () => current()?.feed, settled, show })
 }
 
 interface Deferred<T> {

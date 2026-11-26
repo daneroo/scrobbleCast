@@ -1,5 +1,4 @@
 import { Link } from '@tanstack/react-router'
-import { recentDays } from '../config'
 import type { Episode } from '../data/podcasts'
 import type { PageDefinition } from '../list/page'
 import type { ShownField } from '../list/shown'
@@ -29,10 +28,4 @@ export const episodesPage: PageDefinition<Episode, ShownField<Episode>> = {
       </span>
     ),
   },
-}
-
-// Under the heading: how far back the episode feed reaches, the Window
-// (which #94 makes widen).
-export function EpisodesWindow() {
-  return <p className="mt-1 text-muted-foreground">Changed in the last {recentDays} days</p>
 }

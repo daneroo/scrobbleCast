@@ -2,9 +2,11 @@ export const booksUrl = 'https://im-scrobble-books.s3.amazonaws.com/goodreads.js
 export const historyUrl = 'https://scrobblecast.dl.imetrical.com/api/history'
 export const user = 'daniel'
 
-// The episode feed: episodes that changed in the last `recentDays` days.
-// (#94 replaces it with the Window.)
-export const recentDays = 7
+// The episode feed's Window: episodes that changed since the start of the day
+// `windowDays` back at first; each "+N days" widens it `windowStepDays`
+// further back.
+export const windowDays = 30
+export const windowStepDays = 30
 // How long fetched data is reused across pages in the same tab.
 export const cacheTtlMs = 5 * 60 * 1000
 

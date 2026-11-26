@@ -10,3 +10,8 @@ export function localTime(date: Date) {
 export function documentTitle(title: string) {
   return `${title} · Scrobble Cast`
 }
+
+// A local day, "YYYY-MM-DD".
+export function localDay(date: Date) {
+  return date.toLocaleDateString('sv-SE')
+}

@@ -1,14 +1,14 @@
-import { Link } from '@tanstack/react-router'
-import { recentDays } from './config'
+import { Await, Link } from '@tanstack/react-router'
 import type { Book } from './data/books'
 import type { Feed } from './data/fetch'
-import type { Episode, Podcast } from './data/podcasts'
-import { FeedCount, classes } from './ui'
+import type { EpisodeFeed, Podcast } from './data/podcasts'
+import { localDay } from './format'
+import { FeedCount, Loading, classes } from './ui'
 
 // Home. Each list's page, and each record's, lives in its list's folder.
 
 export function Home({ feeds }: {
-  feeds: { books: Promise<Feed<Book[]>>; podcasts: Promise<Feed<Podcast[]>>; episodes: Promise<Feed<Episode[]>> }
+  feeds: { books: Promise<Feed<Book[]>>; podcasts: Promise<Feed<Podcast[]>>; episodes: Promise<EpisodeFeed> }
 }) {
   const sections = [
     {
@@ -20,7 +20,7 @@ export function Home({ feeds }: {
       count: <FeedCount feed={feeds.podcasts} count={(podcasts) => podcasts.length} />,
     },
     {
-      to: '/episodes', title: 'Episodes', label: `played in the last ${recentDays} days`, border: 'border-t-episodes',
+      to: '/episodes', title: 'Episodes', label: <WindowSince episodes={feeds.episodes} />, border: 'border-t-episodes',
       count: <FeedCount feed={feeds.episodes} count={(episodes) => episodes.filter((episode) => episode.playedSeconds > 0).length} />,
     },
   ] as const
@@ -54,6 +54,18 @@ export function Home({ feeds }: {
           </Link>
         ))}
       </div>
+    </>
+  )
+}
+
+// The episodes card's label: played since the Window's start.
+function WindowSince({ episodes }: { episodes: Promise<EpisodeFeed> }) {
+  return (
+    <>
+      played since{' '}
+      <Await promise={episodes} fallback={<Loading />}>
+        {({ since }) => <time dateTime={since.toISOString()}>{localDay(since)}</time>}
+      </Await>
     </>
   )
 }

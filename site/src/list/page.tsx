@@ -61,7 +61,8 @@ const grids: Record<CardSize, string> = {
 // Every new query text (typed, a preset, "See all", "← Journal", a header
 // click) goes back to the top if the list's start has scrolled off screen.
 // "See all" and "← Journal" go with the button pressed, so focus moves to the
-// input, after that scroll.
+// search (the input, or its button when the input is closed), after that
+// scroll.
 export function ListPage<T, F extends ShownField<T>>({ page, items, under, journalAvailable = true }: {
   page: PageDefinition<T, F>
   items: Promise<Feed<T[]>>
@@ -76,7 +77,7 @@ export function ListPage<T, F extends ShownField<T>>({ page, items, under, journ
   const journal = journalAvailable && card && hasLanes(page.presets)
   const query = useMemo(() => page.list.parse(text), [page.list, text])
   const start = useTopOnRestart<HTMLDivElement>(text)
-  const input = useRef<HTMLInputElement>(null)
+  const input = useRef<HTMLElement>(null)
   const focusInput = useRef(false)
   useEffect(() => {
     if (!focusInput.current) return
@@ -91,8 +92,8 @@ export function ListPage<T, F extends ShownField<T>>({ page, items, under, journ
 
   return (
     <>
-      <header className="mb-4">
-        <Heading>{page.title}</Heading>
+      <header className="mb-3">
+        <Heading small>{page.title}</Heading>
         {under}
       </header>
       <QueryLine

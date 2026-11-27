@@ -16,11 +16,12 @@ export function classes(...names: (string | false | undefined)[]) {
   return names.filter(Boolean).join(' ')
 }
 
-// A page's main heading.
-export function Heading({ className, ...props }: ComponentProps<'h1'>) {
+// A page's main heading. `small` for a page the top bar already names (the
+// lists), so it leaves room for what's under it.
+export function Heading({ className, small = false, ...props }: ComponentProps<'h1'> & { small?: boolean }) {
   return (
     <h1
-      className={classes('text-4xl font-bold tracking-tighter wrap-anywhere lg:text-5xl', className)}
+      className={classes('font-bold wrap-anywhere', small ? 'text-2xl tracking-tight' : 'text-4xl tracking-tighter lg:text-5xl', className)}
       {...props}
     />
   )
